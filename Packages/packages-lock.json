@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.drydock.toolbelt": {
+      "version": "https://github.com/yannish/drytools.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "9360d242b784ea35837f2923867a850877a863c0"
+    },
     "com.unity.collab-proxy": {
       "version": "1.5.7",
       "depth": 0,
