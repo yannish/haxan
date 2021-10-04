@@ -77,6 +77,29 @@ public class GridBuilder : MonoBehaviour
 		cells = null;
 	}
 
+	public void MakeOneCell()
+	{
+		var cellPrefabObj = PrefabUtility.InstantiatePrefab(cellPrefab) as GameObject;
+
+		//CreateCell(0, 0, 0);
+	}
+
+	public GameObject randomPrefab;
+	public void InstantiateAPrefab()
+	{
+		if(randomPrefab == null)
+		{
+			Debug.LogWarning("Assign a random prefab!");
+			return;
+		}
+
+		var newPrefab = PrefabUtility.InstantiatePrefab(randomPrefab) as GameObject;
+		if (newPrefab != null)
+			Debug.LogWarning("Here's your new prefab: " + newPrefab.gameObject.name, newPrefab);
+		else
+			Debug.LogWarning("NUL!");
+	}
+
 	void CreateCell(int x, int z, int i)
 	{
 		Vector3 pos;
@@ -88,7 +111,11 @@ public class GridBuilder : MonoBehaviour
 		//Cell cell = cells[i] = Instantiate(cellPrefab).GetComponent<Cell>();
 
 		var cellPrefabObj = PrefabUtility.InstantiatePrefab(cellPrefab) as GameObject;
+		//return;
+
 		Cell cell = cells[i] = cellPrefabObj.GetComponent<Cell>();
+		if (cell == null)
+			return;
 
 		cell.transform.SetParent(transform, false);
 		cell.transform.localPosition = pos;

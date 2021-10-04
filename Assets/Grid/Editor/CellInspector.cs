@@ -22,7 +22,11 @@ public class CellInspector : Editor
 		if (Globals.Grid != null && cell.TryGetBoundCellObject(out CellObject foundCellObj))
 		{
 			var obj = foundCellObj.gameObject;
-			EditorGUILayout.ObjectField("BOUND OBJECT: ", obj, typeof(Object), true);
+			EditorGUILayout.ObjectField("BOUND CELL-OBJECT: ", obj, typeof(Object), true);
+		}
+		else
+		{
+			EditorGUILayout.LabelField("NO BOUND CELL-OBJECT");
 		}
 
 		DrawDefaultInspector();

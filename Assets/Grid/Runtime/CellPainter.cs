@@ -9,6 +9,8 @@ public class CellPainter : MonoBehaviour
 	public CellPreset currentPaint;
 	public List<CellPreset> presets = new List<CellPreset>();
 
+
+
 	public static void PaintCell(Cell cell, CellPreset cellPreset)
 	{
 		Debug.Log("PAINTING CELL!");
