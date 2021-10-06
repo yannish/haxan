@@ -12,29 +12,6 @@ public class Cell : MonoBehaviour,
 	public static event Action<Cell> OnCellHovered = delegate { };
 	public static event Action OnCellUnhovered = delegate { };
 
-    //public void CellHovered() { OnCellHovered(this); }
-    //public void CellUnhovered() { OnCellUnhovered(); }
-
-
-    //... cells are the IFlowables of their UIElements component.
-    public FlowController Flow
-    {
-        get
-        {
-            //Debug.Log("fetching flow on : " + gameObject.name);
-
-            if (this.TryGetBoundCellObject(out CellObject foundCellObject))
-            {
-                if (foundCellObject.flowController != null)
-                    return foundCellObject.flowController;
-            }
-
-            //Debug.Log("... no bound object, getting base flow: " + gameObject.name);
-
-            return cellFlow;
-        }
-    }
-
 
     //... coords:
     public OffsetCoordinates offsetCoords;
@@ -55,6 +32,27 @@ public class Cell : MonoBehaviour,
 	{
 		cellFlow = GetComponent<CellFlowController>();
         this.Unbind();
+	}
+
+
+
+	//... cells are the IFlowables of their UIElements component.
+	public FlowController Flow
+	{
+		get
+		{
+			//Debug.Log("fetching flow on : " + gameObject.name);
+
+			if (this.TryGetBoundCellObject(out CellObject foundCellObject))
+			{
+				if (foundCellObject.flowController != null)
+					return foundCellObject.flowController;
+			}
+
+			//Debug.Log("... no bound object, getting base flow: " + gameObject.name);
+
+			return cellFlow;
+		}
 	}
 
 

@@ -18,8 +18,9 @@ public class UIElement : MonoBehaviour,
 	IPointerDownHandler,
 	IPointerUpHandler
 {
-
 	public bool logDebug;
+
+	void Awake() =>	flowableComponent = GetComponent<IFlowable>();
 
 
 	//... this'll be Cell on the board, yielding the bound -> cellObj -> flowController?
@@ -36,9 +37,6 @@ public class UIElement : MonoBehaviour,
 			return null;
 		}
 	}
-
-
-	void Awake() =>	flowableComponent = GetComponent<IFlowable>();
 
 
 	public virtual void OnPointerEnter(PointerEventData eventData)
@@ -79,9 +77,11 @@ public class UIElement : MonoBehaviour,
 	}
 
 	public virtual void OnSelect(BaseEventData eventData) { }
+
 	public virtual void OnDeselect(BaseEventData eventData) { }
 
 	public virtual void OnLeft() { }
+	
 	public virtual void OnRight() { }
 
 	public virtual void OnPointerUp(PointerEventData eventData) { }

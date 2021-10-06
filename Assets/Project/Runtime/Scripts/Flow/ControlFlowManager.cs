@@ -17,10 +17,26 @@ public class ControlFlowManager : MonoBehaviour
 		//	this.EditorUpdater();
 	}
 
-	public CellObject selectedCell; 
+	//public CellObject selectedCell; 
 
+	[ReadOnly]
 	public FlowController initialFlowController;
+	[ReadOnly]
 	public FlowController currFlowController;
+
+
+	private void Start()
+	{
+		initialFlowController = GetComponentInChildren<FlowController>();
+		if (initialFlowController)
+			initialFlowController.Enter();
+
+		Events.instance.AddListener<ElementHoveredEvent>(HandleHover);
+		Events.instance.AddListener<ElementBackClickedEvent>(HandleBackClick);
+		Events.instance.AddListener<ElementClickedEvent>(HandleInput);
+		Events.instance.AddListener<EmptyClickEvent>(HandleEmptyInput);
+	}
+
 
 	public void ShowCurrentController()
 	{
@@ -40,18 +56,6 @@ public class ControlFlowManager : MonoBehaviour
 		}
 
 		return checkController;
-	}
-
-	private void Start()
-	{
-		initialFlowController = GetComponentInChildren<FlowController>();
-		if(initialFlowController)
-			initialFlowController.Enter();
-
-		Events.instance.AddListener<ElementHoveredEvent>(HandleHover);
-		Events.instance.AddListener<ElementBackClickedEvent>(HandleBackClick);
-		Events.instance.AddListener<ElementClickedEvent>(HandleInput);
-		Events.instance.AddListener<EmptyClickEvent>(HandleEmptyInput);
 	}
 
 	private void HandleBackClick(ElementBackClickedEvent e)
