@@ -50,7 +50,7 @@ public class UIElement : MonoBehaviour,
 	public virtual void OnPointerExit(PointerEventData eventData)
 	{
 		if (logDebug)
-			Debug.Log("poined exited: " + gameObject.name);
+			Debug.Log("pointer exited: " + gameObject.name);
 
 		Events.instance.Raise(new ElementHoveredEvent(null));
 	}

@@ -9,11 +9,7 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 	[ReadOnly] public QuickStateMachine fsm;
 
-    public static event Action<Character> OnCharacterHovered = delegate { };
-    public static event Action OnCharacterUnhovered = delegate { };
 
-    public static event Action<Character> OnCharacterSelected = delegate { };
-    public static event Action OnCharacterDeselected = delegate { };
 
 
     public abstract bool TryGetCommandStack(ref Stack<CharacterCommand> commandStack);
@@ -30,8 +26,6 @@ public abstract class CharacterFlowController : CellObjFlowController
 		fsm?.SetTrigger(FSM.hover);
 
 		base.HoverPeek();
-        OnCharacterHovered(character);
-
 	}
 
 	public override void HoverUnpeek()
@@ -39,7 +33,6 @@ public abstract class CharacterFlowController : CellObjFlowController
 		fsm?.SetTrigger(FSM.unhover);
 
 		base.HoverUnpeek();
-        OnCharacterUnhovered();
     }
 
 	public override void Enter()
@@ -47,8 +40,6 @@ public abstract class CharacterFlowController : CellObjFlowController
 		fsm?.SetTrigger(FSM.select);
 
 		base.Enter();
-
-        OnCharacterSelected(character);
 
 		if (character.movementAbility)
 			TransitionTo(character.movementAbility.flow);
@@ -59,8 +50,6 @@ public abstract class CharacterFlowController : CellObjFlowController
 		fsm?.SetTrigger(FSM.deselect);
 
 		base.Exit();
-
-        OnCharacterDeselected();
 	}
 
 	public override void HandleEmptyInput(EmptyClickEvent e)

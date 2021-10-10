@@ -91,7 +91,7 @@ public abstract class FlowController : MonoBehaviour
 
 	protected virtual void TransitionTo(FlowController newFlowController)
 	{
-		if (peekedFlow != null)
+		if (peekedFlow != null && peekedFlow != newFlowController)
 		{
 			//if (peekedFlow != newFlowController)
 			peekedFlow.HoverUnpeek();
@@ -102,7 +102,6 @@ public abstract class FlowController : MonoBehaviour
 
 		if (newFlowController != null)
 			nextController = newFlowController.gameObject.name;
-		//nextController = newFlowController.controllerName;
 
 		Debog.logInput("transitioning to " + nextController + " controller");
 

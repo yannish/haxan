@@ -9,7 +9,6 @@ public abstract class Character : CellObject
     public static event Action OnUnhovered = delegate { };
 
     //public string characterName;
-    public Sprite icon;
 
 	public Ability movementAbility;
 	public List<Ability> abilities;

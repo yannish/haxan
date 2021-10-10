@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DummyFlowController : FlowController
+public class DummyFlowController : CellObjFlowController
 {
 	public ScrObjAbility ability;
 

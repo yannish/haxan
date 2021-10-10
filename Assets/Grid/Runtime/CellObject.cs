@@ -5,12 +5,16 @@ using UnityEngine;
 [SelectionBase, ExecuteAlways]
 public class CellObject : MonoBehaviour
 {
+	[Header("Config")]
+	public Sprite icon;
+	public Transform pivot;
+
+	[Header("State")]
 	public HexDirection facing;
 
+	[Header("Flow")]
 	[ReadOnly]
 	public FlowController flowController;
-
-	public Transform pivot;
 
 	//private void Awake() => { }
 

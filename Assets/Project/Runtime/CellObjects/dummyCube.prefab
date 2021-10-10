@@ -197,9 +197,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3fec835bf6eba3d4b85859c9eda44003, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  facing: 3
-  flowController: {fileID: 2968459637578864127}
+  icon: {fileID: 21300000, guid: edba8d7ebc919284cb1870a690ec5f11, type: 3}
   pivot: {fileID: 6548106253942327891}
+  facing: 1
+  flowController: {fileID: 2968459637578864127}
 --- !u!114 &2968459637578864127
 MonoBehaviour:
   m_ObjectHideFlags: 0
