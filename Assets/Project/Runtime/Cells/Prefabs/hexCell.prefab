@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2270226773515199538
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4654898495138374746}
+  m_Layer: 0
+  m_Name: clipScrubber
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4654898495138374746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2270226773515199538}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6127379645728883189}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4885497740848747112
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,7 +40,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4885497740848747113}
   - component: {fileID: 4885497740848747114}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: col
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -257,6 +287,7 @@ Transform:
   - {fileID: 4885497740848747113}
   - {fileID: 4885497742186296005}
   - {fileID: 7047534434980709483}
+  - {fileID: 6127379645728883189}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -360,6 +391,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4885497742186296005}
+  - component: {fileID: 4598706114248679655}
   m_Layer: 0
   m_Name: visuals
   m_TagString: Untagged
@@ -382,6 +414,25 @@ Transform:
   m_Father: {fileID: 4885497741254353246}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &4598706114248679655
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4885497742186296004}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5763425123781631584
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,3 +463,55 @@ Transform:
   m_Father: {fileID: 4885497741254353246}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7667528250261754650
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6127379645728883189}
+  - component: {fileID: 7807194471052898664}
+  m_Layer: 0
+  m_Name: heightShift
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6127379645728883189
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7667528250261754650}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 3.5575094, y: 1.8249997, z: -0.5954016}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4654898495138374746}
+  m_Father: {fileID: 4885497741254353246}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7807194471052898664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7667528250261754650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4d00e4b06a02448abe6547bf206328, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lenses: []
+  targetValue: 0
+  baseValue: 0
+  smooth: 0
+  smoothTime: 0
+  applyMaxSpeed: 0
+  maxSpeed: 0
+  currValue: 0

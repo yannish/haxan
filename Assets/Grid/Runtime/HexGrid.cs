@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class HexGrid : MonoBehaviour
 {
-    public CellObjectBindingMap cellObjectBindings = new CellObjectBindingMap();
+	public const string GridLayer = "Grid";
 
-    //public BindingMap<CellObject, Cell> cellObj2CellMap = new BindingMap<CellObject, Cell>();
-    //public BindingMap<Cell, CellObject> cellObjectBindings = new BindingMap<Cell, CellObject>();
+	public static LayerMask Mask { get { return LayerMask.GetMask(GridLayer); } }
+
+	public CellObjectBindingMap cellObjectBindings = new CellObjectBindingMap();
 
     public Dictionary<HexCoordinates, Cell> coordCellLookup = new Dictionary<HexCoordinates, Cell>();
+
 	public Cell[] cells;
 }
 

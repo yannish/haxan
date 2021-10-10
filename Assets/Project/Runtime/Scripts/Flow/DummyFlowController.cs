@@ -1,110 +1,110 @@
-﻿//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-//public class DummyFlowController : FlowController
-//{
-//	public ScrObjAbility ability;
+public class DummyFlowController : FlowController
+{
+	public ScrObjAbility ability;
 
-//	[ReadOnly] public DummyCube dummyCube;
-//	[ReadOnly] public ControlLens clickedLens;
-//	[ReadOnly] public QuickStateMachine fsm;
-//    //Animator animator;
+	[ReadOnly] public DummyCube dummyCube;
+	[ReadOnly] public ControlLens clickedLens;
+	[ReadOnly] public QuickStateMachine fsm;
+	//Animator animator;
 
-//	protected override void Awake()
-//	{
-//		base.Awake();
-//		//animator = GetComponent<Animator>();
-//		fsm = GetComponentInChildren<QuickStateMachine>();
-//		dummyCube = GetComponent<DummyCube>();
-//		//uiElement = GetComponent<AnimatorUIElement>();
-//	}
+	protected override void Awake()
+	{
+		base.Awake();
+		//animator = GetComponent<Animator>();
+		fsm = GetComponentInChildren<QuickStateMachine>();
+		dummyCube = GetComponent<DummyCube>();
+		//uiElement = GetComponent<AnimatorUIElement>();
+	}
 
-//    public override void HoverPeek()
-//    {
-//		Debug.Log("Hover peeking : " + gameObject.name);
+	public override void HoverPeek()
+	{
+		Debug.Log("Hover peeking : " + gameObject.name);
 
-//		fsm?.SetTrigger(FSM.hover);
+		fsm?.SetTrigger(FSM.hover);
 
-//		base.HoverPeek();
-//    }
+		base.HoverPeek();
+	}
 
-//    public override void HoverUnpeek()
-//    {
-//		Debug.Log("Hover unpeeking : " + gameObject.name);
+	public override void HoverUnpeek()
+	{
+		Debug.Log("Hover unpeeking : " + gameObject.name);
 
-//		fsm?.SetTrigger(FSM.unhover);
+		fsm?.SetTrigger(FSM.unhover);
 
-//		base.HoverUnpeek();
-//    }
+		base.HoverUnpeek();
+	}
 
-//    public override void Enter()
-//	{
-//		base.Enter();
+	public override void Enter()
+	{
+		base.Enter();
 
-//		//Debug.Log("Entered DummyFLow");
+		//Debug.Log("Entered DummyFLow");
 
-//		fsm.SetTrigger(FSM.select);
+		fsm.SetTrigger(FSM.select);
 
-//		if (
-//			ability != null
-//			&& dummyCube.CurrentCell
-//			)
-//		{
-//			clickedLens = CellActions.EffectCells(
-//				ability.GetReachableCells(dummyCube.CurrentCell),
-//				ability as ICellCommandDispenser
-//				);
-//		}
-		
-//		//dummyCube.CurrentCell?.baseFlow.animator.SetBool("select", true);
+		if (
+			ability != null
+			&& dummyCube.CurrentCell
+			)
+		{
+			clickedLens = CellActions.EffectCells(
+				ability.GetReachableCells(dummyCube.CurrentCell),
+				ability as ICellCommandDispenser
+				);
+		}
 
-//		//if (dummyCube.CurrentCell)
-//		//{
-//		//	clickedLens = new ControlLens();
+		//dummyCube.CurrentCell?.baseFlow.animator.SetBool("select", true);
 
-//		//	var effectedCells = dummyCube.CurrentCell.coords.GetCardinalLine(HexDirection.NE, 3);
+		//if (dummyCube.CurrentCell)
+		//{
+		//	clickedLens = new ControlLens();
 
-//		//	Debug.Log("Effected cells: " + effectedCells.Count);
+		//	var effectedCells = dummyCube.CurrentCell.coords.GetCardinalLine(HexDirection.NE, 3);
 
-//		//	foreach (var cell in effectedCells)
-//		//	{
-//		//		CellPathCommand command = new CellPathCommand(cell);
-//		//		command.Execute();
-//		//		clickedLens.OnDiscard(() => command.Undo());
-//		//	}
-//		//}
-//	}
+		//	Debug.Log("Effected cells: " + effectedCells.Count);
 
-//	public override void Exit()
-//	{
-//		base.Exit();
-//		//Debug.Log("Exited DummyFLow");
-//		//dummyCube.CurrentCell?.baseFlow.animator.SetBool("select", false);
+		//	foreach (var cell in effectedCells)
+		//	{
+		//		CellPathCommand command = new CellPathCommand(cell);
+		//		command.Execute();
+		//		clickedLens.OnDiscard(() => command.Undo());
+		//	}
+		//}
+	}
 
-//		fsm.SetTrigger(FSM.deselect);
+	public override void Exit()
+	{
+		base.Exit();
+		//Debug.Log("Exited DummyFLow");
+		//dummyCube.CurrentCell?.baseFlow.animator.SetBool("select", false);
 
-//		if (clickedLens != null)
-//		{
-//			clickedLens.Discard();
-//			clickedLens = null;
-//		}
-//	}
+		fsm.SetTrigger(FSM.deselect);
 
-//	//public override void HoverPeek()
-//	//{
-//	//	//Debug.Log("Hover peeking dummyFLow");
-//	//	dummyCube.CurrentCell?.baseFlow.animator.SetBool("clickable", true);
-//	//}
+		if (clickedLens != null)
+		{
+			clickedLens.Discard();
+			clickedLens = null;
+		}
+	}
 
-//	//public override void HoverUnpeek()
-//	//{
-//	//	//Debug.Log("Hover unpeeking dummyFLow");
-//	//	dummyCube.CurrentCell?.baseFlow.animator.SetBool("clickable", false);
-//	//}
+	//public override void HoverPeek()
+	//{
+	//	//Debug.Log("Hover peeking dummyFLow");
+	//	dummyCube.CurrentCell?.baseFlow.animator.SetBool("clickable", true);
+	//}
 
-//	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
-//	{
-//		return FlowState.YIELD;
-//	}
-//}
+	//public override void HoverUnpeek()
+	//{
+	//	//Debug.Log("Hover unpeeking dummyFLow");
+	//	dummyCube.CurrentCell?.baseFlow.animator.SetBool("clickable", false);
+	//}
+
+	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
+	{
+		return FlowState.YIELD;
+	}
+}

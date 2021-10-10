@@ -15,33 +15,26 @@ public class CellFlowController : FlowController
 	{
         fsm = GetComponentInChildren<QuickStateMachine>();
 		cell = GetComponent<Cell>();
-
-        //animator = GetComponent<Animator>();
     }
 
-	public override void HoverPeek()
-	{
-		fsm?.SetTrigger("hover");
-		//if(baseCellObject)
-		//	fsm.SetTrigger("clickable");
-		//baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger("clickable");
-	}
+	public override void HoverPeek() => fsm?.SetTrigger("hover");
 
-	public override void HoverUnpeek()
-	{
-		fsm?.SetTrigger("unhover");
-		//if (baseCellObject)
-		//	fsm.SetTrigger("unclickable");
-		//baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger("unclickable");
-	}
+	public override void HoverUnpeek() => fsm?.SetTrigger("unhover");
+	
+	//if(baseCellObject)
+	//	fsm.SetTrigger("clickable");
+	//baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger("clickable");
+
+	//if (baseCellObject)
+	//	fsm.SetTrigger("unclickable");
+	//baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger("unclickable");
 
 	//public override void Enter() { fsm?.SetTrigger("select"); }
 	//public override void Exit() { fsm?.SetTrigger("unselect"); }
 
+	//public override void HoverPeek() { animator?.SetBool("hover", true); }
+	//public override void HoverUnpeek() { animator?.SetBool("hover", false); }
 
-    //public override void HoverPeek() { animator?.SetBool("hover", true); }
-    //public override void HoverUnpeek() { animator?.SetBool("hover", false); }
-
-    //public override void Enter() { animator?.SetBool("select", true); }
-    //public override void Exit() { animator?.SetBool("select", false); }
+	//public override void Enter() { animator?.SetBool("select", true); }
+	//public override void Exit() { animator?.SetBool("select", false); }
 }

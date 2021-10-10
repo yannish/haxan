@@ -26,20 +26,20 @@ public class CellObjectInspector : Editor
 
 		Event e = Event.current;
 
-		//bool holdinShift = false;
-		//// You'll need a control id to avoid messing with other tools!
-		//int controlID = GUIUtility.GetControlID(FocusType.Passive);
+		bool holdinShift = false;
+		// You'll need a control id to avoid messing with other tools!
+		int controlID = GUIUtility.GetControlID(FocusType.Passive);
 
-		//if (Event.current.GetTypeForControl(controlID) == EventType.KeyDown)
-		//{
-		//	if (Event.current.keyCode == KeyCode.LeftShift)
-		//	{
-		//		//Debug.Log("shift pressed!");
-		//		holdinShift = true;
-		//		// Causes repaint & accepts event has been handled
-		//		//Event.current.Use();
-		//	}
-		//}
+		if (Event.current.GetTypeForControl(controlID) == EventType.KeyDown)
+		{
+			if (Event.current.keyCode == KeyCode.LeftShift)
+			{
+				//Debug.Log("shift pressed!");
+				holdinShift = true;
+				// Causes repaint & accepts event has been handled
+				Event.current.Use();
+			}
+		}
 
 
 		if (Event.current.type == EventType.MouseDown && Event.current.button == 1)
@@ -48,10 +48,10 @@ public class CellObjectInspector : Editor
 			RaycastHit hit;
 
 			//Debug.Log("right click pressed!");
-			//if(holdinShift)
-			//	Debug.Log("... with SHIFT!!");
+			if (holdinShift)
+				Debug.Log("... with SHIFT!!");
 
-			if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("gridmesh")))
+			if (Physics.Raycast(ray, out hit, Mathf.Infinity, HexGrid.Mask))
 			{
 				var hitCell = hit.transform.GetComponentInParent<Cell>();
 
@@ -64,6 +64,8 @@ public class CellObjectInspector : Editor
 					{
 						if (hitCell == boundCell)
 						{
+							//Debug.Log("hit currently bound cell!");
+
 							var dir = hitCell.transform.position.FlatTo(hit.point);
 							var closestCardinalDir = dir.ClosestCardinal();
 
@@ -76,7 +78,5 @@ public class CellObjectInspector : Editor
 				}
 			}
 		}
-
-		
 	}
 }

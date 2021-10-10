@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-//... doing this because a cell might give you a flow, or an icon on the HUD (ex. an ability or item)
+//... doing this because a cell might give you a flow, or an icon on the HUD (ex. an ability or item), etc.
 //public interface IFlowable
 //{
 //	FlowController Flow { get; }

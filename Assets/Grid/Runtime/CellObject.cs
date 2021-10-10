@@ -69,15 +69,11 @@ public static class CellObjectExtensions
 	public static Cell NearestCell(this CellObject cellObj)
 	{
 		Ray ray = new Ray(cellObj.transform.position + Vector3.up * 10f, Vector3.down);
-		if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, LayerMask.GetMask("gridmesh")))
+		if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, HexGrid.Mask))
 		{
-			//Debug.LogWarning("... nearest cell hit something: " + hit.collider.gameObject.name);
-
 			Cell hitCell = hit.transform.GetComponentInParent<Cell>();
 			if ( hitCell != null)
-			{
 				return hitCell;
-			}
 		}
 
 		Debug.LogWarning("... nearest cell hit NOTHING: ");
