@@ -20,26 +20,37 @@ public class CellObjectDisplay : MonoBehaviour
         CellObjFlowController.OnObjectSelected += DisplayCellObject;
         CellObjFlowController.OnObjectDeselected += ClearCellObject;
 
-        ClearCellObject();
+        gameObject.SetActive(true);
     }
 
     void DisplayCellObject(CellObject cellObject)
     {
-        Debug.Log("... displaying cellObject");
-
-        gameObject.SetActive(true);
-
-        if(cellObject.icon)
+        if (cellObject.icon)
             iconSlot.sprite = cellObject.icon;
-        
+
         nameSlot.SetText(cellObject.name.ToUpper());
+
+        displayCount++;
+        UpdateDisplay();
     }
 
     void ClearCellObject(CellObject cellObject = null)
     {
-        Debug.Log("... clearing cellObject");
+        displayCount--;
+        UpdateDisplay();
+    }
 
-        if (gameObject)
-            gameObject.SetActive(false);
+    [ReadOnly] public int displayCount;
+    void UpdateDisplay()
+	{
+        if(displayCount == 0)
+		{
+            if (gameObject)
+                gameObject.SetActive(false);
+        }
+		else
+		{
+            gameObject.SetActive(true);
+        }
     }
 }

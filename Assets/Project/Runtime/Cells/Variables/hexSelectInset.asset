@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 83e7c7a8af39e004a8dd9842741bd683, type: 3}
-  m_Name: hexHoveredInset
+  m_Name: hexSelectInset
   m_EditorClassIdentifier: 
   DeveloperDescription: 
-  Value: 0.3
+  Value: 0.6

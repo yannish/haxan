@@ -5,24 +5,55 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
+public enum FloatShiftStyle
+{
+	TWEEN,
+	SMOOTH
+}
+
 public class FloatShifter : MonoBehaviour
 {
     public FloatLensManager lensManager;
+	public FloatShiftStyle style;
 
-	[ReadOnly] public float currValue;
 
+	[Header("Tween")]
+	[ReadOnly] public float currTweenValue;
 	public float easeTime;
-
 	public Ease ease;
 
+
+	[Header("Smooth Damp")]
+	public float smoothTime = 1f;
+	public float smoothDuration = 2f;
+	public float maxSpeed = -1f;
+	[ReadOnly]
+	public float currSmoothedValue;
+	[ReadOnly]
+	public float currSmoothedVelocity;
+	[ReadOnly]
+	public float currSmoothedTarget;
+	[ReadOnly]
+	public float currSmoothTimer;
+
+
+	[Header("Drive")]
 	public UnityEvent<float> onUpdate;
 
 	public void Awake()
 	{
 		if (lensManager == null)
 			return;
+		switch (style)
+		{
+			case FloatShiftStyle.TWEEN:
+				lensManager.onTargetChanged += TweenToTarget;
+				break;
 
-		lensManager.onTargetChanged += TweenToTarget;
+			case FloatShiftStyle.SMOOTH:
+				lensManager.onTargetChanged += SmoothDampToTarget;
+				break;
+		}
 	}
 
 
@@ -34,9 +65,41 @@ public class FloatShifter : MonoBehaviour
 
 		seq = DOTween.Sequence();
 		seq.SetAutoKill();
-		seq.Append(DOTween.To(() => currValue, x => currValue = x, newTarget, easeTime))
-			.OnUpdate(() => onUpdate?.Invoke(currValue))
+
+		seq.Append(DOTween.To(() => currTweenValue, x => currTweenValue = x, newTarget, easeTime))
+			.OnUpdate(() => onUpdate?.Invoke(currTweenValue))
+			//.SetAutoKill()
 			.SetEase(ease);
+
+		seq.OnKill(() => seq = null);
+	}
+
+	private void SmoothDampToTarget(float newTarget)
+	{
+		if (seq.IsActive())
+			seq.Kill();
+
+		seq = DOTween.Sequence();
+		seq.SetAutoKill();
+
+		currSmoothedTarget = newTarget;
+		currSmoothTimer = 0f;
+
+		seq.Append(DOTween.To(() => currSmoothTimer, x => currSmoothTimer = x, 1f, smoothDuration))
+			.OnUpdate(() =>
+			{
+				currSmoothedValue = Mathf.SmoothDamp(
+					currSmoothedValue, 
+					currSmoothedTarget, 
+					ref currSmoothedVelocity, 
+					smoothTime,
+					maxSpeed > 0f ? maxSpeed : Mathf.Infinity,
+					Time.deltaTime
+					);
+				onUpdate?.Invoke(currSmoothedValue);
+			})
+			.SetEase(Ease.Linear);
+
 		seq.OnKill(() => seq = null);
 	}
 }

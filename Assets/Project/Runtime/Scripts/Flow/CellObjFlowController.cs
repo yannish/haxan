@@ -39,14 +39,20 @@ public class CellObjFlowController : FlowController
 	public override void HoverPeek()
 	{
 		Debog.logGameflow("Hover peeking : " + gameObject.name);
+
+		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.hover);
 		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.clickable);
+		
 		OnObjectHovered(baseCellObject);
 	}
 
 	public override void HoverUnpeek()
 	{
 		Debog.logGameflow("Hover unpeeking : " + gameObject.name);
+
+		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.unhover);
 		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.unclickable);
+		
 		OnObjetUnhovered(baseCellObject);
 	}
 }

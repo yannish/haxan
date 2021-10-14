@@ -8,8 +8,7 @@ using UnityEngine;
 public class CellFlowController : FlowController
 {
     [ReadOnly] public QuickStateMachine fsm;
-    [ReadOnly] public Cell cell;// { get; protected set; }
-    //[ReadOnly] public Animator animator;// { get; protected set; }
+    [ReadOnly] public Cell cell;
 
     protected override void Awake()
 	{
@@ -17,9 +16,9 @@ public class CellFlowController : FlowController
 		cell = GetComponent<Cell>();
     }
 
-	public override void HoverPeek() => fsm?.SetTrigger("hover");
+	public override void HoverPeek() => fsm?.SetTrigger(FSM.hover);
 
-	public override void HoverUnpeek() => fsm?.SetTrigger("unhover");
+	public override void HoverUnpeek() => fsm?.SetTrigger(FSM.unhover);
 	
 	//if(baseCellObject)
 	//	fsm.SetTrigger("clickable");

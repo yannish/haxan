@@ -9,8 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 83e7c7a8af39e004a8dd9842741bd683, type: 3}
-  m_Name: hexHoveredInset
+  m_Script: {fileID: 11500000, guid: b6fb9aa5c59b85344a0a7f86cbf0d79f, type: 3}
+  m_Name: hover
   m_EditorClassIdentifier: 
-  DeveloperDescription: 
-  Value: 0.3
+  index: 0

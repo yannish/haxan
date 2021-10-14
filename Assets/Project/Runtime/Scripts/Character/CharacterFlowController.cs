@@ -11,7 +11,6 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 
 
-
     public abstract bool TryGetCommandStack(ref Stack<CharacterCommand> commandStack);
 
     protected override void Awake()
@@ -23,14 +22,14 @@ public abstract class CharacterFlowController : CellObjFlowController
 
     public override void HoverPeek()
     {
-		fsm?.SetTrigger(FSM.hover);
+		//fsm?.SetTrigger(FSM.hover);
 
 		base.HoverPeek();
 	}
 
 	public override void HoverUnpeek()
     {
-		fsm?.SetTrigger(FSM.unhover);
+		//fsm?.SetTrigger(FSM.unhover);
 
 		base.HoverUnpeek();
     }

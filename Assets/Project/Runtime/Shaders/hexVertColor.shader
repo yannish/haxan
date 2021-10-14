@@ -3,6 +3,7 @@ Shader "UI/hexVertColor"
     Properties
     {
         _Color("Color", Color) = (1,1,1,1)
+        _Alpha("Alpha", Range(0.0, 1.0)) = 1
         _Inset("Inset",  Range(0.0, 1.0)) = 1
         _Outset("Outset",  Range(0.0, 1.0)) = 0
 
@@ -40,6 +41,7 @@ Shader "UI/hexVertColor"
 
             float _Inset;
             float _Outset;
+            float _Alpha;
             fixed4 _Color;
 
             struct v2f 
@@ -62,7 +64,9 @@ Shader "UI/hexVertColor"
             { 
                 clip(_Inset - i.color.x);
                 clip(i.color.x - _Outset);
-                return _Color;
+                fixed4 col = fixed4(_Color.xyz, _Alpha);
+                //col.w = _Alpha;
+                return col;
             }
 
             ENDCG
