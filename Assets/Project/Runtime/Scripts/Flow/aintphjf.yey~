@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,11 +6,13 @@ public class DummyFlowController : CellObjFlowController
 {
 	public ScrObjAbility ability;
 
-	private Action pathControl;
+	private ControlLens pathControl;
 
 
 	[ReadOnly] public DummyCube dummyCube;
+	[ReadOnly] public ControlLens clickedLens;
 	[ReadOnly] public QuickStateMachine fsm;
+	//Animator animator;
 
 	protected override void Awake()
 	{
@@ -78,27 +79,25 @@ public class DummyFlowController : CellObjFlowController
 	public override void Exit()
 	{
 		base.Exit();
+		//Debug.Log("Exited DummyFLow");
+		//dummyCube.CurrentCell?.baseFlow.animator.SetBool("select", false);
 
 		fsm.SetTrigger(FSM.deselect);
 
-		if (pathControl != null)
+		if (clickedLens != null)
 		{
-			pathControl.Invoke();
-			pathControl = null;
+			clickedLens.Discard();
+			clickedLens = null;
 		}
 	}
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
-		if(pathControl != null)
-		{
-			pathControl.Invoke();
-			pathControl = null;
-		}
+		if(!(e.element.flowController is CellFlowController))
+			return false;
 
 		if (
-			e.element == null
-			|| e.element.flowController == null
+			e.element.flowController == null
 			|| !(e.element.flowController is CellFlowController)
 			|| (e.element.flowController as CellFlowController).cell == null
 			)
@@ -110,11 +109,22 @@ public class DummyFlowController : CellObjFlowController
 		if (pathedCells.IsNullOrEmpty())
 			return false;
 
-		pathControl = CellActions.NewEffectCells<CellPathCommand>(pathedCells);
+		pathControl = CellActions.EffectCells(pathedCells, this);
 
 		if (dummyCube.CurrentCell)
 		{
-			
+			clickedLens = new ControlLens();
+
+			var effectedCells = dummyCube.CurrentCell.coords.GetCardinalLine(HexDirection.NE, 3);
+
+			Debug.Log("Effected cells: " + effectedCells.Count);
+
+			foreach (var cell in effectedCells)
+			{
+				CellPathCommand command = new CellPathCommand(cell);
+				command.Execute();
+				clickedLens.OnDiscard(() => command.Undo());
+			}
 		}
 
 		return false;

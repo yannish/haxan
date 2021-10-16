@@ -62,31 +62,37 @@ public static class Pathfinder
 
 			foreach(Cell neighbour in neighbours)
 			{
-				if(neighbour != null)
+				if (neighbour == null)
+					continue;
+
+				if (
+					!restrictedCells.IsNullOrEmpty()
+					&& restrictedCells.Contains(neighbour)
+					)
+					continue;
+
+				if (exploredCells.Contains(neighbour) || nodesToCheck.Contains(neighbour))
+					continue;
+
+
+				nodesToCheck.Enqueue(neighbour);
+
+				var tentativeDistance =
+					shortestDistToSource[inspectedNode] +
+					(neighbour.transform.position - inspectedNode.transform.position).magnitude;
+
+				//... TODO: could have shortestDistToSource asked for a non-existent neighbour key.
+
+				if(
+					shortestDistToSource.ContainsKey(neighbour)
+					&& tentativeDistance < shortestDistToSource[neighbour]
+					)
 				{
-					if(
-						!restrictedCells.IsNullOrEmpty()
-						&& restrictedCells.Contains(neighbour)
-						)
-							continue;
+					shortestDistToSource[neighbour] =
+						shortestDistToSource[inspectedNode] +
+						(neighbour.transform.position - inspectedNode.transform.position).magnitude;
 
-					if(!exploredCells.Contains(neighbour) && !nodesToCheck.Contains(neighbour))
-					{
-						nodesToCheck.Enqueue(neighbour);
-
-						var tentativeDistance =
-							shortestDistToSource[inspectedNode] +
-							(neighbour.transform.position - inspectedNode.transform.position).magnitude;
-
-						if(tentativeDistance < shortestDistToSource[neighbour])
-						{
-							shortestDistToSource[neighbour] =
-								shortestDistToSource[inspectedNode] +
-								(neighbour.transform.position - inspectedNode.transform.position).magnitude;
-
-							previousNode[neighbour] = inspectedNode;
-						}
-					}
+					previousNode[neighbour] = inspectedNode;
 				}
 			}
 		}

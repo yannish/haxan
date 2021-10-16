@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CharacterFlowController : CellObjFlowController
+public abstract class CharacterFlow : CellObjFlowController
 {
     [ReadOnly] public Character character;
 
@@ -22,14 +22,14 @@ public abstract class CharacterFlowController : CellObjFlowController
 
     public override void HoverPeek()
     {
-		//fsm?.SetTrigger(FSM.hover);
+		fsm?.SetTrigger(FSM.hover);
 
 		base.HoverPeek();
 	}
 
 	public override void HoverUnpeek()
     {
-		//fsm?.SetTrigger(FSM.unhover);
+		fsm?.SetTrigger(FSM.unhover);
 
 		base.HoverUnpeek();
     }

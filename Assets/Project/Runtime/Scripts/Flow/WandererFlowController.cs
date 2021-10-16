@@ -4,10 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WandererFlowController : CharacterFlowController, ICellCommandDispenser
+public class WandererFlowController : CharacterFlow
 {
-	public CellCommand GetCellCommand(Cell cell) { return new CellPathCommand(cell); }
-
 	[ReadOnly] public Wanderer wanderer;
 
 	Stack<CharacterCommand> inputCommandStack;
@@ -22,13 +20,14 @@ public class WandererFlowController : CharacterFlowController, ICellCommandDispe
 	public override void Enter()
 	{
 		base.Enter();
-		Globals.SelectedWanderer.Add(wanderer);
+
+		//Globals.SelectedWanderer.Add(wanderer);
 	}
 
 	public override void Exit()
 	{
 		base.Exit();
-		Globals.SelectedWanderer.Remove(wanderer);
+		//Globals.SelectedWanderer.Remove(wanderer);
 
 		if(pathControl != null)
 			pathControl.Discard();
@@ -79,9 +78,7 @@ public class WandererFlowController : CharacterFlowController, ICellCommandDispe
 
 
 		if (
-            //e.element?.flowController
 			e.element.flowController != null
-			//&& e.element.flowController != null
 			&& e.element.flowController is CellFlowController
 			&& (e.element.flowController as CellFlowController).cell != null
 			)
@@ -92,7 +89,7 @@ public class WandererFlowController : CharacterFlowController, ICellCommandDispe
             if (pathedCells.IsNullOrEmpty())
                 return false;
 
-			pathControl = CellActions.EffectCells(pathedCells, this);
+			//pathControl = CellActions.EffectCells(pathedCells, this);
 
 			return true;
 		}
@@ -125,7 +122,7 @@ public class WandererFlowController : CharacterFlowController, ICellCommandDispe
 				{
 					Cell fromCell = i == 0 ? wanderer.CurrentCell : pathToCell[i - 1];
 
-					var newStepCommand = new StepCommand(wanderer, fromCell, pathToCell[i], 1f);
+					var newStepCommand = new StepCommand(this, fromCell, pathToCell[i], 1f);
 					newCommandStack.Push(newStepCommand);
 
 					Debug.Log("pushing step command " + newStepCommand.ToString());

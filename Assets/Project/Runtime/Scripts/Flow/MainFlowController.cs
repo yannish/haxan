@@ -34,8 +34,14 @@ public class Turn
 
 public class MainFlowController : FlowController
 {
-    //[ReadOnly]
-    public TeamPhase phase = TeamPhase.PLAYER;
+	protected override void Awake()
+	{
+		SetPhase(TeamPhase.PLAYER);
+		base.Awake();
+	}
+
+	[ReadOnly]
+	public TeamPhase phase = TeamPhase.PLAYER;
     public void SetPhase(TeamPhase newPhase)
     {
         switch(newPhase)
@@ -107,11 +113,11 @@ public class MainFlowController : FlowController
 
                         if (currCharacterFlow.TryGetCommandStack(ref currCommandStack))
                         {
-                            activeCommand = currCommandStack.Pop();
-                            activeCommand.Execute();
+                            //activeCommand = currCommandStack.Pop();
+                            //activeCommand.Execute();
 
-                            Debug.Log("new command chain from : " + currCharacterFlow.name);
-                            Debug.Log("... chain length : " + currCommandStack.Count);
+                            //Debug.Log("new command chain from : " + currCharacterFlow.name);
+                            //Debug.Log("... chain length : " + currCommandStack.Count);
                         }
                     }
                 }
@@ -128,8 +134,8 @@ public class MainFlowController : FlowController
                 commandHistory.Push(activeCommand);
                 if (!currCommandStack.IsNullOrEmpty())
                 {
-                    activeCommand = currCommandStack.Pop();
-                    activeCommand.Execute();
+                    //activeCommand = currCommandStack.Pop();
+                    //activeCommand.Execute();
                 }
                 else
                 {
@@ -181,10 +187,10 @@ public class MainFlowController : FlowController
         }
 
         activeCommand = currCommandStack.Pop();
-		activeCommand.Execute();
-		commandHistory.Push(activeCommand);
+		//activeCommand.Execute();
+		//commandHistory.Push(activeCommand);
 
-        Events.instance.Raise(new ForwardTimeStep(activeCommand.character));
+        //Events.instance.Raise(new ForwardTimeStep(activeCommand.character));
 
         //...shouldn't need to validate here, should be building a legit chain to begin with
         //if (currCommandChain.Peek().IsValid())
@@ -197,11 +203,11 @@ public class MainFlowController : FlowController
 	{
 		if (!commandHistory.IsNullOrEmpty())
 		{
-			var poppedCommand = commandHistory.Pop();
-			poppedCommand.Undo();
-			currCommandStack.Push(poppedCommand);
+			//var poppedCommand = commandHistory.Pop();
+			//poppedCommand.Undo();
+			//currCommandStack.Push(poppedCommand);
 
-			Events.instance.Raise(new BackwardTimeStep(poppedCommand.character));
+			//Events.instance.Raise(new BackwardTimeStep(poppedCommand.character));
 		}
 		else
 		{

@@ -27,18 +27,6 @@ public class GridBuilderInspector : Editor
 		}
 		EditorGUILayout.EndHorizontal();
 
-		EditorGUILayout.BeginHorizontal();
-		if (GUILayout.Button("Make One Cell"))
-		{
-			gridBuilder.MakeOneCell();
-		}
-
-		if (GUILayout.Button("Make One Prefab"))
-		{
-			gridBuilder.InstantiateAPrefab();
-		}
-		EditorGUILayout.EndHorizontal();
-
 		//base.OnInspectorGUI();
 
 		//if(GUILayout.Button("Check"))

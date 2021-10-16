@@ -19,21 +19,24 @@ public class GroundMoveAbilityFlow : FlowController
 
 public class GroundMoveAbility : Ability
 {
-    public override List<Cell> GetValidMoves(Cell cell, Character character)
+    public override List<Cell> GetValidMoves(Cell cell, CharacterFlow flow)
 	{
 		List<Cell> validCells = new List<Cell>();
 
-		validCells = character.CurrentCell.GetCardinalRing(character.maxMove, t => !t.IsBound());
+		validCells = flow.character.CurrentCell.GetCardinalRing(
+			flow.character.maxMove, 
+			t => !t.IsBound()
+			);
 
 		return null;
 	}
 
-	public override List<CharacterCommand> FetchCommandChain(Cell targetCell, Character character)
+	public override List<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow)
 	{
-		if (targetCell == character.CurrentCell || !targetCell.IsPassable)
+		if (targetCell == flow.character.CurrentCell || !targetCell.IsPassable)
 			return null;
 
-		var pathToCell = Pathfinder.GetPath(character.CurrentCell, targetCell);
+		var pathToCell = Pathfinder.GetPath(flow.character.CurrentCell, targetCell);
 		if (pathToCell == null)
 			return null;
 
@@ -41,9 +44,9 @@ public class GroundMoveAbility : Ability
 
 		for (int i = 0; i < pathToCell.Count; i++)
 		{
-			Cell fromCell = i == 0 ? character.CurrentCell : pathToCell[i - 1];
+			Cell fromCell = i == 0 ? flow.character.CurrentCell : pathToCell[i - 1];
 
-			var newStepCommand = new StepCommand(character, fromCell, pathToCell[i], 1f);
+			var newStepCommand = new StepCommand(flow, fromCell, pathToCell[i], 1f);
 			newCommandStack.Add(newStepCommand);
 
 			Debug.Log("pushing step command " + newStepCommand.ToString());

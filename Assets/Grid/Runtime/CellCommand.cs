@@ -4,50 +4,48 @@ using UnityEngine;
 
 public abstract class CellCommand
 {
+
 	public Cell cell;
-	public CellCommand(Cell cell)
-	{
-		this.cell = cell;
-	}
+	//public CellCommand(Cell cell)
+	//{
+	//	this.cell = cell;
+	//}
 
 	public abstract void Execute();
-	//public abstract void Execute(Cell cell);
+	
 	public abstract void Undo();
-	//public abstract void Undo(Cell cell);
 }
 
 public class CellHoverCommand : CellCommand
 {
-	public CellHoverCommand(Cell cell) : base(cell)
-	{
-	}
+	public CellHoverCommand() { }
 
 	public override void Execute()
 	{
-		cell.cellFlow.fsm.SetTrigger("hover");
+		cell.cellFlow.fsm.SetTrigger(FSM.hover);
 		//cell.baseFlow.animator.SetBool("hover", true);
     }
 
 	public override void Undo()
 	{
-		cell.cellFlow.fsm.SetTrigger("unhover");
+		cell.cellFlow.fsm.SetTrigger(FSM.unhover);
 		//cell.baseFlow.animator.SetBool("hover", false);
     }
 }
 
 public class CellPathCommand : CellCommand
 {
-	public CellPathCommand(Cell cell) : base(cell) { }
+	public CellPathCommand() { }
 
 	public override void Execute()
 	{
-		cell.cellFlow.fsm.SetTrigger("path");
+		cell.cellFlow.fsm.SetTrigger(FSM.path);
 		//cell.baseFlow.animator.SetBool("path", true);
     }
 
 	public override void Undo()
 	{
-		cell.cellFlow.fsm.SetTrigger("unpath");
+		cell.cellFlow.fsm.SetTrigger(FSM.unpath);
 		//cell.baseFlow.animator.SetBool("path", false);
     }
 }

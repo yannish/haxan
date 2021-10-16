@@ -20,7 +20,8 @@ public class CellObjectDisplay : MonoBehaviour
         CellObjFlowController.OnObjectSelected += DisplayCellObject;
         CellObjFlowController.OnObjectDeselected += ClearCellObject;
 
-        gameObject.SetActive(true);
+        UpdateDisplay();
+        //gameObject.SetActive(true);
     }
 
     void DisplayCellObject(CellObject cellObject)
@@ -43,6 +44,8 @@ public class CellObjectDisplay : MonoBehaviour
     [ReadOnly] public int displayCount;
     void UpdateDisplay()
 	{
+        Debug.LogWarning("updating display");
+
         if(displayCount == 0)
 		{
             if (gameObject)

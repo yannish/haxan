@@ -11,6 +11,8 @@ public static class FSM
 	public const string deselect = "deselect";
 	public const string clickable = "clickable";
 	public const string unclickable = "unclickable";
+	public const string path = "path";
+	public const string unpath = "unpath";
 }
 
 public enum FlowState

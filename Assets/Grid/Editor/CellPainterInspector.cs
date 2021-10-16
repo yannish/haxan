@@ -69,7 +69,7 @@ public class CellPainterInspector : Editor
 			Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 			RaycastHit hit;
 
-			if (Physics.Raycast(ray, out hit, Mathf.Infinity, LayerMask.GetMask("gridmesh")))
+			if (Physics.Raycast(ray, out hit, Mathf.Infinity, HexGrid.Mask))
 			{
 				//Debug.Log("CLICK IN CELLPAINTER HIT SOMETHING");
 

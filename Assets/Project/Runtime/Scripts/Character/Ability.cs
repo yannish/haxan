@@ -15,7 +15,7 @@ public abstract class Ability : MonoBehaviour
 		}
 	}
 
-	public virtual List<Cell> GetValidMoves(Cell cell, Character character) => null;
+	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlow flow) => null;
 
-	public virtual List<CharacterCommand> FetchCommandChain(Cell targetCell, Character character) => null;
+	public virtual List<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
 }

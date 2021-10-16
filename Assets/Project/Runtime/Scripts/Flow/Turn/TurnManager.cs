@@ -82,8 +82,8 @@ public class TurnManager : MonoBehaviour
 		if(currCommandChain.Count > 0)
 		{
 			var poppedCommand = currCommandChain.Pop();
-			poppedCommand.Execute();
-			commandHistory.Push(poppedCommand);
+			//poppedCommand.Start();
+			//commandHistory.Push(poppedCommand);
 
 			//...shouldn't need to validate here, should be building a legit chain to begin with
 			//if (currCommandChain.Peek().IsValid())
@@ -101,9 +101,9 @@ public class TurnManager : MonoBehaviour
 	{
 		if(commandHistory.Count > 0)
 		{
-			var poppedCommand = commandHistory.Pop();
-			poppedCommand.Undo();
-			currCommandChain.Push(poppedCommand);
+			//var poppedCommand = commandHistory.Pop();
+			//poppedCommand.Undo();
+			//currCommandChain.Push(poppedCommand);
 		}
 		else
 		{

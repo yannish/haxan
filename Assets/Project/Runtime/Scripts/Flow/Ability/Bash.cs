@@ -7,7 +7,7 @@ public class Bash : ScrObjAbility, ICellCommandDispenser
 {
 	public CellCommand GetCellCommand(Cell cell)
 	{
-		return new CellPathCommand(cell);
+		return new CellPathCommand();
 	}
 
 	public override List<Cell> GetReachableCells(Cell cell)

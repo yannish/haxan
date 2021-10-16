@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -23,6 +24,21 @@ public static class CellActions
 	public static Cell GetNeighbour(this Cell cell, HexDirection direction)
 	{
 		return cell.neighbours[(int)direction];
+	}
+
+	public static Action NewEffectCells<T>(List<Cell> cells) where T : CellCommand, new()
+	{
+		Action undo = () => { };
+
+		foreach (var cell in cells)
+		{
+			T newCommand = new T();
+			newCommand.cell = cell;
+			newCommand.Execute();
+			undo += () => newCommand.Undo();
+		}
+
+		return undo;
 	}
 
 	public static ControlLens EffectCells(
