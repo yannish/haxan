@@ -6,11 +6,11 @@ public class Blackboard
 {
     public GameObject agent { get; private set; }
 
-    public Stack<CharacterCommand> currCommandStack;
+    public Queue<CharacterCommand> currCommandStack;
 
     public Blackboard(GameObject agent)
     {
         this.agent = agent;
-        currCommandStack = new Stack<CharacterCommand>();
+        currCommandStack = new Queue<CharacterCommand>();
     }
 }

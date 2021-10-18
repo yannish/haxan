@@ -2,20 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum AbilityType
+{
+	MOVEMENT,
+	TARGET
+}
+
 public abstract class Ability : MonoBehaviour
 {
-	public FlowController _flow;
-	public FlowController flow
+	public AbilityType type;
+
+	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlow flow) => null;
+
+	public virtual Queue<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
+
+	public virtual void Peek(Cell targetCell, CharacterFlow flow) { }
+
+	public virtual void Unpeek() { }
+
+
+	public AbilityFlowController _flow;
+	public AbilityFlowController flow
 	{
 		get
 		{
 			if (_flow == null)
-				_flow = GetComponent<FlowController>();
+				_flow = GetComponent<AbilityFlowController>();
 			return _flow;
 		}
 	}
-
-	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlow flow) => null;
-
-	public virtual List<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
 }

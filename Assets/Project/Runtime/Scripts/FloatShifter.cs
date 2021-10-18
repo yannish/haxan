@@ -44,6 +44,9 @@ public class FloatShifter : MonoBehaviour
 	{
 		if (lensManager == null)
 			return;
+
+		currSmoothedValue = lensManager.baseValue;
+
 		switch (style)
 		{
 			case FloatShiftStyle.TWEEN:

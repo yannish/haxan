@@ -47,7 +47,6 @@ public static class Globals
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 	public static void LoadRuntimeAssets()
 	{
-        
         ActiveWanderers = Resources.Load(
 			wanderersPath,
 			typeof(CharacterRuntimeSet)

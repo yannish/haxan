@@ -44,7 +44,7 @@ public class CellObjectDisplay : MonoBehaviour
     [ReadOnly] public int displayCount;
     void UpdateDisplay()
 	{
-        Debug.LogWarning("updating display");
+        //Debug.LogWarning("updating display");
 
         if(displayCount == 0)
 		{

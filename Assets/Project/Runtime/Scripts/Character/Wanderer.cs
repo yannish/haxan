@@ -7,13 +7,19 @@ public class Wanderer : Character
 {
 	protected override void OnEnable()
 	{
-		if (Application.isPlaying)
-			Globals.ActiveWanderers.Add(this);
+		Globals.ActiveWanderers?.Add(this);
+		base.OnEnable();
 	}
 
-    protected override void OnDisable()
+	protected override void OnDisable()
 	{
-		if (Application.isPlaying)
-			Globals.ActiveWanderers.Remove(this);
+		Globals.ActiveWanderers?.Remove(this);
+		base.OnDisable();
+	}
+
+	protected override void Start()
+	{
+		base.Start();
+		movementAbility = Instantiate<Ability>(movementAbility, this.transform);
 	}
 }

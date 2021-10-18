@@ -13,6 +13,9 @@ public static class FSM
 	public const string unclickable = "unclickable";
 	public const string path = "path";
 	public const string unpath = "unpath";
+	public const string hintPath = "hintPath";
+	public const string unhintPath = "unhintPath";
+
 }
 
 public enum FlowState
@@ -43,9 +46,17 @@ public abstract class FlowController : MonoBehaviour
 
 	public virtual void Update() { }
 
-	public virtual void Enter() { }
+	public virtual void Enter()
+	{
+		if (logDebug) 
+			Debug.LogWarning("entering ability flow: ", this.gameObject);
+	}
 
-	public virtual void Exit() { }
+	public virtual void Exit() 
+	{
+		if (logDebug)
+			Debug.LogWarning("exiting ability flow: ", this.gameObject);
+	}
 
 	public virtual void HoverPeek() { }
 
@@ -58,27 +69,69 @@ public abstract class FlowController : MonoBehaviour
 
 	public virtual FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
 	{
+		Debug.LogWarning("handling back input on " + gameObject.name, this.gameObject);
+
+		if (subFlow != null)
+		{
+			//... you've right clicked the subflow you're currently in, keep it hovered:
+			if (e.element.flowController == subFlow)
+			{
+				TransitionTo(null, false);
+				//peekedFlow = e.element.flowController;
+				//peekedFlow.HoverPeek();
+				return FlowState.YIELD;
+			}
+
+			//... you've right clicked somewhere else, but have a subflow, it should probably fold up:
+			var result = subFlow.HandleBackInput(e);
+			if(result == FlowState.DONE)
+			{
+				TransitionTo(null);
+				return FlowState.YIELD;
+			}
+
+			//if (subFlow.subFlow == null)
+			//{
+			//	TransitionTo(null);
+			//	return FlowState.YIELD;
+			//}
+			//else
+			//{
+			//	//Debug.Log("... subflow had a subflow: " + subFlow.subFlow.gameObject.name);
+			//	var result = subFlow.HandleBackInput(e);
+			//	if(result == FlowState.DONE)
+			//	{
+			//		TransitionTo(null);
+			//		return FlowState.YIELD;
+			//	}
+			//}
+		}
+
 		return FlowState.YIELD;
 	}
 
 	public virtual void HandleEmptyInput(EmptyClickEvent e)
 	{
-		Debug.Log("handling empty input on " + gameObject.name);
+		Debug.LogWarning("handling empty input on " + gameObject.name, this.gameObject);
 
 		if (subFlow != null)
 		{
-			//Debug.Log("... subflow : " + subFlow.gameObject.name);
-			if (subFlow.subFlow == null)
-			{
-				//Debug.Log("... subflow doesn't have a subflow" );
-				TransitionTo(null);
-				return;
-			}
-			else
-			{
-				//Debug.Log("... subflow had a subflow: " + subFlow.subFlow.gameObject.name);
-				subFlow.HandleEmptyInput(e);
-			}
+			TransitionTo(null);
+			return;
+
+
+			////Debug.Log("... subflow : " + subFlow.gameObject.name);
+			//if (subFlow.subFlow == null)
+			//{
+			//	//Debug.Log("... subflow doesn't have a subflow" );
+			//	TransitionTo(null);
+			//	return;
+			//}
+			//else
+			//{
+			//	//Debug.Log("... subflow had a subflow: " + subFlow.subFlow.gameObject.name);
+			//	subFlow.HandleEmptyInput(e);
+			//}
 		}
 	}
 
@@ -86,14 +139,14 @@ public abstract class FlowController : MonoBehaviour
 	public virtual bool HandleHover(ElementHoveredEvent e)
 	{
 		if (subFlow != null)
-			subFlow.HandleHover(e);
+			return subFlow.HandleHover(e);
 		//Debog.logInput("Handling hover in " + gameObject.name);
 		return false;
 	}
 
-	protected virtual void TransitionTo(FlowController newFlowController)
+	protected virtual void TransitionTo(FlowController newFlowController, bool clearPeekedFlow = true)
 	{
-		if (peekedFlow != null && peekedFlow != newFlowController)
+		if (clearPeekedFlow && peekedFlow != null && peekedFlow != newFlowController)
 		{
 			//if (peekedFlow != newFlowController)
 			peekedFlow.HoverUnpeek();

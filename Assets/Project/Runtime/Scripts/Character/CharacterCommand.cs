@@ -7,6 +7,11 @@ using UnityEngine;
 [Serializable]
 public abstract class CharacterCommand
 {
+	public float currTime;
+	public float currProgress;
+	public float duration = 1f;
+
+
 	public CharacterCommand(CharacterFlow characterFlow)
 	{
 		this.characterFlow = characterFlow;
@@ -19,13 +24,20 @@ public abstract class CharacterCommand
 	public virtual void Unpeek() { }
 
 	public virtual void Start() { }
-	//public virtual void Start(CharacterFlowController charFlow) => characterFlow = charFlow;
 
 	public virtual void End() { }
-	//public virtual void End(CharacterFlowController charFlow) { }
 
-	public abstract bool Tick();
-	//public abstract bool Tick(CharacterFlowController charFlow);
+	//... ticks true when the command is complete
+	public virtual bool Tick()
+	{
+		if (duration == 0f)
+			return false;
+
+		currTime += Time.deltaTime;
+		currProgress = Mathf.Clamp01(currTime / duration);
+
+		return currProgress >= 1f;
+	}
 }
 
 

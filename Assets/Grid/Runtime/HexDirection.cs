@@ -148,8 +148,7 @@ public static class HexDirectionExtensions
 
 	public static HexDirection To(this Cell from, Cell to)
 	{
-		return HexDirection.E;
-		//return (HexDirection)Array.IndexOf(from.neighbours, to);
+		return (HexDirection)Array.IndexOf(from.neighbours, to);
 	}
 
 
@@ -337,8 +336,8 @@ public static class HexCoordinateExtensions
 		{
 			var coord = startCoords.Step(direction, i);
 
-			Debug.Log("Checking coord:" + coord.ToString());
-			Debug.Log("... lookup had : " + Globals.Grid.coordCellLookup.Count);
+			//Debug.Log("Checking coord:" + coord.ToString());
+			//Debug.Log("... lookup had : " + Globals.Grid.coordCellLookup.Count);
 
 			//... if there's an actual cell at this coordinate:
 			if (Globals.Grid.coordCellLookup.TryGetValue(coord, out Cell foundCell))
@@ -370,5 +369,43 @@ public static class HexCoordinateExtensions
 		}
 
 		return cells;
+	}
+
+	public static List<Cell> GetCellsInRadius(
+		this Cell cell,
+		int radius,
+		Predicate<Cell> check = null
+		)
+	{
+		if (radius < 1) 
+			return null;
+
+		//var cell = Globals.Selector.CheckGrid(cell.transform.position);
+		var grabbedCells = new List<Cell>();
+
+		//if (radius == 1) { grabbedCells.Add(cell); return grabbedCells; }
+
+		int xMin = cell.coords.X - radius;
+		int xMax = cell.coords.X + radius;
+		int zMin = cell.coords.Z - radius;
+		int zMax = cell.coords.Z + radius;
+		int yMin = cell.coords.Y - radius;
+		int yMax = cell.coords.Y + radius;
+
+		for (int x = xMin; x <= xMax; x++)
+		{
+			for (int z = Mathf.Max(zMin, -x - yMax); z <= Mathf.Min(zMax, -x - yMin); z++)
+			{
+				if(Globals.Grid.coordCellLookup.TryGetValue(new HexCoordinates(x, z), out Cell foundCell))
+				{
+					if (check != null && !check.Invoke(foundCell)) 
+						continue;
+
+					grabbedCells.Add(foundCell);
+				}
+			}
+		}
+
+		return grabbedCells;
 	}
 }

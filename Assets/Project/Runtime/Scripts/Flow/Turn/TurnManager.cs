@@ -20,11 +20,11 @@ public class TurnManager : MonoBehaviour
 	}
 
 	//[SerializeField]
-	public Stack<CharacterCommand> currCommandChain;
+	public Queue<CharacterCommand> currCommandChain;
 	//private Queue<CharacterCommand> currCommandChain;
 
 	//... REWIND:
-	public Stack<CharacterCommand> commandHistory = new Stack<CharacterCommand>();
+	public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
 	//public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
 
 
@@ -81,7 +81,7 @@ public class TurnManager : MonoBehaviour
 	{
 		if(currCommandChain.Count > 0)
 		{
-			var poppedCommand = currCommandChain.Pop();
+			var poppedCommand = currCommandChain.Dequeue();
 			//poppedCommand.Start();
 			//commandHistory.Push(poppedCommand);
 

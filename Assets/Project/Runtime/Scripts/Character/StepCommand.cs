@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using BOG;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,7 +7,6 @@ public class StepCommand : CharacterCommand
 {
 	public Cell targetCell;
 	public Cell fromCell;
-	public float duration;
 
 	public StepCommand(
 		CharacterFlow characterFlow,
@@ -20,9 +20,30 @@ public class StepCommand : CharacterCommand
 		this.duration = duration;
 	}
 
+	public override void Start()
+	{
+		string log = string.Format("executing from : {0} to : {1}", fromCell.name, targetCell.name);
+		Debog.logGameflow(log);
+
+		//if (!character.TryGetBoundCell(out fromCell))
+		//	Debug.Log("failed to grab 'from' cell for step command");
+
+		fromCell.Leave(characterFlow.character);
+		characterFlow.character.MoveAndBindTo(targetCell);
+		targetCell.Enter(characterFlow.character);
+	}
+
+	public override void End()
+	{
+		base.End();
+	}
+
 	public override bool Tick()
 	{
-		return true;
+		currTime += Time.deltaTime;
+		currProgress = Mathf.Clamp01(currTime / duration);
+
+		return currProgress >= 1f;
 	}
 }
 
@@ -54,7 +75,7 @@ public class StepCommand : CharacterCommand
 //		 * what else would be the thing
 //		 * previously it was UIElements, and then cells were UIElements
 //		 */
-		
+
 //		if (targetCell == null || !character.IsBound())
 //			return false;
 
@@ -66,24 +87,9 @@ public class StepCommand : CharacterCommand
 //		base.Begin();
 //	}
 
-//	public override bool Tick()
-//	{
-//		currTime += Time.deltaTime;
-//		currProgress = Mathf.Clamp01(currTime / duration);
 
-//		return base.Tick();
-//	}
 
-//	public override void Execute()
-//	{
-//		Debug.Log("executing STEP for " + this.ToString());
 
-//		//if (!character.TryGetBoundCell(out fromCell))
-//		//	Debug.Log("failed to grab 'from' cell for step command");
-
-//		fromCell.Leave(character);
-//		character.MoveAndBindTo(targetCell);
-//	}
 
 //	public override void Undo()
 //	{

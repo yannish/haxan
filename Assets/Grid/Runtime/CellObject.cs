@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[SelectionBase, ExecuteAlways]
+[SelectionBase]
+//[ExecuteAlways] //... why?
 public class CellObject : MonoBehaviour
 {
 	[Header("Config")]
@@ -20,8 +21,10 @@ public class CellObject : MonoBehaviour
 
 	//... awakenedOverGrid rebinds every cellObject to its cell.
 	//... done in Start, because cells are Unbinding themselves on Awake.
-    private void Start()
+    protected virtual void Start()
     {
+		//Debug.LogWarning("Start on cellobj");
+
 		flowController = GetComponent<FlowController>();
 
 		if (gameObject.activeSelf)
@@ -37,7 +40,6 @@ public class CellObject : MonoBehaviour
 				null;
 		}
 	}
-
 
 	protected virtual void OnEnable() => this.BindInPlace();   
 
@@ -55,6 +57,14 @@ public class CellObject : MonoBehaviour
 
 public static class CellObjectExtensions
 {
+	public static void SetDirectFacing(this CellObject cellObj, Vector3 dir)
+	{
+		if (cellObj.pivot == null)
+			return;
+
+		cellObj.pivot.rotation = Quaternion.LookRotation(dir);
+	}
+
 	public static void SetFacing(this CellObject cellObj, HexDirection dir)
 	{
 		var newFacingDir = dir.ToVector();
@@ -62,13 +72,6 @@ public static class CellObjectExtensions
 			cellObj.pivot.rotation = Quaternion.LookRotation(newFacingDir);
 		cellObj.facing = dir;
 	}
-
-	//public static Cell CurrentCell(this CellObject cellObj)
-	//{
-	//	if (Globals.Grid.cellObjectBindings.TryGetBinding(cellObj, out Cell foundCell))
-	//		return foundCell;
-	//	return null;
-	//}
 
 	public static Cell NearestCell(this CellObject cellObj)
 	{

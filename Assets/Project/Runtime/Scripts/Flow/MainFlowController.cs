@@ -16,7 +16,7 @@ public class Turn
 {
     [ReadOnly]
     public Character owner;
-    public Stack<CharacterCommand> commands;
+    public Queue<CharacterCommand> commands;
 
     //public Turn(Character owner)
     //{
@@ -40,6 +40,8 @@ public class MainFlowController : FlowController
 		base.Awake();
 	}
 
+	#region TURN PROCESSING:
+
 	[ReadOnly]
 	public TeamPhase phase = TeamPhase.PLAYER;
     public void SetPhase(TeamPhase newPhase)
@@ -62,12 +64,12 @@ public class MainFlowController : FlowController
 	//[ReadOnly] 
     public Character currCharacter;
 
-
 	//... the commands waiting to be processed:
-	public Stack<CharacterCommand> currCommandStack;
+	public Queue<CharacterCommand> currCommandStack;
+
     //... the command currently being ticked along:
     public CharacterCommand activeCommand;
-	public Stack<CharacterCommand> commandHistory = new Stack<CharacterCommand>();
+	public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
 
 
     public List<Turn> playerTurns;
@@ -104,7 +106,7 @@ public class MainFlowController : FlowController
             case TeamPhase.PLAYER:
                 if (
                     currCommandStack.IsNullOrEmpty()
-                    && commandHistory.IsNullOrEmpty()
+                    //&& commandHistory.IsNullOrEmpty()
                     )
                 {
                     if (subFlow != null && subFlow is WandererFlowController)
@@ -113,12 +115,17 @@ public class MainFlowController : FlowController
 
                         if (currCharacterFlow.TryGetCommandStack(ref currCommandStack))
                         {
-                            //activeCommand = currCommandStack.Pop();
-                            //activeCommand.Execute();
+							string log = string.Format(
+								"new chain from {0}, length {1}",
+								currCharacterFlow.name,
+								currCommandStack.Count
+								);
 
-                            //Debug.Log("new command chain from : " + currCharacterFlow.name);
-                            //Debug.Log("... chain length : " + currCommandStack.Count);
-                        }
+							TransitionTo(null, true);
+
+							activeCommand = currCommandStack.Dequeue();
+							activeCommand.Start();
+						}
                     }
                 }
 
@@ -131,15 +138,20 @@ public class MainFlowController : FlowController
         {
             if (activeCommand.Tick())
             {
-                commandHistory.Push(activeCommand);
+				activeCommand.End();
+
+                commandHistory.Enqueue(activeCommand);
                 if (!currCommandStack.IsNullOrEmpty())
                 {
-                    //activeCommand = currCommandStack.Pop();
-                    //activeCommand.Execute();
-                }
+					activeCommand = currCommandStack.Dequeue();
+					activeCommand.Start();
+				}
                 else
                 {
                     Debog.logGameflow("All commands processed.");
+
+					TransitionTo(activeCommand.characterFlow);
+
                     currCommandStack = null;
                     activeCommand = null;
                 }
@@ -177,8 +189,8 @@ public class MainFlowController : FlowController
 		commandHistory = null;
 	}
 
-
-    void ProcessCommand()
+    
+	void ProcessCommand()
 	{
         if(currCommandStack.IsNullOrEmpty())
         {
@@ -186,7 +198,7 @@ public class MainFlowController : FlowController
             return;
         }
 
-        activeCommand = currCommandStack.Pop();
+        activeCommand = currCommandStack.Dequeue();
 		//activeCommand.Execute();
 		//commandHistory.Push(activeCommand);
 
@@ -215,19 +227,26 @@ public class MainFlowController : FlowController
 		}
 	}
 
-	public override void Enter()
-	{
-		Debug.Log("Entered maincontroller flow");
-	}
+	#endregion
 
-	public override void Exit()
-	{
-		Debug.Log("Exited maincontroller flow");
-		base.Exit();
-	}
+	#region FLOW PROCESSING:
+
+	//public override void Enter()
+	//{
+	//	base.Enter();
+	//	Debug.Log("Entered maincontroller flow");
+	//}
+
+	//public override void Exit()
+	//{
+	//	Debug.Log("Exited maincontroller flow");
+	//	base.Exit();
+	//}
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
+		//Debug.LogWarning("handling hover in main:");
+
 		if (subFlow != null && subFlow.HandleHover(e))
 			return true;
 
@@ -250,17 +269,29 @@ public class MainFlowController : FlowController
 		return false;
 	}
 
-	public override FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
-	{
-		if(e.element.flowController == subFlow)
-		{
-			TransitionTo(null);
-			peekedFlow = e.element.flowController;
-			peekedFlow.HoverPeek();
-		}
+	//public override FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
+	//{
+	//	if(subFlow)
+	//	{
+	//		//... TODO : this might be unnecessary
+	//		if (e.element.flowController == subFlow)
+	//		{
+	//			TransitionTo(null);
+	//			peekedFlow = e.element.flowController;
+	//			peekedFlow.HoverPeek();
+	//			return FlowState.RUNNING;
+	//		}
 
-		return FlowState.RUNNING;
-	}
+	//		var result = subFlow.HandleBackInput(e);
+	//		if(result == FlowState.DONE)
+	//		{
+	//			TransitionTo(null);
+	//			return FlowState.RUNNING;
+	//		}
+	//	}
+
+	//	return FlowState.RUNNING;
+	//}
 
 	public override FlowState HandleInput(ElementClickedEvent e, FlowController owner)
 	{
@@ -283,8 +314,6 @@ public class MainFlowController : FlowController
         //if there's already a subFlow, pass input through that:
         if (subFlow != null)
 		{
-			Debug.Log("... subflow on maincontroller");
-
 			var subFlowState = subFlow.HandleInput(e, this);
 
 			switch (subFlowState)
@@ -348,4 +377,6 @@ public class MainFlowController : FlowController
 	
 		return FlowState.RUNNING;
 	}
+
+	#endregion
 }

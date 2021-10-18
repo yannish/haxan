@@ -7,7 +7,7 @@ public class EnemyFlowController : CharacterFlow
     [ReadOnly] public Enemy enemy;
     [ReadOnly] public Blackboard blackboard;
 
-    public override bool TryGetCommandStack(ref Stack<CharacterCommand> commandStack)
+    public override bool TryGetCommandStack(ref Queue<CharacterCommand> commandStack)
     {
         enemy.tree.root.Tick();
 

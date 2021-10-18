@@ -6,38 +6,52 @@ using UnityEngine;
 public abstract class CharacterFlow : CellObjFlowController
 {
     [ReadOnly] public Character character;
-
 	[ReadOnly] public QuickStateMachine fsm;
 
 
+	Queue<CharacterCommand> inputCommandStack;
+	public void ProvideCommandStack(Queue<CharacterCommand> newCommandStack)
+	{
+		inputCommandStack = newCommandStack;
+	}
 
-    public abstract bool TryGetCommandStack(ref Stack<CharacterCommand> commandStack);
+	public virtual bool TryGetCommandStack(ref Queue<CharacterCommand> commandStack)
+	{
+		if (!inputCommandStack.IsNullOrEmpty())
+		{
+			commandStack = inputCommandStack;
+			inputCommandStack = null;
+			return true;
+		}
 
-    protected override void Awake()
+		return false;
+	}
+
+
+	protected override void Awake()
     {
         base.Awake();
         character = baseCellObject as Character;
 		fsm = GetComponentInChildren<QuickStateMachine>();
     }
 
+
+
     public override void HoverPeek()
     {
 		fsm?.SetTrigger(FSM.hover);
-
 		base.HoverPeek();
 	}
 
 	public override void HoverUnpeek()
     {
 		fsm?.SetTrigger(FSM.unhover);
-
 		base.HoverUnpeek();
     }
 
 	public override void Enter()
 	{
 		fsm?.SetTrigger(FSM.select);
-
 		base.Enter();
 
 		if (character.movementAbility)
@@ -47,22 +61,41 @@ public abstract class CharacterFlow : CellObjFlowController
 	public override void Exit()
 	{
 		fsm?.SetTrigger(FSM.deselect);
-
 		base.Exit();
 	}
 
-	public override void HandleEmptyInput(EmptyClickEvent e)
+	public override FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
 	{
-		base.HandleEmptyInput(e);
+		return FlowState.DONE;
 	}
+
+	public override bool HandleHover(ElementHoveredEvent e)
+	{
+		//Debug.LogWarning("hndling ability hover in characterflow");
+
+		if (subFlow == null)
+			return false;
+
+		if (!(subFlow is AbilityFlowController))
+			return false;
+
+		var abilityFlow = subFlow as AbilityFlowController;
+		if (abilityFlow.ability.type == AbilityType.MOVEMENT)
+		{
+			//Debug.LogWarning("... had a movement subflow");
+			subFlow.HandleHover(e);
+			return true;
+		}
+
+		return base.HandleHover(e);
+	}
+
 
 	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
 	{
 		//if there's already a subFlow, pass input through that:
 		if (subFlow != null)
 		{
-			Debug.Log("... subflow on character controller");
-
 			var subFlowState = subFlow.HandleInput(e, this);
 
 			switch (subFlowState)
@@ -84,6 +117,7 @@ public abstract class CharacterFlow : CellObjFlowController
 	}
 
 	public virtual void BeginTurn() { }
+
     public virtual void EndTurn() { }
 
 }

@@ -4,48 +4,44 @@ using UnityEngine;
 
 public abstract class CellCommand
 {
-
 	public Cell cell;
-	//public CellCommand(Cell cell)
-	//{
-	//	this.cell = cell;
-	//}
 
-	public abstract void Execute();
-	
-	public abstract void Undo();
+	public abstract string trigger { get; }
+	public abstract string untrigger { get; }
+
+	public virtual void Execute() => cell.cellFlow.fsm.SetTrigger(trigger);
+
+	public virtual void Undo() => cell.cellFlow.fsm.SetTrigger(untrigger);
 }
 
 public class CellHoverCommand : CellCommand
 {
 	public CellHoverCommand() { }
 
-	public override void Execute()
-	{
-		cell.cellFlow.fsm.SetTrigger(FSM.hover);
-		//cell.baseFlow.animator.SetBool("hover", true);
-    }
+	public override string trigger => FSM.hover;
+	public override string untrigger => FSM.unhover;
+}
 
-	public override void Undo()
-	{
-		cell.cellFlow.fsm.SetTrigger(FSM.unhover);
-		//cell.baseFlow.animator.SetBool("hover", false);
-    }
+public class CellClickableCommand : CellCommand
+{
+	public CellClickableCommand() { }
+
+	public override string trigger => FSM.clickable;
+	public override string untrigger => FSM.unclickable;
 }
 
 public class CellPathCommand : CellCommand
 {
 	public CellPathCommand() { }
 
-	public override void Execute()
-	{
-		cell.cellFlow.fsm.SetTrigger(FSM.path);
-		//cell.baseFlow.animator.SetBool("path", true);
-    }
+	public override string trigger => FSM.path;
+	public override string untrigger => FSM.unpath;
+}
 
-	public override void Undo()
-	{
-		cell.cellFlow.fsm.SetTrigger(FSM.unpath);
-		//cell.baseFlow.animator.SetBool("path", false);
-    }
+public class CellHintPathCommand : CellCommand
+{
+	public CellHintPathCommand() { }
+
+	public override string trigger => FSM.hintPath;
+	public override string untrigger => FSM.unhintPath;
 }
