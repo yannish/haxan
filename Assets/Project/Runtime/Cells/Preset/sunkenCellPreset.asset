@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e9542bc9c6e895843aeb86dada84e1a6, type: 3}
-  m_Name: baseCellPreset
+  m_Name: sunkenCellPreset
   m_EditorClassIdentifier: 
   baseMaterials:
   - {fileID: 2100000, guid: 649b36897abbb9e43a85f98463906896, type: 2}
   configs:
-  - {fileID: 11400000, guid: e359b2071967b4949b6a7fa0408c235b, type: 2}
+  - {fileID: 11400000, guid: 9c20f413197d76a43838ce581fc58b04, type: 2}
+  baseVisuals:
+  - {fileID: 6341771860932224232, guid: 19f34f250a365684eaa9a3eea85a165f, type: 3}
   baseProps: []

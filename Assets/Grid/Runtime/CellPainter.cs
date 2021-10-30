@@ -7,65 +7,88 @@ using UnityEngine;
 public class CellPainter : MonoBehaviour
 {
 	public CellPreset currentPaint;
-	public List<CellPreset> presets = new List<CellPreset>();
 
+	public List<CellPreset> presets = new List<CellPreset>();
 
 
 	public static void PaintCell(Cell cell, CellPreset cellPreset)
 	{
-		Debug.Log("PAINTING CELL!");
+		Debug.Log("PAINTING CELL: " + cellPreset.name);
 
 		cell.preset = cellPreset;
 
 		if (!cellPreset.baseMaterials.IsNullOrEmpty())
 		{
-			foreach(var mat in cellPreset.baseMaterials)
-			{
-				//Debug.Log("... mat: " + mat.name);
-			}
+			//foreach (var mat in cellPreset.baseMaterials)
+			//{
+			//	Debug.Log("... mat: " + mat.name);
+			//}
 
 			var index = UnityEngine.Random.Range(0, cellPreset.baseMaterials.Count);
 			Debug.Log("... selected index: " + index);
 
 			var randomMat = cellPreset.baseMaterials[index];
-			cell.baseMeshRenderer.sharedMaterial = randomMat;
+
+			if (cell.visualBase)
+			{
+				foreach(var rend in cell.baseMeshRenderers)
+				{
+					if (rend != null)
+						rend.sharedMaterial = randomMat;
+				}
+			}
 		}
 
-		if (cell.TryGetBoundCellObject(out CellObject foundObject))
+		if (!cellPreset.baseVisuals.IsNullOrEmpty())
 		{
-			DestroyImmediate(foundObject);
+			if (cell.visualBase.transform.childCount > 0)
+			{
+				var currVisual = cell.visualBase.transform.GetChild(0);
+				if (currVisual != null)
+					DestroyImmediate(currVisual.gameObject);
+			}
+
+			var newVisualPrefab = PrefabUtility.InstantiatePrefab(
+				cellPreset.baseVisuals[UnityEngine.Random.Range(0, cellPreset.baseVisuals.Count)],
+				cell.visualBase.transform
+				);
 		}
 
-		if (!cellPreset.baseProps.IsNullOrEmpty())
-		{
-			Debug.Log("instantiating: " + cellPreset.baseProps[0].name);
-			var newPrefab = PrefabUtility.InstantiatePrefab(cellPreset.baseProps[0]);
-			//var newPrefab = PrefabUtility.InstantiatePrefab(cellPreset.baseProps[0] as GameObject);
+		//if (cell.TryGetBoundCellObject(out CellObject foundObject))
+		//{
+		//	DestroyImmediate(foundObject);
+		//}
 
-			var newCellObj = (newPrefab as GameObject).GetComponent<CellObject>();
+		//if (!cellPreset.baseProps.IsNullOrEmpty())
+		//{
+		//	Debug.Log("instantiating: " + cellPreset.baseProps[0].name);
+		//	var newPrefab = PrefabUtility.InstantiatePrefab(cellPreset.baseProps[0]);
+		//	//var newPrefab = PrefabUtility.InstantiatePrefab(cellPreset.baseProps[0] as GameObject);
 
-			if (newCellObj != null)
-				Debug.Log("it's a game object");
-			else
-				Debug.Log("it's not a game object");
+		//	var newCellObj = (newPrefab as GameObject).GetComponent<CellObject>();
 
-			//var newCellObj = (
-			//	PrefabUtility.InstantiatePrefab(
-			//		cellPreset.baseProps[UnityEngine.Random.Range(0, cellPreset.baseProps.Count)]
-			//		) 
-			//		as GameObject)
-			//		.GetComponent<CellObject>();
+		//	if (newCellObj != null)
+		//		Debug.Log("it's a game object");
+		//	else
+		//		Debug.Log("it's not a game object");
 
-			//var cellObject = cellPreset.baseProps[0];
-			////var cellObject = cellPreset.baseProps.Random();
-			//var newPrefab = PrefabUtility.InstantiatePrefab(cellObject) as GameObject;
+		//	//var newCellObj = (
+		//	//	PrefabUtility.InstantiatePrefab(
+		//	//		cellPreset.baseProps[UnityEngine.Random.Range(0, cellPreset.baseProps.Count)]
+		//	//		) 
+		//	//		as GameObject)
+		//	//		.GetComponent<CellObject>();
 
-			////GameObject newPrefabObj = (GameObject)newPrefab;
+		//	//var cellObject = cellPreset.baseProps[0];
+		//	////var cellObject = cellPreset.baseProps.Random();
+		//	//var newPrefab = PrefabUtility.InstantiatePrefab(cellObject) as GameObject;
 
-			//var newCellObject = newPrefab.GetComponent<CellObject>();
+		//	////GameObject newPrefabObj = (GameObject)newPrefab;
 
-			newCellObj.MoveAndBindTo(cell);
-		}
+		//	//var newCellObject = newPrefab.GetComponent<CellObject>();
+
+		//	newCellObj.MoveAndBindTo(cell);
+		//}
 
 		PrefabUtility.RecordPrefabInstancePropertyModifications(cell);
 		EditorSceneManager.MarkSceneDirty(cell.gameObject.scene);

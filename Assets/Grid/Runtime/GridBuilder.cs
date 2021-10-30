@@ -28,7 +28,6 @@ public class GridBuilder : MonoBehaviour
 		hexGrid.coordCellLookup.Clear();
 		for (int i = 0; i < cells.Length; i++)
 		{
-			//Debug.Log("Binding coord: " + cells[i].coords.ToString() + " to " + cells[i].name);
 			hexGrid.coordCellLookup.Add(cells[i].coords, cells[i]);
 		}
 	}
@@ -42,13 +41,6 @@ public class GridBuilder : MonoBehaviour
 		for (int z = 0, i = 0; z < gridHeight; z++)
 			for (int x = 0; x < gridWidth; x++)
 				CreateCell(x, z, i++);
-
-		//hexGrid.coordCellLookup.Clear();
-		//for (int i = 0; i < cells.Length; i++)
-		//{
-		//	Debug.Log("Binding coord: " + cells[i].coords.ToString() + " to " + cells[i].name);
-		//	hexGrid.coordCellLookup.Add(cells[i].coords, cells[i]);
-		//}
 	}
 
 	public void BindAllCellObjects()
@@ -110,13 +102,19 @@ public class GridBuilder : MonoBehaviour
 			return;
 
 
-
 		cell.transform.SetParent(transform, false);
 		cell.transform.localPosition = pos;
 		cell.offsetCoords = new OffsetCoordinates(x, z);
 		cell.coords = HexCoordinates.FromOffsetCoordinates(x, z);
 		//cell.coords = cell.offsetCoords.ToCubeCoords();
 		cell.name = string.Concat("hexCell: ",cell.coords.ToString());
+
+		if (cell.preset)
+		{
+			CellPainter.PaintCell(cell, cell.preset);
+		}
+
+
 		//... if cell isn't on western-most edge, it has a westward neighbour:
 		if (x > 0)
 			cell.SetNeighbour(cells[i - 1], HexDirection.W);

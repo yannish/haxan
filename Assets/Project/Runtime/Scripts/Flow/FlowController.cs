@@ -30,8 +30,8 @@ public abstract class FlowController : MonoBehaviour
 	public bool logDebug;
 
 	[ReadOnly] public FlowController subFlow;// { get; set; }
-
 	[ReadOnly] public FlowController peekedFlow;
+	[ReadOnly] public FlowController lastSubFlow;
 
 	/*
 	 * is it odd to give each flow a Peekd Flow?
@@ -112,7 +112,8 @@ public abstract class FlowController : MonoBehaviour
 
 	public virtual void HandleEmptyInput(EmptyClickEvent e)
 	{
-		Debug.LogWarning("handling empty input on " + gameObject.name, this.gameObject);
+		if(logDebug)
+			Debog.logInput("handling empty input on " + gameObject.name, this.gameObject);
 
 		if (subFlow != null)
 		{
@@ -167,6 +168,8 @@ public abstract class FlowController : MonoBehaviour
 		}
 
 		subFlow = newFlowController;
+		if(subFlow != null)
+			lastSubFlow = subFlow;
 
 		if (subFlow != null)
 		{

@@ -9,18 +9,18 @@ public abstract class CharacterFlow : CellObjFlowController
 	[ReadOnly] public QuickStateMachine fsm;
 
 
-	Queue<CharacterCommand> inputCommandStack;
-	public void ProvideCommandStack(Queue<CharacterCommand> newCommandStack)
+	Turn inputTurn;
+	public void ProvideInputTurn(Turn newTurn)
 	{
-		inputCommandStack = newCommandStack;
+		inputTurn = newTurn;
 	}
 
-	public virtual bool TryGetCommandStack(ref Queue<CharacterCommand> commandStack)
+	public virtual bool TryGetInputTurn(ref Turn commandStack)
 	{
-		if (!inputCommandStack.IsNullOrEmpty())
+		if (inputTurn != null)
 		{
-			commandStack = inputCommandStack;
-			inputCommandStack = null;
+			commandStack = inputTurn;
+			inputTurn = null;
 			return true;
 		}
 
@@ -101,7 +101,7 @@ public abstract class CharacterFlow : CellObjFlowController
 			switch (subFlowState)
 			{
 				case FlowState.YIELD:
-					break;
+					return FlowState.YIELD;
 
 				case FlowState.DONE:
 					TransitionTo(null);
@@ -113,7 +113,7 @@ public abstract class CharacterFlow : CellObjFlowController
 			}
 		}
 
-		return FlowState.RUNNING;
+		return FlowState.YIELD;
 	}
 
 	public virtual void BeginTurn() { }

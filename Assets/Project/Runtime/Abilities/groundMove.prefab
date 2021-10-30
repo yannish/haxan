@@ -45,15 +45,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a742b27a770b60448f714e00dd1bdae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  phase: 0
   type: 0
   _flow: {fileID: 8056546268011214399}
   stepDuration:
     UseConstant: 1
-    ConstantValue: 0.2
+    ConstantValue: 0.1
     Variable: {fileID: 0}
   turnDuration:
     UseConstant: 1
-    ConstantValue: 0.4
+    ConstantValue: 0.1
     Variable: {fileID: 0}
 --- !u!114 &8056546268011214399
 MonoBehaviour:
@@ -70,6 +71,7 @@ MonoBehaviour:
   logDebug: 0
   subFlow: {fileID: 0}
   peekedFlow: {fileID: 0}
+  lastSubFlow: {fileID: 0}
   _ability: {fileID: 4453239625402978951}
   validMoves: []
   validElements: []

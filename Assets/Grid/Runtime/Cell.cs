@@ -14,6 +14,7 @@ public class Cell : MonoBehaviour,
 
 
     //... coords:
+	[Header("Coords")]
     public OffsetCoordinates offsetCoords;
 	public HexCoordinates coords;
 
@@ -23,9 +24,15 @@ public class Cell : MonoBehaviour,
 
 
 	//... assigned components:
+	[Header("Paint")]
 	public CellPreset preset;
+
+	//[Header("Visuals")]
+	public GameObject visualBase;
+	[ReadOnly] public List<MeshRenderer> baseMeshRenderers;
+
+	[Header("Pivot")]
 	public Transform occupantPivot;
-	public MeshRenderer baseMeshRenderer;
 
 
 	void Awake()
@@ -34,7 +41,13 @@ public class Cell : MonoBehaviour,
         this.Unbind();
 	}
 
+	void OnValidate()
+	{
+		if (visualBase == null)
+			return;
 
+		baseMeshRenderers = visualBase.GetComponentsInChildren<MeshRenderer>().ToList();
+	}
 
 	//... cells are the IFlowables of their UIElements component.
 	public FlowController Flow

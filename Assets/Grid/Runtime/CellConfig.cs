@@ -12,7 +12,10 @@ public class CellConfig : ScriptableObject
 	public virtual void Paint(Cell cell)
 	{
 		if (baseMat != null)
-			cell.baseMeshRenderer.sharedMaterial = baseMat;
+		{
+
+		}
+			//cell.baseMeshRenderer.sharedMaterial = baseMat;
 	}
 }
 

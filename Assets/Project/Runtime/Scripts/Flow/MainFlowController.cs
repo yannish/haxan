@@ -5,26 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum TeamPhase
-{
-    PLAYER,
-    ENEMY
-}
-
-[Serializable]
-public class Turn
-{
-    [ReadOnly]
-    public Character owner;
-    public Queue<CharacterCommand> commands;
-
-    //public Turn(Character owner)
-    //{
-    //    this.owner = owner;
-    //    //this.commands = commands;
-    //}
-}
-
 /*
  *... why put turnflow control right in here w/ mainflow...
  * 
@@ -38,9 +18,15 @@ public class MainFlowController : FlowController
 	{
 		SetPhase(TeamPhase.PLAYER);
 		base.Awake();
+
+		dummyTurn = ScriptableObject.CreateInstance<DummyTurn>();
 	}
 
 	#region TURN PROCESSING:
+
+	public ITurnProcessor turnProcessor;
+	//public List<GameObject> turnProcessors = new List<GameObject>();
+
 
 	[ReadOnly]
 	public TeamPhase phase = TeamPhase.PLAYER;
@@ -49,7 +35,7 @@ public class MainFlowController : FlowController
         switch(newPhase)
         {
             case TeamPhase.PLAYER:
-                PopulatePlayerTurns();
+                ClearPlayerTurns();
                 break;
 
             case TeamPhase.ENEMY:
@@ -64,25 +50,27 @@ public class MainFlowController : FlowController
 	//[ReadOnly] 
     public Character currCharacter;
 
-	//... the commands waiting to be processed:
-	public Queue<CharacterCommand> currCommandStack;
+	//... the turn waiting to be processed:
+	public Turn currInputTurn;
+	public DummyTurn dummyTurn;
+	//public Queue<CharacterCommand> currCommandStack;
 
-    //... the command currently being ticked along:
-    public CharacterCommand activeCommand;
+	//... the command currently being ticked along:
+	public CharacterCommand activeCommand;
 	public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
 
 
     public List<Turn> playerTurns;
-    void PopulatePlayerTurns()
+    void ClearPlayerTurns()
     {
         playerTurns.Clear();
-        foreach(Wanderer wanderer in Globals.ActiveWanderers.Items)
-        {
-            if(!wanderer.isStunned)
-            {
-                playerTurns.Add(new Turn() { owner = wanderer });
-            }
-        }
+        //foreach(Wanderer wanderer in Globals.ActiveWanderers.Items)
+        //{
+        //    if(!wanderer.isStunned)
+        //    {
+        //        playerTurns.Add(new Turn() { owner = wanderer });
+        //    }
+        //}
     }
 
     public List<Turn> enemyTurns;
@@ -99,106 +87,25 @@ public class MainFlowController : FlowController
     }
 
 
-    private void LateUpdate()
-	{
-        switch (phase)
-        {
-            case TeamPhase.PLAYER:
-                if (
-                    currCommandStack.IsNullOrEmpty()
-                    //&& commandHistory.IsNullOrEmpty()
-                    )
-                {
-                    if (subFlow != null && subFlow is WandererFlowController)
-                    {
-                        var currCharacterFlow = subFlow as WandererFlowController;
-
-                        if (currCharacterFlow.TryGetCommandStack(ref currCommandStack))
-                        {
-							string log = string.Format(
-								"new chain from {0}, length {1}",
-								currCharacterFlow.name,
-								currCommandStack.Count
-								);
-
-							TransitionTo(null, true);
-
-							activeCommand = currCommandStack.Dequeue();
-							activeCommand.Start();
-						}
-                    }
-                }
-
-                break;
-        }
-
-
-        //... process an active command, clear it if it's done:
-        if(activeCommand != null)
-        {
-            if (activeCommand.Tick())
-            {
-				activeCommand.End();
-
-                commandHistory.Enqueue(activeCommand);
-                if (!currCommandStack.IsNullOrEmpty())
-                {
-					activeCommand = currCommandStack.Dequeue();
-					activeCommand.Start();
-				}
-                else
-                {
-                    Debog.logGameflow("All commands processed.");
-
-					TransitionTo(activeCommand.characterFlow);
-
-                    currCommandStack = null;
-                    activeCommand = null;
-                }
-            }
-
-            return;
-        }
-        
-        //if(activeCommand == null && currCommandStack.IsNullOrEmpty())
-        //{
-        //}
-
-		//if(activeCommand == null)
-		//{
-		//	if (Input.GetKeyDown(KeyCode.N))
-		//		ProcessCommand();
-
-		//	if (Input.GetKeyDown(KeyCode.R))
-		//		RewindCommand();
-
-		//	if (Input.GetKeyDown(KeyCode.C))
-		//		BankCommand();
-		//}
-		//else
-		//{
-		//	if (activeCommand.Tick())
-		//		activeCommand = null;
-		//}
-	}
+   
 
 
 	void BankCommand()
 	{
-		currCommandStack = null;
+		currInputTurn = null;
 		commandHistory = null;
 	}
 
     
 	void ProcessCommand()
 	{
-        if(currCommandStack.IsNullOrEmpty())
-        {
-            Debug.LogWarning("No more commands to process!");
-            return;
-        }
+        //if(currInputTurn.IsNullOrEmpty())
+        //{
+        //    Debug.LogWarning("No more commands to process!");
+        //    return;
+        //}
 
-        activeCommand = currCommandStack.Dequeue();
+        //activeCommand = currInputTurn.Dequeue();
 		//activeCommand.Execute();
 		//commandHistory.Push(activeCommand);
 
@@ -229,23 +136,51 @@ public class MainFlowController : FlowController
 
 	#endregion
 
+	private bool wasProcessingLastFrame;
+	private void LateUpdate()
+	{
+		if (turnProcessor == null || turnProcessor.IsProcessing)
+		{
+			wasProcessingLastFrame = true;
+			return;
+		}
+
+		if (wasProcessingLastFrame && lastSubFlow != null)
+		{
+			wasProcessingLastFrame = false;
+			TransitionTo(lastSubFlow, true);
+		}	
+
+		if(currInputTurn == null)
+		{
+			if(subFlow != null && subFlow is WandererFlowController)
+			{
+				var currWandererFlow = subFlow as WandererFlowController;
+				if(currWandererFlow.TryGetInputTurn(ref currInputTurn))
+				{
+					string log = string.Format(
+						"new turn from {0}, length {1}",
+						currWandererFlow.name,
+						currInputTurn.commands.Count
+						);
+
+					TransitionTo(null, true);
+
+					turnProcessor.RecordTurn(currInputTurn);
+					currInputTurn = null;
+				}
+			}
+		}
+	}
+
 	#region FLOW PROCESSING:
-
-	//public override void Enter()
-	//{
-	//	base.Enter();
-	//	Debug.Log("Entered maincontroller flow");
-	//}
-
-	//public override void Exit()
-	//{
-	//	Debug.Log("Exited maincontroller flow");
-	//	base.Exit();
-	//}
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
-		//Debug.LogWarning("handling hover in main:");
+		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
+			return false;
+
+		//Debog.logInput("handling hover in main:");
 
 		if (subFlow != null && subFlow.HandleHover(e))
 			return true;
@@ -257,7 +192,7 @@ public class MainFlowController : FlowController
         }
 
 		//... 
-		if (currCommandStack != null)
+		if (currInputTurn != null)
 			return false;
 
 		if (e.element == null || e.element.flowController == null)
@@ -269,44 +204,28 @@ public class MainFlowController : FlowController
 		return false;
 	}
 
-	//public override FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
-	//{
-	//	if(subFlow)
-	//	{
-	//		//... TODO : this might be unnecessary
-	//		if (e.element.flowController == subFlow)
-	//		{
-	//			TransitionTo(null);
-	//			peekedFlow = e.element.flowController;
-	//			peekedFlow.HoverPeek();
-	//			return FlowState.RUNNING;
-	//		}
-
-	//		var result = subFlow.HandleBackInput(e);
-	//		if(result == FlowState.DONE)
-	//		{
-	//			TransitionTo(null);
-	//			return FlowState.RUNNING;
-	//		}
-	//	}
-
-	//	return FlowState.RUNNING;
-	//}
 
 	public override FlowState HandleInput(ElementClickedEvent e, FlowController owner)
 	{
-		Debog.logGameflow("Handling input on maincontroller");
-
-		if (currCommandStack != null)
-		{
-			Debog.logGameflow("... curr command stack still being processed");
+		// TODO: how to nullcheck reference to interface..
+		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
 			return FlowState.RUNNING;
-		}
+
+		if(logDebug)
+			Debog.logInput("Handling input on maincontroller");
+
+		//if (currInputTurn != null)
+		//{
+		//	if (logDebug)
+		//		Debog.logGameflow("... curr command stack still being processed");
+		//	return FlowState.RUNNING;
+		//}
 
 		if (e.element is TurnButton)
         {
-            Debog.logInput("TURN BUTTON PRESSED");
-            //(e.element as TurnButton).EndTurn();
+			if (logDebug)
+				Debog.logInput("TURN BUTTON PRESSED");
+
             return FlowState.RUNNING;
         }
 
@@ -330,6 +249,9 @@ public class MainFlowController : FlowController
 					return FlowState.RUNNING;
 			}
 		}
+
+		if (logDebug)
+			Debog.logGameflow("subflow passed on input in main");
 
 		//... if subflow didn't want input, or you've clicked a new one:
 		if (e.element.flowController != null)
@@ -356,7 +278,8 @@ public class MainFlowController : FlowController
 			}
 			else
 			{
-				//Debog.logGameflow("found flow, heading in");
+				if(logDebug)
+					Debog.logGameflow("found flow, heading in");
 
 				TransitionTo(e.element.flowController);
 

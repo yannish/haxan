@@ -11,6 +11,8 @@ public class CellPreset : ScriptableObject
 	//[AssetList(Path = "/Config/Cell/")]
 	public List<CellConfig> configs;
 
+	public List<GameObject> baseVisuals;
+
 	//[AssetList(Path = "/Config/Cell/", Tags = "Prop")]
 	public List<GameObject> baseProps;
 }

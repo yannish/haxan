@@ -36,9 +36,9 @@ public static class GridActions
 
 	public static void AwakenOverGrid(this CellObject cellObject)
 	{
-		//Debug.LogWarning("Awakening " + cellObject.name + " over grid...", cellObject);
+		Debug.LogWarning("Awakening " + cellObject.name + " over grid...", cellObject);
 
-		Cell foundCell = cellObject.transform.position.PollGrid();
+		Cell foundCell = cellObject.pivot.position.PollGrid();
 		if(foundCell != null)
 		{
 			cellObject.MoveAndBindTo(foundCell);
@@ -70,7 +70,7 @@ public static class GridActions
 
 	public static Cell PollGrid(this Vector3 position)
 	{
-		Ray checkRay = new Ray(position, Vector3.down);
+		Ray checkRay = new Ray(position + Vector3.up * 1.8f, Vector3.down);
 		RaycastHit hit;
 
 		if (Physics.Raycast(checkRay, out hit, Mathf.Infinity, HexGrid.Mask))

@@ -10,11 +10,14 @@ public enum AbilityType
 
 public abstract class Ability : MonoBehaviour
 {
+	public StepPhase phase;
+
 	public AbilityType type;
 
 	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlow flow) => null;
 
-	public virtual Queue<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
+	public virtual Turn FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
+	//public virtual Queue<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
 
 	public virtual void Peek(Cell targetCell, CharacterFlow flow) { }
 

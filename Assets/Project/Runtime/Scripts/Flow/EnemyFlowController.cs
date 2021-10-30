@@ -7,13 +7,13 @@ public class EnemyFlowController : CharacterFlow
     [ReadOnly] public Enemy enemy;
     [ReadOnly] public Blackboard blackboard;
 
-    public override bool TryGetCommandStack(ref Queue<CharacterCommand> commandStack)
+    public override bool TryGetInputTurn(ref Turn inputTurn)
     {
         enemy.tree.root.Tick();
 
         if (!blackboard.currCommandStack.IsNullOrEmpty())
         {
-            commandStack = blackboard.currCommandStack;
+            //inputTurn = blackboard.currCommandStack;
             return true;
         }
 

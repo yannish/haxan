@@ -38,7 +38,8 @@ public class GroundMoveAbility : Ability
 		}
 	}
 
-	public override Queue<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow)
+	public override Turn FetchCommandChain(Cell targetCell, CharacterFlow flow)
+	//public override Queue<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow)
 	{
 		if (targetCell == flow.character.CurrentCell || !targetCell.IsPassable || targetCell.IsBound())
 			return null;
@@ -92,6 +93,13 @@ public class GroundMoveAbility : Ability
 			Debog.logGameflow(nextLog);
 		}
 
-		return newCommandStack;
+		var newTurn = new Turn()
+		{
+			commands = newCommandStack,
+			owner = flow.character,
+			phase = phase
+		};
+
+		return newTurn;
 	}
 }

@@ -48,11 +48,11 @@ public class TurnManager : MonoBehaviour
     {
 		if (currWanderer != null && currCommandChain == null)
 		{
-			if(currWanderer.TryGetCommandStack(ref currCommandChain))
-			{
-				if (currCommandChain != null)
-					Debug.Log("new command chain from : " + currWanderer.name);
-			}
+			//if(currWanderer.TryGetCommandStack(ref currCommandChain))
+			//{
+			//	if (currCommandChain != null)
+			//		Debug.Log("new command chain from : " + currWanderer.name);
+			//}
 		}
 
 		if(Input.GetKeyDown(KeyCode.N))

@@ -101,15 +101,14 @@ public class AbilityFlowController : FlowController
 		if (cell == null)
 			return FlowState.YIELD;
 
-
 		if(validElements.Contains(e.element))
 		{
-			Queue<CharacterCommand> newCommands = ability.FetchCommandChain(cell, characterFlow);
-			characterFlow.ProvideCommandStack(newCommands);
+			Turn newTurn = ability.FetchCommandChain(cell, characterFlow);
+			//Queue<CharacterCommand> newCommands = ability.FetchCommandChain(cell, characterFlow);
+			characterFlow.ProvideInputTurn(newTurn);
+			ability.Unpeek();
 		}
 
-		ability.Unpeek();
-
-		return FlowState.DONE;
+		return FlowState.YIELD;
 	}
 }

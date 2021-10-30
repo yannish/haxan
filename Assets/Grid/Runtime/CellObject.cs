@@ -23,7 +23,7 @@ public class CellObject : MonoBehaviour
 	//... done in Start, because cells are Unbinding themselves on Awake.
     protected virtual void Start()
     {
-		//Debug.LogWarning("Start on cellobj");
+		Debug.LogWarning("Start on cellobj : " + this.gameObject.name, gameObject);
 
 		flowController = GetComponent<FlowController>();
 
@@ -57,6 +57,17 @@ public class CellObject : MonoBehaviour
 
 public static class CellObjectExtensions
 {
+	public static void SetVisualPos(this CellObject cellObj, Vector3 newPos, bool inLocalSpace = false)
+	{
+		if (cellObj.pivot == null)
+			return;
+
+		if (inLocalSpace)
+			cellObj.pivot.localPosition = newPos;
+		else
+			cellObj.pivot.position = newPos;
+	}
+
 	public static void SetDirectFacing(this CellObject cellObj, Vector3 dir)
 	{
 		if (cellObj.pivot == null)

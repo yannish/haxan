@@ -8,6 +8,9 @@ public class StepCommand : CharacterCommand
 	public Cell targetCell;
 	public Cell fromCell;
 
+	public Vector3 startPos;
+	public Vector3 endPos;
+
 	public StepCommand(
 		CharacterFlow characterFlow,
 		Cell fromCell,
@@ -18,6 +21,9 @@ public class StepCommand : CharacterCommand
 		this.targetCell = targetCell;
 		this.fromCell = fromCell;
 		this.duration = duration;
+
+		startPos = fromCell.occupantPivot.position;
+		endPos = targetCell.occupantPivot.position;
 	}
 
 	public override void Start()
@@ -29,19 +35,22 @@ public class StepCommand : CharacterCommand
 		//	Debug.Log("failed to grab 'from' cell for step command");
 
 		fromCell.Leave(characterFlow.character);
-		characterFlow.character.MoveAndBindTo(targetCell);
-		targetCell.Enter(characterFlow.character);
 	}
 
 	public override void End()
 	{
 		base.End();
+		characterFlow.character.SetVisualPos(Vector3.zero, true);
+		characterFlow.character.MoveAndBindTo(targetCell);
+		targetCell.Enter(characterFlow.character);
 	}
 
 	public override bool Tick()
 	{
 		currTime += Time.deltaTime;
 		currProgress = Mathf.Clamp01(currTime / duration);
+
+		characterFlow.character.SetVisualPos(Vector3.Lerp(startPos, endPos, currProgress));
 
 		return currProgress >= 1f;
 	}
