@@ -4,6 +4,10 @@ using UnityEngine;
 
 public interface ITurnProcessor
 {
+    void ProcessTurns();
+
+    void SetPhase(TeamPhase teamPhase);
+
     void RecordTurn(Turn turn);
 
     void Undo();

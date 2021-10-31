@@ -9,6 +9,8 @@ public class CellObjectDisplay : MonoBehaviour
     public Image iconSlot;
     public TextMeshProUGUI nameSlot;
 
+    public GameObject veil;
+
     void Start()
     {
         iconSlot = GetComponentInChildren<Image>();
@@ -20,9 +22,23 @@ public class CellObjectDisplay : MonoBehaviour
         CellObjFlowController.OnObjectSelected += DisplayCellObject;
         CellObjFlowController.OnObjectDeselected += ClearCellObject;
 
+        CellObjFlowController.OnObjectEnabled += BrightenCellDisplay;
+        CellObjFlowController.OnObjectDisabled += DarkenCellDisplay;
+
         UpdateDisplay();
-        //gameObject.SetActive(true);
+
     }
+
+    void BrightenCellDisplay(CellObject cellObject)
+	{
+        veil.SetActive(false);
+	}
+
+    void DarkenCellDisplay(CellObject cellObject)
+	{
+        veil.SetActive(true);
+    }
+
 
     void DisplayCellObject(CellObject cellObject)
     {
@@ -32,12 +48,14 @@ public class CellObjectDisplay : MonoBehaviour
         nameSlot.SetText(cellObject.name.ToUpper());
 
         displayCount++;
+
         UpdateDisplay();
     }
 
     void ClearCellObject(CellObject cellObject = null)
     {
         displayCount--;
+
         UpdateDisplay();
     }
 

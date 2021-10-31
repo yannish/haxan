@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d9f38ef006d9e242bd06bb7fb482e20, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  logDebug: 0
+  logDebug: 1
   subFlow: {fileID: 0}
   peekedFlow: {fileID: 0}
   lastSubFlow: {fileID: 0}

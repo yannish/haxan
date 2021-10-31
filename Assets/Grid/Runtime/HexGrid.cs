@@ -36,7 +36,7 @@ public static class GridActions
 
 	public static void AwakenOverGrid(this CellObject cellObject)
 	{
-		Debug.LogWarning("Awakening " + cellObject.name + " over grid...", cellObject);
+		//Debug.LogWarning("Awakening " + cellObject.name + " over grid...", cellObject);
 
 		Cell foundCell = cellObject.pivot.position.PollGrid();
 		if(foundCell != null)

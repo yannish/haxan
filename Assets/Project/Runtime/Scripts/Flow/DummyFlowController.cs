@@ -45,34 +45,9 @@ public class DummyFlowController : CellObjFlowController
 
 		fsm.SetTrigger(FSM.select);
 
-		//if (
-		//	ability != null
-		//	&& dummyCube.CurrentCell
-		//	)
-		//{
-		//	clickedLens = CellActions.EffectCells(
-		//		ability.GetReachableCells(dummyCube.CurrentCell),
-		//		ability as ICellCommandDispenser
-		//		);
-		//}
-
-		//dummyCube.CurrentCell?.baseFlow.animator.SetBool("select", true);
-
-		//if (dummyCube.CurrentCell)
-		//{
-		//	clickedLens = new ControlLens();
-
-		//	var effectedCells = dummyCube.CurrentCell.coords.GetCardinalLine(HexDirection.NE, 3);
-
-		//	Debug.Log("Effected cells: " + effectedCells.Count);
-
-		//	foreach (var cell in effectedCells)
-		//	{
-		//		CellPathCommand command = new CellPathCommand(cell);
-		//		command.Execute();
-		//		clickedLens.OnDiscard(() => command.Undo());
-		//	}
-		//}
+		pathControl = CellActions.EffectCells<CellPathCommand>(
+			dummyCube.currCell.GetCardinalRing(2, t => !t.IsBound())
+			);
 	}
 
 	public override void Exit()
@@ -105,17 +80,12 @@ public class DummyFlowController : CellObjFlowController
 			return false;
 
 		Cell hoveredCell = (e.element.flowController as CellFlowController).cell;
-		var pathedCells = Pathfinder.GetPath(dummyCube.CurrentCell, hoveredCell);
+		var pathedCells = Pathfinder.GetPath(dummyCube.currCell, hoveredCell);
 
 		if (pathedCells.IsNullOrEmpty())
 			return false;
 
-		pathControl = CellActions.NewEffectCells<CellPathCommand>(pathedCells);
-
-		if (dummyCube.CurrentCell)
-		{
-			
-		}
+		pathControl = CellActions.EffectCells<CellPathCommand>(pathedCells);
 
 		return false;
 	}

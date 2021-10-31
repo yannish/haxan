@@ -81,13 +81,11 @@ public class MainFlowController : FlowController
         {
             if(!enemy.isStunned)
             {
-                enemyTurns.Add(new Turn() { owner = enemy });
+                //enemyTurns.Add(new Turn() { owner = enemy });
             }
         }
     }
 
-
-   
 
 
 	void BankCommand()
@@ -96,7 +94,6 @@ public class MainFlowController : FlowController
 		commandHistory = null;
 	}
 
-    
 	void ProcessCommand()
 	{
         //if(currInputTurn.IsNullOrEmpty())
@@ -117,7 +114,6 @@ public class MainFlowController : FlowController
         //}
     }
 
-
     void RewindCommand()
 	{
 		if (!commandHistory.IsNullOrEmpty())
@@ -136,10 +132,23 @@ public class MainFlowController : FlowController
 
 	#endregion
 
+
+	public bool doBreak;
+
 	private bool wasProcessingLastFrame;
 	private void LateUpdate()
 	{
-		if (turnProcessor == null || turnProcessor.IsProcessing)
+		if (doBreak)
+		{
+			doBreak = false;
+		}
+
+		if (turnProcessor == null)
+			return;
+
+		turnProcessor.ProcessTurns();
+
+		if (turnProcessor.IsProcessing)
 		{
 			wasProcessingLastFrame = true;
 			return;
@@ -149,20 +158,28 @@ public class MainFlowController : FlowController
 		{
 			wasProcessingLastFrame = false;
 			TransitionTo(lastSubFlow, true);
-		}	
+		}
+
 
 		if(currInputTurn == null)
 		{
-			if(subFlow != null && subFlow is WandererFlowController)
+			if (subFlow != null && subFlow is WandererFlowController)
 			{
+				//Debug.LogWarning("... trying to get input from wanderer");
+
 				var currWandererFlow = subFlow as WandererFlowController;
 				if(currWandererFlow.TryGetInputTurn(ref currInputTurn))
 				{
-					string log = string.Format(
-						"new turn from {0}, length {1}",
-						currWandererFlow.name,
-						currInputTurn.commands.Count
-						);
+					if (logDebug)
+					{
+						string log = string.Format(
+							"new turn from {0}, length {1}",
+							currWandererFlow.name,
+							currInputTurn.commands.Count
+							);
+
+						Debog.logGameflow(log);
+					}
 
 					TransitionTo(null, true);
 
@@ -171,6 +188,7 @@ public class MainFlowController : FlowController
 				}
 			}
 		}
+
 	}
 
 	#region FLOW PROCESSING:
@@ -179,8 +197,6 @@ public class MainFlowController : FlowController
 	{
 		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
 			return false;
-
-		//Debog.logInput("handling hover in main:");
 
 		if (subFlow != null && subFlow.HandleHover(e))
 			return true;
@@ -192,9 +208,6 @@ public class MainFlowController : FlowController
         }
 
 		//... 
-		if (currInputTurn != null)
-			return false;
-
 		if (e.element == null || e.element.flowController == null)
 			return false;
 

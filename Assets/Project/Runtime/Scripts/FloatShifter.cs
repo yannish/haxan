@@ -61,7 +61,7 @@ public class FloatShifter : MonoBehaviour
 
 
 	Sequence seq;
-	private void TweenToTarget(float newTarget)
+	private void TweenToTarget(float newTarget, float inTime)
 	{
 		if(seq.IsActive())
 			seq.Kill();
@@ -77,7 +77,7 @@ public class FloatShifter : MonoBehaviour
 		seq.OnKill(() => seq = null);
 	}
 
-	private void SmoothDampToTarget(float newTarget)
+	private void SmoothDampToTarget(float newTarget, float inTime)
 	{
 		if (seq.IsActive())
 			seq.Kill();

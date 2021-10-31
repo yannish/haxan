@@ -15,6 +15,16 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 	[ReadOnly] public bool isProcessing;
 	public bool IsProcessing => isProcessing;
 
+	[ReadOnly] public TeamPhase phase;
+	public void SetPhase(TeamPhase teamPhase)
+	{
+		Globals.ReadyWanderers.Items.Clear();
+		foreach(var wanderer in Globals.ActiveWanderers.Items)
+		{
+			Globals.ReadyWanderers.Add(wanderer);
+		}
+	}
+
 
 	[ReadOnly] public Turn currTurn;
 	[ReadOnly] public CharacterCommand currCommand;
@@ -29,7 +39,7 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 		currCommand.Start();
 	}
 
-	void LateUpdate()
+	public void ProcessTurns()
 	{
 		if (currCommand == null)
 			return;
@@ -38,7 +48,7 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 		{
 			currCommand.End();
 			currCommand = null;
-			if(!currTurn.commands.IsNullOrEmpty())
+			if (!currTurn.commands.IsNullOrEmpty())
 			{
 				currCommand = currTurn.commands.Dequeue();
 				currCommand.Start();
@@ -57,14 +67,13 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 		
 	}
 
-	//public Queue<Turn> playerTurnQueue = new Queue<Turn>();
-
-	public List<Turn> playerTurns = new List<Turn>();
-	public List<Turn> enemyTurns = new List<Turn>();
-
 	public void ProcessEnemyTurns()
 	{
 
 	}
+
+	//public Queue<Turn> playerTurnQueue = new Queue<Turn>();
+	public List<Turn> playerTurns = new List<Turn>();
+	public List<Turn> enemyTurns = new List<Turn>();
 
 }

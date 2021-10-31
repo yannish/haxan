@@ -9,6 +9,10 @@ public static class HexMetrics
 
 	public static int CubeDistance(this Cell from, Cell to)
 	{
-		return 0;
+		return Mathf.Max(
+			Mathf.Abs(from.coords.X - to.coords.X),
+			Mathf.Abs(from.coords.Y - to.coords.Y),
+			Mathf.Abs(from.coords.Z - to.coords.Z)
+			);
 	}
 }

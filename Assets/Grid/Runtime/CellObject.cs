@@ -23,7 +23,7 @@ public class CellObject : MonoBehaviour
 	//... done in Start, because cells are Unbinding themselves on Awake.
     protected virtual void Start()
     {
-		Debug.LogWarning("Start on cellobj : " + this.gameObject.name, gameObject);
+		//Debug.LogWarning("Start on cellobj : " + this.gameObject.name, gameObject);
 
 		flowController = GetComponent<FlowController>();
 
@@ -31,7 +31,7 @@ public class CellObject : MonoBehaviour
             this.AwakenOverGrid();
     }
 
-	public Cell CurrentCell
+	public Cell currCell
 	{
 		get
 		{

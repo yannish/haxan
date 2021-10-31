@@ -70,9 +70,9 @@ public static class Globals
 		//	deadEnemiesPath, 
 		//	typeof(CharacterRuntimeSet)) as CharacterRuntimeSet;
 
-		//ReadyWanderers = Resources.Load(
-		//	readyWanderersPath,
-		//	typeof(CharacterRuntimeSet)) as CharacterRuntimeSet;
+		ReadyWanderers = Resources.Load(
+			readyWanderersPath,
+			typeof(CharacterRuntimeSet)) as CharacterRuntimeSet;
 
 		//ReadyEnemies = Resources.Load(
 		//	readyEnemiesPath,

@@ -15,18 +15,22 @@ public class CellObjFlowController : FlowController
 	public static event Action<CellObject> OnObjectSelected = delegate { };
 	public static event Action<CellObject> OnObjectDeselected = delegate { };
 
+	public static event Action<CellObject> OnObjectEnabled = delegate { };
+	public static event Action<CellObject> OnObjectDisabled = delegate { };
 
 	protected override void Awake() => baseCellObject = GetComponent<CellObject>();
 
+
+
 	public override void Enter()
 	{
-		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.select);
+		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.select);
 		OnObjectSelected(baseCellObject);
 	}
 
 	public override void Exit()
 	{
-		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.deselect);
+		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.deselect);
 		OnObjectDeselected(baseCellObject);
 
 		if (subFlow != null)
@@ -38,20 +42,22 @@ public class CellObjFlowController : FlowController
 
 	public override void HoverPeek()
 	{
-		Debog.logGameflow("Hover peeking : " + gameObject.name);
+		if(logDebug)
+			Debog.logGameflow("Hover peeking : " + gameObject.name);
 
-		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.hover);
-		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.clickable);
+		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.hover);
+		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.clickable);
 		
 		OnObjectHovered(baseCellObject);
 	}
 
 	public override void HoverUnpeek()
 	{
-		Debog.logGameflow("Hover unpeeking : " + gameObject.name);
+		if (logDebug)
+			Debog.logGameflow("Hover unpeeking : " + gameObject.name);
 
-		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.unhover);
-		baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger(FSM.unclickable);
+		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unhover);
+		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unclickable);
 		
 		OnObjetUnhovered(baseCellObject);
 	}

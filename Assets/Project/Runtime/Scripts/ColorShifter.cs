@@ -26,7 +26,7 @@ public class ColorShifter : MonoBehaviour
 	}
 
 	Sequence seq;
-	private void TweenToTarget(Color obj)
+	private void TweenToTarget(Color obj, float inTime)
 	{
 		if (seq.IsActive())
 			seq.Kill();

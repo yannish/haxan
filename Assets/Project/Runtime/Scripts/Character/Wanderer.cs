@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[SelectionBase]
 [RequireComponent(typeof(WandererFlowController))]
 public class Wanderer : Character
 {

@@ -8,6 +8,14 @@ public enum AbilityType
 	TARGET
 }
 
+public enum StepPhase
+{
+	UTILITY,
+	MOVE,
+	ATTACK
+}
+
+
 public abstract class Ability : MonoBehaviour
 {
 	public StepPhase phase;
@@ -16,7 +24,10 @@ public abstract class Ability : MonoBehaviour
 
 	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlow flow) => null;
 
-	public virtual Turn FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
+	public virtual Turn FetchCommandChain(Cell targetCell, CharacterFlow flow) 
+	{
+		return Turn.CreateInstance(flow.character, this);
+	}
 	//public virtual Queue<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
 
 	public virtual void Peek(Cell targetCell, CharacterFlow flow) { }

@@ -68,6 +68,7 @@ public class MainFlowControllerInspector : Editor
 		EditorGUILayout.Space();
 
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("logDebug"));
+		EditorGUILayout.PropertyField(serializedObject.FindProperty("doBreak"));
 		EditorGUILayout.Space();
 
 

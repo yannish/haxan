@@ -15,6 +15,41 @@ public interface ICellCommandDispenser
 
 public static class CellActions
 {
+	public static bool HasPathTo(
+		this Cell fromCell,
+		Cell toCell,
+		int maxLength = -1
+		)
+	{
+		var foundPath = Pathfinder.GetPath(fromCell, toCell);
+		if (foundPath.IsNullOrEmpty())
+			return false;
+
+		if (maxLength > 0)
+			return foundPath.Count <= maxLength;
+
+		return true;
+	}
+
+	public static bool HasPathTo(
+		this Cell fromCell, 
+		Cell toCell, 
+		out List<Cell> foundPath,
+		int maxLength = -1
+		)
+	{
+		foundPath = Pathfinder.GetPath(fromCell, toCell);
+		if (foundPath.IsNullOrEmpty())
+			return false;
+
+		if (maxLength > 0)
+			return foundPath.Count <= maxLength;
+
+		return true;
+	}
+
+	//public static bool HasPathTo
+
 	public static void SetNeighbour(this Cell cell, Cell newNeighbour, HexDirection direction)
 	{
 		cell.neighbours[(int)direction] = newNeighbour;
@@ -26,7 +61,7 @@ public static class CellActions
 		return cell.neighbours[(int)direction];
 	}
 
-	public static Action NewEffectCells<T>(List<Cell> cells) where T : CellCommand, new()
+	public static Action EffectCells<T>(List<Cell> cells) where T : CellCommand, new()
 	{
 		Action undo = () => { };
 
@@ -41,21 +76,21 @@ public static class CellActions
 		return undo;
 	}
 
-	public static ControlLens EffectCells(
-		List<Cell> cells,
-		ICellCommandDispenser commandDispenser
-		)
-	{
-		ControlLens lens = ScriptableObject.CreateInstance<ControlLens>();
-		//ControlLens lens = new ControlLens();
+	//public static ControlLens EffectCells(
+	//	List<Cell> cells,
+	//	ICellCommandDispenser commandDispenser
+	//	)
+	//{
+	//	ControlLens lens = ScriptableObject.CreateInstance<ControlLens>();
+	//	//ControlLens lens = new ControlLens();
 
-		foreach (var cell in cells)
-		{
-			var effectCommend = commandDispenser.GetCellCommand(cell);
-			effectCommend.Execute();
-			lens.OnPostDiscard(() => effectCommend.Undo());
-		}
+	//	foreach (var cell in cells)
+	//	{
+	//		var effectCommend = commandDispenser.GetCellCommand(cell);
+	//		effectCommend.Execute();
+	//		lens.OnPostDiscard(() => effectCommend.Undo());
+	//	}
 
-		return lens;
-	}
+	//	return lens;
+	//}
 }

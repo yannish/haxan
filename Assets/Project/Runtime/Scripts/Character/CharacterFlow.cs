@@ -12,14 +12,20 @@ public abstract class CharacterFlow : CellObjFlowController
 	Turn inputTurn;
 	public void ProvideInputTurn(Turn newTurn)
 	{
+		//Debug.LogWarning("Providing Input Turn");
+
 		inputTurn = newTurn;
 	}
 
-	public virtual bool TryGetInputTurn(ref Turn commandStack)
+	public virtual bool TryGetInputTurn(ref Turn newInputTurn)
 	{
+		//Debug.LogWarning("trying to get input turn");
+
 		if (inputTurn != null)
 		{
-			commandStack = inputTurn;
+			Debug.LogWarning("got input turn");
+
+			newInputTurn = inputTurn;
 			inputTurn = null;
 			return true;
 		}
@@ -84,7 +90,7 @@ public abstract class CharacterFlow : CellObjFlowController
 		{
 			//Debug.LogWarning("... had a movement subflow");
 			subFlow.HandleHover(e);
-			return true;
+			return false;
 		}
 
 		return base.HandleHover(e);

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[SelectionBase]
 public abstract class Character : CellObject
 {
     public static event Action<Character> OnHovered = delegate { };

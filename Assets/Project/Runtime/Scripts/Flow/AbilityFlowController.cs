@@ -32,7 +32,7 @@ public class AbilityFlowController : FlowController
 	{
 		base.Enter();
 
-		validMoves = ability.GetValidMoves(characterFlow.character.CurrentCell, characterFlow);
+		validMoves = ability.GetValidMoves(characterFlow.character.currCell, characterFlow);
 		if (validMoves.IsNullOrEmpty())
 			return;
 		validElements = validMoves.Select(t => t.GetComponent<UIElement>()).ToList();
@@ -40,11 +40,11 @@ public class AbilityFlowController : FlowController
 		switch (ability.type)
 		{
 			case AbilityType.MOVEMENT:
-				previewValidMovesControl = CellActions.NewEffectCells<CellHintPathCommand>(validMoves);
+				previewValidMovesControl = CellActions.EffectCells<CellHintPathCommand>(validMoves);
 				break;
 
 			case AbilityType.TARGET:
-				previewValidMovesControl = CellActions.NewEffectCells<CellClickableCommand>(validMoves);
+				previewValidMovesControl = CellActions.EffectCells<CellClickableCommand>(validMoves);
 				break;
 		}
 	}
@@ -96,6 +96,9 @@ public class AbilityFlowController : FlowController
 		//	return FlowState.YIELD;
 
 		//CharacterFlow characterFlow = parentController as CharacterFlow;
+
+		if (validElements.IsNullOrEmpty())
+			return FlowState.YIELD;
 
 		Cell cell = e.element.GetComponent<Cell>();
 		if (cell == null)

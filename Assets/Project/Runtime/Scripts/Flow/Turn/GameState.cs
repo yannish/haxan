@@ -31,4 +31,9 @@ public static class GameState
             return CharacterMasterList.sets[typeof(Wanderer)].Items.Count == 0;
         }
     }
+
+    public static bool Ready(this Wanderer wanderer)
+	{
+        return Globals.ReadyWanderers.Items.Contains(wanderer);
+	}
 }

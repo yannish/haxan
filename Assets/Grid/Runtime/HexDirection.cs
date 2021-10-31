@@ -315,7 +315,14 @@ public static class HexCoordinateExtensions
 		for (HexDirection dir = HexDirection.NE; dir <= HexDirection.NW; dir++)
 		{
 			var startCoord = cell.coords.Step(dir, radius);
-			cells.AddRange(GetCardinalLine(startCoord, dir.Previous().Previous(), radius - 1));
+			cells.AddRange(
+				GetCardinalLine(
+					startCoord, 
+					dir.Previous().Previous(), 
+					radius - 1,
+					check : check
+					)
+				);
 		}
 
 		return cells;

@@ -9,6 +9,6 @@ public class DummyCube : CellObject
 	protected override void Start()
 	{
 		base.Start();
-		grabbedCells = CurrentCell.GetCardinalRing(1);
+		grabbedCells = currCell.GetCardinalRing(1);
 	}
 }
