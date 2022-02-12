@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
@@ -7,7 +8,7 @@ public enum TeamPhase
 {
 	PLAYER,
 	ENEMY,
-	RESOLVE
+	VICTORY
 }
 
 public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
@@ -16,24 +17,52 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 	public bool IsProcessing => isProcessing;
 
 	[ReadOnly] public TeamPhase phase;
-	public void SetPhase(TeamPhase teamPhase)
+	[ReadOnly, SerializeField] Enemy currEnemy;
+	[ReadOnly, SerializeField] List<Enemy> enemyTurnOrder = new List<Enemy>();
+	public void SetPhase(TeamPhase newPhase)
 	{
-		Globals.ReadyWanderers.Items.Clear();
-		foreach(var wanderer in Globals.ActiveWanderers.Items)
+		phase = newPhase;
+		switch (phase)
 		{
-			Globals.ReadyWanderers.Add(wanderer);
+			case TeamPhase.ENEMY:
+				Globals.ReadyEnemies.Items.Clear();
+				foreach (var enemy in Globals.ActiveEnemies.Items)
+				{
+					Globals.ReadyEnemies.Add(enemy);
+				}
+
+				enemyTurnOrder = Globals.ReadyEnemies.Items
+					.Cast<Enemy>()
+					.OrderBy(t => t.turnPriority)
+					.ToList();
+
+				currEnemy = enemyTurnOrder.FirstOrDefault();
+
+				break;
+
+			case TeamPhase.PLAYER:
+				Globals.ReadyWanderers.Items.Clear();
+				foreach (var wanderer in Globals.ActiveWanderers.Items)
+				{
+					Globals.ReadyWanderers.Add(wanderer);
+				}
+				break;
 		}
+
 	}
 
 
 	[ReadOnly] public Turn currTurn;
 	[ReadOnly] public CharacterCommand currCommand;
 
+	public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
+
+
+
 	public void RecordTurn(Turn turn)
 	{
 		isProcessing = true;
 
-		//playerTurnQueue.Enqueue(turn);
 		currTurn = turn;
 		currCommand = turn.commands.Dequeue();
 		currCommand.Start();
@@ -41,6 +70,11 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 
 	public void ProcessTurns()
 	{
+		if(phase == TeamPhase.ENEMY)
+		{
+			//if(currEnemy != null)
+		}
+
 		if (currCommand == null)
 			return;
 
@@ -60,7 +94,6 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 		}
 	}
 
-	public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
 
 	public void Undo()
 	{
@@ -69,7 +102,7 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 
 	public void ProcessEnemyTurns()
 	{
-
+		
 	}
 
 	//public Queue<Turn> playerTurnQueue = new Queue<Turn>();

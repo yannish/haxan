@@ -11,6 +11,7 @@ public class CellObject : MonoBehaviour
 	public Transform pivot;
 
 	[Header("State")]
+	[ReadOnly]
 	public HexDirection facing;
 
 	[Header("Flow")]

@@ -13,15 +13,16 @@ public enum NodeStatus
 public abstract class Node : MonoBehaviour
 {
     [ReadOnly] public NodeStatus status;
+
     [ReadOnly] public bool started = false;
 
     [ReadOnly] public Blackboard blackboard;
+    
     public void ProvideBlackboard(Blackboard blackboard) { this.blackboard = blackboard; }
-
-    public abstract NodeStatus Tick();
+    
     public abstract Node Initialize(Blackboard blackboard);
 
-    public virtual bool CheckConditions() { return status == NodeStatus.RUNNING; }
+    public abstract NodeStatus Tick();
 
     public virtual void Enter()
     {
@@ -44,4 +45,6 @@ public abstract class Node : MonoBehaviour
         status = NodeStatus.FAILURE;
         Exit();
     }
+
+    public virtual bool CheckConditions() { return status == NodeStatus.RUNNING; }
 }

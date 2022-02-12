@@ -32,6 +32,12 @@ public class HexGridInspector : Editor
 			Debug.LogWarning("backward: ");
 			foreach (var cellObj in grid.cellObjectBindings.backwardLookup.Keys)
 			{
+				if(cellObj == null)
+				{
+					Debug.LogAssertion("... missing cellObj in bindings");
+					continue;
+				}
+
 				Debug.LogWarning("... " + cellObj.name);
 			}
 		}

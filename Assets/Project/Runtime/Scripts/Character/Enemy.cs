@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[SelectionBase]
 public class Enemy : Character
 {
-    public Blackboard blackboard;
+    public int turnPriority;
 
-    private BehaviourTree _tree;
+    [ReadOnly] public Blackboard blackboard;
+
+    [ReadOnly] public BehaviourTree _tree;
     public BehaviourTree tree
     {
         get

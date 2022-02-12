@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BOG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,19 +24,13 @@ public class DummyFlowController : CellObjFlowController
 
 	public override void HoverPeek()
 	{
-		Debug.Log("Hover peeking : " + gameObject.name);
-
 		fsm?.SetTrigger(FSM.hover);
-
 		base.HoverPeek();
 	}
 
 	public override void HoverUnpeek()
 	{
-		Debug.Log("Hover unpeeking : " + gameObject.name);
-
 		fsm?.SetTrigger(FSM.unhover);
-
 		base.HoverUnpeek();
 	}
 

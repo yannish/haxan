@@ -21,7 +21,6 @@ public class CellObjFlowController : FlowController
 	protected override void Awake() => baseCellObject = GetComponent<CellObject>();
 
 
-
 	public override void Enter()
 	{
 		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.select);
