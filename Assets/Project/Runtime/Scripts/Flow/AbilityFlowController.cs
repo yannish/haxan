@@ -28,6 +28,16 @@ public class AbilityFlowController : FlowController
 		this.characterFlow = characterFlow;
 	}
 
+
+
+	protected override void Awake()
+	{
+		base.Awake();
+		validMoves = new List<Cell>();
+		validElements = new List<UIElement>();
+	}
+
+
 	public override void Enter()
 	{
 		base.Enter();
@@ -61,15 +71,21 @@ public class AbilityFlowController : FlowController
 
 		ability.Unpeek();
 
-		validMoves = null;
-		validElements = null;
+		if(!validMoves.IsNullOrEmpty())
+			validMoves.Clear();
+
+		if(!validElements.IsNullOrEmpty())
+			validElements.Clear();
 	}
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
 		ability.Unpeek();
 
-		if(validElements.Contains(e.element))
+		if(
+			//!validElements.IsNullOrEmpty() && 
+			validElements.Contains(e.element)
+			)
 		{
 			var targetCell = e.element.GetComponent<Cell>();
 			if(targetCell != null)

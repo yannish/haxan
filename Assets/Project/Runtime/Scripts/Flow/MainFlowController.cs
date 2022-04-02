@@ -14,121 +14,23 @@ using UnityEngine;
 
 public class MainFlowController : FlowController
 {
-	protected override void Awake()
+	public void Start()
 	{
-		SetPhase(TeamPhase.PLAYER);
-		base.Awake();
+		turnProcessor = GetComponentInChildren<ITurnProcessor>();
+		turnProcessor.SetPhase(TeamPhase.PLAYER);
 
-		dummyTurn = ScriptableObject.CreateInstance<DummyTurn>();
+		//dummyTurn = ScriptableObject.CreateInstance<DummyTurn>();
+		//SetPhase(TeamPhase.PLAYER);
 	}
 
 	#region TURN PROCESSING:
 
 	public ITurnProcessor turnProcessor;
-	//public List<GameObject> turnProcessors = new List<GameObject>();
-
-
-	[ReadOnly]
-	public TeamPhase phase = TeamPhase.PLAYER;
-    public void SetPhase(TeamPhase newPhase)
-    {
-        switch(newPhase)
-        {
-            case TeamPhase.PLAYER:
-                ClearPlayerTurns();
-                break;
-
-            case TeamPhase.ENEMY:
-                PopulateEnemyTurns();
-                break;
-        }
-
-        phase = newPhase;
-    }
-
-
-	//[ReadOnly] 
+	
     public Character currCharacter;
 
 	//... the turn waiting to be processed:
 	public Turn currInputTurn;
-	public DummyTurn dummyTurn;
-	//public Queue<CharacterCommand> currCommandStack;
-
-	//... the command currently being ticked along:
-	public CharacterCommand activeCommand;
-	public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
-
-
-    public List<Turn> playerTurns;
-    void ClearPlayerTurns()
-    {
-        playerTurns.Clear();
-        //foreach(Wanderer wanderer in Globals.ActiveWanderers.Items)
-        //{
-        //    if(!wanderer.isStunned)
-        //    {
-        //        playerTurns.Add(new Turn() { owner = wanderer });
-        //    }
-        //}
-    }
-
-    public List<Turn> enemyTurns;
-    void PopulateEnemyTurns()
-    {
-        enemyTurns.Clear();
-        foreach(Enemy enemy in Globals.ActiveEnemies.Items)
-        {
-            if(!enemy.isStunned)
-            {
-                //enemyTurns.Add(new Turn() { owner = enemy });
-            }
-        }
-    }
-
-
-
-	void BankCommand()
-	{
-		currInputTurn = null;
-		commandHistory = null;
-	}
-
-	void ProcessCommand()
-	{
-        //if(currInputTurn.IsNullOrEmpty())
-        //{
-        //    Debug.LogWarning("No more commands to process!");
-        //    return;
-        //}
-
-        //activeCommand = currInputTurn.Dequeue();
-		//activeCommand.Execute();
-		//commandHistory.Push(activeCommand);
-
-        //Events.instance.Raise(new ForwardTimeStep(activeCommand.character));
-
-        //...shouldn't need to validate here, should be building a legit chain to begin with
-        //if (currCommandChain.Peek().IsValid())
-        //{
-        //}
-    }
-
-    void RewindCommand()
-	{
-		if (!commandHistory.IsNullOrEmpty())
-		{
-			//var poppedCommand = commandHistory.Pop();
-			//poppedCommand.Undo();
-			//currCommandStack.Push(poppedCommand);
-
-			//Events.instance.Raise(new BackwardTimeStep(poppedCommand.character));
-		}
-		else
-		{
-			Debug.LogWarning("No command history to undo!");
-		}
-	}
 
 	#endregion
 
@@ -139,17 +41,17 @@ public class MainFlowController : FlowController
 	private void LateUpdate()
 	{
 		if (doBreak)
-		{
 			doBreak = false;
-		}
 
-		if (turnProcessor == null)
+		if ((turnProcessor as Component) == null)
 			return;
 
 		turnProcessor.ProcessTurns();
-
 		if (turnProcessor.IsProcessing)
 		{
+			if (!wasProcessingLastFrame && subFlow != null)
+				TransitionTo(null);
+
 			wasProcessingLastFrame = true;
 			return;
 		}
@@ -188,8 +90,8 @@ public class MainFlowController : FlowController
 				}
 			}
 		}
-
 	}
+
 
 	#region FLOW PROCESSING:
 
@@ -234,10 +136,13 @@ public class MainFlowController : FlowController
 		//	return FlowState.RUNNING;
 		//}
 
+
 		if (e.element is TurnButton)
         {
 			if (logDebug)
 				Debog.logInput("TURN BUTTON PRESSED");
+
+			turnProcessor.SetPhase(TeamPhase.ENEMY);
 
             return FlowState.RUNNING;
         }

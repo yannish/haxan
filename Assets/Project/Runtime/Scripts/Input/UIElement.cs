@@ -20,21 +20,39 @@ public class UIElement : MonoBehaviour,
 {
 	public bool logDebug;
 
-	void Awake() =>	flowableComponent = GetComponent<IFlowable>();
-
+	//public virtual void Awake() =>	flowableComponent = GetComponent<IFlowable>();
 
 	//... this'll be Cell on the board, yielding the bound -> cellObj -> flowController?
-	public IFlowable flowableComponent { get; protected set; }
+	//public IFlowable flowableComponent { get; protected set; }
 
+	private FlowController _flowController;
 	public virtual FlowController flowController
 	{
 		get
 		{
-			if (flowableComponent != null)
-				return flowableComponent.Flow;
+			if(_flowController == null)
+			{
+				IFlowable flowable = GetComponent<IFlowable>();
+				if(flowable != null)
+				{
+					Debog.logInput("caching a flowable on " + this.name + ", it's " + flowable.Flow.name);
+					_flowController = flowable.Flow;
+					return _flowController;
+				}
 
-			Debog.logInput("return null on element's flowcontroller");
-			return null;
+				Cell cell = GetComponent<Cell>();
+				if (cell != null)
+					Debog.logInput("foundd a cell tho");
+
+				if(cell is IFlowable)
+					Debog.logInput("... which is flowable");
+
+				//Debog.logInput("... foudn no iflowable on " + this.name);
+			}
+
+			//Debog.logInput("no flowable component on " + this.name + "'s flowcontroller");
+
+			return _flowController;
 		}
 	}
 
@@ -42,9 +60,10 @@ public class UIElement : MonoBehaviour,
 	public virtual void OnPointerEnter(PointerEventData eventData)
 	{
 		if(logDebug)
-			Debug.Log("poined entered: " + gameObject.name);
+			Debug.Log("pointer entered: " + gameObject.name);
 
-		Events.instance.Raise(new ElementHoveredEvent(this));
+		ControlFlowManager.OnElementHovered.Invoke(new ElementHoveredEvent(this));
+		//Events.instance.Raise(new ElementHoveredEvent(this));
 	}
 
 	public virtual void OnPointerExit(PointerEventData eventData)
@@ -52,7 +71,8 @@ public class UIElement : MonoBehaviour,
 		if (logDebug)
 			Debug.Log("pointer exited: " + gameObject.name);
 
-		Events.instance.Raise(new ElementHoveredEvent(null));
+		ControlFlowManager.OnElementHovered.Invoke(new ElementHoveredEvent(null));
+		//Events.instance.Raise(new ElementHoveredEvent(null));
 	}
 
 	public virtual void OnPointerDown(PointerEventData eventData)
@@ -62,13 +82,15 @@ public class UIElement : MonoBehaviour,
 			case PointerEventData.InputButton.Left:
 				if (logDebug)
 					Debug.Log("left clicked: " + gameObject.name);
-				Events.instance.Raise(new ElementClickedEvent(this));
+				//Events.instance.Raise(new ElementClickedEvent(this));
+				ControlFlowManager.OnElementClicked.Invoke(new ElementClickedEvent(this));
 				break;
 
 			case PointerEventData.InputButton.Right:
 				if (logDebug)
 					Debug.Log("right clicked: " + gameObject.name);
-				Events.instance.Raise(new ElementBackClickedEvent(this));
+				//Events.instance.Raise(new ElementBackClickedEvent(this));
+				ControlFlowManager.OnElementBackClicked.Invoke(new ElementBackClickedEvent(this));
 				break;
 		}
 
@@ -84,5 +106,9 @@ public class UIElement : MonoBehaviour,
 	
 	public virtual void OnRight() { }
 
-	public virtual void OnPointerUp(PointerEventData eventData) { }
+	public virtual void OnPointerUp(PointerEventData eventData) 
+	{
+		if (logDebug)
+			Debug.Log("click done : " + gameObject.name);
+	}
 }

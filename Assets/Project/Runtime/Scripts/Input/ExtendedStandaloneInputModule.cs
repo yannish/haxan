@@ -36,7 +36,8 @@ public class ExtendedStandaloneInputModule : StandaloneInputModule
 			)
 		{
 			Debog.logInput("emptyClick event");
-			Events.instance.Raise(new EmptyClickEvent());
+			//Events.instance.Raise(new EmptyClickEvent());
+			ControlFlowManager.OnEmptyClick.Invoke(new EmptyClickEvent());
 		}
 	}
 }

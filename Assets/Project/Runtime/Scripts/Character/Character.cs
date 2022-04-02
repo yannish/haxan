@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BOG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,29 @@ public abstract class Character : CellObject
 	public Ability movementAbility;
 	public List<Ability> abilities;
 
+    
     //... gamestate:
     public bool isStunned;
-    public int maxMove;
+
+    public int maxActions;
+    [ReadOnly] public int currActions = -1;
+
+    public int maxMoves;
+    [ReadOnly] public int currMove = -1;
+
+
+    public virtual void Ready()
+	{
+        //Debog.logGameflow("READYING CHARACTER " + this.gameObject.name, gameObject);
+
+        if (isStunned)
+        {
+            currActions = 0;
+            currMove = 0;
+            return;
+        }
+
+        currActions = maxActions;
+        currMove = maxMoves;
+	}
 }

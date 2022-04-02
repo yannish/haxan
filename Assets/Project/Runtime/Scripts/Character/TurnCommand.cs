@@ -25,16 +25,20 @@ public class TurnCommand : CharacterCommand
 		this.endFacing = toDir.ToVector();
 	}
 
-	public override void End()
+	public override void Execute()
 	{
 		characterFlow.character.SetFacing(toDir);
+	}
+
+	public override void Undo()
+	{
+		characterFlow.character.SetFacing(fromDir);
 	}
 
 	public override bool Tick()
 	{
 		//currFacing = ;
 		characterFlow.character.SetDirectFacing(Vector3.Slerp(currFacing, endFacing, currProgress));
-
 		return base.Tick();
 	}
 }

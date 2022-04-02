@@ -21,6 +21,10 @@ public class Wanderer : Character
 	protected override void Start()
 	{
 		base.Start();
+	}
+
+	private void Awake()
+	{
 		movementAbility = Instantiate<Ability>(movementAbility, this.transform);
 	}
 }

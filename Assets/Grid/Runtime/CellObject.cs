@@ -58,6 +58,13 @@ public class CellObject : MonoBehaviour
 
 public static class CellObjectExtensions
 {
+	/// <summary>
+	/// Move character.
+	/// </summary>
+	/// <param name="cellObj"></param>
+	/// <param name="newPos"></param>
+	/// <param name="inLocalSpace"></param>
+
 	public static void SetVisualPos(this CellObject cellObj, Vector3 newPos, bool inLocalSpace = false)
 	{
 		if (cellObj.pivot == null)

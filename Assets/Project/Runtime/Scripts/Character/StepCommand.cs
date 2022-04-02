@@ -26,23 +26,35 @@ public class StepCommand : CharacterCommand
 		endPos = targetCell.occupantPivot.position;
 	}
 
-	public override void Start()
+	public override void OnBeginTick()
 	{
+		base.OnBeginTick();
+
 		string log = string.Format("executing from : {0} to : {1}", fromCell.name, targetCell.name);
 		Debog.logGameflow(log);
-
-		//if (!character.TryGetBoundCell(out fromCell))
-		//	Debug.Log("failed to grab 'from' cell for step command");
-
 		fromCell.Leave(characterFlow.character);
 	}
 
-	public override void End()
+	public override void OnCompleteTick()
 	{
-		base.End();
+		base.OnCompleteTick();
+		targetCell.Enter(characterFlow.character);
+	}
+
+	public override void Execute()
+	{
+		base.Execute();
+		characterFlow.character.currMove--;
 		characterFlow.character.SetVisualPos(Vector3.zero, true);
 		characterFlow.character.MoveAndBindTo(targetCell);
-		targetCell.Enter(characterFlow.character);
+	}
+
+	public override void Undo()
+	{
+		base.Undo();
+		characterFlow.character.currMove++;
+		characterFlow.character.MoveAndBindTo(fromCell);
+		characterFlow.character.SetVisualPos(Vector3.zero, true);
 	}
 
 	public override bool Tick()

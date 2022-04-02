@@ -9,10 +9,13 @@ public class SketchPad : MonoBehaviour
 
     TweenCallback currCallback;
 
+    public Blackboard blackBoard;
+
     // Start is called before the first frame update
     protected virtual void Start()
     {
         Debug.LogWarning("Startin sketchpad");
+        //blackBoard.data.a
     }
 
 

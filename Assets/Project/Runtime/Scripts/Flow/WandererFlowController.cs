@@ -8,14 +8,17 @@ public class WandererFlowController : CharacterFlow
 {
 	[ReadOnly] public Wanderer wanderer;
 
-
-
 	protected override void Awake()
 	{
 		base.Awake();
 		wanderer = GetComponent<Wanderer>();
+	}
+
+	private void Start()
+	{
 		wanderer.movementAbility.flow.ProvideCharacter(this);
 	}
+
 
 	//public override void Enter()
 	//{

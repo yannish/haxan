@@ -72,11 +72,13 @@ public static class Globals
 
 		ReadyWanderers = Resources.Load(
 			readyWanderersPath,
-			typeof(CharacterRuntimeSet)) as CharacterRuntimeSet;
+			typeof(CharacterRuntimeSet)
+			) as CharacterRuntimeSet;
 
-		//ReadyEnemies = Resources.Load(
-		//	readyEnemiesPath,
-		//	typeof(CharacterRuntimeSet)) as CharacterRuntimeSet;
+		ReadyEnemies = Resources.Load(
+			readyEnemiesPath,
+			typeof(CharacterRuntimeSet)
+			) as CharacterRuntimeSet;
 	}
 
 	private static Camera camera;
@@ -110,6 +112,17 @@ public static class Globals
 			if (grid == null)
 				grid = GameObject.FindObjectOfType<HexGrid>();
 			return grid;
+		}
+	}
+
+	private static MainFlowController mainFlow;
+	public static MainFlowController MainFlow
+	{
+		get
+		{
+			if (mainFlow == null)
+				mainFlow = GameObject.FindObjectOfType<MainFlowController>();
+			return mainFlow;
 		}
 	}
 

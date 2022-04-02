@@ -5,11 +5,12 @@ using UnityEngine;
 
 public abstract class CharacterFlow : CellObjFlowController
 {
+	[Header("CHARACTER")]
     [ReadOnly] public Character character;
 	[ReadOnly] public QuickStateMachine fsm;
 
 
-	Turn inputTurn;
+	public Turn inputTurn;
 	public void ProvideInputTurn(Turn newTurn)
 	{
 		//Debug.LogWarning("Providing Input Turn");
@@ -40,7 +41,6 @@ public abstract class CharacterFlow : CellObjFlowController
         character = baseCellObject as Character;
 		fsm = GetComponentInChildren<QuickStateMachine>();
     }
-
 
 
     public override void HoverPeek()

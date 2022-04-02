@@ -26,24 +26,11 @@ public class Health : MonoBehaviour
 	public float currentPercent { get { return (float)current / max; } }
 
 
+	void Decrement() => ChangeBy(-1);
 
-	//[Button]
-	void Decrement()
-	{
-		ChangeBy(-1);
-	}
+	void Increment() => ChangeBy(1);
 
-	//[Button]
-	void Increment()
-	{
-		ChangeBy(1);
-	}
-
-	//[Button]
-	void DoKill()
-	{
-		OnDeath();
-	}
+	void DoKill() => OnDeath();
 
 
 

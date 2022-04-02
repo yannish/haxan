@@ -15,8 +15,8 @@ public class GroundMoveAbility : Ability
     public override List<Cell> GetValidMoves(Cell cell, CharacterFlow flow)
 	{
 		return flow.character.currCell.GetCellsInRadius(
-			flow.character.maxMove,
-			t => !t.IsBound() && flow.character.currCell.HasPathTo(t, flow.character.maxMove)
+			flow.character.currMove,
+			t => !t.IsBound() && flow.character.currCell.HasPathTo(t, flow.character.maxMoves)
 			);
 
 		//return flow.character.currCell.GetCellsInRadius(

@@ -15,8 +15,35 @@ public static class FSM
 	public const string unpath = "unpath";
 	public const string hintPath = "hintPath";
 	public const string unhintPath = "unhintPath";
-
 }
+
+public enum FSMtrigger
+{
+	hover,
+	unhover,
+	select,
+	deselect,
+	clickable,
+	unclickable,
+	path,
+	unpath,
+	hintPath,
+	unhintPath
+}
+
+//public static Dictionary<FSMtrigger, string> FSMTriggerEnumToName = new Dictionary<FSMtrigger, string>()
+//{
+//	//{FSMtrigger.hover },
+//}
+
+public static class FSMExtension
+{
+	//public static string TriggerEnumToName(this FSMtrigger triggerEnum)
+	//{
+
+	//}
+}
+
 
 public enum FlowState
 {
@@ -29,6 +56,7 @@ public abstract class FlowController : MonoBehaviour
 {
 	public bool logDebug;
 
+	[Header("FLOW")]
 	[ReadOnly] public FlowController subFlow;// { get; set; }
 	[ReadOnly] public FlowController peekedFlow;
 	[ReadOnly] public FlowController lastSubFlow;
@@ -119,7 +147,6 @@ public abstract class FlowController : MonoBehaviour
 		{
 			TransitionTo(null);
 			return;
-
 
 			////Debug.Log("... subflow : " + subFlow.gameObject.name);
 			//if (subFlow.subFlow == null)

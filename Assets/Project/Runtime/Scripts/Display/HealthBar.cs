@@ -30,6 +30,7 @@ public class HealthBar : MonoBehaviour
 		HandleHealthChange(health.current);
 
 		health.OnHealthChangedTo += HandleHealthChange;
+
 		health.OnHide += Hide;
 		health.OnShow += Show;
 

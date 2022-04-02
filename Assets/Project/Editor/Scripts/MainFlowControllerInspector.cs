@@ -20,12 +20,11 @@ public class MainFlowControllerInspector : Editor
 	public void OnEnable()
 	{
 		Debug.Log("Enabled Control flow manager inspector");
-
+		
+		EditorApplication.update -= DoRepaint;
 		EditorApplication.update += DoRepaint;
 
 		mainFlow = target as MainFlowController;
-
-		//var availableTurnProcessors = new List<>
 
 		mainFlow.turnProcessor = null;
 		//mainFlow.turnProcessors.Clear();
@@ -44,7 +43,6 @@ public class MainFlowControllerInspector : Editor
 		}
 
 		serializedObject.ApplyModifiedProperties();
-
 		//mainFlow.turnProcessor = mainFlow.GetComponentInChildren<ITurnProcessor>();
 	}
 
@@ -83,7 +81,7 @@ public class MainFlowControllerInspector : Editor
 
 		EditorGUILayout.LabelField("MAIN:", EditorStyles.boldLabel);
 		GUI.enabled = false;
-		EditorGUILayout.PropertyField(serializedObject.FindProperty("phase"));
+		//EditorGUILayout.PropertyField(serializedObject.FindProperty("phase"));
 		GUI.enabled = true;
 
 		if(mainFlow.turnProcessor != null && (mainFlow.turnProcessor as Component) != null)
@@ -139,32 +137,32 @@ public class MainFlowControllerInspector : Editor
 		EditorGUILayout.LabelField("COMMAND HISTORY:");
 		EditorStyles.label.fontStyle = origFontStyle;
 
-		if (mainFlow.commandHistory == null || mainFlow.commandHistory.Count == 0)
-		{
-			EditorGUILayout.LabelField("...");
-		}
-		else
-		{
-			float labelWidth = EditorGUIUtility.labelWidth;
+		//if (mainFlow.commandHistory == null || mainFlow.commandHistory.Count == 0)
+		//{
+		//	EditorGUILayout.LabelField("...");
+		//}
+		//else
+		//{
+		//	float labelWidth = EditorGUIUtility.labelWidth;
 
-			EditorGUIUtility.labelWidth = 60f;
+		//	EditorGUIUtility.labelWidth = 60f;
 
-			var commandList = mainFlow.commandHistory.ToList();
+		//	var commandList = mainFlow.commandHistory.ToList();
 
-			for (int i = 0; i < mainFlow.commandHistory.Count; i++)
-			{
-				EditorGUILayout.BeginHorizontal();
-				EditorGUILayout.LabelField(commandList[i].ToString());
-				EditorGUILayout.EndHorizontal();
-			}
-		}
+		//	for (int i = 0; i < mainFlow.commandHistory.Count; i++)
+		//	{
+		//		EditorGUILayout.BeginHorizontal();
+		//		EditorGUILayout.LabelField(commandList[i].ToString());
+		//		EditorGUILayout.EndHorizontal();
+		//	}
+		//}
 
-		if(Application.isPlaying && !mainFlow.playerTurns.IsNullOrEmpty())
-		{
-			if(GUILayout.Button("RESOLVE"))
-			{
-				//mainFlow.SetPhase(TeamPhase.RESOLVE);
-			}
-		}
+		//if(Application.isPlaying && !mainFlow.playerTurns.IsNullOrEmpty())
+		//{
+		//	if(GUILayout.Button("RESOLVE"))
+		//	{
+		//		//mainFlow.SetPhase(TeamPhase.RESOLVE);
+		//	}
+		//}
 	}
 }

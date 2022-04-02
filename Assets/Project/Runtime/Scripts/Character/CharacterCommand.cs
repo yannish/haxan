@@ -11,21 +11,28 @@ public abstract class CharacterCommand
 	public float currProgress;
 	public float duration = 1f;
 
+	public CharacterFlow characterFlow;
 
 	public CharacterCommand(CharacterFlow characterFlow)
 	{
 		this.characterFlow = characterFlow;
 	}
 
-	public CharacterFlow characterFlow;
 
 	public virtual void Peek() { }
 
 	public virtual void Unpeek() { }
 
-	public virtual void Start() { }
+	public virtual void OnBeginTick() { }
 
-	public virtual void End() { }
+	public virtual void OnCompleteTick() { }
+
+	public virtual void Execute() { }
+
+	public virtual void Undo() { }
+
+	//public virtual void IncurCost() { }
+
 
 	//... ticks true when the command is complete
 	public virtual bool Tick()

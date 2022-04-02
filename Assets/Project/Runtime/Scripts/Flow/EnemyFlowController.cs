@@ -11,13 +11,13 @@ public class EnemyFlowController : CharacterFlow
     {
         enemy.tree.root.Tick();
 
-        if (!blackboard.currCommandStack.IsNullOrEmpty())
-        {
-            //inputTurn = blackboard.currCommandStack;
-            return true;
-        }
+		//if (!blackboard.currCommandStack.IsNullOrEmpty())
+		//{
+		//	//inputTurn = blackboard.currCommandStack;
+		//	return true;
+		//}
 
-        return false;
+		return false;
     }
 
     public override void BeginTurn()
@@ -27,6 +27,6 @@ public class EnemyFlowController : CharacterFlow
 
     public override void EndTurn()
     {
-        blackboard.currCommandStack = null;
+        //blackboard.currCommandStack = null;
     }
 }

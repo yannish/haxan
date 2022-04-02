@@ -34,7 +34,7 @@ Transform:
   - {fileID: 4144163391800896640}
   - {fileID: 7839910000709154002}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4144163390095145677
 MonoBehaviour:
@@ -55,7 +55,10 @@ MonoBehaviour:
   movementAbility: {fileID: 4453239625402978951, guid: 465d74576705d584caf55cfd2381ce28, type: 3}
   abilities: []
   isStunned: 0
-  maxMove: 1
+  maxActions: 1
+  currActions: -1
+  maxMoves: 2
+  currMove: -1
 --- !u!114 &4144163390095145678
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,9 +74,11 @@ MonoBehaviour:
   logDebug: 0
   subFlow: {fileID: 0}
   peekedFlow: {fileID: 0}
+  lastSubFlow: {fileID: 0}
   baseCellObject: {fileID: 0}
   character: {fileID: 0}
   fsm: {fileID: 0}
+  inputTurn: {fileID: 0}
   wanderer: {fileID: 0}
 --- !u!1 &4144163390891134656
 GameObject:
@@ -349,6 +354,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 4144163390095145676}
     m_Modifications:
     - target: {fileID: 967298661039260208, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}
@@ -480,12 +486,8 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}
---- !u!4 &6564785940931847777 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2449681901158474898, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}
-  m_PrefabInstance: {fileID: 8855707159031808755}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4089454288622443483 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4766325456631781672, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}
@@ -497,6 +499,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2aa73c60a766bb4fbe7da2ee19aca9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &6564785940931847777 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2449681901158474898, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}
+  m_PrefabInstance: {fileID: 8855707159031808755}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &7814321341375433533 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1627982436188441038, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}

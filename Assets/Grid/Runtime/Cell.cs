@@ -35,11 +35,13 @@ public class Cell : MonoBehaviour,
 	public Transform occupantPivot;
 
 
+
 	void Awake()
 	{
 		cellFlow = GetComponent<CellFlowController>();
         this.Unbind();
 	}
+
 
 	void OnValidate()
 	{
@@ -48,6 +50,7 @@ public class Cell : MonoBehaviour,
 
 		baseMeshRenderers = visualBase.GetComponentsInChildren<MeshRenderer>().ToList();
 	}
+
 
 	//... cells are the IFlowables of their UIElements component.
 	public FlowController Flow
@@ -80,6 +83,7 @@ public class Cell : MonoBehaviour,
 				(config as IEntryHandler).OnEntry(cellObj);
 		}
 	}
+
 
 	public void Leave(CellObject cellObj)
 	{
