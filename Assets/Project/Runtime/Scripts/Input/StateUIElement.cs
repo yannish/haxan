@@ -6,8 +6,10 @@ using UnityEngine.EventSystems;
 public class StateUIElement : UIElement
 {
 	[ReadOnly] public QuickStateMachine fsm;
-	private void Awake()
+	public override  void Awake()
 	{
+		base.Awake();
+
 		fsm = GetComponentInChildren<QuickStateMachine>();
 	}
 

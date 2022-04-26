@@ -14,11 +14,15 @@ public interface ITurnProcessor
 
     void SetPhase(TeamPhase teamPhase);
 
+    TeamPhase CurrPhase { get; }
+
+    //...   soon as you record a turn, processor will return IsProcessing,
+    //      until the turn is finished being executed.
     void RecordTurn(Turn turn);
 
     void Undo();
 
-    void ProcessEnemyTurns();
+    //void ProcessEnemyTurns();
 
     bool IsProcessing { get; }
 }

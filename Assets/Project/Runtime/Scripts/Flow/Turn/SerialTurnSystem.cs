@@ -17,17 +17,22 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 	[ReadOnly] public bool isProcessing;
 	public bool IsProcessing => isProcessing;
 
-	[ReadOnly] public TeamPhase phase;
+	[ReadOnly] public TeamPhase currPhase;
+	public TeamPhase CurrPhase => currPhase;
+
 	[ReadOnly, SerializeField] Enemy currEnemy;
 	[ReadOnly, SerializeField] List<Enemy> enemyTurnOrder = new List<Enemy>();
+
+	//public TeamPhase GetPhase
+
 	public void SetPhase(TeamPhase newPhase)
 	{
 		Globals.ReadyWanderers.Items?.Clear();
 		Globals.ReadyEnemies.Items?.Clear();
 
-		phase = newPhase;
+		currPhase = newPhase;
 
-		switch (phase)
+		switch (currPhase)
 		{
 			case TeamPhase.ENEMY:
 
@@ -84,13 +89,13 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 
 	public void ProcessTurns()
 	{
-		if(phase == TeamPhase.ENEMY)
-		{
-			if (currEnemy != null)
-			{
-
-			}
-		}
+		//if(phase == TeamPhase.ENEMY)
+		//{
+		//	if (currEnemy != null)
+		//	{
+		//		Debug.LogWarning("Processing enemy: " + currEnemy.name);
+		//	}
+		//}
 
 		if (currCommand == null)
 			return;
@@ -99,8 +104,11 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 		{
 			currCommand.OnCompleteTick();
 			currCommand.Execute();
+
 			commandHistory.Push(currCommand);
+			
 			currCommand = null;
+
 			if (!currTurn.commands.IsNullOrEmpty())
 			{
 				currCommand = currTurn.commands.Dequeue();
@@ -148,10 +156,10 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 		commandHistory.Push(currRedoCommand);
 	}
 
-	public void ProcessEnemyTurns()
-	{
+	//public void ProcessEnemyTurns()
+	//{
 		
-	}
+	//}
 
 	public List<Turn> playerTurns = new List<Turn>();
 	public List<Turn> enemyTurns = new List<Turn>();

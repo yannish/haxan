@@ -6,23 +6,25 @@ using UnityEngine;
 //[ExecuteAlways] //... why?
 public class CellObject : MonoBehaviour
 {
-	[Header("Config")]
+	[Header("CONFIG:")]
 	public Sprite icon;
 	public Transform pivot;
 
-	[Header("State")]
-	[ReadOnly]
-	public HexDirection facing;
 
-	[Header("Flow")]
+	[Header("FLOW:")]
 	[ReadOnly]
 	public FlowController flowController;
+
+
+	[Header("STATE:")]
+	[ReadOnly]
+	public HexDirection facing;
 
 	//private void Awake() => { }
 
 	//... awakenedOverGrid rebinds every cellObject to its cell.
 	//... done in Start, because cells are Unbinding themselves on Awake.
-    protected virtual void Start()
+	protected virtual void Start()
     {
 		//Debug.LogWarning("Start on cellobj : " + this.gameObject.name, gameObject);
 

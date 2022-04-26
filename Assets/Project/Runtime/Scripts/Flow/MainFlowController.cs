@@ -14,6 +14,8 @@ using UnityEngine;
 
 public class MainFlowController : FlowController
 {
+	[ReadOnly] public TeamPhase currPhase;
+
 	public void Start()
 	{
 		turnProcessor = GetComponentInChildren<ITurnProcessor>();
@@ -22,6 +24,7 @@ public class MainFlowController : FlowController
 		//dummyTurn = ScriptableObject.CreateInstance<DummyTurn>();
 		//SetPhase(TeamPhase.PLAYER);
 	}
+
 
 	#region TURN PROCESSING:
 
@@ -62,15 +65,22 @@ public class MainFlowController : FlowController
 			TransitionTo(lastSubFlow, true);
 		}
 
+		if(subFlow != null)
+		{
+			var subflowTickResult = subFlow.Tick();
+			if (subflowTickResult == FlowState.DONE)
+			{
+				TransitionTo(null);
+				return;
+			}
+		}
 
-		if(currInputTurn == null)
+		if (currInputTurn == null)
 		{
 			if (subFlow != null && subFlow is WandererFlowController)
 			{
-				//Debug.LogWarning("... trying to get input from wanderer");
-
 				var currWandererFlow = subFlow as WandererFlowController;
-				if(currWandererFlow.TryGetInputTurn(ref currInputTurn))
+				if (currWandererFlow.TryGetInputTurn(ref currInputTurn))
 				{
 					if (logDebug)
 					{
@@ -86,10 +96,27 @@ public class MainFlowController : FlowController
 					TransitionTo(null, true);
 
 					turnProcessor.RecordTurn(currInputTurn);
+
 					currInputTurn = null;
 				}
 			}
 		}
+
+		//switch (currPhase)
+		//{
+		//	case TeamPhase.PLAYER:
+		//		break;
+
+		//	case TeamPhase.ENEMY:
+		//		Debog.logGameflow("Enemy turn, back to player.");
+		//		break;
+
+		//	case TeamPhase.VICTORY:
+		//		break;
+
+		//	default:
+		//		break;
+		//}
 	}
 
 
@@ -142,6 +169,8 @@ public class MainFlowController : FlowController
 			if (logDebug)
 				Debog.logInput("TURN BUTTON PRESSED");
 
+			TransitionTo(null);
+
 			turnProcessor.SetPhase(TeamPhase.ENEMY);
 
             return FlowState.RUNNING;
@@ -163,7 +192,7 @@ public class MainFlowController : FlowController
 					return FlowState.RUNNING;
 
 				case FlowState.RUNNING:
-					subFlow.Update();
+					subFlow.Tick();
 					return FlowState.RUNNING;
 			}
 		}
@@ -178,6 +207,7 @@ public class MainFlowController : FlowController
 
 			if(e.element.flowController is CellFlowController)
 			{
+				Debog.logGameflow("... it's cell flow: " + e.element.flowController);
 				return FlowState.RUNNING;
 			}
 

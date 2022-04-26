@@ -16,9 +16,7 @@ public class WandererDisplay : MonoBehaviour
 			newSlot.transform.SetParent(this.transform);
 
 			var wandererSlot = newSlot.GetComponent<WandererSlot>();
-			wandererSlot.ProvideWanderer(wanderer as Wanderer);
-
-			//wandererSlot = 
+			wandererSlot.BindTo(wanderer as Wanderer);
 		}
 	}
 }

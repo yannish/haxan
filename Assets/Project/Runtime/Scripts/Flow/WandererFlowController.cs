@@ -44,7 +44,6 @@ public class WandererFlowController : CharacterFlow
 	//}
 
 
-
 	public override void HandleEmptyInput(EmptyClickEvent e)
 	{
 		if (subFlow == character.movementAbility.flow)

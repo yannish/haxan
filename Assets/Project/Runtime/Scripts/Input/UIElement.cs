@@ -25,38 +25,48 @@ public class UIElement : MonoBehaviour,
 	//... this'll be Cell on the board, yielding the bound -> cellObj -> flowController?
 	//public IFlowable flowableComponent { get; protected set; }
 
-	private FlowController _flowController;
-	public virtual FlowController flowController
+	[ReadOnly, SerializeField] private FlowController _flowController;
+
+	public IFlowable flowable;
+
+	public virtual void Awake()
 	{
-		get
-		{
-			if(_flowController == null)
-			{
-				IFlowable flowable = GetComponent<IFlowable>();
-				if(flowable != null)
-				{
-					Debog.logInput("caching a flowable on " + this.name + ", it's " + flowable.Flow.name);
-					_flowController = flowable.Flow;
-					return _flowController;
-				}
-
-				Cell cell = GetComponent<Cell>();
-				if (cell != null)
-					Debog.logInput("foundd a cell tho");
-
-				if(cell is IFlowable)
-					Debog.logInput("... which is flowable");
-
-				//Debog.logInput("... foudn no iflowable on " + this.name);
-			}
-
-			//Debog.logInput("no flowable component on " + this.name + "'s flowcontroller");
-
-			return _flowController;
-		}
+		flowable = GetComponent<IFlowable>();
 	}
 
+	public virtual FlowController flowController => flowable == null ? null : flowable.Flow;
+	//{
+	//	get
+	//	{
 
+
+	//		if(_flowController == null)
+	//		{
+	//			IFlowable flowable = GetComponent<IFlowable>();
+	//			if(flowable != null)
+	//			{
+	//				//Debog.logInput("caching a flowable on " + this.name + ", it's " + flowable.Flow.name);
+	//				_flowController = flowable.Flow;
+	//				return _flowController;
+	//			}
+
+	//			Cell cell = GetComponent<Cell>();
+	//			if (cell != null)
+	//				Debog.logInput("foundd a cell tho");
+
+	//			if(cell is IFlowable)
+	//				Debog.logInput("... which is flowable");
+
+	//			//Debog.logInput("... foudn no iflowable on " + this.name);
+	//		}
+
+	//		//Debog.logInput("no flowable component on " + this.name + "'s flowcontroller");
+
+	//		return _flowController;
+	//	}
+	//}
+
+	
 	public virtual void OnPointerEnter(PointerEventData eventData)
 	{
 		if(logDebug)

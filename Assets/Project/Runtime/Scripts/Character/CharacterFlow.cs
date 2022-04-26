@@ -114,7 +114,7 @@ public abstract class CharacterFlow : CellObjFlowController
 					return FlowState.RUNNING;
 
 				case FlowState.RUNNING:
-					subFlow.Update();
+					subFlow.Tick();
 					return FlowState.RUNNING;
 			}
 		}

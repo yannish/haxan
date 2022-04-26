@@ -1,47 +1,71 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class WandererSlot : UIElement
+public class WandererSlot : RectUIElement, IFlowable
 {
 	[Header("WANDERER")]
 	public Image iconSlot;
 	[ReadOnly] public Wanderer wanderer;
-	[ReadOnly] public QuickStateMachine fsm;
 
-	private void Awake()
-	{
-		fsm = GetComponentInChildren<QuickStateMachine>();
-	}
+	public FlowController Flow => wanderer != null ? wanderer.flow : null;
 
-	public void ProvideWanderer(Wanderer wanderer)
+	//[ReadOnly] public 
+	//[ReadOnly] public QuickStateMachine fsm;
+
+	//public override void Awake()
+	//{
+	//base.Awake();
+	//fsm = GetComponentInChildren<QuickStateMachine>();
+	//}
+
+	public void BindTo(Wanderer wanderer)
 	{
 		this.wanderer = wanderer;
 		this.iconSlot.sprite = wanderer.icon;
+
+		CellObjFlowController.OnFlowPeeked += OnFlowPeeked;
+		CellObjFlowController.OnFlowUnpeeked += OnFlowUnpeeked;
+
+		CellObjFlowController.OnFlowEntered += OnFlowEntered;
+		CellObjFlowController.OnFlowExited += OnFlowExited;
+
 	}
 
-	public override FlowController flowController
+	private void OnFlowPeeked(CellObjFlowController obj)
 	{
-		get
-		{
-			if (wanderer != null)
-				return wanderer.flowController;
+		if (obj != wanderer.flow)
+			return;
 
-			return null;
-		}
+		Hover();
 	}
 
-	public override void OnPointerEnter(PointerEventData eventData)
+	private void OnFlowUnpeeked(CellObjFlowController obj)
 	{
-		base.OnPointerEnter(eventData);
-		fsm?.SetTrigger(FSM.hover);
+		if (obj != wanderer.flow)
+			return;
+
+		Unhover();
 	}
 
-	public override void OnPointerExit(PointerEventData eventData)
+	private void OnFlowEntered(CellObjFlowController obj)
 	{
-		base.OnPointerExit(eventData);
-		fsm?.SetTrigger(FSM.unhover);
+		if (obj != wanderer.flow)
+			return;
+
+		Highlight();
+		//Click();
+	}
+
+	private void OnFlowExited(CellObjFlowController obj)
+	{
+		if (obj != wanderer.flow)
+			return;
+
+		Unhighlight();
+		//Unclick();
 	}
 }

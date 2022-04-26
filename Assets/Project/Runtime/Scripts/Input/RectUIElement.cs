@@ -4,47 +4,84 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-
-
-public class RectUIElement : UIElement
+public class RectUIElement : MonoBehaviour
 {
-	void Awake()
+	//public override void Awake()
+	protected virtual void Awake()
 	{
+		//base.Awake();
+
 		if (clickRect != null)
-		{
 			cachedAnchoredPos = clickRect.anchoredPosition;
-		}
 
 		if(hoverRect != null)
-		{
 			cachedDimensions = new Rect(0f, 0f, hoverRect.rect.width, hoverRect.rect.height);
-		}
+
+		if (colorImage != null)
+			baseColor = colorImage.color;
 	}
 
 
-	public override void OnPointerEnter(PointerEventData eventData)
-	{
-		base.OnPointerEnter(eventData);
-		HoverTweenToTarget(hoveredThickness);
-	}
+	//public override void OnPointerEnter(PointerEventData eventData)
+	//{
+	//	base.OnPointerEnter(eventData);
+	//	HoverTweenToTarget(hoveredThickness);
+	//}
 
-	public override void OnPointerExit(PointerEventData eventData)
-	{
-		base.OnPointerExit(eventData);
-		HoverTweenToTarget(0f);
-	}
+	//public override void OnPointerExit(PointerEventData eventData)
+	//{
+	//	base.OnPointerExit(eventData);
+	//	HoverTweenToTarget(0f);
+	//}
 
-	public override void OnPointerDown(PointerEventData eventData)
-	{
-		base.OnPointerDown(eventData);
-		ClickTween(-clickDepth);
-	}
+	//public override void OnPointerDown(PointerEventData eventData)
+	//{
+	//	base.OnPointerDown(eventData);
+	//	ClickTween(-clickDepth);
+	//}
 
-	public override void OnPointerUp(PointerEventData eventData)
+	//public override void OnPointerUp(PointerEventData eventData)
+	//{
+	//	base.OnPointerUp(eventData);
+	//	ClickTween(0f);
+	//}
+
+	[Header("COLOUR:")]
+	public ColorReference colorRef;
+	[ReadOnly] public Color baseColor;
+	public Image colorImage;
+	public float colorDuration;
+	//[ReadOnly] public Color currColor;
+
+	Sequence colorSequence;
+
+	public void Highlight() => ColorTween(colorRef);
+
+	public void Unhighlight() => ColorTween(baseColor);
+
+	protected void ColorTween(Color newColor)
 	{
-		base.OnPointerUp(eventData);
-		ClickTween(0f);
+		if (colorImage == null)
+			return;
+
+		if (colorSequence.IsActive())
+			colorSequence.Kill();
+
+		colorSequence = DOTween.Sequence();
+
+		colorSequence.SetAutoKill();
+
+		//colorSequence.
+
+		colorSequence
+			//.AppendInterval(colorDuration)
+			.Append(DOTween.To(() => colorImage.color, x => colorImage.color = x, newColor, colorDuration))
+			.OnUpdate(() =>
+			{
+				//colorImage.color =
+			});
 	}
 
 
@@ -60,7 +97,12 @@ public class RectUIElement : UIElement
 	[ReadOnly] public Vector2 cachedAnchoredPos;
 
 	Sequence clickSequence;
-	private void ClickTween(float newClickTarget)
+
+	public void Click() => ClickTween(-clickDepth);
+
+	public void Unclick() => ClickTween(0f);
+
+	protected void ClickTween(float newClickTarget)
 	{
 		if (clickRect == null)
 			return;
@@ -107,7 +149,11 @@ public class RectUIElement : UIElement
 
 	Sequence hoverSeq;
 
-	private void HoverTweenToTarget(float newTarget)
+	public void Hover() => HoverTweenToTarget(hoveredThickness);
+
+	public void Unhover() => HoverTweenToTarget(0f);
+
+	protected void HoverTweenToTarget(float newTarget)
 	{
 		if (hoverRect == null)
 			return;

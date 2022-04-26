@@ -27,4 +27,17 @@ public class Wanderer : Character
 	{
 		movementAbility = Instantiate<Ability>(movementAbility, this.transform);
 	}
+
+
+	[ReadOnly, SerializeField] WandererFlowController _flow;
+	public WandererFlowController flow
+	{
+		get
+		{
+			if (_flow == null)
+				_flow = GetComponent<WandererFlowController>();
+			return _flow;
+		}
+	}
+
 }

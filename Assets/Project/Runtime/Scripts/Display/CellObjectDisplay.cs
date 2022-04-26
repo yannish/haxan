@@ -16,11 +16,11 @@ public class CellObjectDisplay : MonoBehaviour
         iconSlot = GetComponentInChildren<Image>();
         nameSlot = GetComponentInChildren<TextMeshProUGUI>();
 
-        CellObjFlowController.OnObjectHovered += DisplayCellObject;
-        CellObjFlowController.OnObjetUnhovered += ClearCellObject;
+        CellObjFlowController.OnFlowPeeked += DisplayCellObject;
+        CellObjFlowController.OnFlowUnpeeked += ClearCellObject;
 		
-        CellObjFlowController.OnObjectSelected += DisplayCellObject;
-        CellObjFlowController.OnObjectDeselected += ClearCellObject;
+        CellObjFlowController.OnFlowEntered += DisplayCellObject;
+        CellObjFlowController.OnFlowExited += ClearCellObject;
 
         CellObjFlowController.OnObjectEnabled += BrightenCellDisplay;
         CellObjFlowController.OnObjectDisabled += DarkenCellDisplay;
@@ -29,30 +29,30 @@ public class CellObjectDisplay : MonoBehaviour
 
     }
 
-    void BrightenCellDisplay(CellObject cellObject)
+    void BrightenCellDisplay(CellObjFlowController cellObjFlow)
 	{
         veil.SetActive(false);
 	}
 
-    void DarkenCellDisplay(CellObject cellObject)
+    void DarkenCellDisplay(CellObjFlowController cellObjFlow)
 	{
         veil.SetActive(true);
     }
 
 
-    void DisplayCellObject(CellObject cellObject)
+    void DisplayCellObject(CellObjFlowController cellObjFlow)
     {
-        if (cellObject.icon)
-            iconSlot.sprite = cellObject.icon;
+        if (cellObjFlow.baseCellObject.icon)
+            iconSlot.sprite = cellObjFlow.baseCellObject.icon;
 
-        nameSlot.SetText(cellObject.name.ToUpper());
+        nameSlot.SetText(cellObjFlow.baseCellObject.name.ToUpper());
 
         displayCount++;
 
         UpdateDisplay();
     }
 
-    void ClearCellObject(CellObject cellObject = null)
+    void ClearCellObject(CellObjFlowController cellObjFlow = null)
     {
         displayCount--;
 

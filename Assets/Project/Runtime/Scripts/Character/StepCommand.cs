@@ -11,6 +11,7 @@ public class StepCommand : CharacterCommand
 	public Vector3 startPos;
 	public Vector3 endPos;
 
+
 	public StepCommand(
 		CharacterFlow characterFlow,
 		Cell fromCell,

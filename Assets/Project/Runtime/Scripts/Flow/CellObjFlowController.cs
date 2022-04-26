@@ -9,14 +9,14 @@ public class CellObjFlowController : FlowController
 	[ReadOnly]
 	public CellObject baseCellObject;
 
-	public static event Action<CellObject> OnObjectHovered = delegate { };
-	public static event Action<CellObject> OnObjetUnhovered = delegate { };
+	public static event Action<CellObjFlowController> OnFlowPeeked = delegate { };
+	public static event Action<CellObjFlowController> OnFlowUnpeeked = delegate { };
 
-	public static event Action<CellObject> OnObjectSelected = delegate { };
-	public static event Action<CellObject> OnObjectDeselected = delegate { };
+	public static event Action<CellObjFlowController> OnFlowEntered = delegate { };
+	public static event Action<CellObjFlowController> OnFlowExited = delegate { };
 
-	public static event Action<CellObject> OnObjectEnabled = delegate { };
-	public static event Action<CellObject> OnObjectDisabled = delegate { };
+	public static event Action<CellObjFlowController> OnObjectEnabled = delegate { };
+	public static event Action<CellObjFlowController> OnObjectDisabled = delegate { };
 
 	protected override void Awake() => baseCellObject = GetComponent<CellObject>();
 
@@ -24,13 +24,13 @@ public class CellObjFlowController : FlowController
 	public override void Enter()
 	{
 		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.select);
-		OnObjectSelected(baseCellObject);
+		OnFlowEntered(this);
 	}
 
 	public override void Exit()
 	{
 		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.deselect);
-		OnObjectDeselected(baseCellObject);
+		OnFlowExited(this);
 
 		if (subFlow != null)
 		{
@@ -47,7 +47,7 @@ public class CellObjFlowController : FlowController
 		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.hover);
 		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.clickable);
 		
-		OnObjectHovered(baseCellObject);
+		OnFlowPeeked(this);
 	}
 
 	public override void HoverUnpeek()
@@ -58,6 +58,6 @@ public class CellObjFlowController : FlowController
 		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unhover);
 		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unclickable);
 		
-		OnObjetUnhovered(baseCellObject);
+		OnFlowUnpeeked(this);
 	}
 }

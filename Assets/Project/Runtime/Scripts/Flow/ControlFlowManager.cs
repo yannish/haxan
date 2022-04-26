@@ -89,5 +89,4 @@ public class ControlFlowManager : MonoBehaviour
 
 		return checkController;
 	}
-
 }

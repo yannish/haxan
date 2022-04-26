@@ -33,7 +33,6 @@ public abstract class CharacterCommand
 
 	//public virtual void IncurCost() { }
 
-
 	//... ticks true when the command is complete
 	public virtual bool Tick()
 	{

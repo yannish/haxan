@@ -52,6 +52,7 @@ public enum FlowState
 	YIELD       //Return when you don't do anything, allowing parent controller to do something.
 }
 
+
 public abstract class FlowController : MonoBehaviour
 {
 	public bool logDebug;
@@ -72,19 +73,11 @@ public abstract class FlowController : MonoBehaviour
 
 	protected virtual void Awake() { }
 
-	public virtual void Update() { }
+	public virtual FlowState Tick() { return FlowState.YIELD; }
 
-	public virtual void Enter()
-	{
-		if (logDebug) 
-			Debug.LogWarning("entering ability flow: ", this.gameObject);
-	}
+	public virtual void Enter() { }
 
-	public virtual void Exit() 
-	{
-		if (logDebug)
-			Debug.LogWarning("exiting ability flow: ", this.gameObject);
-	}
+	public virtual void Exit() { }
 
 	public virtual void HoverPeek() { }
 
