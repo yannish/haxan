@@ -25,13 +25,14 @@ public class UIElement : MonoBehaviour,
 	//... this'll be Cell on the board, yielding the bound -> cellObj -> flowController?
 	//public IFlowable flowableComponent { get; protected set; }
 
-	[ReadOnly, SerializeField] private FlowController _flowController;
+	//[ReadOnly, SerializeField] private FlowController _flowController;
 
 	public IFlowable flowable;
 
 	public virtual void Awake()
 	{
 		flowable = GetComponent<IFlowable>();
+		//_flowController
 	}
 
 	public virtual FlowController flowController => flowable == null ? null : flowable.Flow;
@@ -85,6 +86,7 @@ public class UIElement : MonoBehaviour,
 		//Events.instance.Raise(new ElementHoveredEvent(null));
 	}
 
+	//public virtual void OnPointerUp(PointerEventData eventData)
 	public virtual void OnPointerDown(PointerEventData eventData)
 	{
 		switch(eventData.button)

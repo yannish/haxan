@@ -27,45 +27,31 @@ public class WandererSlot : RectUIElement, IFlowable
 		this.wanderer = wanderer;
 		this.iconSlot.sprite = wanderer.icon;
 
-		CellObjFlowController.OnFlowPeeked += OnFlowPeeked;
-		CellObjFlowController.OnFlowUnpeeked += OnFlowUnpeeked;
+		wanderer.flow.OnFlowPeeked += OnFlowPeeked;
+		wanderer.flow.OnFlowUnpeeked += OnFlowUnpeeked;
 
-		CellObjFlowController.OnFlowEntered += OnFlowEntered;
-		CellObjFlowController.OnFlowExited += OnFlowExited;
+		wanderer.flow.OnFlowEntered += OnFlowEntered;
+		wanderer.flow.OnFlowExited += OnFlowExited;
 
 	}
 
-	private void OnFlowPeeked(CellObjFlowController obj)
+	private void OnFlowPeeked(FlowController obj)
 	{
-		if (obj != wanderer.flow)
-			return;
-
 		Hover();
 	}
 
-	private void OnFlowUnpeeked(CellObjFlowController obj)
+	private void OnFlowUnpeeked(FlowController obj)
 	{
-		if (obj != wanderer.flow)
-			return;
-
 		Unhover();
 	}
 
-	private void OnFlowEntered(CellObjFlowController obj)
+	private void OnFlowEntered(FlowController obj)
 	{
-		if (obj != wanderer.flow)
-			return;
-
 		Highlight();
-		//Click();
 	}
 
-	private void OnFlowExited(CellObjFlowController obj)
+	private void OnFlowExited(FlowController obj)
 	{
-		if (obj != wanderer.flow)
-			return;
-
 		Unhighlight();
-		//Unclick();
 	}
 }

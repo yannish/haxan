@@ -278,9 +278,9 @@ MonoBehaviour:
     ConstantColor: {r: 0, g: 0, b: 0, a: 1}
     ColorVariable: {fileID: 0}
   baseColor: {r: 0, g: 0, b: 0, a: 0}
-  colorImage: {fileID: 0}
+  colorImage: {fileID: 4877546582659515946}
   colorDuration: 0
-  clickRect: {fileID: 0}
+  clickRect: {fileID: 4877546582659515947}
   clickSpring:
     freq: 12
     damp: 0.3
@@ -291,7 +291,7 @@ MonoBehaviour:
   clickVelocity: 200
   clickDuration: 1
   cachedAnchoredPos: {x: 0, y: 0}
-  hoverRect: {fileID: 0}
+  hoverRect: {fileID: 4877546582659515947}
   hoverTweenDuration: 0.5
   hoveredThickness: 50
   hoverSpring:
@@ -307,7 +307,7 @@ MonoBehaviour:
     width: 0
     height: 0
   currThickness: 0
-  turnPhaseFlow: {fileID: 0}
+  turnButtonFlow: {fileID: 0}
 --- !u!114 &3208450678671142477
 MonoBehaviour:
   m_ObjectHideFlags: 0

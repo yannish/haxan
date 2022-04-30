@@ -1,4 +1,5 @@
 using BOG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -31,18 +32,7 @@ public enum FSMtrigger
 	unhintPath
 }
 
-//public static Dictionary<FSMtrigger, string> FSMTriggerEnumToName = new Dictionary<FSMtrigger, string>()
-//{
-//	//{FSMtrigger.hover },
-//}
-
-public static class FSMExtension
-{
-	//public static string TriggerEnumToName(this FSMtrigger triggerEnum)
-	//{
-
-	//}
-}
+public static class FSMExtension { }
 
 
 public enum FlowState
@@ -54,6 +44,7 @@ public enum FlowState
 
 
 public abstract class FlowController : MonoBehaviour
+//public abstract class FlowController<T> : MonoBehaviour where T : MonoBehaviour
 {
 	public bool logDebug;
 
@@ -71,17 +62,25 @@ public abstract class FlowController : MonoBehaviour
 	//[ReadOnly] 
 	//public CellObject baseCellObject;
 
+	public event Action<FlowController> OnFlowPeeked = delegate { };
+	public event Action<FlowController> OnFlowUnpeeked = delegate { };
+
+	public event Action<FlowController> OnFlowEntered = delegate { };
+	public event Action<FlowController> OnFlowExited = delegate { };
+
+
+
 	protected virtual void Awake() { }
 
 	public virtual FlowState Tick() { return FlowState.YIELD; }
 
-	public virtual void Enter() { }
+	public virtual void Enter() => OnFlowEntered(this);
 
-	public virtual void Exit() { }
+	public virtual void Exit() => OnFlowExited(this);
 
-	public virtual void HoverPeek() { }
+	public virtual void HoverPeek() => OnFlowPeeked(this);
 
-	public virtual void HoverUnpeek() { }
+	public virtual void HoverUnpeek() => OnFlowUnpeeked(this);
 
 	public virtual FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
 	{
@@ -107,7 +106,9 @@ public abstract class FlowController : MonoBehaviour
 			var result = subFlow.HandleBackInput(e);
 			if(result == FlowState.DONE)
 			{
-				TransitionTo(null);
+				TransitionTo(null, false);
+				//if (e.element.flowController != null)
+				//	HandleHover(e);
 				return FlowState.YIELD;
 			}
 

@@ -4,43 +4,35 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 
-[RequireComponent(typeof(TurnPhaseFlowController))]
+[RequireComponent(typeof(TurnButtonFlowController))]
 public class TurnButton : RectUIElement, IFlowable
 {
 	//[ReadOnly] public RectUIElement rectElement;
-	[ReadOnly] public TurnPhaseFlowController turnPhaseFlow;
+	[ReadOnly] public TurnButtonFlowController turnButtonFlow;
 
-	public FlowController Flow => turnPhaseFlow;
+	public FlowController Flow => turnButtonFlow;
 
 	protected override void Awake()
 	{
 		base.Awake();
-		turnPhaseFlow = GetComponent<TurnPhaseFlowController>();
+		
+		turnButtonFlow = GetComponent<TurnButtonFlowController>();
+
+		turnButtonFlow.OnFlowPeeked += OnFlowPeeked;
+		turnButtonFlow.OnFlowUnpeeked += OnFlowUnpeeked;
+
+		//turnButtonFlow.OnFlowEntered += ClickAndRelease;
 	}
 
-	//public override void OnPointerEnter(PointerEventData eventData)
-	//{
-	//	base.OnPointerEnter(eventData);
-	//	//rectElement.Hover();
-	//}
+	private void OnFlowPeeked(FlowController obj)
+	{
+		Hover();
+	}
 
-	//public override void OnPointerExit(PointerEventData eventData)
-	//{
-	//	base.OnPointerExit(eventData);
-	//	//rectElement.Unhover();
-	//}
-
-	//public override void OnPointerDown(PointerEventData eventData)
-	//{
-	//	base.OnPointerDown(eventData);
-	//	//rectElement.Click();
-	//}
-
-	//public override void OnPointerUp(PointerEventData eventData)
-	//{
-	//	base.OnPointerUp(eventData);
-	//	//rectElement.Unclick();
-	//}
+	private void OnFlowUnpeeked(FlowController obj)
+	{
+		Unhover();
+	}
 
 
 	//   [Header("TURN BUTTON")]

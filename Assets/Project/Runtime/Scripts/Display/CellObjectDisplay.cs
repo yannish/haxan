@@ -16,14 +16,14 @@ public class CellObjectDisplay : MonoBehaviour
         iconSlot = GetComponentInChildren<Image>();
         nameSlot = GetComponentInChildren<TextMeshProUGUI>();
 
-        CellObjFlowController.OnFlowPeeked += DisplayCellObject;
-        CellObjFlowController.OnFlowUnpeeked += ClearCellObject;
+        //CellObjFlowController.OnFlowPeeked += DisplayCellObject;
+        //CellObjFlowController.OnFlowUnpeeked += ClearCellObject;
 		
-        CellObjFlowController.OnFlowEntered += DisplayCellObject;
-        CellObjFlowController.OnFlowExited += ClearCellObject;
+        //CellObjFlowController.OnFlowEntered += DisplayCellObject;
+        //CellObjFlowController.OnFlowExited += ClearCellObject;
 
-        CellObjFlowController.OnObjectEnabled += BrightenCellDisplay;
-        CellObjFlowController.OnObjectDisabled += DarkenCellDisplay;
+        //CellObjFlowController.OnObjectEnabled += BrightenCellDisplay;
+        //CellObjFlowController.OnObjectDisabled += DarkenCellDisplay;
 
         UpdateDisplay();
 

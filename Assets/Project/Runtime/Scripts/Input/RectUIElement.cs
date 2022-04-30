@@ -98,11 +98,36 @@ public class RectUIElement : MonoBehaviour
 
 	Sequence clickSequence;
 
-	public void Click() => ClickTween(-clickDepth);
+	public void Click() => ClickHold(-clickDepth);
 
-	public void Unclick() => ClickTween(0f);
+	public void Unclick() => ClickHold(0f);
 
-	protected void ClickTween(float newClickTarget)
+	public void ClickAndRelease() => Click(clickVelocity);
+
+	protected void Click(float newClickVelocity)
+	{
+		if (clickRect == null)
+			return;
+
+		if (clickSequence.IsActive())
+			clickSequence.Kill();
+
+		clickSequence = DOTween.Sequence();
+
+		clickSequence.SetAutoKill();
+
+		clickSpring.velocity = -newClickVelocity;
+
+		clickSequence
+			.AppendInterval(clickDuration)
+			.OnUpdate(() =>
+			{
+				clickSpring.Step();
+				clickRect.anchoredPosition = cachedAnchoredPos + new Vector2(0f, clickSpring.currValue);
+			});
+	}
+
+	protected void ClickHold(float newClickTarget)
 	{
 		if (clickRect == null)
 			return;

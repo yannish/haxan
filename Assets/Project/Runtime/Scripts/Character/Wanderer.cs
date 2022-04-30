@@ -39,5 +39,4 @@ public class Wanderer : Character
 			return _flow;
 		}
 	}
-
 }

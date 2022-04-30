@@ -8,8 +8,6 @@ using UnityEngine;
 
 public class ControlFlowManager : MonoBehaviour 
 {
-
-
 	public static Action<ElementHoveredEvent> OnElementHovered;
 	public static Action<ElementBackClickedEvent> OnElementBackClicked;
 	public static Action<ElementClickedEvent> OnElementClicked;

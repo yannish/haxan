@@ -164,18 +164,6 @@ public class MainFlowController : FlowController
 		//}
 
 
-		if (e.element is TurnButton)
-        {
-			if (logDebug)
-				Debog.logInput("TURN BUTTON PRESSED");
-
-			TransitionTo(null);
-
-			turnProcessor.SetPhase(TeamPhase.ENEMY);
-
-            return FlowState.RUNNING;
-        }
-
 
         //if there's already a subFlow, pass input through that:
         if (subFlow != null)
@@ -203,7 +191,20 @@ public class MainFlowController : FlowController
 		//... if subflow didn't want input, or you've clicked a new one:
 		if (e.element.flowController != null)
 		{
-            Debog.logGameflow("clicked element had a subflow : " + e.element.flowController.name);
+			Debog.logGameflow("clicked element had a subflow : " + e.element.flowController.name);
+
+			if (e.element.flowController is TurnButtonFlowController)
+			{
+				if (logDebug)
+					Debog.logInput("TURN BUTTON PRESSED");
+
+				TransitionTo(null);
+
+				turnProcessor.SetPhase(TeamPhase.ENEMY);
+
+				return FlowState.RUNNING;
+			}
+
 
 			if(e.element.flowController is CellFlowController)
 			{
