@@ -15,13 +15,13 @@ public class DummyTurn : InlineScriptableObject
 //[Serializable]
 public class Turn : InlineScriptableObject
 {
-    [ReadOnly] public Character owner;
+    [ReadOnly] public CellObject owner;
 
     [ReadOnly] public Ability ability;
 
     public Queue<CharacterCommand> commands;
 
-    public static Turn CreateInstance(Character owner, Ability ability)
+    public static Turn CreateInstance(CellObject owner, Ability ability)
 	{
 		var newTurn = ScriptableObject.CreateInstance<Turn>();
 		newTurn.owner = owner;
@@ -31,7 +31,7 @@ public class Turn : InlineScriptableObject
 
 	}
 
-	public Turn(Character owner)
+	public Turn(CellObject owner)
 	{
 		this.owner = owner;
 		//this.commands = commands;

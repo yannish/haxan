@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class WandererFlowController : CharacterFlow
+public class WandererFlowController : CharacterFlowController
 {
 	[ReadOnly] public Wanderer wanderer;
+
 
 	protected override void Awake()
 	{
@@ -17,6 +18,11 @@ public class WandererFlowController : CharacterFlow
 	private void Start()
 	{
 		wanderer.movementAbility.flow.ProvideCharacter(this);
+
+		foreach (var ability in wanderer.abilities)
+		{
+			ability.flow.ProvideCharacter(wanderer.flow);
+		}
 	}
 
 

@@ -13,7 +13,7 @@ public class StepCommand : CharacterCommand
 
 
 	public StepCommand(
-		CharacterFlow characterFlow,
+		CharacterFlowController characterFlow,
 		Cell fromCell,
 		Cell targetCell,
 		float duration

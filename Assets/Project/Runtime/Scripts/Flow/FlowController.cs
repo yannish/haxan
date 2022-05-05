@@ -62,6 +62,8 @@ public abstract class FlowController : MonoBehaviour
 	//[ReadOnly] 
 	//public CellObject baseCellObject;
 
+	
+
 	public event Action<FlowController> OnFlowPeeked = delegate { };
 	public event Action<FlowController> OnFlowUnpeeked = delegate { };
 

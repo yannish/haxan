@@ -22,8 +22,8 @@ public class AbilityFlowController : FlowController
 	public List<Cell> validMoves = new List<Cell>();
 	public List<UIElement> validElements = new List<UIElement>();
 
-	public CharacterFlow characterFlow;
-	public void ProvideCharacter(CharacterFlow characterFlow)
+	public CharacterFlowController characterFlow;
+	public void ProvideCharacter(CharacterFlowController characterFlow)
 	{
 		this.characterFlow = characterFlow;
 	}
@@ -45,6 +45,7 @@ public class AbilityFlowController : FlowController
 		validMoves = ability.GetValidMoves(characterFlow.character.currCell, characterFlow);
 		if (validMoves.IsNullOrEmpty())
 			return;
+
 		validElements = validMoves.Select(t => t.GetComponent<UIElement>()).ToList();
 
 		switch (ability.type)
@@ -122,7 +123,7 @@ public class AbilityFlowController : FlowController
 
 		if(validElements.Contains(e.element))
 		{
-			Turn newTurn = ability.FetchCommandChain(cell, characterFlow);
+			Turn newTurn = ability.FetchCommandChain(cell, characterFlow.character, characterFlow);
 			//Queue<CharacterCommand> newCommands = ability.FetchCommandChain(cell, characterFlow);
 			characterFlow.ProvideInputTurn(newTurn);
 			ability.Unpeek();

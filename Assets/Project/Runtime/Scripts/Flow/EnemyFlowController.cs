@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyFlowController : CharacterFlow
+public class EnemyFlowController : CharacterFlowController
 {
     [ReadOnly] public Enemy enemy;
     [ReadOnly] public Blackboard blackboard;

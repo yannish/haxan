@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class WandererSlot : RectUIElement, IFlowable
+public class WandererDisplaySlot : RectUIElement, IFlowable
 {
 	[Header("WANDERER")]
 	public Image iconSlot;

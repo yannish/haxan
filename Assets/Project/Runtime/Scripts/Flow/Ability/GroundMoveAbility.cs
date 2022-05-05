@@ -12,7 +12,7 @@ public class GroundMoveAbility : Ability
 
 	private Action pathControl;
 
-    public override List<Cell> GetValidMoves(Cell cell, CharacterFlow flow)
+    public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow)
 	{
 		return flow.character.currCell.GetCellsInRadius(
 			flow.character.currMove,
@@ -51,11 +51,9 @@ public class GroundMoveAbility : Ability
 		//}
 
 		//return pathableCells;
-
-
 	}
 
-	public override void Peek(Cell targetCell, CharacterFlow flow)
+	public override void Peek(Cell targetCell, CharacterFlowController flow)
 	{
 		var path = Pathfinder.GetPath(flow.character.currCell, targetCell);
 		if (path.IsNullOrEmpty())
@@ -73,31 +71,36 @@ public class GroundMoveAbility : Ability
 		}
 	}
 
-	public override Turn FetchCommandChain(Cell targetCell, CharacterFlow flow)
+	public override Turn FetchCommandChain(Cell targetCell, CellObject cellObj, FlowController flow)
 	{
-		if (targetCell == flow.character.currCell || !targetCell.IsPassable || targetCell.IsBound())
+		if (targetCell == cellObj.currCell || !targetCell.IsPassable || targetCell.IsBound())
 			return null;
 
-		var pathToCell = Pathfinder.GetPath(flow.character.currCell, targetCell);
+		var pathToCell = Pathfinder.GetPath(cellObj.currCell, targetCell);
 		if (pathToCell == null)
 			return null;
 
+		//... TODO: this is getting rough. 
+		if (!(flow is CharacterFlowController))
+			return null;
 
-		Turn newTurn = base.FetchCommandChain(targetCell, flow);
+		var characterFlow = flow as CharacterFlowController;
 
-		HexDirection toFirstCellDir = flow.character.currCell.To(pathToCell[0]);
+		Turn newTurn = base.FetchCommandChain(targetCell, cellObj, flow);
 
-		string log = string.Format("currFacing : {0} , toFirstCell : {1}", flow.character.facing, toFirstCellDir);
+		HexDirection toFirstCellDir = cellObj.currCell.To(pathToCell[0]);
+
+		string log = string.Format("currFacing : {0} , toFirstCell : {1}", cellObj.facing, toFirstCellDir);
 		Debog.logGameflow(log);
 
-		if (flow.character.facing != toFirstCellDir)
+		if (cellObj.facing != toFirstCellDir)
 		{
-			TurnCommand newTurnCommand = new TurnCommand(flow, flow.character.facing, toFirstCellDir, turnDuration);
+			TurnCommand newTurnCommand = new TurnCommand(characterFlow, cellObj.facing, toFirstCellDir, turnDuration);
 			newTurn.commands.Enqueue(newTurnCommand);
 
 			string firstTurnLog = string.Format(
-				"doing turn from : {0} , to : {1}", 
-				flow.character.facing, 
+				"doing turn from : {0} , to : {1}",
+				cellObj.facing, 
 				toFirstCellDir
 				);
 			Debog.logGameflow(firstTurnLog);
@@ -106,13 +109,13 @@ public class GroundMoveAbility : Ability
 		HexDirection lastFacingDirection = toFirstCellDir;
 		for (int i = 0; i < pathToCell.Count; i++)
 		{
-			Cell fromCell = i == 0 ? flow.character.currCell : pathToCell[i - 1];
+			Cell fromCell = i == 0 ? cellObj.currCell : pathToCell[i - 1];
 			Cell toCell = pathToCell[i];
 			HexDirection toNextCellDir = fromCell.To(toCell);
 			if(lastFacingDirection != toNextCellDir)
 			{
 				TurnCommand newTurnCommand = new TurnCommand(
-					flow, 
+					characterFlow, 
 					lastFacingDirection, 
 					toNextCellDir, 
 					turnDuration
@@ -121,11 +124,11 @@ public class GroundMoveAbility : Ability
 				newTurn.commands.Enqueue(newTurnCommand);
 				lastFacingDirection = toNextCellDir;
 
-				string turnLog = string.Format("turn from : {0} , to : {1}", flow.character.facing, toFirstCellDir);
+				string turnLog = string.Format("turn from : {0} , to : {1}", cellObj.facing, toFirstCellDir);
 				Debog.logGameflow(turnLog);
 			}
 
-			var newStepCommand = new StepCommand(flow, fromCell, toCell, stepDuration);
+			var newStepCommand = new StepCommand(characterFlow, fromCell, toCell, stepDuration);
 			newTurn.commands.Enqueue(newStepCommand);
 
 			string nextLog = string.Format("from : {0} , to : {1}", fromCell.name, toCell.name);

@@ -20,6 +20,11 @@ public class CellObject : MonoBehaviour
 	[ReadOnly]
 	public HexDirection facing;
 
+
+	[Header("ABILITIES:")]
+	public List<Ability> abilities;
+
+
 	//private void Awake() => { }
 
 	//... awakenedOverGrid rebinds every cellObject to its cell.

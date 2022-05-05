@@ -3,20 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CharacterFlow : CellObjFlowController
+public abstract class CharacterFlowController : CellObjFlowController
 {
 	[Header("CHARACTER")]
     [ReadOnly] public Character character;
 	[ReadOnly] public QuickStateMachine fsm;
+
+	//public static event Action<CharacterFlowController> Entered = delegate { };
+	//public static event Action<CharacterFlowController> Exited = delegate { };
 
 
 	public Turn inputTurn;
 	public void ProvideInputTurn(Turn newTurn)
 	{
 		//Debug.LogWarning("Providing Input Turn");
-
 		inputTurn = newTurn;
 	}
+
 
 	public virtual bool TryGetInputTurn(ref Turn newInputTurn)
 	{

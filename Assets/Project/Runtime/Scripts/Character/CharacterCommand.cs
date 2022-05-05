@@ -11,13 +11,12 @@ public abstract class CharacterCommand
 	public float currProgress;
 	public float duration = 1f;
 
-	public CharacterFlow characterFlow;
+	public CharacterFlowController characterFlow;
 
-	public CharacterCommand(CharacterFlow characterFlow)
+	public CharacterCommand(CharacterFlowController characterFlow)
 	{
 		this.characterFlow = characterFlow;
 	}
-
 
 	public virtual void Peek() { }
 

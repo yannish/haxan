@@ -12,7 +12,7 @@ public class TurnCommand : CharacterCommand
 
 
 	public TurnCommand(
-		CharacterFlow characterFlow, 
+		CharacterFlowController characterFlow, 
 		HexDirection fromDir, HexDirection toDir,
 		float duration
 		) : base(characterFlow)

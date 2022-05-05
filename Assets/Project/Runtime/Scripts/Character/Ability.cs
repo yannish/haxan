@@ -15,22 +15,27 @@ public enum StepPhase
 	ATTACK
 }
 
-
+[RequireComponent(typeof(AbilityFlowController))]
 public abstract class Ability : MonoBehaviour
 {
+	[Header("CONFIG:")]
+	public Sprite icon;
+
+	public string abilityName;
+
 	public StepPhase phase;
 
 	public AbilityType type;
 
-	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlow flow) => null;
 
-	public virtual Turn FetchCommandChain(Cell targetCell, CharacterFlow flow) 
+	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow) => null;
+
+	public virtual Turn FetchCommandChain(Cell targetCell, CellObject cellObj, FlowController flow) 
 	{
-		return Turn.CreateInstance(flow.character, this);
+		return Turn.CreateInstance(cellObj, this);
 	}
-	//public virtual Queue<CharacterCommand> FetchCommandChain(Cell targetCell, CharacterFlow flow) => null;
 
-	public virtual void Peek(Cell targetCell, CharacterFlow flow) { }
+	public virtual void Peek(Cell targetCell, CharacterFlowController flow) { }
 
 	public virtual void Unpeek() { }
 

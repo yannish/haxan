@@ -15,7 +15,7 @@ public class WandererDisplay : MonoBehaviour
 			var newSlot = Instantiate(wandererSlotPrefab);
 			newSlot.transform.SetParent(this.transform);
 
-			var wandererSlot = newSlot.GetComponent<WandererSlot>();
+			var wandererSlot = newSlot.GetComponent<WandererDisplaySlot>();
 			wandererSlot.BindTo(wanderer as Wanderer);
 		}
 	}

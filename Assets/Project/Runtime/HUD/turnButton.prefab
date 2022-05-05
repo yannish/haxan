@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -200, y: 49.870796}
+  m_AnchoredPosition: {x: 200, y: -49.871}
   m_SizeDelta: {x: 400, y: 99.74158}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4877546582659515945
@@ -293,10 +293,10 @@ MonoBehaviour:
   cachedAnchoredPos: {x: 0, y: 0}
   hoverRect: {fileID: 4877546582659515947}
   hoverTweenDuration: 0.5
-  hoveredThickness: 50
+  hoveredThickness: 20
   hoverSpring:
-    freq: 12
-    damp: 0.3
+    freq: 30
+    damp: 1
     currValue: 0
     currTarget: 0
     velocity: 0
@@ -339,4 +339,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logDebug: 0
-  _flowController: {fileID: 0}

@@ -7,26 +7,77 @@ public class AbilityDisplay : MonoBehaviour
 {
     public AbilityDisplaySlot[] slots;
 
-    private void Awake()
+    public int numberOfAbilitySlots;
+    public GameObject abilitySlotPrefab;
+
+    private void Start()
     {
+		//for (int i = 0; i < numberOfAbilitySlots; i++)
+		//{
+  //          var newSlot = Instantiate(abilitySlotPrefab);
+  //          newSlot.transform.SetParent(this.transform);
+  //      }
+
+  //      foreach (var wanderer in Globals.ActiveWanderers.Items)
+		//{
+
+		//}
+
         slots = GetComponentsInChildren<AbilityDisplaySlot>();
 
-        Character.OnHovered += DisplayAbilities;
-        Character.OnUnhovered += ClearAbilities;
-    }
+		//CellObjFlowController.Peeked += DisplayAbilities;
+  //      CellObjFlowController.Unpeeked += ClearAbilities;
 
-    private void ClearAbilities()
+        CellObjFlowController.Entered += DisplayAbilities;
+        CellObjFlowController.Exited += ClearAbilities;
+
+        ClearAbilities();
+	}
+
+    private void ClearAbilities(CellObjFlowController obj = null)
     {
-        throw new NotImplementedException();
+		foreach (var slot in slots)
+		{
+            if (slot == null)
+                continue;
+
+            slot.gameObject.SetActive(false);
+		}
     }
 
-    private void DisplayAbilities(Character obj)
+    private void DisplayAbilities(CellObjFlowController obj)
     {
         ClearAbilities();
 
-        //for (int i = 0; i < obj.abilities; i++)
+        //foreach (var slot in slots)
         //{
+        //    if (slot == null)
+        //        continue;
 
+        //    slot.gameObject.SetActive(true);
         //}
+
+        int abilityCount = 0;
+        foreach (var ability in obj.baseCellObject.abilities)
+        {
+            if (ability == null)
+                continue;
+
+            AbilityDisplaySlot slot = slots[abilityCount];
+            if (slot == null)
+                continue;
+
+            SlotAbility(ability, slot);
+            abilityCount++;
+        }
     }
+
+	private void SlotAbility(Ability ability, AbilityDisplaySlot slot)
+	{
+        slot.gameObject.SetActive(true);
+        slot.abilityIcon.sprite = ability.icon;
+        slot.abilityText.SetText(ability.abilityName.ToUpper());
+        slot.ability = ability;
+        //slot.abilityIcon = ability.
+	}
 }

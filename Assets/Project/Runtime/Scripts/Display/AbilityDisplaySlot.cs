@@ -4,10 +4,14 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AbilityDisplaySlot : MonoBehaviour
+public class AbilityDisplaySlot : RectUIElement, IFlowable
 {
+    [Header("ABILITY:")]
     public Image abilityIcon;
     public TextMeshProUGUI abilityText;
+    [ReadOnly] public Ability ability;
+
+    public FlowController Flow => ability != null ? ability.flow : null;
 
     public void DisplayAbility(ScrObjAbility ability)
     {
