@@ -74,7 +74,6 @@ public class UIElement : MonoBehaviour,
 			Debug.Log("pointer entered: " + gameObject.name);
 
 		ControlFlowManager.OnElementHovered.Invoke(new ElementHoveredEvent(this));
-		//Events.instance.Raise(new ElementHoveredEvent(this));
 	}
 
 	public virtual void OnPointerExit(PointerEventData eventData)
@@ -83,7 +82,6 @@ public class UIElement : MonoBehaviour,
 			Debug.Log("pointer exited: " + gameObject.name);
 
 		ControlFlowManager.OnElementHovered.Invoke(new ElementHoveredEvent(null));
-		//Events.instance.Raise(new ElementHoveredEvent(null));
 	}
 
 	//public virtual void OnPointerUp(PointerEventData eventData)
@@ -94,14 +92,12 @@ public class UIElement : MonoBehaviour,
 			case PointerEventData.InputButton.Left:
 				if (logDebug)
 					Debug.Log("left clicked: " + gameObject.name);
-				//Events.instance.Raise(new ElementClickedEvent(this));
 				ControlFlowManager.OnElementClicked.Invoke(new ElementClickedEvent(this));
 				break;
 
 			case PointerEventData.InputButton.Right:
 				if (logDebug)
 					Debug.Log("right clicked: " + gameObject.name);
-				//Events.instance.Raise(new ElementBackClickedEvent(this));
 				ControlFlowManager.OnElementBackClicked.Invoke(new ElementBackClickedEvent(this));
 				break;
 		}

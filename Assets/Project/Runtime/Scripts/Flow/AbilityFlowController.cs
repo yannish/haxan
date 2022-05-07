@@ -1,3 +1,4 @@
+using BOG;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -60,6 +61,7 @@ public class AbilityFlowController : FlowController
 		}
 	}
 
+
 	public override void Exit()
 	{
 		base.Exit();
@@ -81,6 +83,9 @@ public class AbilityFlowController : FlowController
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
+		if (logDebug)
+			Debog.logGameflow("... handling hover in abilityFlow " + this.ability.name);
+
 		ability.Unpeek();
 
 		if(
@@ -96,7 +101,7 @@ public class AbilityFlowController : FlowController
 			}
 		}
 
-		return false;
+		return base.HandleHover(e);
 
 		//if (e.element.flowController == null)
 		//	return false;

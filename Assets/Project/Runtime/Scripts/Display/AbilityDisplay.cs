@@ -78,6 +78,11 @@ public class AbilityDisplay : MonoBehaviour
         slot.abilityIcon.sprite = ability.icon;
         slot.abilityText.SetText(ability.abilityName.ToUpper());
         slot.ability = ability;
-        //slot.abilityIcon = ability.
+
+        ability.flow.OnFlowPeeked += slot.OnFlowPeeked;
+        ability.flow.OnFlowUnpeeked += slot.OnFlowUnpeeked;
+
+        ability.flow.OnFlowEntered += slot.OnFlowEntered;
+        ability.flow.OnFlowExited += slot.OnFlowExited;
 	}
 }

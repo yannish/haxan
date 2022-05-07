@@ -127,23 +127,25 @@ public class MainFlowController : FlowController
 		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
 			return false;
 
-		if (subFlow != null && subFlow.HandleHover(e))
-			return true;
+		return base.HandleHover(e);
 
-		if (peekedFlow != null)
-        {
-            peekedFlow.HoverUnpeek();
-            peekedFlow = null;
-        }
+		//if (subFlow != null && subFlow.HandleHover(e))
+		//	return true;
 
-		//... 
-		if (e.element == null || e.element.flowController == null)
-			return false;
+		//if (peekedFlow != null)
+  //      {
+  //          peekedFlow.HoverUnpeek();
+  //          peekedFlow = null;
+  //      }
 
-		peekedFlow = e.element.flowController;
-		peekedFlow.HoverPeek();
+		////... 
+		//if (e.element == null || e.element.flowController == null)
+		//	return false;
 
-		return false;
+		//peekedFlow = e.element.flowController;
+		//peekedFlow.HoverPeek();
+
+		//return false;
 	}
 
 

@@ -134,7 +134,7 @@ MonoBehaviour:
   baseColor: {r: 0, g: 0, b: 0, a: 0}
   colorImage: {fileID: 0}
   colorDuration: 0
-  clickRect: {fileID: 0}
+  clickRect: {fileID: 5728346320539845610}
   clickSpring:
     freq: 12
     damp: 0.3
@@ -145,7 +145,7 @@ MonoBehaviour:
   clickVelocity: 200
   clickDuration: 1
   cachedAnchoredPos: {x: 0, y: 0}
-  hoverRect: {fileID: 0}
+  hoverRect: {fileID: 5728346320539845610}
   hoverTweenDuration: 0.5
   hoveredThickness: 50
   hoverSpring:

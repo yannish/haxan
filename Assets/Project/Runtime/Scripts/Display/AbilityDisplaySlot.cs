@@ -13,18 +13,35 @@ public class AbilityDisplaySlot : RectUIElement, IFlowable
 
     public FlowController Flow => ability != null ? ability.flow : null;
 
-    public void DisplayAbility(ScrObjAbility ability)
-    {
-        gameObject.SetActive(true);
+    //public void DisplayAbility(ScrObjAbility ability)
+    //{
+    //    gameObject.SetActive(true);
 
-        if (ability.icon)
-            abilityIcon.sprite = ability.icon;
+    //    if (ability.icon)
+    //        abilityIcon.sprite = ability.icon;
 
-        abilityText.SetText(ability.name.ToUpper());
-    }
+    //    abilityText.SetText(ability.name.ToUpper());
+    //}
 
-    public void Clear()
-    {
-        gameObject.SetActive(false);
-    }
+    //public void Clear()
+    //{
+    //    gameObject.SetActive(false);
+    //}
+
+ //   public void BindTo(Ability ability)
+	//{
+ //       ability.flow.OnFlowPeeked += OnFlowPeeked;
+ //       ability.flow.OnFlowUnpeeked += OnFlowUnpeeked;
+        
+ //       ability.flow.OnFlowEntered += OnFlowEntered;
+ //       ability.flow.OnFlowExited += OnFlowExited;
+ //   }
+
+    public void OnFlowPeeked(FlowController obj) => Hover();
+
+    public void OnFlowUnpeeked(FlowController obj) => Unhover();
+
+    public void OnFlowEntered(FlowController obj) => Highlight();
+
+    public void OnFlowExited(FlowController obj) => Unhighlight();
 }

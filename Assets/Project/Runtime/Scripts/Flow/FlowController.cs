@@ -162,10 +162,31 @@ public abstract class FlowController : MonoBehaviour
 	//... if a flow's HandleHover returns true, it's been "used"...?
 	public virtual bool HandleHover(ElementHoveredEvent e)
 	{
-		if (subFlow != null)
-			return subFlow.HandleHover(e);
-		//Debog.logInput("Handling hover in " + gameObject.name);
+		if (subFlow != null && subFlow.HandleHover(e))
+			return true;
+
+		if (peekedFlow != null)
+		{
+			peekedFlow.HoverUnpeek();
+			peekedFlow = null;
+		}
+
+		//... 
+		if (e.element == null || e.element.flowController == null)
+			return false;
+
+		peekedFlow = e.element.flowController;
+		peekedFlow.HoverPeek();
+
+		if(logDebug)
+			Debog.logInput("Handling hover in " + gameObject.name);
+
 		return false;
+
+		//if (subFlow != null)
+		//	return subFlow.HandleHover(e);
+		////Debog.logInput("Handling hover in " + gameObject.name);
+		//return false;
 	}
 
 	protected virtual void TransitionTo(FlowController newFlowController, bool clearPeekedFlow = true)

@@ -35,23 +35,11 @@ public class WandererDisplaySlot : RectUIElement, IFlowable
 
 	}
 
-	private void OnFlowPeeked(FlowController obj)
-	{
-		Hover();
-	}
+	private void OnFlowPeeked(FlowController obj) => Hover();
 
-	private void OnFlowUnpeeked(FlowController obj)
-	{
-		Unhover();
-	}
+	private void OnFlowUnpeeked(FlowController obj) => Unhover();
 
-	private void OnFlowEntered(FlowController obj)
-	{
-		Highlight();
-	}
+	private void OnFlowEntered(FlowController obj) => Highlight();
 
-	private void OnFlowExited(FlowController obj)
-	{
-		Unhighlight();
-	}
+	private void OnFlowExited(FlowController obj) => Unhighlight();
 }

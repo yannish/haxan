@@ -57,7 +57,7 @@ public class Cell : MonoBehaviour,
 	{
 		get
 		{
-			Debug.Log("fetching flow on : " + gameObject.name);
+			//Debug.Log("fetching flow on : " + gameObject.name);
 
 			if (this.TryGetBoundCellObject(out CellObject foundCellObject))
 			{
@@ -65,7 +65,7 @@ public class Cell : MonoBehaviour,
 					return foundCellObject.flowController;
 			}
 
-			Debug.Log("... no bound object, getting base flow: " + gameObject.name);
+			//Debug.Log("... no bound object, getting base flow: " + gameObject.name);
 
 			return cellFlow;
 		}

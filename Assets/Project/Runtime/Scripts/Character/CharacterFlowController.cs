@@ -67,16 +67,19 @@ public abstract class CharacterFlowController : CellObjFlowController
 			TransitionTo(character.movementAbility.flow);
 	}
 
+
 	public override void Exit()
 	{
 		fsm?.SetTrigger(FSM.deselect);
 		base.Exit();
 	}
 
+
 	public override FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
 	{
 		return FlowState.DONE;
 	}
+
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
