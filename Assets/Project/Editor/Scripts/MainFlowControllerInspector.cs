@@ -60,6 +60,7 @@ public class MainFlowControllerInspector : Editor
 		this.Repaint();
 	}
 
+	List<FlowController> flowHeirarchy = new List<FlowController>();
 	void DrawContent()
 	{
 		MainFlowController mainFlow = target as MainFlowController;
@@ -69,10 +70,34 @@ public class MainFlowControllerInspector : Editor
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("doBreak"));
 		EditorGUILayout.Space();
 
+		flowHeirarchy.Clear();
 
 
-		EditorGUILayout.LabelField("FLOW:", EditorStyles.boldLabel);
+		EditorGUILayout.LabelField("FLOW HEIRARCHY:", EditorStyles.boldLabel);
+
+		FlowController flowToDraw = mainFlow;
+		while(flowToDraw != null)
+		{
+			flowHeirarchy.Add(flowToDraw);
+			flowToDraw = flowToDraw.subFlow;
+		}
+
+		foreach (var flow in flowHeirarchy)
+		{
+			string label = string.Format("- {0}", flow.name);
+			EditorGUILayout.ObjectField(new GUIContent(label), flow, typeof(FlowController), true);
+			EditorGUI.indentLevel++;
+		}
+
+		foreach(var flow in flowHeirarchy)
+		{
+			EditorGUI.indentLevel--;
+		}
+		EditorGUILayout.Space();
+
+
 		GUI.enabled = false;
+		EditorGUILayout.LabelField("FLOW DEBUG:", EditorStyles.boldLabel);
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("peekedFlow"));//, new GUIContent("peeked flow: "));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("subFlow"));//, new GUIContent("sub flow: "));
 		EditorGUILayout.PropertyField(serializedObject.FindProperty("lastSubFlow"));//, new GUIContent("sub flow: "));

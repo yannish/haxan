@@ -48,7 +48,7 @@ public abstract class FlowController : MonoBehaviour
 {
 	public bool logDebug;
 
-	[Header("FLOW")]
+	[Header("FLOW:")]
 	[ReadOnly] public FlowController subFlow;// { get; set; }
 	[ReadOnly] public FlowController peekedFlow;
 	[ReadOnly] public FlowController lastSubFlow;
@@ -84,10 +84,49 @@ public abstract class FlowController : MonoBehaviour
 
 	public virtual void HoverUnpeek() => OnFlowUnpeeked(this);
 
-	public virtual FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
-	{
-		return FlowState.YIELD;
-	}
+	public virtual FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null) { return FlowState.YIELD; }
+	//{
+	//	if (e.element.flowController == null)
+	//		return FlowState.YIELD;
+
+	//	if(subFlow != null)
+	//	{
+	//		var subFlowState = subFlow.HandleInput(e, parentController);
+
+	//		switch(subFlowState)
+	//		{
+	//			case FlowState.RUNNING:
+	//				return FlowState.RUNNING;
+
+	//			case FlowState.DONE:
+	//				TransitionTo(null);
+	//				peekedFlow = e.element.flowController;
+	//				peekedFlow.HoverPeek();
+	//				return FlowState.RUNNING;
+
+	//			case FlowState.YIELD:
+	//				break;
+	//		}
+	//	}
+
+	//	//... clicking the element you're already in:
+	//	if (e.element.flowController == this)
+	//	{
+	//		Debog.logGameflow("clicked existing element");
+	//		//TransitionTo(null);
+	//		return FlowState.DONE;
+	//	}
+
+	//	if(e.element.flowController.GetType() == this.GetType())
+	//	{
+	//		Debog.logGameflow("clicked element of same type");
+	//		return FlowState.YIELD;
+	//	}
+
+	//	TransitionTo(e.element.flowController);
+
+	//	return FlowState.RUNNING;
+	//}
 
 	public virtual FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
 	{
@@ -131,7 +170,7 @@ public abstract class FlowController : MonoBehaviour
 			//}
 		}
 
-		return FlowState.YIELD;
+		return FlowState.RUNNING;
 	}
 
 	public virtual void HandleEmptyInput(EmptyClickEvent e)

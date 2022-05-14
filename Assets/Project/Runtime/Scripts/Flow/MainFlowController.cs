@@ -149,108 +149,153 @@ public class MainFlowController : FlowController
 	}
 
 
-	public override FlowState HandleInput(ElementClickedEvent e, FlowController owner)
+	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
 	{
-		// TODO: how to nullcheck reference to interface..
-		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
+		var clickedFlow = e.element.flowController;
+		if (clickedFlow == null)
 			return FlowState.RUNNING;
 
-		if(logDebug)
-			Debog.logInput("Handling input on maincontroller");
-
-		//if (currInputTurn != null)
-		//{
-		//	if (logDebug)
-		//		Debog.logGameflow("... curr command stack still being processed");
-		//	return FlowState.RUNNING;
-		//}
-
-
-
-        //if there's already a subFlow, pass input through that:
-        if (subFlow != null)
+		if(subFlow != null)
 		{
-			var subFlowState = subFlow.HandleInput(e, this);
+			var subflowState = subFlow.HandleInput(e, parentController);
 
-			switch (subFlowState)
+			switch (subflowState)
 			{
-				case FlowState.YIELD:
-					break;
+				case FlowState.RUNNING:
+					return FlowState.RUNNING;
 
 				case FlowState.DONE:
 					TransitionTo(null);
-					return FlowState.RUNNING;
+					peekedFlow = e.element.flowController;
+					peekedFlow.HoverPeek();
+					break;
 
-				case FlowState.RUNNING:
-					subFlow.Tick();
-					return FlowState.RUNNING;
+				case FlowState.YIELD:
+					break;
 			}
 		}
 
-		if (logDebug)
-			Debog.logGameflow("subflow passed on input in main");
-
-		//... if subflow didn't want input, or you've clicked a new one:
-		if (e.element.flowController != null)
+		//... ex. if you clicked the same character
+		if (subFlow == clickedFlow)
 		{
-			Debog.logGameflow("clicked element had a subflow : " + e.element.flowController.name);
+			Debog.logGameflow("clicked existing element in mainflow");
 
-			if (e.element.flowController is TurnButtonFlowController)
-			{
-				if (logDebug)
-					Debog.logInput("TURN BUTTON PRESSED");
+			TransitionTo(null);
+			peekedFlow = e.element.flowController;
+			peekedFlow.HoverPeek();
 
-				TransitionTo(null);
-
-				turnProcessor.SetPhase(TeamPhase.ENEMY);
-
-				return FlowState.RUNNING;
-			}
-
-
-			if(e.element.flowController is CellFlowController)
-			{
-				Debog.logGameflow("... it's cell flow: " + e.element.flowController);
-				return FlowState.RUNNING;
-			}
-
-			//... clicking the element you're already in:
-            if (e.element.flowController == subFlow)
-			{
-				Debog.logGameflow("clicked existing element");
-				TransitionTo(null);
-
-				//... go back to peeking it:
-				peekedFlow = e.element.flowController;
-				peekedFlow.HoverPeek();
-
-				//... clear out "selected wanderer so that TurnFlow stops ticking it:
-				//Globals.SelectedWanderer.Items.Clear();
-			}
-			else
-			{
-				if(logDebug)
-					Debog.logGameflow("found flow, heading in");
-
-				TransitionTo(e.element.flowController);
-
-				//... fill out "selected wanderer" for TurnFlow to reference:
-				//if (e.element.flowController is WandererFlowController)
-				//{
-				//	Debug.Log("... setting selected wanderer");
-
-				//	Wanderer wanderer = (e.element.flowController as WandererFlowController).wanderer;
-				//	Globals.SelectedWanderer.Add(wanderer);
-				//}
-			}
+			return FlowState.RUNNING;
 		}
-		else
-		{
-			Debog.logGameflow("... element flow controller was null on maincontroller");
-		}
-	
+
+		TransitionTo(clickedFlow);
+
 		return FlowState.RUNNING;
 	}
+
+	//public override FlowState HandleInput(ElementClickedEvent e, FlowController owner)
+	//{
+	//	// TODO: how to nullcheck reference to interface..
+	//	if ((turnProcessor as Component) && turnProcessor.IsProcessing)
+	//		return FlowState.RUNNING;
+
+	//	if(logDebug)
+	//		Debog.logInput("Handling input on maincontroller");
+
+	//	//if (currInputTurn != null)
+	//	//{
+	//	//	if (logDebug)
+	//	//		Debog.logGameflow("... curr command stack still being processed");
+	//	//	return FlowState.RUNNING;
+	//	//}
+
+ //       //if there's already a subFlow, pass input through that:
+ //       if (subFlow != null)
+	//	{
+	//		var subFlowState = subFlow.HandleInput(e, this);
+
+	//		switch (subFlowState)
+	//		{
+	//			case FlowState.YIELD:
+	//				break;
+
+	//			case FlowState.DONE:
+	//				TransitionTo(null);
+	//				return FlowState.RUNNING;
+
+	//			case FlowState.RUNNING:
+	//				//subFlow.Tick();
+	//				return FlowState.RUNNING;
+	//		}
+	//	}
+
+	//	if (logDebug)
+	//		Debog.logGameflow("subflow passed on input in main");
+
+	//	//... if subflow didn't want input, or you've clicked a new one:
+	//	if (e.element.flowController != null)
+	//	{
+	//		Debog.logGameflow("clicked element had a subflow : " + e.element.flowController.name);
+
+	//		if (e.element.flowController is TurnButtonFlowController)
+	//		{
+	//			if (logDebug)
+	//				Debog.logInput("TURN BUTTON PRESSED");
+
+	//			TransitionTo(null);
+
+	//			turnProcessor.SetPhase(TeamPhase.ENEMY);
+
+	//			return FlowState.RUNNING;
+	//		}
+
+	//		if(e.element.flowController is CellFlowController)
+	//		{
+	//			Debog.logGameflow("... it's cell flow: " + e.element.flowController);
+	//			return FlowState.RUNNING;
+	//		}
+
+
+	//		//... HANDLE BELOW IN BASE:
+
+	//		////... clicking the element you're already in:
+ //  //         if (e.element.flowController == subFlow)
+	//		//{
+	//		//	Debog.logGameflow("clicked existing element");
+	//		//	TransitionTo(null);
+
+	//		//	//... go back to peeking it:
+	//		//	peekedFlow = e.element.flowController;
+	//		//	peekedFlow.HoverPeek();
+
+	//		//	//... clear out "selected wanderer so that TurnFlow stops ticking it:
+	//		//	//Globals.SelectedWanderer.Items.Clear();
+	//		//}
+	//		//else
+	//		//{
+	//		//	if(logDebug)
+	//		//		Debog.logGameflow("found flow, heading in");
+
+	//		//	TransitionTo(e.element.flowController);
+
+	//		//	//... fill out "selected wanderer" for TurnFlow to reference:
+	//		//	//if (e.element.flowController is WandererFlowController)
+	//		//	//{
+	//		//	//	Debug.Log("... setting selected wanderer");
+
+	//		//	//	Wanderer wanderer = (e.element.flowController as WandererFlowController).wanderer;
+	//		//	//	Globals.SelectedWanderer.Add(wanderer);
+	//		//	//}
+	//		//}
+	//	}
+	//	else
+	//	{
+	//		Debog.logGameflow("... element flow controller was null on maincontroller");
+	//	}
+
+	//	return base.HandleInput(e, this);
+
+	//	//return FlowState.RUNNING;
+	//}
 
 	#endregion
 }

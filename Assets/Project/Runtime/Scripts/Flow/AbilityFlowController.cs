@@ -114,10 +114,6 @@ public class AbilityFlowController : FlowController
 
 	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
 	{
-		//if (parentController == null && !(parentController is CharacterFlow))
-		//	return FlowState.YIELD;
-
-		//CharacterFlow characterFlow = parentController as CharacterFlow;
 
 		if (validElements.IsNullOrEmpty())
 			return FlowState.YIELD;
@@ -129,10 +125,22 @@ public class AbilityFlowController : FlowController
 		if(validElements.Contains(e.element))
 		{
 			Turn newTurn = ability.FetchCommandChain(cell, characterFlow.character, characterFlow);
-			//Queue<CharacterCommand> newCommands = ability.FetchCommandChain(cell, characterFlow);
+			
 			characterFlow.ProvideInputTurn(newTurn);
 			ability.Unpeek();
+
+			return FlowState.RUNNING;
 		}
+
+
+		var clickedFlow = e.element.flowController;
+
+		if (clickedFlow is AbilityFlowController)
+			return FlowState.YIELD;
+
+		if (clickedFlow is CharacterFlowController)
+			return FlowState.DONE;
+
 
 		return FlowState.YIELD;
 	}

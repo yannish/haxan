@@ -84,6 +84,7 @@ public class GroundMoveAbility : Ability
 		if (!(flow is CharacterFlowController))
 			return null;
 
+
 		var characterFlow = flow as CharacterFlowController;
 
 		Turn newTurn = base.FetchCommandChain(targetCell, cellObj, flow);

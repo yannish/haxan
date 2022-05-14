@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,6 +19,7 @@ public enum StepPhase
 [RequireComponent(typeof(AbilityFlowController))]
 public abstract class Ability : MonoBehaviour
 {
+
 	[Header("CONFIG:")]
 	public Sprite icon;
 
@@ -35,9 +37,24 @@ public abstract class Ability : MonoBehaviour
 		return Turn.CreateInstance(cellObj, this);
 	}
 
-	public virtual void Peek(Cell targetCell, CharacterFlowController flow) { }
 
-	public virtual void Unpeek() { }
+
+	protected Action peekAction;
+
+	public virtual void Peek(Cell targetCell, CharacterFlowController flow) 
+	{
+		var peekedCells = GetValidMoves(targetCell, flow);
+		peekAction = CellActions.EffectCells<CellPathCommand>(peekedCells);
+	}
+
+	public virtual void Unpeek()
+	{
+		if (peekAction != null)
+		{
+			peekAction.Invoke();
+			peekAction = null;
+		}
+	}
 
 
 	public AbilityFlowController _flow;

@@ -147,7 +147,7 @@ MonoBehaviour:
   cachedAnchoredPos: {x: 0, y: 0}
   hoverRect: {fileID: 5728346320539845610}
   hoverTweenDuration: 0.5
-  hoveredThickness: 50
+  hoveredThickness: 16
   hoverSpring:
     freq: 12
     damp: 0.3

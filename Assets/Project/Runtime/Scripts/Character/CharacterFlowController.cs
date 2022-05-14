@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BOG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -63,8 +64,8 @@ public abstract class CharacterFlowController : CellObjFlowController
 		fsm?.SetTrigger(FSM.select);
 		base.Enter();
 
-		if (character.movementAbility)
-			TransitionTo(character.movementAbility.flow);
+		//if (character.movementAbility)
+		//	TransitionTo(character.movementAbility.flow);
 	}
 
 
@@ -105,7 +106,8 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
 	{
-		//if there's already a subFlow, pass input through that:
+		var clickedFlow = e.element.flowController;
+
 		if (subFlow != null)
 		{
 			var subFlowState = subFlow.HandleInput(e, this);
@@ -113,17 +115,43 @@ public abstract class CharacterFlowController : CellObjFlowController
 			switch (subFlowState)
 			{
 				case FlowState.YIELD:
-					return FlowState.YIELD;
+					break;
 
 				case FlowState.DONE:
 					TransitionTo(null);
 					return FlowState.RUNNING;
 
 				case FlowState.RUNNING:
-					subFlow.Tick();
 					return FlowState.RUNNING;
 			}
 		}
+
+
+		//... ex. if you clicked the same ability icon again
+		if (subFlow == clickedFlow)
+		{
+			Debog.logGameflow("clicked existing element in char flow");
+
+			TransitionTo(null);
+			peekedFlow = e.element.flowController;
+			peekedFlow.HoverPeek();
+
+			return FlowState.RUNNING;
+		}
+
+		
+		if (clickedFlow is CharacterFlowController)
+			return FlowState.YIELD;
+
+
+		if (clickedFlow is AbilityFlowController)
+		{
+			var abilityFlow = (clickedFlow as AbilityFlowController);
+			TransitionTo(abilityFlow);
+			return FlowState.RUNNING;
+		}
+
+		//TransitionTo(clickedFlow);
 
 		return FlowState.YIELD;
 	}

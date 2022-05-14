@@ -48,8 +48,8 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 330a6a77c8f75104ba7a89b793230150, type: 3}
   abilityName: bash
   phase: 2
-  type: 0
-  _flow: {fileID: 0}
+  type: 1
+  _flow: {fileID: 3752653300603672207}
 --- !u!114 &3752653300603672207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +66,7 @@ MonoBehaviour:
   subFlow: {fileID: 0}
   peekedFlow: {fileID: 0}
   lastSubFlow: {fileID: 0}
-  _ability: {fileID: 0}
+  _ability: {fileID: 5824293317502162645}
   validMoves: []
   validElements: []
   characterFlow: {fileID: 0}
