@@ -45,6 +45,13 @@ public class CellObjFlowController : FlowController
 			subFlow = null;
 		}
 
+		if (peekedFlow != null)
+		{
+			peekedFlow.HoverUnpeek();
+			peekedFlow = null;
+		}
+
+
 		Exited(this);
 	}
 

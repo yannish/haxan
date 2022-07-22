@@ -30,6 +30,14 @@ public class CellClickableCommand : CellCommand
 	public override string untrigger => FSM.unclickable;
 }
 
+public class CellPeekClickableCommand : CellCommand
+{
+	public CellPeekClickableCommand() { }
+
+	public override string trigger => FSM.peekClickable;
+	public override string untrigger => FSM.unpeekClickable;
+}
+
 public class CellPathCommand : CellCommand
 {
 	public CellPathCommand() { }
@@ -38,10 +46,10 @@ public class CellPathCommand : CellCommand
 	public override string untrigger => FSM.unpath;
 }
 
-public class CellHintPathCommand : CellCommand
+public class CellPeekPathCommand : CellCommand
 {
-	public CellHintPathCommand() { }
+	public CellPeekPathCommand() { }
 
-	public override string trigger => FSM.hintPath;
-	public override string untrigger => FSM.unhintPath;
+	public override string trigger => FSM.peekPath;
+	public override string untrigger => FSM.unpeekPath;
 }

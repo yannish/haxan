@@ -39,22 +39,61 @@ public abstract class Ability : MonoBehaviour
 
 
 
+	//... when you hover / unhover flow:
+	Action peekValidMovesAction;
+	public virtual void PeekValidMoves(Cell targetCell, CharacterFlowController flow)
+	{
+		Debug.LogWarning("peeking valid moves on " + this.gameObject.name);
+	}
+
+	public virtual void UnpeekValidMoves(Cell targetCell, CharacterFlowController flow)
+	{
+		Debug.LogWarning("unpeeking  valid moves on " + this.gameObject.name);
+	}
+
+
+	//... when you enter / exit flow:
+	Action showValidMovesAction;
+	public virtual void ShowValidMoves(Cell targetCell, CharacterFlowController flow)
+	{
+
+	}
+
+	public virtual void HideValidMoves(Cell targetCell, CharacterFlowController flow)
+	{
+
+	}
+
+
+	//... when you hover / unhover specific valid moves
+	Action peekMovesAction;
+	public virtual void PeekMove(Cell targetCell, CharacterFlowController flow)
+	{
+
+	}
+
+	public virtual void UnpeekMove(Cell targetCell, CharacterFlowController flow)
+	{
+
+	}
+
+
 	protected Action peekAction;
 
-	public virtual void Peek(Cell targetCell, CharacterFlowController flow) 
-	{
-		var peekedCells = GetValidMoves(targetCell, flow);
-		peekAction = CellActions.EffectCells<CellPathCommand>(peekedCells);
-	}
+	public virtual void Peek(Cell targetCell, CharacterFlowController flow) { }
+	//{
+	//	var peekedCells = GetValidMoves(targetCell, flow);
+	//	peekAction = CellActions.EffectCells<CellPathCommand>(peekedCells);
+	//}
 
-	public virtual void Unpeek()
-	{
-		if (peekAction != null)
-		{
-			peekAction.Invoke();
-			peekAction = null;
-		}
-	}
+	public virtual void Unpeek() { }
+	//{
+	//	if (peekAction != null)
+	//	{
+	//		peekAction.Invoke();
+	//		peekAction = null;
+	//	}
+	//}
 
 
 	public AbilityFlowController _flow;

@@ -86,21 +86,37 @@ public abstract class CharacterFlowController : CellObjFlowController
 	{
 		//Debug.LogWarning("hndling ability hover in characterflow");
 
-		if (subFlow == null)
-			return false;
+		//if (subFlow == null)
+		//	return false;
 
-		if (!(subFlow is AbilityFlowController))
-			return false;
-
-		var abilityFlow = subFlow as AbilityFlowController;
-		if (abilityFlow.ability.type == AbilityType.MOVEMENT)
+		if(peekedFlow != null)
 		{
-			//Debug.LogWarning("... had a movement subflow");
-			subFlow.HandleHover(e);
-			return false;
+			peekedFlow.HoverUnpeek();
+			peekedFlow = null;
 		}
 
-		return base.HandleHover(e);
+		if (e.element == null || e.element.flowController == null)
+			return false;
+
+		peekedFlow = e.element.flowController;
+		peekedFlow.HoverPeek();
+
+		return true;
+
+		//if (!(subFlow is AbilityFlowController))
+		//	return false;
+
+		//var abilityFlow = subFlow as AbilityFlowController;
+
+
+		//if (abilityFlow.ability.type == AbilityType.MOVEMENT)
+		//{
+		//	//Debug.LogWarning("... had a movement subflow");
+		//	subFlow.HandleHover(e);
+		//	return false;
+		//}
+
+		//return base.HandleHover(e);
 	}
 
 

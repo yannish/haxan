@@ -12,10 +12,17 @@ public class BashAbility : Ability
 		//return base.GetValidMoves(cell, flow);
 	}
 
+
+
 	//public override void Peek(Cell targetCell, CharacterFlowController flow)
 	//{
 	//	//var otherRing = targetCell.GetCardinalRing(1);
 	//	var peekedCells = GetValidMoves(targetCell, flow);
+
+	//	var pushDirection = flow.character.currCell.To(targetCell);
+
+	//	CellMarkupService.I?.MarkCellPush(targetCell, pushDirection);
+
 	//	peekAction = CellActions.EffectCells<CellPathCommand>(peekedCells);
 	//}
 

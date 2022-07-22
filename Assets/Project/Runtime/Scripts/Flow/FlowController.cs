@@ -8,14 +8,21 @@ public static class FSM
 {
 	public const string hover = "hover";
 	public const string unhover = "unhover";
+
 	public const string select = "select";
 	public const string deselect = "deselect";
+
 	public const string clickable = "clickable";
 	public const string unclickable = "unclickable";
+
+	public const string peekClickable = "peekClickable";
+	public const string unpeekClickable = "unpeekClickable";
+
 	public const string path = "path";
 	public const string unpath = "unpath";
-	public const string hintPath = "hintPath";
-	public const string unhintPath = "unhintPath";
+
+	public const string peekPath = "peekPath";
+	public const string unpeekPath = "unpeekPath";
 }
 
 public enum FSMtrigger
@@ -201,8 +208,8 @@ public abstract class FlowController : MonoBehaviour
 	//... if a flow's HandleHover returns true, it's been "used"...?
 	public virtual bool HandleHover(ElementHoveredEvent e)
 	{
-		if (subFlow != null && subFlow.HandleHover(e))
-			return true;
+		//if (subFlow != null && subFlow.HandleHover(e))
+		//	return true;
 
 		if (peekedFlow != null)
 		{
@@ -217,7 +224,7 @@ public abstract class FlowController : MonoBehaviour
 		peekedFlow = e.element.flowController;
 		peekedFlow.HoverPeek();
 
-		if(logDebug)
+		if (logDebug)
 			Debog.logInput("Handling hover in " + gameObject.name);
 
 		return false;

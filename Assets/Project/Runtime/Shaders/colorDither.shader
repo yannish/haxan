@@ -1,33 +1,21 @@
-Shader "UI/hexVertColor"
+Shader "Unlit/colorDither"
 {
     Properties
     {
         _Color("Color", Color) = (1,1,1,1)
-        _Alpha("Alpha", Range(0.0, 1.0)) = 1
-        _Inset("Inset",  Range(0.0, 1.0)) = 1
-        _Outset("Outset",  Range(0.0, 1.0)) = 0
-
+        _DitherColor("DitherColor", Color) = (1,1,1,1)
         _Dither("Dither", Range(-1,1)) = 1
-
-       /* _MyColor("Some Color", Color) = (1,1,1,1)
-        _MyVector("Some Vector", Vector) = (0,0,0,0)
-        _MyFloat("My float", Range(0,1)) = 0.5
-        _MyTexture("Texture", 2D) = "white" {}
-        _MyCubemap("Cubemap", CUBE) = "" {}*/
-        //_Inset("Inset",  Float) = 1;
-        //_MainTex ("Texture", 2D) = "white" {}
     }
+
     SubShader
     {
-		Blend SrcAlpha OneMinusSrcAlpha
-
-        Tags { "Queue" = "Transparent" }
-        //Tags { "RenderType"="Opaque" }
+        Tags { "RenderType"="Opaque" }
         LOD 100
-
 
         Pass
         {
+            ColorMask 0
+
             Stencil
             {
                 Ref 1
@@ -44,40 +32,61 @@ Shader "UI/hexVertColor"
             struct appdata
             {
                 float4 vertex : POSITION;
-                //float2 uv : TEXCOORD0;
-                fixed4 color : COLOR;
             };
 
-            float _Inset;
-            float _Outset;
-            float _Alpha;
-            fixed4 _Color;
-
-            struct v2f 
+            struct v2f
             {
-                float4 pos : SV_POSITION;
-                fixed4 color : COLOR;
+                float4 vertex : SV_POSITION;
             };
+
+            //float4 _Color;
+
+            v2f vert (appdata v)
+            {
+                v2f o;
+                o.vertex = UnityObjectToClipPos(v.vertex);
+                return o;
+            }
+
+            half4 frag (v2f i) : SV_Target
+            {
+                return (1,1,1,1);
+            }
+            ENDCG
+        }
+
+        Pass
+        {
+            CGPROGRAM
+            #pragma vertex vert
+            #pragma fragment frag
+
+            #include "UnityCG.cginc"
+
+            struct appdata
+            {
+                float4 vertex : POSITION;
+            };
+
+            struct v2f
+            {
+                float4 vertex : SV_POSITION;
+            };
+
+            float4 _Color;
 
             v2f vert(appdata v)
             {
                 v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                o.color = v.color;
-                //o.color.xyz = v.normal * 0.5 + 0.5;
-                //o.color.w = 1.0;
+                o.vertex = UnityObjectToClipPos(v.vertex);
                 return o;
             }
 
-            fixed4 frag(v2f i) : SV_Target 
-            { 
-                clip(_Inset - i.color.x);
-                clip(i.color.x - _Outset);
-                fixed4 col = fixed4(_Color.xyz, _Alpha);
-                //col.w = _Alpha;
+            fixed4 frag(v2f i) : SV_Target
+            {
+                fixed4 col = _Color;
                 return col;
             }
-
             ENDCG
         }
 
@@ -111,7 +120,7 @@ Shader "UI/hexVertColor"
 
 
             float _Dither;
-            float4 _Color;
+            float4 _DitherColor;
 
             static const float4x4 bigDitherTable = float4x4
             (
@@ -125,7 +134,7 @@ Shader "UI/hexVertColor"
             v2f vert(appdata v)
             {
                 v2f o;
-
+                
                 o.vertex = UnityObjectToClipPos(v.vertex);
                 o.screenPos = ComputeScreenPos(o.vertex);
 
@@ -146,7 +155,7 @@ Shader "UI/hexVertColor"
                 float lookup = bigDitherTable[screenPixel.y % 4][screenPixel.x % 4] * 0.25f;
                 clip(lookup - _Dither);
 
-                return _Color;
+                return _DitherColor;
             }
 
             ENDCG

@@ -149,8 +149,8 @@ MonoBehaviour:
   hoverTweenDuration: 0.5
   hoveredThickness: 16
   hoverSpring:
-    freq: 12
-    damp: 0.3
+    freq: 25
+    damp: 1
     currValue: 0
     currTarget: 0
     velocity: 0
