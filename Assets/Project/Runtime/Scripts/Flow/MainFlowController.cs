@@ -127,8 +127,6 @@ public class MainFlowController : FlowController
 		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
 			return false;
 
-		//return base.HandleHover(e);
-
 		if (subFlow != null && subFlow.HandleHover(e))
 			return true;
 

@@ -6,7 +6,7 @@ using UnityEngine;
 public class GridProbe : CellObject
 {
 	[Space(10)]
-	[Header("Grid Testing")]
+	[Header("GRID TESTING:")]
     public int maxLength;
 
     public List<Cell> foundPath = new List<Cell>();

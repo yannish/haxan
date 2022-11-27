@@ -18,9 +18,8 @@ public class TurnButton : RectUIElement, IFlowable
 		
 		turnButtonFlow = GetComponent<TurnButtonFlowController>();
 
-		turnButtonFlow.OnFlowPeeked += OnFlowPeeked;
-		turnButtonFlow.OnFlowUnpeeked += OnFlowUnpeeked;
-
+		//turnButtonFlow.OnFlowPeeked += OnFlowPeeked;
+		//turnButtonFlow.OnFlowUnpeeked += OnFlowUnpeeked;
 		//turnButtonFlow.OnFlowEntered += ClickAndRelease;
 	}
 

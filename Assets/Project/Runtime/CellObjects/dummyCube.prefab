@@ -52,7 +52,7 @@ MonoBehaviour:
   _meshRenderers:
   - {fileID: 6548106253918746998}
   - {fileID: 6548106252838889488}
-  testyLoat: 0
+  testyFloat: 0
 --- !u!114 &7462813488132203134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,7 +95,7 @@ Transform:
   m_GameObject: {fileID: 6548106252838889491}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1.3054, y: 1.3054, z: 1.3054}
+  m_LocalScale: {x: 1.0169458, y: 1.0169458, z: 1.0169458}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6548106253942327891}
@@ -202,8 +202,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: edba8d7ebc919284cb1870a690ec5f11, type: 3}
   pivot: {fileID: 6548106253942327891}
-  facing: 1
   flowController: {fileID: 2968459637578864127}
+  facing: 1
+  abilities: []
+  grabbedCells: []
 --- !u!114 &2968459637578864127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -219,10 +221,10 @@ MonoBehaviour:
   logDebug: 0
   subFlow: {fileID: 0}
   peekedFlow: {fileID: 0}
+  lastSubFlow: {fileID: 0}
   baseCellObject: {fileID: 0}
   ability: {fileID: 0}
   dummyCube: {fileID: 0}
-  clickedLens: {fileID: 0}
   fsm: {fileID: 0}
 --- !u!1 &6548106253918746993
 GameObject:
@@ -241,7 +243,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6548106253918746992
 Transform:
   m_ObjectHideFlags: 0
@@ -346,6 +348,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 2
     m_TransformParent: {fileID: 6548106253628595231}
     m_Modifications:
     - target: {fileID: 967298661039260208, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}
@@ -497,6 +500,7 @@ PrefabInstance:
       value: selectLayer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: edc6b1feae3b6274fbea2c71afe6b503, type: 3}
 --- !u!4 &101487587602877114 stripped
 Transform:

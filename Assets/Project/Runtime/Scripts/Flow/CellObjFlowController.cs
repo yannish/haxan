@@ -7,27 +7,28 @@ using UnityEngine;
 public class CellObjFlowController : FlowController
 {
 	[ReadOnly]
-	public CellObject baseCellObject;
+	public CellObject cellObject;
 
-	public static event Action<CellObjFlowController> Peeked = delegate { };
-	public static event Action<CellObjFlowController> Unpeeked = delegate { };
+	public static event Action<CellObjFlowController> OnHoverPeeked = delegate { };
+	public static event Action<CellObjFlowController> OnHoverUnpeeked = delegate { };
 
-	public static event Action<CellObjFlowController> Entered = delegate { };
-	public static event Action<CellObjFlowController> Exited = delegate { };
+	public static event Action<CellObjFlowController> OnEntered = delegate { };
+	public static event Action<CellObjFlowController> OnExited = delegate { };
 
 	//public static event Action<CellObjFlowController> OnObjectEnabled = delegate { };
 	//public static event Action<CellObjFlowController> OnObjectDisabled = delegate { };
 
-	protected override void Awake() => baseCellObject = GetComponent<CellObject>();
+	protected override void Awake() => cellObject = GetComponent<CellObject>();
 
 
 	public override void Enter()
 	{
 		base.Enter();
 
-		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.select);
+		//baseCellObject?.currCell?.cellFlow.visuals.SetTrigger(FSMtrigger.select, true);
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.select);
 
-		Entered(this);
+		OnEntered(this);
 
 		//OnFlowEntered
 		//base.OnFlowEntered(this);
@@ -37,7 +38,8 @@ public class CellObjFlowController : FlowController
 	public override void Exit()
 	{
 		base.Exit();
-		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.deselect);
+		//baseCellObject?.currCell?.cellFlow.visuals.SetTrigger(FSMtrigger.select, false);
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.deselect);
 		
 		if (subFlow != null)
 		{
@@ -51,8 +53,7 @@ public class CellObjFlowController : FlowController
 			peekedFlow = null;
 		}
 
-
-		Exited(this);
+		OnExited(this);
 	}
 
 	public override void HoverPeek()
@@ -62,10 +63,22 @@ public class CellObjFlowController : FlowController
 		if(logDebug)
 			Debog.logGameflow("Hover peeking : " + gameObject.name);
 
-		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.hover);
-		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.clickable);
+		//if (IsEnterable)
+		//{
+		//	baseCellObject?.currCell?.cellFlow.visuals.SetTrigger(FSMtrigger.clickable);
+		//}
+		//else
+		//{
+		//	baseCellObject?.currCell?.cellFlow.HoverPeek();
+		//}
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.hover);
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.hover);
 
-		Peeked(this);
+		//baseCellObject?.currCell?.cellFlow.HoverUnpeek();
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.clickable);
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.clickable);
+
+		OnHoverPeeked(this);
 	}
 
 	public override void HoverUnpeek()
@@ -75,9 +88,12 @@ public class CellObjFlowController : FlowController
 		if (logDebug)
 			Debog.logGameflow("Hover unpeeking : " + gameObject.name);
 
-		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unhover);
-		baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unclickable);
+		//baseCellObject?.currCell?.cellFlow.visuals.SetTrigger(FSMtrigger.clickable);
+		//baseCellObject?.currCell?.cellFlow.HoverUnpeek();
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unhover);
+		//baseCellObject?.currCell?.cellFlow.visuals.Unclickable();
+		//baseCellObject?.currCell?.cellFlow.fsm.SetTrigger(FSM.unclickable);
 
-		Unpeeked(this);
+		OnHoverUnpeeked(this);
 	}
 }

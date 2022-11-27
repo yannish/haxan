@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CellDisplay : MonoBehaviour
+public class CellInfoDisplay : MonoBehaviour
 {
 	//public static event Action OnCellUnhovered = delegate { };
 

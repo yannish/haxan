@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [SelectionBase]
-//[ExecuteAlways] //... why?
+[ExecuteAlways] //... why? for OnEnable / OnDisable
 public class CellObject : MonoBehaviour
 {
 	[Header("CONFIG:")]
@@ -12,13 +12,11 @@ public class CellObject : MonoBehaviour
 
 
 	[Header("FLOW:")]
-	[ReadOnly]
-	public FlowController flowController;
+	[ReadOnly] public FlowController flowController;
 
 
 	[Header("STATE:")]
-	[ReadOnly]
-	public HexDirection facing;
+	[ReadOnly] public HexDirection facing;
 
 
 	[Header("ABILITIES:")]
@@ -49,9 +47,19 @@ public class CellObject : MonoBehaviour
 		}
 	}
 
-	protected virtual void OnEnable() => this.BindInPlace();   
+	protected virtual void OnEnable()
+	{
+		this.BindInPlace();
+		//Debug.LogWarning("ON ENABLE CELL OBJECT");
+	}
+	//protected virtual void OnEnable() => this.BindInPlace();
 
-    protected virtual void OnDisable() => this.Unbind();
+	protected virtual void OnDisable()
+	{
+		this.Unbind();
+		//Debug.LogWarning("ON ENABLE CELL OBJECT");
+	}
+	//protected virtual void OnDisable() => this.Unbind();
 
 	//public virtual void SetFacing(HexDirection newDirection)
 	//{

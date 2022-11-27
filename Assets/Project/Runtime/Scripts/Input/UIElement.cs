@@ -28,11 +28,14 @@ public class UIElement : MonoBehaviour,
 	//[ReadOnly, SerializeField] private FlowController _flowController;
 
 	public IFlowable flowable;
+	[ReadOnly] public Component flowableComponent;
 
 	public virtual void Awake()
 	{
 		flowable = GetComponent<IFlowable>();
-		//_flowController
+		Component comp = flowable as Component;
+		if (comp != null)
+			flowableComponent = comp;
 	}
 
 	public virtual FlowController flowController => flowable == null ? null : flowable.Flow;
@@ -84,7 +87,6 @@ public class UIElement : MonoBehaviour,
 		ControlFlowManager.OnElementHovered.Invoke(new ElementHoveredEvent(null));
 	}
 
-	//public virtual void OnPointerUp(PointerEventData eventData)
 	public virtual void OnPointerDown(PointerEventData eventData)
 	{
 		switch(eventData.button)

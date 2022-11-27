@@ -14,34 +14,34 @@ public class Cell : MonoBehaviour,
 
 
     //... coords:
-	[Header("Coords")]
+	[Header("COORDS:")]
     public OffsetCoordinates offsetCoords;
 	public HexCoordinates coords;
 
+	[ReadOnly] public CellVisuals visuals;
 	[ReadOnly] public CellFlowController cellFlow;
 	[ReadOnly] public Cell[] neighbours = new Cell[6];
 	public Cell[] validNeighbours { get { return neighbours.Where(t => t != null && t.IsPassable).ToArray(); } }
 
 
 	//... assigned components:
-	[Header("Paint")]
+	[Header("PAINT:")]
 	public CellPreset preset;
 
 	//[Header("Visuals")]
 	public GameObject visualBase;
 	[ReadOnly] public List<MeshRenderer> baseMeshRenderers;
 
-	[Header("Pivot")]
+	[Header("PIVOT:")]
 	public Transform occupantPivot;
-
 
 
 	void Awake()
 	{
+		visuals = GetComponentInChildren<CellVisuals>();
 		cellFlow = GetComponent<CellFlowController>();
         this.Unbind();
 	}
-
 
 	void OnValidate()
 	{
@@ -58,7 +58,6 @@ public class Cell : MonoBehaviour,
 		get
 		{
 			//Debug.Log("fetching flow on : " + gameObject.name);
-
 			if (this.TryGetBoundCellObject(out CellObject foundCellObject))
 			{
 				if (foundCellObject.flowController != null)
@@ -66,7 +65,6 @@ public class Cell : MonoBehaviour,
 			}
 
 			//Debug.Log("... no bound object, getting base flow: " + gameObject.name);
-
 			return cellFlow;
 		}
 	}

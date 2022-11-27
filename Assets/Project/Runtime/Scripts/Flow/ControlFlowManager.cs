@@ -13,10 +13,8 @@ public class ControlFlowManager : MonoBehaviour
 	public static Action<ElementClickedEvent> OnElementClicked;
 	public static Action<EmptyClickEvent> OnEmptyClick;
 
-	[ReadOnly]
-	public FlowController initialFlowController;
-	[ReadOnly]
-	public FlowController currFlowController;
+	[ReadOnly] public FlowController initialFlowController;
+	[ReadOnly] public FlowController currFlowController;
 
 
 	private void OnEnable()
@@ -36,19 +34,12 @@ public class ControlFlowManager : MonoBehaviour
 	}
 
 
-
 	private void Start()
 	{
 		initialFlowController = GetComponentInChildren<FlowController>();
 		if (initialFlowController)
 			initialFlowController.Enter();
-
-		//Events.instance.AddListener<ElementHoveredEvent>(HandleHover);
-		//Events.instance.AddListener<ElementBackClickedEvent>(HandleBackClick);
-		//Events.instance.AddListener<ElementClickedEvent>(HandleInput);
-		//Events.instance.AddListener<EmptyClickEvent>(HandleEmptyInput);
 	}
-
 
 	void HandleBackClick(ElementBackClickedEvent e) => initialFlowController.HandleBackInput(e);
 
@@ -79,7 +70,6 @@ public class ControlFlowManager : MonoBehaviour
 			return null;
 
 		var checkController = initialFlowController;
-
 		while(checkController.subFlow != null)
 		{
 			checkController = checkController.subFlow;

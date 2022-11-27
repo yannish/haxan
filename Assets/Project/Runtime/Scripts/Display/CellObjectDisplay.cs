@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
+
 public class CellObjectDisplay : MonoBehaviour
 {
     public Image iconSlot;
@@ -17,11 +19,11 @@ public class CellObjectDisplay : MonoBehaviour
         iconSlot = GetComponentInChildren<Image>();
         nameSlot = GetComponentInChildren<TextMeshProUGUI>();
 
-		CellObjFlowController.Peeked += DisplayCellObject;
-		CellObjFlowController.Unpeeked += ClearCellObject;
+		CellObjFlowController.OnHoverPeeked += DisplayCellObject;
+		CellObjFlowController.OnHoverUnpeeked += ClearCellObject;
 
-		CellObjFlowController.Entered += DisplayCellObject;
-		CellObjFlowController.Exited += ClearCellObject;
+		CellObjFlowController.OnEntered += DisplayCellObject;
+		CellObjFlowController.OnExited += ClearCellObject;
 
 		//CellObjFlowController.OnObjectEnabled += BrightenCellDisplay;
 		//CellObjFlowController.OnObjectDisabled += DarkenCellDisplay;
@@ -43,10 +45,10 @@ public class CellObjectDisplay : MonoBehaviour
 
     void DisplayCellObject(CellObjFlowController cellObjFlow)
     {
-        if (cellObjFlow.baseCellObject.icon)
-            iconSlot.sprite = cellObjFlow.baseCellObject.icon;
+        if (cellObjFlow.cellObject.icon)
+            iconSlot.sprite = cellObjFlow.cellObject.icon;
 
-        nameSlot.SetText(cellObjFlow.baseCellObject.name.ToUpper());
+        nameSlot.SetText(cellObjFlow.cellObject.name.ToUpper());
 
         displayCount++;
 

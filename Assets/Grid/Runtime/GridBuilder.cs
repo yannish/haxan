@@ -48,6 +48,7 @@ public class GridBuilder : MonoBehaviour
 		Globals.Grid.cellObjectBindings.Clear();
 
 		CellObject[] existingCellObjects = FindObjectsOfType<CellObject>();
+
 		foreach (var cellObj in existingCellObjects)
 			cellObj.BindInPlace();
 	}

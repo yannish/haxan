@@ -8,7 +8,9 @@ public class AbilityDisplay : MonoBehaviour
     public AbilityDisplaySlot[] slots;
 
     public int numberOfAbilitySlots;
+
     public GameObject abilitySlotPrefab;
+
 
     private void Start()
     {
@@ -28,8 +30,8 @@ public class AbilityDisplay : MonoBehaviour
 		//CellObjFlowController.Peeked += DisplayAbilities;
   //      CellObjFlowController.Unpeeked += ClearAbilities;
 
-        CellObjFlowController.Entered += DisplayAbilities;
-        CellObjFlowController.Exited += ClearAbilities;
+        CellObjFlowController.OnEntered += DisplayAbilities;
+        CellObjFlowController.OnExited += ClearAbilities;
 
         ClearAbilities();
 	}
@@ -58,7 +60,7 @@ public class AbilityDisplay : MonoBehaviour
         //}
 
         int abilityCount = 0;
-        foreach (var ability in obj.baseCellObject.abilities)
+        foreach (var ability in obj.cellObject.abilities)
         {
             if (ability == null)
                 continue;
@@ -68,6 +70,7 @@ public class AbilityDisplay : MonoBehaviour
                 continue;
 
             SlotAbility(ability, slot);
+
             abilityCount++;
         }
     }
@@ -79,10 +82,10 @@ public class AbilityDisplay : MonoBehaviour
         slot.abilityText.SetText(ability.abilityName.ToUpper());
         slot.ability = ability;
 
-        ability.flow.OnFlowPeeked += slot.OnFlowPeeked;
-        ability.flow.OnFlowUnpeeked += slot.OnFlowUnpeeked;
+        //ability.flow.OnFlowPeeked += slot.OnFlowPeeked;
+        //ability.flow.OnFlowUnpeeked += slot.OnFlowUnpeeked;
 
-        ability.flow.OnFlowEntered += slot.OnFlowEntered;
-        ability.flow.OnFlowExited += slot.OnFlowExited;
+        //ability.flow.OnFlowEntered += slot.OnFlowEntered;
+        //ability.flow.OnFlowExited += slot.OnFlowExited;
 	}
 }

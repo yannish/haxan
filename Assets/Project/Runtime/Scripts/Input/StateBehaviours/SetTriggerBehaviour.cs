@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SetTriggerBehaviour : QuickStateBehaviour
 {
-    public FSMtrigger trigger;
+    public CellState trigger;
 
 	public override void Enter()
 	{

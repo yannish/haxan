@@ -10,6 +10,7 @@ public class CellMarkupService : Service<CellMarkupService>
 	public List<GameObject> placedMarkers = new List<GameObject>();
 
 	public PooledMonoBehaviour pushMarker;
+
     public Action MarkCellPush(Cell cell, HexDirection pushDir)
 	{
 		if (pushMarker == null)

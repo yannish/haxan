@@ -6,17 +6,9 @@ using UnityEngine;
 [CustomEditor(typeof(ControlFlowManager))]
 public class ControlFlowManagerInspector : Editor
 {
-	public void OnEnable()
-	{
-		//Debug.Log("Enabled Control flow manager inspector");
-		EditorApplication.update += DoRepaint;
-	}
+	public void OnEnable() => EditorApplication.update += DoRepaint;
 
-	public void OnDisable()
-	{
-		//Debug.Log("Disabled Control flow manager inspector");
-		EditorApplication.update -= DoRepaint;
-	}
+	public void OnDisable() => EditorApplication.update -= DoRepaint;
 
 	void DoRepaint()
 	{

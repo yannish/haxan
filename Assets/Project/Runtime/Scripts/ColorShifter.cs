@@ -32,10 +32,13 @@ public class ColorShifter : MonoBehaviour
 			seq.Kill();
 
 		seq = DOTween.Sequence();
+
 		seq.SetAutoKill();
+
 		seq.Append(DOTween.To(() => currColor, x => currColor = x, obj, easeTime))
 			.OnUpdate(() => onUpdate?.Invoke(currColor))
 			.SetEase(ease);
+
 		seq.OnKill(() => seq = null);
 	}
 }

@@ -77,7 +77,21 @@ public static class BindingMapExtensions
 	private static bool DoBind(CellObject cellObject, Cell cell)
 	{
 		if (cellObject.IsBound() || cell.IsBound())
-			return false;
+		{
+			if(cell.TryGetBoundCellObject(out var foundObject))
+			{
+				if(foundObject != cellObject)
+				{
+					Debug.LogWarning(
+						"... wasn't able to bind " + cellObject.name + 
+						" in place, cell was already bound to " + foundObject.name, 
+						cell
+						);
+				}
+
+				return false;
+			}
+		}
 
 		Globals.Grid.cellObjectBindings.Bind(cell, cellObject);
 		return true;

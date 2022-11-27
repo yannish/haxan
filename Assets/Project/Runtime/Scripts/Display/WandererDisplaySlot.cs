@@ -27,11 +27,11 @@ public class WandererDisplaySlot : RectUIElement, IFlowable
 		this.wanderer = wanderer;
 		this.iconSlot.sprite = wanderer.icon;
 
-		wanderer.flow.OnFlowPeeked += OnFlowPeeked;
-		wanderer.flow.OnFlowUnpeeked += OnFlowUnpeeked;
+		//wanderer.flow.OnFlowPeeked += OnFlowPeeked;
+		//wanderer.flow.OnFlowUnpeeked += OnFlowUnpeeked;
 
-		wanderer.flow.OnFlowEntered += OnFlowEntered;
-		wanderer.flow.OnFlowExited += OnFlowExited;
+		//wanderer.flow.OnFlowEntered += OnFlowEntered;
+		//wanderer.flow.OnFlowExited += OnFlowExited;
 
 	}
 

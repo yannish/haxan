@@ -5,21 +5,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CellFlowController : FlowController
+public class CellFlowController : CellObjFlowController
 {
+	[ReadOnly] public CellVisuals visuals;
     [ReadOnly] public QuickStateMachine fsm;
     [ReadOnly] public Cell cell;
 
     protected override void Awake()
 	{
+		visuals = GetComponentInChildren<CellVisuals>();
         fsm = GetComponentInChildren<QuickStateMachine>();
 		cell = GetComponent<Cell>();
     }
 
-	public override void HoverPeek() => fsm?.SetTrigger(FSM.hover);
+	//public override void HoverPeek() => visuals?.SetTrigger(FSMtrigger.hover, true);
+	//public override void HoverPeek() => fsm?.SetTrigger(FSM.hover);
 
-	public override void HoverUnpeek() => fsm?.SetTrigger(FSM.unhover);
-	
+	//public override void HoverUnpeek() => visuals?.SetTrigger(FSMtrigger.hover, false);
+	//public override void HoverUnpeek() => fsm?.SetTrigger(FSM.unhover);
+
 	//if(baseCellObject)
 	//	fsm.SetTrigger("clickable");
 	//baseCellObject?.CurrentCell?.cellFlow.fsm.SetTrigger("clickable");

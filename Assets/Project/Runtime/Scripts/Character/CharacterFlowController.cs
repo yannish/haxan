@@ -42,7 +42,7 @@ public abstract class CharacterFlowController : CellObjFlowController
 	protected override void Awake()
     {
         base.Awake();
-        character = baseCellObject as Character;
+        character = cellObject as Character;
 		fsm = GetComponentInChildren<QuickStateMachine>();
     }
 
@@ -50,28 +50,31 @@ public abstract class CharacterFlowController : CellObjFlowController
     public override void HoverPeek()
     {
 		fsm?.SetTrigger(FSM.hover);
+		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.hover, true);
 		base.HoverPeek();
 	}
 
 	public override void HoverUnpeek()
     {
 		fsm?.SetTrigger(FSM.unhover);
+		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.hover, false);
 		base.HoverUnpeek();
     }
 
 	public override void Enter()
 	{
 		fsm?.SetTrigger(FSM.select);
+		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.select, true);
 		base.Enter();
 
 		//if (character.movementAbility)
 		//	TransitionTo(character.movementAbility.flow);
 	}
 
-
 	public override void Exit()
 	{
 		fsm?.SetTrigger(FSM.deselect);
+		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.select, false);
 		base.Exit();
 	}
 

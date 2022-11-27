@@ -19,6 +19,20 @@ public class CellObjectInspector : Editor
 		EditorGUILayout.EndHorizontal();
 	}
 
+	private void OnEnable()
+	{
+		//Debug.LogWarning("ENABLED CELL OBJECT");
+		//CellObject cellObj = target as CellObject;
+		//cellObj.BindInPlace();
+	}
+
+	private void OnDisable()
+	{
+		//Debug.LogWarning("DISABLED CELL OBJECT");
+		//CellObject cellObj = target as CellObject;
+		//cellObj.Unbind();
+	}
+
 	private void OnSceneGUI()
 	{
 		var cellObject = target as CellObject;
@@ -48,6 +62,7 @@ public class CellObjectInspector : Editor
 			RaycastHit hit;
 
 			//Debug.Log("right click pressed!");
+
 			if (holdinShift)
 				Debug.Log("... with SHIFT!!");
 
