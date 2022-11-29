@@ -8,7 +8,7 @@ public class WandererDisplay : MonoBehaviour
 
 	public void Start()
 	{
-		Debug.LogWarning("Making " + Globals.ActiveWanderers.Items.Count);
+		//Debug.LogWarning("Making " + Globals.ActiveWanderers.Items.Count);
 
 		foreach(var wanderer in Globals.ActiveWanderers.Items)
 		{

@@ -7,11 +7,11 @@ public class CellGridDisplay : MonoBehaviour
 {
 	private void OnEnable()
 	{
-		FlowController.OnFlowPeekedGlobal += HandleHoverGlobal;
-		FlowController.OnFlowUnpeekedGlobal += HandleUnhoverGlobal;
+		FlowController.OnFlowPeeked += HandleHoverGlobal;
+		FlowController.OnFlowUnpeeked += HandleUnhoverGlobal;
 
-		FlowController.OnFlowEnteredGlobal += HandleEnterGlobal;
-		FlowController.OnFlowExitedGlobal += HandleExitGlobal;
+		FlowController.OnFlowEntered += HandleEnterGlobal;
+		FlowController.OnFlowExited += HandleExitGlobal;
 
 		//CellObjFlowController.OnHoverPeeked += HandleHover;
 		//CellObjFlowController.OnHoverUnpeeked += HandleUnhover;
@@ -22,11 +22,11 @@ public class CellGridDisplay : MonoBehaviour
 
 	private void OnDisable()
 	{
-		FlowController.OnFlowPeekedGlobal -= HandleHoverGlobal;
-		FlowController.OnFlowUnpeekedGlobal -= HandleUnhoverGlobal;
+		FlowController.OnFlowPeeked -= HandleHoverGlobal;
+		FlowController.OnFlowUnpeeked -= HandleUnhoverGlobal;
 
-		FlowController.OnFlowEnteredGlobal -= HandleEnterGlobal;
-		FlowController.OnFlowExitedGlobal -= HandleExitGlobal;
+		FlowController.OnFlowEntered -= HandleEnterGlobal;
+		FlowController.OnFlowExited -= HandleExitGlobal;
 
 		//CellObjFlowController.OnHoverPeeked -= HandleHover;
 		//CellObjFlowController.OnHoverUnpeeked -= HandleUnhover;
@@ -57,8 +57,6 @@ public class CellGridDisplay : MonoBehaviour
 	
 	private void HandleHoverGlobal(FlowController flow)
 	{
-		//if(flow ==)
-
 		CellFlowController cellFlow = flow as CellFlowController;
 		if (cellFlow != null)
 		{

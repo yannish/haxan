@@ -5,13 +5,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CellFlowController : CellObjFlowController
+public class CellFlowController : FlowController
 {
 	[ReadOnly] public CellVisuals visuals;
     [ReadOnly] public QuickStateMachine fsm;
     [ReadOnly] public Cell cell;
 
-    protected override void Awake()
+	public override bool IsEnterable => false;
+
+	protected override void Awake()
 	{
 		visuals = GetComponentInChildren<CellVisuals>();
         fsm = GetComponentInChildren<QuickStateMachine>();

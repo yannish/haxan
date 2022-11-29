@@ -66,36 +66,28 @@ public abstract class FlowController : MonoBehaviour
 	//[ReadOnly] 
 	//public CellObject baseCellObject;
 
-	public static event Action<FlowController> OnFlowPeekedGlobal = delegate { };
-	public static event Action<FlowController> OnFlowUnpeekedGlobal = delegate { };
+	public static event Action<FlowController> OnFlowPeeked = delegate { };
 
-	public static event Action<FlowController> OnFlowEnteredGlobal = delegate { };
-	public static event Action<FlowController> OnFlowExitedGlobal = delegate { };
+	public static event Action<FlowController> OnFlowUnpeeked = delegate { };
 
-	//public event Action<FlowController> OnFlowPeeked = delegate { };
-	//public event Action<FlowController> OnFlowUnpeeked = delegate { };
-
-	//public event Action<FlowController> OnFlowEntered = delegate { };
-	//public event Action<FlowController> OnFlowExited = delegate { };
+	public static event Action<FlowController> OnFlowEntered = delegate { };
+	
+	public static event Action<FlowController> OnFlowExited = delegate { };
 
 
 	protected virtual void Awake() { }
 
 	public virtual FlowState Tick() { return FlowState.YIELD; }
 
-	public virtual bool IsEnterable => false;
+	public virtual bool IsEnterable => true;
 
-	public virtual void Enter() => OnFlowEnteredGlobal(this);
-	//public virtual void Enter() => OnFlowEntered(this);
+	public virtual void Enter() => OnFlowEntered(this);
 
-	public virtual void Exit() => OnFlowExitedGlobal(this);
-	//public virtual void Exit() => OnFlowExited(this);
+	public virtual void Exit() => OnFlowExited(this);
 
-	public virtual void HoverPeek() => OnFlowPeekedGlobal(this);
-	//public virtual void HoverPeek() => OnFlowPeeked(this);
+	public virtual void HoverPeek() => OnFlowPeeked(this);
 
-	public virtual void HoverUnpeek() => OnFlowUnpeekedGlobal(this);
-	//public virtual void HoverUnpeek() => OnFlowUnpeeked(this);
+	public virtual void HoverUnpeek() => OnFlowUnpeeked(this);
 
 	public virtual FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null) { return FlowState.YIELD; }
 	//{

@@ -173,7 +173,7 @@ public class MainFlowController : FlowController
 			}
 		}
 
-		//... ex. if you clicked the same character
+		//... ex. if you clicked the same character or ability
 		if (subFlow == clickedFlow)
 		{
 			Debog.logGameflow("clicked existing element in mainflow");
@@ -185,7 +185,20 @@ public class MainFlowController : FlowController
 			return FlowState.RUNNING;
 		}
 
-		TransitionTo(clickedFlow);
+		if(clickedFlow.IsEnterable)
+		{
+			TransitionTo(clickedFlow);
+		}
+		else 
+		{
+			if (subFlow != null)
+				TransitionTo(null);
+
+			peekedFlow = e.element.flowController;
+			peekedFlow.HoverPeek();
+
+			return FlowState.RUNNING;
+		}
 
 		return FlowState.RUNNING;
 	}

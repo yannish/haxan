@@ -169,7 +169,7 @@ public class RectUIElement : MonoBehaviour
 
 	public FloatSpring hoverSpring;
 
-	[ReadOnly] public Rect cachedDimensions;
+	/*[ReadOnly] */public Rect cachedDimensions;
 	[ReadOnly] public float currThickness;
 
 	Sequence hoverSeq;
@@ -180,6 +180,8 @@ public class RectUIElement : MonoBehaviour
 
 	protected void HoverTweenToTarget(float newTarget)
 	{
+		//Debug.LogWarning("HOVERING: " + newTarget);
+
 		if (hoverRect == null)
 			return;
 

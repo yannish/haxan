@@ -5,7 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class WandererDisplaySlot : RectUIElement, IFlowable
+public class WandererDisplaySlot : RectUIElement
+	, IFlowable
 {
 	[Header("WANDERER")]
 	public Image iconSlot;
@@ -27,12 +28,11 @@ public class WandererDisplaySlot : RectUIElement, IFlowable
 		this.wanderer = wanderer;
 		this.iconSlot.sprite = wanderer.icon;
 
-		//wanderer.flow.OnFlowPeeked += OnFlowPeeked;
-		//wanderer.flow.OnFlowUnpeeked += OnFlowUnpeeked;
+		wanderer.flow.OnCharacterFlowPeeked += OnFlowPeeked;
+		wanderer.flow.OnCharacterFlowUnpeeked += OnFlowUnpeeked;
 
-		//wanderer.flow.OnFlowEntered += OnFlowEntered;
-		//wanderer.flow.OnFlowExited += OnFlowExited;
-
+		wanderer.flow.OnCharacterFlowEntered += OnFlowEntered;
+		wanderer.flow.OnCharacterFlowExited += OnFlowExited;
 	}
 
 	private void OnFlowPeeked(FlowController obj) => Hover();

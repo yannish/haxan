@@ -19,11 +19,17 @@ public class CellObjectDisplay : MonoBehaviour
         iconSlot = GetComponentInChildren<Image>();
         nameSlot = GetComponentInChildren<TextMeshProUGUI>();
 
-		CellObjFlowController.OnHoverPeeked += DisplayCellObject;
-		CellObjFlowController.OnHoverUnpeeked += ClearCellObject;
+		FlowController.OnFlowPeeked += DisplayCellObject;
+		FlowController.OnFlowUnpeeked += ClearCellObject;
 
-		CellObjFlowController.OnEntered += DisplayCellObject;
-		CellObjFlowController.OnExited += ClearCellObject;
+		FlowController.OnFlowEntered += DisplayCellObject;
+		FlowController.OnFlowExited += ClearCellObject;
+
+		//CellObjFlowController.OnHoverPeeked += DisplayCellObject;
+		//CellObjFlowController.OnHoverUnpeeked += ClearCellObject;
+
+		//CellObjFlowController.OnEntered += DisplayCellObject;
+		//CellObjFlowController.OnExited += ClearCellObject;
 
 		//CellObjFlowController.OnObjectEnabled += BrightenCellDisplay;
 		//CellObjFlowController.OnObjectDisabled += DarkenCellDisplay;
@@ -32,19 +38,23 @@ public class CellObjectDisplay : MonoBehaviour
 
     }
 
-    void BrightenCellDisplay(CellObjFlowController cellObjFlow)
+    void BrightenCellDisplay(FlowController flow)
 	{
         veil.SetActive(false);
 	}
 
-    void DarkenCellDisplay(CellObjFlowController cellObjFlow)
+    void DarkenCellDisplay(FlowController flow)
 	{
         veil.SetActive(true);
     }
 
 
-    void DisplayCellObject(CellObjFlowController cellObjFlow)
+    void DisplayCellObject(FlowController flow)
     {
+        CellObjFlowController cellObjFlow = flow as CellObjFlowController;
+        if (cellObjFlow == null)
+            return;
+
         if (cellObjFlow.cellObject.icon)
             iconSlot.sprite = cellObjFlow.cellObject.icon;
 
@@ -55,8 +65,12 @@ public class CellObjectDisplay : MonoBehaviour
         UpdateDisplay();
     }
 
-    void ClearCellObject(CellObjFlowController cellObjFlow = null)
+    void ClearCellObject(FlowController flow = null)
     {
+        CellObjFlowController cellObjFlow = flow as CellObjFlowController;
+        if (cellObjFlow == null)
+            return;
+
         displayCount--;
 
         UpdateDisplay();

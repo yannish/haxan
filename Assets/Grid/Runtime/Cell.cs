@@ -5,8 +5,8 @@ using System.Linq;
 using UnityEngine;
 
 [SelectionBase, RequireComponent(typeof(CellFlowController))]
-public class Cell : MonoBehaviour, 
-	IFlowable
+public class Cell : MonoBehaviour
+	, IFlowable
 {
 
 	public static event Action<Cell> OnCellHovered = delegate { };

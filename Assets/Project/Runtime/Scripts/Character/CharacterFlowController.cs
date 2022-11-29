@@ -6,13 +6,18 @@ using UnityEngine;
 
 public abstract class CharacterFlowController : CellObjFlowController
 {
+	public event Action<FlowController> OnCharacterFlowPeeked = delegate { };
+												 
+	public event Action<FlowController> OnCharacterFlowUnpeeked = delegate { };
+												 
+	public event Action<FlowController> OnCharacterFlowEntered = delegate { };
+												 
+	public event Action<FlowController> OnCharacterFlowExited = delegate { };
+
+
 	[Header("CHARACTER")]
     [ReadOnly] public Character character;
 	[ReadOnly] public QuickStateMachine fsm;
-
-	//public static event Action<CharacterFlowController> Entered = delegate { };
-	//public static event Action<CharacterFlowController> Exited = delegate { };
-
 
 	public Turn inputTurn;
 	public void ProvideInputTurn(Turn newTurn)
@@ -50,6 +55,7 @@ public abstract class CharacterFlowController : CellObjFlowController
     public override void HoverPeek()
     {
 		fsm?.SetTrigger(FSM.hover);
+		OnCharacterFlowPeeked?.Invoke(this);
 		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.hover, true);
 		base.HoverPeek();
 	}
@@ -57,6 +63,7 @@ public abstract class CharacterFlowController : CellObjFlowController
 	public override void HoverUnpeek()
     {
 		fsm?.SetTrigger(FSM.unhover);
+		OnCharacterFlowUnpeeked?.Invoke(this);
 		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.hover, false);
 		base.HoverUnpeek();
     }
@@ -64,6 +71,7 @@ public abstract class CharacterFlowController : CellObjFlowController
 	public override void Enter()
 	{
 		fsm?.SetTrigger(FSM.select);
+		OnCharacterFlowEntered?.Invoke(this);
 		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.select, true);
 		base.Enter();
 
@@ -74,6 +82,7 @@ public abstract class CharacterFlowController : CellObjFlowController
 	public override void Exit()
 	{
 		fsm?.SetTrigger(FSM.deselect);
+		OnCharacterFlowExited?.Invoke(this);
 		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.select, false);
 		base.Exit();
 	}

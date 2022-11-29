@@ -411,19 +411,19 @@ MonoBehaviour:
   hovered: 0
   hoveredAlpha: 0.5
   hoveredHexRingSize:
-    size: 0.8
+    size: 0.75
     thickness: 0.2
   unhoveredHexRingSize:
     size: 0.7
     thickness: 0.2
   clickable: 0
   clickableSize:
-    size: 0.9
+    size: 0.8
     thickness: 0.2
   selected: 0
   selectedSize:
-    size: 0
-    thickness: 0
+    size: 0.9
+    thickness: 0.3
   pathBlock: {fileID: 115388812904715908}
   pathBlockSize:
     propName: _Color
@@ -999,6 +999,7 @@ MonoBehaviour:
   coords:
     x: 0
     z: 0
+  visuals: {fileID: 0}
   cellFlow: {fileID: 0}
   neighbours:
   - {fileID: 0}
