@@ -44,7 +44,6 @@ public class CellVisuals : MonoBehaviour
     [ReadOnly] public float currHoverAlpha;
 
 
-
     [ReadOnly] public bool hovered;
     public EditorButton hoverOnBtn = new EditorButton("HoverOn", true);
     void HoverOn()
@@ -63,8 +62,6 @@ public class CellVisuals : MonoBehaviour
     public float hoveredAlpha = 0.5f;
     public HexRingSize hoveredHexRingSize;
     public HexRingSize unhoveredHexRingSize;
-
-
 
 
     [Header("CLICKABLE:")]
@@ -142,6 +139,7 @@ public class CellVisuals : MonoBehaviour
 
     public HexRingSize pathShownSize;
     public HexRingSize pathHintSize;
+    public HexRingSize pathHiddenSize;
 
     [ReadOnly] public Vector3 pathCurrSize;
     [ReadOnly] public Vector3 pathTargetSize;
@@ -152,18 +150,20 @@ public class CellVisuals : MonoBehaviour
 
 
 
-
-
     [Header("SMOOTHING:")]
     public float smoothTime;
     public float colorLerpTime = 1f;
-    public float interactionFrequency;
-    public float interactionDamping;
+
+    public FloatReference interactionFrequency;
+    public FloatReference interactionFrequencyRange;
+    
+    public FloatReference interactionDamping;
+    public FloatReference interactionDampingRange;
+    
 
 
     [Header("THREAT:")]
     public Color threatColor;
-    //[ReadOnly] public bool threatened;
 
 
 
@@ -175,38 +175,6 @@ public class CellVisuals : MonoBehaviour
 	}
 
 
-	public EditorButton setInsetBig = new EditorButton("SetInsetBig", true);
-    public void SetInsetBig()
-	{
-        //currHoverTargetInset = unhoveredInset;
-        StartCoroutine(SmoothChange());
-        //TweenToTarget();
-	}
-
-    public EditorButton setInsetSmall = new EditorButton("SetInsetSmall", true);
-    public void SetInsetSmall()
-	{
-        //currHoverTargetInset = hoveredInset;
-        StartCoroutine(SmoothChange());
-        //TweenToTarget();
-    }
-
-
-    public EditorButton setOutsetBig = new EditorButton("SetOutsetBig", true);
-    public void SetOutsetBig()
-    {
-        //currHoverTargetOutset = unhoveredOutset;
-        StartCoroutine(SmoothChange());
-        //TweenToTarget();
-    }
-
-    public EditorButton setOutsetSmall = new EditorButton("SetOutsetSmall", true);
-    public void SetOutsetSmall()
-    {
-        //currHoverTargetOutset = hoveredOutset;
-        StartCoroutine(SmoothChange());
-        //TweenToTarget();
-    }
 
 
     public void SetTrigger(CellState trigger) => SetTriggerValue(trigger, true);
@@ -255,17 +223,13 @@ public class CellVisuals : MonoBehaviour
         //... hover:
         currInteractionTargetSize = unhoveredHexRingSize;
         if (hovered)
-        {
             currInteractionTargetSize = hoveredHexRingSize;
-        }
-		if (clickable)
-		{
+		
+        if (clickable)
             currInteractionTargetSize = clickableSize;
-		}
+        
         if (selected)
-        {
             currInteractionTargetSize = selectedSize;
-        }
 
         currHoverTargetColor = interactionBaseColor;
 
@@ -279,7 +243,7 @@ public class CellVisuals : MonoBehaviour
 
 
         //... path:
-        pathTargetSize = Vector3.one;
+        pathTargetSize = pathHiddenSize;
         if (pathShown)
             pathTargetSize = pathShownSize;
         else if (pathHinted)
@@ -292,34 +256,32 @@ public class CellVisuals : MonoBehaviour
 
     IEnumerator SmoothChange()
 	{
+        float interactionDampingOffset = UnityEngine.Random.Range(-interactionDampingRange, interactionDampingRange);
+        float interactionFrequencyOffset = UnityEngine.Random.Range(-interactionFrequencyRange, interactionFrequencyRange);
+
         for (float t = 0f; t < smoothTime; t += Time.deltaTime)
         {
+            //... hover:
             Springy.Spring(
                 ref currInteractionSize, 
                 ref currInteractionSizeVelocity, 
                 currInteractionTargetSize, 
-                interactionDamping, 
-                interactionFrequency, 
+                interactionDamping + interactionDampingOffset, 
+                interactionFrequency + interactionFrequencyOffset, 
                 Time.deltaTime
                 );
 
-            //... hover:
-            //Springy.Spring(ref currInset, ref currInsetVelocity, currHoverTargetInset, insetDamping, insetFrequency, Time.deltaTime);
-            //currInset = Mathf.SmoothDamp(currInset, currTargetInset, ref currInsetVelocity, insetSmoothTime);
-
-            //Springy.Spring(ref currOutset, ref currOutsetVelocity, currHoverTargetOutset, outsetDamping, outsetFrequency, Time.deltaTime);
-            //currOutset = Mathf.SmoothDamp(currOutset, currTargetOutset, ref currOutsetVelocity, outsetSmoothTime);
-
             float colorLerp = Mathf.Clamp01(t / colorLerpTime);
             currHoverColor = Color.Lerp(currHoverColor, currHoverTargetColor, colorLerp);
+
 
             //... path:
             Springy.Spring(
                 ref pathCurrSize, 
                 ref pathSizeVelocity, 
                 pathTargetSize,
-                interactionDamping,
-                interactionFrequency, 
+                interactionDamping + interactionDampingOffset,
+                interactionFrequency + interactionFrequencyOffset, 
                 Time.deltaTime
                 );
             
@@ -342,19 +304,19 @@ public class CellVisuals : MonoBehaviour
 		hoverBlock.RecordChange(interactionHexThickness);
 		hoverBlock.RecordChange(interactionColor);
 
-        //string msg = string.Format("{0}, {1}, {2}", currHoverSize.x, )
 
         //... path:
-        pathBlockThickness.floatValue = pathCurrSize.x;
+        pathBlockSize.floatValue = pathCurrSize.x;
+        pathBlockThickness.floatValue = pathCurrSize.y;
         pathBlockColor.colorValue = pathCurrColor;
 
         pathBlock.RecordChange(pathBlockColor);
         pathBlock.RecordChange(pathBlockThickness);
+        pathBlock.RecordChange(pathBlockSize);
     }
 
 
     Sequence seq;
-
 	public void TweenToTarget()
     {
         if (seq.IsActive())
@@ -364,4 +326,37 @@ public class CellVisuals : MonoBehaviour
 
         seq.SetAutoKill();
     }
+
+    //public EditorButton setInsetBig = new EditorButton("SetInsetBig", true);
+    //   public void SetInsetBig()
+    //{
+    //       //currHoverTargetInset = unhoveredInset;
+    //       StartCoroutine(SmoothChange());
+    //       //TweenToTarget();
+    //}
+
+    //   public EditorButton setInsetSmall = new EditorButton("SetInsetSmall", true);
+    //   public void SetInsetSmall()
+    //{
+    //       //currHoverTargetInset = hoveredInset;
+    //       StartCoroutine(SmoothChange());
+    //       //TweenToTarget();
+    //   }
+
+
+    //   public EditorButton setOutsetBig = new EditorButton("SetOutsetBig", true);
+    //   public void SetOutsetBig()
+    //   {
+    //       //currHoverTargetOutset = unhoveredOutset;
+    //       StartCoroutine(SmoothChange());
+    //       //TweenToTarget();
+    //   }
+
+    //   public EditorButton setOutsetSmall = new EditorButton("SetOutsetSmall", true);
+    //   public void SetOutsetSmall()
+    //   {
+    //       //currHoverTargetOutset = hoveredOutset;
+    //       StartCoroutine(SmoothChange());
+    //       //TweenToTarget();
+    //   }
 }

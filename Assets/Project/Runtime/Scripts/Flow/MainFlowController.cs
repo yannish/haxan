@@ -153,7 +153,22 @@ public class MainFlowController : FlowController
 		if (clickedFlow == null)
 			return FlowState.RUNNING;
 
-		if(subFlow != null)
+
+		//... ex. if you clicked the same character or ability
+		if (subFlow == clickedFlow)
+		{
+			Debog.logGameflow("clicked existing element in mainflow");
+
+			TransitionTo(null);
+
+			peekedFlow = e.element.flowController;
+			peekedFlow.HoverPeek();
+
+			return FlowState.RUNNING;
+		}
+
+
+		if (subFlow != null)
 		{
 			var subflowState = subFlow.HandleInput(e, parentController);
 
@@ -166,6 +181,7 @@ public class MainFlowController : FlowController
 					TransitionTo(null);
 					peekedFlow = e.element.flowController;
 					peekedFlow.HoverPeek();
+					//return FlowState.RUNNING;
 					break;
 
 				case FlowState.YIELD:
@@ -173,17 +189,6 @@ public class MainFlowController : FlowController
 			}
 		}
 
-		//... ex. if you clicked the same character or ability
-		if (subFlow == clickedFlow)
-		{
-			Debog.logGameflow("clicked existing element in mainflow");
-
-			TransitionTo(null);
-			peekedFlow = e.element.flowController;
-			peekedFlow.HoverPeek();
-
-			return FlowState.RUNNING;
-		}
 
 		if(clickedFlow.IsEnterable)
 		{

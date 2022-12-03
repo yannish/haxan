@@ -31,7 +31,6 @@ public class AbilityFlowController : FlowController
 	}
 
 
-
 	protected override void Awake()
 	{
 		base.Awake();
@@ -113,7 +112,6 @@ public class AbilityFlowController : FlowController
 	{
 		base.HoverUnpeek();
 
-
 		Debug.LogWarning("unhover peek in ability", this.gameObject);
 
 		if (peekValidMovesAction != null)
@@ -160,6 +158,16 @@ public class AbilityFlowController : FlowController
 
 	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
 	{
+		var clickedFlow = e.element.flowController;
+
+		if (
+			clickedFlow is CharacterFlowController
+			&& clickedFlow == characterFlow
+			)
+		{
+			Debug.LogWarning("CLICKED OWNER FROM WITHIN ABILITY.");
+			return FlowState.DONE;
+		}
 
 		if (validElements.IsNullOrEmpty())
 			return FlowState.YIELD;
@@ -178,15 +186,11 @@ public class AbilityFlowController : FlowController
 			return FlowState.RUNNING;
 		}
 
-
-		var clickedFlow = e.element.flowController;
-
 		if (clickedFlow is AbilityFlowController)
 			return FlowState.YIELD;
 
 		if (clickedFlow is CharacterFlowController)
 			return FlowState.DONE;
-
 
 		return FlowState.YIELD;
 	}

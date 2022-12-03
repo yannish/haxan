@@ -13,15 +13,15 @@ public class GridBuilderInspector : Editor
 		var gridBuilder = target as GridBuilder;
 
 		EditorGUILayout.BeginHorizontal();
-		if (GUILayout.Button("Create Grid"))
+		if (GUILayout.Button("CREATE GRID"))
 		{
 			gridBuilder.CreateGrid();
 		}
-		if (GUILayout.Button("Clear Grid"))
+		if (GUILayout.Button("CLEAR GRID"))
 		{
 			gridBuilder.ClearGrid();
 		}
-		if (GUILayout.Button("Bind"))
+		if (GUILayout.Button("BIND CELLOBJECTS"))
 		{
 			gridBuilder.BindAllCellObjects();
 		}

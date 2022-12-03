@@ -25,6 +25,9 @@ public class Wanderer : Character
 
 	private void Awake()
 	{
+		if (!Application.isPlaying)
+			return;
+
 		movementAbility = Instantiate<Ability>(movementAbility, this.transform);
 	}
 

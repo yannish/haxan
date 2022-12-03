@@ -29,6 +29,7 @@ public class HexGridInspector : Editor
 			{
 				Debug.LogWarning("... " + cell.name);
 			}
+
 			Debug.LogWarning("backward: ");
 			foreach (var cellObj in grid.cellObjectBindings.backwardLookup.Keys)
 			{
@@ -42,12 +43,11 @@ public class HexGridInspector : Editor
 			}
 		}
 
-		if(GUILayout.Button("Clear Binding"))
+		if(GUILayout.Button("Clear Bindings"))
 		{
 			Undo.RecordObject(grid, "Clear Bindings");
 			grid.cellObjectBindings.Clear();
 		}
 		EditorGUILayout.EndHorizontal();
-
 	}
 }

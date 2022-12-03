@@ -75,8 +75,8 @@ public abstract class CharacterFlowController : CellObjFlowController
 		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.select, true);
 		base.Enter();
 
-		//if (character.movementAbility)
-		//	TransitionTo(character.movementAbility.flow);
+		if (character.movementAbility)
+			TransitionTo(character.movementAbility.flow);
 	}
 
 	public override void Exit()
@@ -146,8 +146,10 @@ public abstract class CharacterFlowController : CellObjFlowController
 					break;
 
 				case FlowState.DONE:
-					TransitionTo(null);
-					return FlowState.RUNNING;
+					return FlowState.DONE;
+
+					//TransitionTo(null);
+					//return FlowState.RUNNING;
 
 				case FlowState.RUNNING:
 					return FlowState.RUNNING;
@@ -166,11 +168,9 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 			return FlowState.RUNNING;
 		}
-
 		
 		if (clickedFlow is CharacterFlowController)
 			return FlowState.YIELD;
-
 
 		if (clickedFlow is AbilityFlowController)
 		{

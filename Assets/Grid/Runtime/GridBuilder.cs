@@ -41,7 +41,11 @@ public class GridBuilder : MonoBehaviour
 		for (int z = 0, i = 0; z < gridHeight; z++)
 			for (int x = 0; x < gridWidth; x++)
 				CreateCell(x, z, i++);
+
+		BindAllCellObjects();
+		//GridActions.RefreshCellBindings();
 	}
+
 
 	public void BindAllCellObjects()
 	{
@@ -52,6 +56,7 @@ public class GridBuilder : MonoBehaviour
 		foreach (var cellObj in existingCellObjects)
 			cellObj.BindInPlace();
 	}
+
 
 	public void ClearGrid()
 	{

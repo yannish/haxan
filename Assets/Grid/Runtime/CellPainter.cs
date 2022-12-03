@@ -28,7 +28,6 @@ public class CellPainter : MonoBehaviour
 			Debug.Log("... selected index: " + index);
 
 			var randomMat = cellPreset.baseMaterials[index];
-
 			if (cell.visualBase)
 			{
 				foreach(var rend in cell.baseMeshRenderers)

@@ -354,7 +354,7 @@ GameObject:
   - component: {fileID: 2806515590475881940}
   - component: {fileID: 9044739830660859822}
   m_Layer: 0
-  m_Name: cellVisuals
+  m_Name: visuals
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -426,11 +426,11 @@ MonoBehaviour:
     thickness: 0.3
   pathBlock: {fileID: 115388812904715908}
   pathBlockSize:
-    propName: _Color
+    propName: _Size
     weight: -1
     floatValue: 0
   pathBlockThickness:
-    propName: _Color
+    propName: _Thickness
     weight: -1
     floatValue: 0
   pathBlockColor:
@@ -441,9 +441,12 @@ MonoBehaviour:
   pathHinted: 0
   pathShown: 0
   pathShownSize:
-    size: 0
-    thickness: 0
+    size: 0.5
+    thickness: 0.5
   pathHintSize:
+    size: 0.3
+    thickness: 0.5
+  pathHiddenSize:
     size: 0
     thickness: 0
   pathCurrSize: {x: 0, y: 0, z: 0}
@@ -452,8 +455,22 @@ MonoBehaviour:
   currPathTargetColor: {r: 0, g: 0, b: 0, a: 0}
   smoothTime: 3
   colorLerpTime: 1
-  interactionFrequency: 24
-  interactionDamping: 0.3
+  interactionFrequency:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: f477aca8f152a4a46a46afb8170f5faa, type: 2}
+  interactionFrequencyRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: bfdca1a8b9fdee249aa7b5b6aa8949d4, type: 2}
+  interactionDamping:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: 2c24b5709bae3e64ca7cf8f4e09c6235, type: 2}
+  interactionDampingRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: d5b3df348d607104b9bf6dcb156cd26a, type: 2}
   threatColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2527493145919057221
 GameObject:
@@ -533,7 +550,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3893080169740684946}
   m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.12, z: 0}
+  m_LocalPosition: {x: 0, y: 0.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -846,7 +863,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4885497741224460324}
   m_LocalRotation: {x: -0.70710677, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.22, z: 0}
+  m_LocalPosition: {x: 0, y: 0.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -935,12 +952,12 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2806515590475881940}
+  - {fileID: 7047534434980709483}
   - {fileID: 168868272273417311}
   - {fileID: 6862295342352731589}
-  - {fileID: 4885497740848747113}
-  - {fileID: 7047534434980709483}
   - {fileID: 1464677832277504620}
   - {fileID: 4885497742186296005}
+  - {fileID: 4885497740848747113}
   - {fileID: 8364550080980851677}
   - {fileID: 6127379645728883189}
   - {fileID: 5829222052710743827}
@@ -1009,7 +1026,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   preset: {fileID: 11400000, guid: 33ab35fb2a5cccc469df8efd87df289f, type: 2}
-  visualBase: {fileID: 4885497742186296004}
+  visualBase: {fileID: 2364657529116554350}
   baseMeshRenderers: []
   occupantPivot: {fileID: 7047534434980709483}
 --- !u!1 &4885497742186296004
@@ -1088,7 +1105,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5145297622913939048}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1691,7 +1708,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9151284664483481250}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0

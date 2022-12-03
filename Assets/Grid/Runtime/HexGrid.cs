@@ -16,6 +16,7 @@ public class HexGrid : MonoBehaviour
 	public Cell[] cells;
 }
 
+
 public static class GridActions
 {
     public static void RefreshCellBindings()
@@ -29,20 +30,15 @@ public static class GridActions
 
         var allCellObjs = GameObject.FindObjectsOfType<CellObject>();
         foreach(var cellObj in allCellObjs)
-        {
-            cellObj.AwakenOverGrid();
-        }
+            cellObj.BindInPlace();
     }
 
 	public static void AwakenOverGrid(this CellObject cellObject)
 	{
 		//Debug.LogWarning("Awakening " + cellObject.name + " over grid...", cellObject);
-
 		Cell foundCell = cellObject.pivot.position.PollGrid();
 		if(foundCell != null)
-		{
 			cellObject.MoveAndBindTo(foundCell);
-		}
 	}
 
 	public static bool MoveAndBindTo(this CellObject cellObj, Cell cell)
