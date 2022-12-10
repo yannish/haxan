@@ -32,9 +32,14 @@ public abstract class Ability : MonoBehaviour
 
 	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow) => null;
 
+
 	public virtual Turn FetchCommandChain(Cell targetCell, CellObject cellObj, FlowController flow) 
 	{
-		return Turn.CreateInstance(cellObj, this);
+		Turn newTurn = new Turn(cellObj);
+		newTurn.ability = this;
+		return newTurn;
+		//return  new Turn()
+		//return Turn.CreateInstance(cellObj, this);
 	}
 
 
@@ -54,47 +59,23 @@ public abstract class Ability : MonoBehaviour
 
 	//... when you enter / exit flow:
 	Action showValidMovesAction;
-	public virtual void ShowValidMoves(Cell targetCell, CharacterFlowController flow)
-	{
+	public virtual void ShowValidMoves(Cell targetCell, CharacterFlowController flow) { }
 
-	}
-
-	public virtual void HideValidMoves(Cell targetCell, CharacterFlowController flow)
-	{
-
-	}
+	public virtual void HideValidMoves(Cell targetCell, CharacterFlowController flow) { }
 
 
 	//... when you hover / unhover specific valid moves
 	Action peekMovesAction;
-	public virtual void PeekMove(Cell targetCell, CharacterFlowController flow)
-	{
+	public virtual void PeekMove(Cell targetCell, CharacterFlowController flow) { }
 
-	}
-
-	public virtual void UnpeekMove(Cell targetCell, CharacterFlowController flow)
-	{
-
-	}
+	public virtual void UnpeekMove(Cell targetCell, CharacterFlowController flow) { }
 
 
 	protected Action peekAction;
 
 	public virtual void Peek(Cell targetCell, CharacterFlowController flow) { }
-	//{
-	//	var peekedCells = GetValidMoves(targetCell, flow);
-	//	peekAction = CellActions.EffectCells<CellPathCommand>(peekedCells);
-	//}
 
 	public virtual void Unpeek() { }
-	//{
-	//	if (peekAction != null)
-	//	{
-	//		peekAction.Invoke();
-	//		peekAction = null;
-	//	}
-	//}
-
 
 	public AbilityFlowController _flow;
 	public AbilityFlowController flow

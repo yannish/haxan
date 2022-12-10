@@ -126,7 +126,7 @@ public class AbilityFlowController : FlowController
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
 		//if (logDebug)
-			Debog.logGameflow("... handling hover in abilityFlow " + this.ability.name);
+			//Debog.logInput("... handling hover in abilityFlow " + this.ability.name);
 
 		ability.Unpeek();
 
@@ -182,6 +182,8 @@ public class AbilityFlowController : FlowController
 			
 			characterFlow.ProvideInputTurn(newTurn);
 			ability.Unpeek();
+
+
 
 			return FlowState.RUNNING;
 		}

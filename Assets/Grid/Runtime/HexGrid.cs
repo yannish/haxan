@@ -54,7 +54,7 @@ public static class GridActions
 			return true;
 		}
 
-		Debug.LogWarning("Tried to move & bind to an occupied cell.", cell.gameObject);
+		//Debug.LogWarning("Tried to move & bind to an occupied cell.", cell.gameObject);
 
 		return false;
 	}

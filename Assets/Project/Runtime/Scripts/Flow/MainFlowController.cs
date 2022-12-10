@@ -14,6 +14,11 @@ using UnityEngine;
 
 public class MainFlowController : FlowController
 {
+	public static void InsertNewTurn(Turn newTurn)
+	{
+
+	}
+
 	[ReadOnly] public TeamPhase currPhase;
 
 	public void Start()
@@ -53,7 +58,9 @@ public class MainFlowController : FlowController
 		if (turnProcessor.IsProcessing)
 		{
 			if (!wasProcessingLastFrame && subFlow != null)
+			{
 				TransitionTo(null);
+			}
 
 			wasProcessingLastFrame = true;
 			return;

@@ -247,7 +247,7 @@ public abstract class FlowController : MonoBehaviour
 		if (newFlowController != null)
 			nextController = newFlowController.gameObject.name;
 
-		Debog.logInput("transitioning to " + nextController + " controller");
+		Debog.logGameflow("transitioning to " + nextController + " controller");
 
 		if (subFlow != null)
 		{

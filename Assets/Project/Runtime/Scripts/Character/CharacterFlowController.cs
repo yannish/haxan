@@ -22,18 +22,18 @@ public abstract class CharacterFlowController : CellObjFlowController
 	public Turn inputTurn;
 	public void ProvideInputTurn(Turn newTurn)
 	{
-		//Debug.LogWarning("Providing Input Turn");
+		Debug.LogWarning("Providing Input Turn");
 		inputTurn = newTurn;
+		if(inputTurn != null)
+			Debug.LogWarning("... so it's no longer null");
 	}
 
 
 	public virtual bool TryGetInputTurn(ref Turn newInputTurn)
 	{
-		//Debug.LogWarning("trying to get input turn");
-
 		if (inputTurn != null)
 		{
-			Debug.LogWarning("got input turn");
+			Debog.logGameflow("... RECEIVED AN INPUT TURN");
 
 			newInputTurn = inputTurn;
 			inputTurn = null;
@@ -96,7 +96,7 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
-		Debug.LogWarning("hndling ability hover in characterflow");
+		//Debog.logInput("... handling ability hover in characterflow");
 
 		if (subFlow != null)
 		{

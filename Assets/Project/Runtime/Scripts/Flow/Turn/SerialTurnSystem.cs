@@ -12,7 +12,8 @@ public enum TeamPhase
 	VICTORY
 }
 
-public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
+public class SerialTurnSystem : MonoBehaviour
+	, ITurnProcessor
 {
 	[ReadOnly] public bool isProcessing;
 	public bool IsProcessing => isProcessing;
@@ -23,7 +24,6 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 	[ReadOnly, SerializeField] Enemy currEnemy;
 	[ReadOnly, SerializeField] List<Enemy> enemyTurnOrder = new List<Enemy>();
 
-	//public TeamPhase GetPhase
 
 	public void SetPhase(TeamPhase newPhase)
 	{
@@ -156,10 +156,6 @@ public class SerialTurnSystem : MonoBehaviour, ITurnProcessor
 		commandHistory.Push(currRedoCommand);
 	}
 
-	//public void ProcessEnemyTurns()
-	//{
-		
-	//}
 
 	public List<Turn> playerTurns = new List<Turn>();
 	public List<Turn> enemyTurns = new List<Turn>();
