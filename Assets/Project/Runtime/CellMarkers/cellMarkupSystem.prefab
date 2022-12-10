@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2445289224299933742
 MonoBehaviour:
@@ -44,5 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5607d11572e526c4daa499b3d673f5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  placedMarkers: []
+  moveMarker: {fileID: 8348903859375885481, guid: 547a153a223b65148b884b03b94b751a, type: 3}
+  jointMarker: {fileID: 1291648390245287865, guid: 8a9a37b0a1511b649bb913ab8cd2f098, type: 3}
+  arrowMarker: {fileID: 5386373755361729292, guid: 964e1a3f3bfffca47a8d76fd4058f2d0, type: 3}
   pushMarker: {fileID: 5438371744236544670, guid: c227e9c4aae018d4983672feee0ab9dd, type: 3}
+  placedPushMarkers: []

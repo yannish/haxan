@@ -47,20 +47,4 @@ public class CellObjFlowController : FlowController
 		if (cellObject != null)
 			OnExited(this);
 	}
-
-	//public override void HoverPeek()
-	//{
-	//	base.HoverPeek();
-
-	//	if(logDebug)
-	//		Debog.logGameflow("Hover peeking : " + gameObject.name);
-	//}
-
-	//public override void HoverUnpeek()
-	//{
-	//	base.HoverUnpeek();
-
-	//	if (logDebug)
-	//		Debog.logGameflow("Hover unpeeking : " + gameObject.name);
-	//}
 }

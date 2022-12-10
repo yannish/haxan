@@ -96,12 +96,16 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
-		//Debug.LogWarning("hndling ability hover in characterflow");
+		Debug.LogWarning("hndling ability hover in characterflow");
 
-		//if (subFlow == null)
-		//	return false;
+		if (subFlow != null)
+		{
+			var result = subFlow.HandleHover(e);
+			if (result)
+				return true;
+		}
 
-		if(peekedFlow != null)
+		if (peekedFlow != null)
 		{
 			peekedFlow.HoverUnpeek();
 			peekedFlow = null;

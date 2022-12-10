@@ -6,73 +6,49 @@ using UnityEngine;
 [ExecuteAlways] //... why? for OnEnable / OnDisable
 public class CellObject : MonoBehaviour
 {
-	[Header("CONFIG:")]
-	public Sprite icon;
 	public Transform pivot;
 
+	[Header("CONFIG:")]
+	public Sprite icon;
+
+	[ExposedScriptableObject]
+	public CellObjectPreset preset;
+	//public bool isPassable;
 
 	[Header("FLOW:")]
 	[ReadOnly] public FlowController flowController;
 
-
 	[Header("STATE:")]
 	[ReadOnly] public HexDirection facing;
-
 
 	[Header("ABILITIES:")]
 	public List<Ability> abilities;
 
 
-	//private void Awake() => { }
+
+	protected virtual void OnEnable() => this.BindInPlace();
+
+	protected virtual void OnDisable() => this.Unbind();
 
 	//... awakenedOverGrid rebinds every cellObject to its cell.
 	//... done in Start, because cells are Unbinding themselves on Awake.
 	protected virtual void Start()
     {
 		//Debug.LogWarning("Start on cellobj : " + this.gameObject.name, gameObject);
-
 		flowController = GetComponent<FlowController>();
 
 		if (gameObject.activeSelf)
             this.AwakenOverGrid();
     }
 
-	public Cell currCell
-	{
-		get
-		{
-			return Globals.Grid.cellObjectBindings.TryGetBinding(this, out Cell foundCell) ?
-				foundCell :
-				null;
-		}
-	}
-
-	protected virtual void OnEnable()
-	{
-		this.BindInPlace();
-		//Debug.LogWarning("ON ENABLE CELL OBJECT");
-	}
-	//protected virtual void OnEnable() => this.BindInPlace();
-
-	protected virtual void OnDisable()
-	{
-		this.Unbind();
-		//Debug.LogWarning("ON ENABLE CELL OBJECT");
-	}
-	//protected virtual void OnDisable() => this.Unbind();
-
-	//public virtual void SetFacing(HexDirection newDirection)
-	//{
-	//	var newFacingDir = dir.ToVector();
-	//	cellObj.pivot.rotation = Quaternion.LookRotation(newFacingDir);
-	//	cellObj.facing = dir;
-	//}
+	public Cell currCell => Globals.Grid.cellObjectBindings.TryGetBinding(this, out Cell cell) ? cell : null;
 }
 
 
 
 public static class CellObjectExtensions
 {
+
 	/// <summary>
 	/// Move character.
 	/// </summary>

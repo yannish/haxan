@@ -53,7 +53,7 @@ public class CellMarkupSystemInspector : Editor
 				{
 					Debug.LogWarning("Placing marker!");
 
-					Undo.RecordObject(system, "Snap CelObject To Grid");
+					Undo.RecordObject(system, "Snap Marker To Grid");
 					
 					Event.current.Use();
 

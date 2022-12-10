@@ -56,7 +56,6 @@ public class AbilityFlowController : FlowController
 			return;
 
 		validElements = validMoves.Select(t => t.GetComponent<UIElement>()).ToList();
-
 		switch (ability.type)
 		{
 			case AbilityType.MOVEMENT:
@@ -80,9 +79,9 @@ public class AbilityFlowController : FlowController
 			previewValidMovesControl = null;
 		}
 
-		//ability.Unpeek();
+		ability.Unpeek();
 
-		if(!validMoves.IsNullOrEmpty())
+		if (!validMoves.IsNullOrEmpty())
 			validMoves.Clear();
 
 		if(!validElements.IsNullOrEmpty())
@@ -127,23 +126,24 @@ public class AbilityFlowController : FlowController
 	public override bool HandleHover(ElementHoveredEvent e)
 	{
 		//if (logDebug)
-		//	Debog.logGameflow("... handling hover in abilityFlow " + this.ability.name);
+			Debog.logGameflow("... handling hover in abilityFlow " + this.ability.name);
 
-		//ability.Unpeek();
+		ability.Unpeek();
 
-		//if(
-		//	//!validElements.IsNullOrEmpty() && 
-		//	validElements.Contains(e.element)
-		//	)
-		//{
-		//	var targetCell = e.element.GetComponent<Cell>();
+		if (
+			//!validElements.IsNullOrEmpty() && 
+			validElements.Contains(e.element)
+			)
+		{
+			Debog.logGameflow("... it was valid!");
 
-		//	if(targetCell != null)
-		//	{
-		//		ability.Peek(targetCell, characterFlow);
-		//		return true;
-		//	}
-		//}
+			var targetCell = e.element.GetComponent<Cell>();
+			if (targetCell != null)
+			{
+				ability.Peek(targetCell, characterFlow);
+				return true;
+			}
+		}
 
 		//return base.HandleHover(e);
 

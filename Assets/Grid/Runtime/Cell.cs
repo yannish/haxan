@@ -8,12 +8,28 @@ using UnityEngine;
 public class Cell : MonoBehaviour
 	, IFlowable
 {
+	//... cells are the IFlowables of their UIElements component.
+	public FlowController Flow
+	{
+		get
+		{
+			//Debug.Log("fetching flow on : " + gameObject.name);
+			if (this.TryGetBoundCellObject(out CellObject foundCellObject))
+			{
+				if (foundCellObject.flowController != null)
+					return foundCellObject.flowController;
+			}
+
+			//Debug.Log("... no bound object, getting base flow: " + gameObject.name);
+			return cellFlow;
+		}
+	}
 
 	public static event Action<Cell> OnCellHovered = delegate { };
+
 	public static event Action OnCellUnhovered = delegate { };
 
 
-    //... coords:
 	[Header("COORDS:")]
     public OffsetCoordinates offsetCoords;
 	public HexCoordinates coords;
@@ -52,22 +68,6 @@ public class Cell : MonoBehaviour
 	}
 
 
-	//... cells are the IFlowables of their UIElements component.
-	public FlowController Flow
-	{
-		get
-		{
-			//Debug.Log("fetching flow on : " + gameObject.name);
-			if (this.TryGetBoundCellObject(out CellObject foundCellObject))
-			{
-				if (foundCellObject.flowController != null)
-					return foundCellObject.flowController;
-			}
-
-			//Debug.Log("... no bound object, getting base flow: " + gameObject.name);
-			return cellFlow;
-		}
-	}
 
 
 	public void Enter(CellObject cellObj)

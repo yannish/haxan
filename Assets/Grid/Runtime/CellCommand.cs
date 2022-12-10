@@ -11,9 +11,6 @@ public abstract class CellCommand
 	public virtual void Execute() => cell.visuals.SetTrigger(triggerType);
 	public virtual void Undo() => cell.visuals.UnsetTrigger(triggerType);
 
-	//public abstract string trigger { get; }
-	//public abstract string untrigger { get; }
-
 	//public virtual void Execute() => cell.cellFlow.fsm.SetTrigger(trigger);
 	//public virtual void Undo() => cell.cellFlow.fsm.SetTrigger(untrigger);
 

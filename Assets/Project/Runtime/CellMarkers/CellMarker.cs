@@ -7,7 +7,7 @@ public class CellMarker : MonoBehaviour
 {
 	public bool IsProcessing() => true;
 
-	public void Play() { }
+	public void Play(Vector3 pos, Vector3 normal) { }
 
 	public void Return() { }
 

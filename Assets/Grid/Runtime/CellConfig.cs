@@ -15,7 +15,6 @@ public class CellConfig : ScriptableObject
 		{
 
 		}
-			//cell.baseMeshRenderer.sharedMaterial = baseMat;
 	}
 }
 

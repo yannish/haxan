@@ -59,7 +59,8 @@ public class GroundMoveAbility : Ability
 		if (path.IsNullOrEmpty())
 			return;
 
-		pathControl = CellActions.EffectCells<CellPathCommand>(path);
+		pathControl = CellMarkupService.I.MarkMovePath(flow.character.currCell, path);
+		//pathControl = CellActions.EffectCells<CellPathCommand>(path);
 	}
 
 	public override void Unpeek()

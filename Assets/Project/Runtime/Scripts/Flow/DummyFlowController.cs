@@ -9,6 +9,7 @@ public class DummyFlowController : CellObjFlowController
 	public ScrObjAbility ability;
 
 	private Action pathControl;
+	private Action markupControl;
 
 
 	[ReadOnly] public DummyCube dummyCube;
@@ -56,6 +57,12 @@ public class DummyFlowController : CellObjFlowController
 			pathControl.Invoke();
 			pathControl = null;
 		}
+
+		if(markupControl != null)
+		{
+			markupControl.Invoke();
+			markupControl = null;
+		}
 	}
 
 	public override bool HandleHover(ElementHoveredEvent e)
@@ -64,6 +71,12 @@ public class DummyFlowController : CellObjFlowController
 		{
 			pathControl.Invoke();
 			pathControl = null;
+		}
+
+		if (markupControl != null)
+		{
+			markupControl.Invoke();
+			markupControl = null;
 		}
 
 		if (
@@ -80,7 +93,9 @@ public class DummyFlowController : CellObjFlowController
 		if (pathedCells.IsNullOrEmpty())
 			return false;
 
-		pathControl = CellActions.EffectCells<CellPathCommand>(pathedCells);
+		//pathControl = CellActions.EffectCells<CellPathCommand>(pathedCells);
+
+		markupControl = CellMarkupService.I.MarkMovePath(dummyCube.currCell, pathedCells);
 
 		return false;
 	}

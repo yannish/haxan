@@ -35,6 +35,9 @@ public static class GridActions
 
 	public static void AwakenOverGrid(this CellObject cellObject)
 	{
+		if (cellObject.pivot == null)
+			return;
+
 		//Debug.LogWarning("Awakening " + cellObject.name + " over grid...", cellObject);
 		Cell foundCell = cellObject.pivot.position.PollGrid();
 		if(foundCell != null)
@@ -51,7 +54,7 @@ public static class GridActions
 			return true;
 		}
 
-		//Debug.LogWarning("Tried to move & bind to an occupied cell.", cell.gameObject);
+		Debug.LogWarning("Tried to move & bind to an occupied cell.", cell.gameObject);
 
 		return false;
 	}

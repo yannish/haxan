@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 5438371744236544671}
   - component: {fileID: 5438371744236544670}
   m_Layer: 0
-  m_Name: pushIndicator
+  m_Name: pushMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

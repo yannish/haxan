@@ -159,7 +159,12 @@ public class CellVisuals : MonoBehaviour
     
     public FloatReference interactionDamping;
     public FloatReference interactionDampingRange;
-    
+
+    public FloatReference pathFrequency;
+    public FloatReference pathFrequencyRange;
+                          
+    public FloatReference pathDamping;
+    public FloatReference pathDampingRange;
 
 
     [Header("THREAT:")]
@@ -259,6 +264,9 @@ public class CellVisuals : MonoBehaviour
         float interactionDampingOffset = UnityEngine.Random.Range(-interactionDampingRange, interactionDampingRange);
         float interactionFrequencyOffset = UnityEngine.Random.Range(-interactionFrequencyRange, interactionFrequencyRange);
 
+        float pathDampingOffset = UnityEngine.Random.Range(-pathDampingRange, pathDampingRange);
+        float pathFrequencyOffset = UnityEngine.Random.Range(-pathFrequencyRange, pathFrequencyRange);
+
         for (float t = 0f; t < smoothTime; t += Time.deltaTime)
         {
             //... hover:
@@ -280,8 +288,8 @@ public class CellVisuals : MonoBehaviour
                 ref pathCurrSize, 
                 ref pathSizeVelocity, 
                 pathTargetSize,
-                interactionDamping + interactionDampingOffset,
-                interactionFrequency + interactionFrequencyOffset, 
+                pathDamping + pathDampingOffset,
+                pathFrequency + pathFrequencyOffset, 
                 Time.deltaTime
                 );
             
@@ -307,7 +315,7 @@ public class CellVisuals : MonoBehaviour
 
         //... path:
         pathBlockSize.floatValue = pathCurrSize.x;
-        pathBlockThickness.floatValue = pathCurrSize.y;
+        pathBlockThickness.floatValue = 1f;
         pathBlockColor.colorValue = pathCurrColor;
 
         pathBlock.RecordChange(pathBlockColor);

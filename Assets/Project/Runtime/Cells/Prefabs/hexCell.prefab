@@ -471,6 +471,22 @@ MonoBehaviour:
     UseConstant: 0
     ConstantValue: 0
     Variable: {fileID: 11400000, guid: d5b3df348d607104b9bf6dcb156cd26a, type: 2}
+  pathFrequency:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: 3ad4f7e18e4cd7048a6cd49a10b59939, type: 2}
+  pathFrequencyRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: e2b6c53d7b89159479fd06f0ec37474d, type: 2}
+  pathDamping:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: f34a050fe33b4ed459ecbc40255d6095, type: 2}
+  pathDampingRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: 24657665b1ba36147be04c98fc24c9f8, type: 2}
   threatColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &2527493145919057221
 GameObject:

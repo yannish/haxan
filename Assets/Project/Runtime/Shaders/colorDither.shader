@@ -98,7 +98,8 @@ Shader "Unlit/colorDither"
             {
                 Ref 1
                 Comp Equal
-                Pass Keep
+                ZFail Replace
+                ///Pass Keep
             }
 
             CGPROGRAM

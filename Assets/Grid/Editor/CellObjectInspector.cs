@@ -61,8 +61,6 @@ public class CellObjectInspector : Editor
 			Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
 			RaycastHit hit;
 
-			//Debug.Log("right click pressed!");
-
 			if (holdinShift)
 				Debug.Log("... with SHIFT!!");
 
