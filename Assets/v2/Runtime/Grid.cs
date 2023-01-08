@@ -6,8 +6,10 @@ public class Grid : MonoBehaviour
 
     void OnDrawGizmos()
     {
-        Vector2 tileSize = new Vector2(4f * 0.8660254f, 4f);
-        Vector2 size = new Vector2(NumTiles.x * tileSize.x, NumTiles.y * tileSize.y);
+        Vector2 size = new Vector2(
+            CellV2.InnerRadius * 2f * (NumTiles.x + 0.5f),
+            CellV2.OuterRadius * (2f + (NumTiles.y - 1) * 1.5f)
+        );
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(size.x, 0f, 0f));
         Gizmos.DrawLine(transform.position, transform.position + new Vector3(0f, 0f, size.y));
         Gizmos.DrawLine(transform.position + new Vector3(size.x, 0f, 0f), transform.position + new Vector3(size.x, 0f, size.y));
