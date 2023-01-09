@@ -43,7 +43,6 @@ public class CellV2 : MonoBehaviour
             roundedCartesian.y
         );
 
-        Gizmos.color = Color.green;
-        Gizmos.DrawLine(pos, pos + Vector3.up * 100f);
+        transform.position = pos;
     }
 }
