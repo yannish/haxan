@@ -4,20 +4,19 @@ using UnityEditor;
 [CustomEditor(typeof(Grid))]
 public class GridEditor : Editor
 {
-    SerializedProperty numTiles;
+    public static Vector2Int NumCells = new Vector2Int(4, 4);
 
     void OnEnable()
     {
-        numTiles = serializedObject.FindProperty("NumTiles");
     }
 
     public override void OnInspectorGUI()
     {
         serializedObject.Update();
 
-        EditorGUILayout.PropertyField(numTiles);
+        NumCells = EditorGUILayout.Vector2IntField("Number of cells to fill", NumCells);
 
-        if (GUILayout.Button("Clear and fill with basic cells"))
+        if (GUILayout.Button($"Clear and fill with {NumCells.x}x{NumCells.y} cells"))
         {
             Grid grid = (Grid)target;
             // Destroy all children that are cells
@@ -27,14 +26,13 @@ public class GridEditor : Editor
                 DestroyImmediate(cell.gameObject);
             }
             // Create new cells
-            Vector2Int num = grid.NumTiles;
             var prefab = Resources.Load("Prefabs/SimpleCell");
-            for (int x = 0; x < num.x; x++)
+            for (int x = 0; x < NumCells.x; x++)
             {
-                for (int y = 0; y < num.y; y++)
+                for (int y = 0; y < NumCells.y; y++)
                 {
                     GameObject child = (GameObject)Instantiate(prefab, grid.transform);
-                    child.name = $"Cell_{x}_{y}";
+                    child.name = $"Cell";
                     child.transform.localPosition = new Vector3(
                         (0.5f + x + y * 0.5f - y / 2) * CellV2.InnerRadius * 2f,
                         0f,

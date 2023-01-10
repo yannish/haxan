@@ -3,9 +3,7 @@ using UnityEngine;
 
 public class Grid : MonoBehaviour
 {
-    public Vector2Int NumTiles = new Vector2Int(4, 4);
-
-    void OnDrawGizmos()
+    void OnDrawGizmosSelected()
     {
         if (transform.hasChanged)
         {
@@ -46,18 +44,25 @@ public class Grid : MonoBehaviour
             transform.position = pos;
             transform.hasChanged = false;
         }
-        // Draw the bounds gizmo
+        // Draw rect around child extents
         {
-            Vector3 pos = transform.position;
-            Vector2 size = new Vector2(
-                CellV2.InnerRadius * 2f * (NumTiles.x + 0.5f),
-                CellV2.OuterRadius * (2f + (NumTiles.y - 1) * 1.5f)
-            );
+            var cells = GetComponentsInChildren<CellV2>();
+            Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
+            Vector2 max = new Vector2(-float.MaxValue, -float.MaxValue);
+            foreach (CellV2 cell in cells)
+            {
+                min = new Vector2(Mathf.Min(min.x, cell.transform.position.x), Mathf.Min(min.y, cell.transform.position.z));
+                max = new Vector2(Mathf.Max(max.x, cell.transform.position.x), Mathf.Max(max.y, cell.transform.position.z));
+            }
+            // Min and max contain the bounds of the tile centers.
+            // Now offset by radii of the tiles to get the bounding min and max.
+            Vector2 bmin = min - new Vector2(CellV2.InnerRadius, CellV2.OuterRadius);
+            Vector2 bmax = max + new Vector2(CellV2.InnerRadius, CellV2.OuterRadius);
 
-            Gizmos.DrawLine(pos, pos + new Vector3(size.x, 0f, 0f));
-            Gizmos.DrawLine(pos, pos + new Vector3(0f, 0f, size.y));
-            Gizmos.DrawLine(pos + new Vector3(size.x, 0f, 0f), pos + new Vector3(size.x, 0f, size.y));
-            Gizmos.DrawLine(pos + new Vector3(0f, 0f, size.y), pos + new Vector3(size.x, 0f, size.y));
+            Gizmos.DrawLine(new Vector3(bmin.x, 0f, bmin.y), new Vector3(bmin.x, 0f, bmax.y));
+            Gizmos.DrawLine(new Vector3(bmin.x, 0f, bmin.y), new Vector3(bmax.x, 0f, bmin.y));
+            Gizmos.DrawLine(new Vector3(bmin.x, 0f, bmax.y), new Vector3(bmax.x, 0f, bmax.y));
+            Gizmos.DrawLine(new Vector3(bmax.x, 0f, bmin.y), new Vector3(bmax.x, 0f, bmax.y));
         }
     }
 }
