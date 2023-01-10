@@ -7,34 +7,30 @@ public class Grid : MonoBehaviour
     {
         if (transform.hasChanged)
         {
-            float3x3 cartesianToHex = math.mul(
+            // An offset of half a cell size is applied to the matrices because
+            // unlike the cells themselves, the grids need to snap to the cell
+            // boundaries, and not the cell centers.
+            float3x3 offsetCartesianToHex = math.mul(
+                Board.CartesianToHex,
                 new float3x3(
-                    Mathf.Sqrt(3f) / (3f * CellV2.OuterRadius), -1f / (3f * CellV2.OuterRadius), 0f,
-                    0f, 2f / (3f * CellV2.OuterRadius), 0f,
-                    0f, 0f, 1f
-                ),
-                new float3x3(
-                    1f, 0f, 0f,
-                    0f, 1f, 0f,
+                    1f, 0f, CellV2.InnerRadius,
+                    0f, 1f, CellV2.OuterRadius,
                     0f, 0f, 1f
                 )
             );
+            float3x3 offsetHexToCartesian = math.mul(
+                new float3x3(
+                    1f, 0f, -CellV2.InnerRadius,
+                    0f, 1f, -CellV2.OuterRadius,
+                    0f, 0f, 1f
+                ),
+                Board.HexToCartesian
+            );
+
             float3 cartesian = new float3(transform.position.x, transform.position.z, 1f);
-            float2 hex = math.mul(cartesianToHex, cartesian).xy;
+            float2 hex = math.mul(offsetCartesianToHex, cartesian).xy;
             hex = math.round(hex);
-            float3x3 hexToCartesian = math.mul(
-                new float3x3(
-                    1f, 0f, 0f,
-                    0f, 1f, 0f,
-                    0f, 0f, 1f
-                ),
-                new float3x3(
-                    CellV2.InnerRadius * 2f, CellV2.InnerRadius, 0f,
-                    0f, 1.5f * CellV2.OuterRadius, 0f,
-                    0f, 0f, 1f
-                )
-            );
-            float2 roundedCartesian = math.mul(hexToCartesian, new float3(hex.x, hex.y, 1f)).xy;
+            float2 roundedCartesian = math.mul(offsetHexToCartesian, new float3(hex.x, hex.y, 1f)).xy;
 
             Vector3 pos = new Vector3(
                 roundedCartesian.x,
