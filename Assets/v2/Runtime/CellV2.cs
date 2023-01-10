@@ -6,14 +6,14 @@ public class CellV2 : MonoBehaviour
     public static readonly float OuterRadius = 2f;
     public static readonly float InnerRadius = OuterRadius * 0.866025404f;
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmos()
     {
         if (transform.hasChanged)
         {
             float3 cartesian = new float3(transform.localPosition.x, transform.localPosition.z, 1f);
-            float2 hex = math.mul(Board.CartesianToHex, cartesian).xy;
-            hex = math.round(hex);
-            float2 roundedCartesian = math.mul(Board.HexToCartesian, new float3(hex.x, hex.y, 1f)).xy;
+            float2 axial = math.mul(Board.CartesianToAxial, cartesian).xy;
+            axial = math.round(axial);
+            float2 roundedCartesian = math.mul(Board.AxialToCartesian, new float3(axial.x, axial.y, 1f)).xy;
 
             Vector3 pos = new Vector3(
                 roundedCartesian.x,

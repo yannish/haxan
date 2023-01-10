@@ -6,14 +6,8 @@ public class GridEditor : Editor
 {
     public static Vector2Int NumCells = new Vector2Int(4, 4);
 
-    void OnEnable()
-    {
-    }
-
     public override void OnInspectorGUI()
     {
-        serializedObject.Update();
-
         NumCells = EditorGUILayout.Vector2IntField("Number of cells to fill", NumCells);
 
         if (GUILayout.Button($"Clear and fill with {NumCells.x}x{NumCells.y} cells"))
@@ -41,6 +35,5 @@ public class GridEditor : Editor
                 }
             }
         }
-        serializedObject.ApplyModifiedProperties();
     }
 }

@@ -10,27 +10,27 @@ public class Grid : MonoBehaviour
             // An offset of half a cell size is applied to the matrices because
             // unlike the cells themselves, the grids need to snap to the cell
             // boundaries, and not the cell centers.
-            float3x3 offsetCartesianToHex = math.mul(
-                Board.CartesianToHex,
+            float3x3 offsetCartesianToAxial = math.mul(
+                Board.CartesianToAxial,
                 new float3x3(
                     1f, 0f, CellV2.InnerRadius,
                     0f, 1f, CellV2.OuterRadius,
                     0f, 0f, 1f
                 )
             );
-            float3x3 offsetHexToCartesian = math.mul(
+            float3x3 offsetAxialToCartesian = math.mul(
                 new float3x3(
                     1f, 0f, -CellV2.InnerRadius,
                     0f, 1f, -CellV2.OuterRadius,
                     0f, 0f, 1f
                 ),
-                Board.HexToCartesian
+                Board.AxialToCartesian
             );
 
             float3 cartesian = new float3(transform.position.x, transform.position.z, 1f);
-            float2 hex = math.mul(offsetCartesianToHex, cartesian).xy;
-            hex = math.round(hex);
-            float2 roundedCartesian = math.mul(offsetHexToCartesian, new float3(hex.x, hex.y, 1f)).xy;
+            float2 axial = math.mul(offsetCartesianToAxial, cartesian).xy;
+            axial = math.round(axial);
+            float2 roundedCartesian = math.mul(offsetAxialToCartesian, new float3(axial.x, axial.y, 1f)).xy;
 
             Vector3 pos = new Vector3(
                 roundedCartesian.x,

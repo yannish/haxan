@@ -3,7 +3,7 @@ using Unity.Mathematics;
 
 public class Board
 {
-    public static readonly float3x3 CartesianToHex = math.mul(
+    public static readonly float3x3 CartesianToAxial = math.mul(
         new float3x3(
             Mathf.Sqrt(3f) / (3f * CellV2.OuterRadius), -1f / (3f * CellV2.OuterRadius), 0f,
             0f, 2f / (3f * CellV2.OuterRadius), 0f,
@@ -15,7 +15,7 @@ public class Board
             0f, 0f, 1f
         )
     );
-    public static readonly float3x3 HexToCartesian = math.mul(
+    public static readonly float3x3 AxialToCartesian = math.mul(
         new float3x3(
             1f, 0f, CellV2.InnerRadius,
             0f, 1f, CellV2.OuterRadius,
