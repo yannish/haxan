@@ -61,4 +61,19 @@ public class Grid : MonoBehaviour
             Gizmos.DrawLine(new Vector3(bmax.x, 0f, bmin.y), new Vector3(bmax.x, 0f, bmax.y));
         }
     }
+
+    void Awake()
+    {
+        Board.AddGrid(this);
+    }
+
+    void Start()
+    {
+        if (Board.Cells == null)
+        {
+            // ^ The board has not been built yet. We only want to do this once
+            // across the whole game's startup, not once per Grid.
+            Board.Rebuild();
+        }
+    }
 }
