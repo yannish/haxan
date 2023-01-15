@@ -3,6 +3,14 @@ using Unity.Mathematics;
 
 public class Unit : MonoBehaviour
 {
+    // Position in offset coordinate space
+    public Vector2Int OffsetPos;
+
+    void Start()
+    {
+        OffsetPos = Board.WorldToOffset(transform.position);
+    }
+
     void OnDrawGizmos()
     {
         if (transform.hasChanged)

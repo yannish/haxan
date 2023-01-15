@@ -29,7 +29,27 @@ public class Board
         )
     );
 
+    public static Vector2Int WorldToOffset(Vector3 worldPos)
+    {
+        float3 cartesian = new float3(worldPos.x, worldPos.z, 1f);
+        float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;
+        Vector2Int axial = new Vector2Int(Mathf.RoundToInt(axialFrac.x), Mathf.RoundToInt(axialFrac.y));
+        Vector2Int offset = new Vector2Int(
+            axial.x + (axial.y - (axial.y & 1)) / 2,
+            axial.y
+        );
+        return offset;
+    }
+
+    /// Position in offset coordinate space
+    public static Vector2Int OffsetPos;
     public static CellV2[,] Cells;
+    // The assumption here is that there will only ever be a handful of units,
+    // so we're not allocating a 2D array of units, one at each position.
+    // Instead we're just keeping a 1D array of all units, and to find a unit at
+    // a given position, we'll just loop over all of them. A better data
+    // structure can be implemented if this ever becomes a perf bottleneck.
+    public static Unit[] Units;
 
     static List<Grid> grids = new List<Grid>();
 
@@ -101,6 +121,9 @@ public class Board
             }
         }
 
-        Debug.Log($"Built a {Cells.GetLength(0)}x{Cells.GetLength(1)} board.");
+        OffsetPos = min;
+
+        Units = Object.FindObjectsOfType<Unit>();
+        Debug.Log($"Built a {Cells.GetLength(0)}x{Cells.GetLength(1)} board with {Units.Length} units.");
     }
 }
