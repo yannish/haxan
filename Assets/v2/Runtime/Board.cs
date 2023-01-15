@@ -88,14 +88,7 @@ public class Board
             cellsAndCoords.Capacity = cellsAndCoords.Count + cells.Length;
             foreach (var cell in cells)
             {
-                // Compute offset coords
-                float3 cartesian = new float3(cell.transform.position.x, cell.transform.position.z, 1f);
-                float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;
-                Vector2Int axial = new Vector2Int(Mathf.RoundToInt(axialFrac.x), Mathf.RoundToInt(axialFrac.y));
-                Vector2Int offset = new Vector2Int(
-                    axial.x + (axial.y - (axial.y & 1)) / 2,
-                    axial.y
-                );
+                Vector2Int offset = WorldToOffset(cell.transform.position);
                 // Potentially update the bounds
                 min = Vector2Int.Min(min, offset);
                 max = Vector2Int.Max(max, offset);
@@ -125,5 +118,18 @@ public class Board
 
         Units = Object.FindObjectsOfType<Unit>();
         Debug.Log($"Built a {Cells.GetLength(0)}x{Cells.GetLength(1)} board with {Units.Length} units.");
+    }
+
+    public static Unit GetUnitAtPos(Vector2Int pos)
+    {
+        foreach (Unit unit in Board.Units)
+        {
+            if (unit.OffsetPos == pos)
+            {
+                // ^ Unit exists at this position
+                return unit;
+            }
+        }
+        return null;
     }
 }
