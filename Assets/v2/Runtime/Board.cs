@@ -40,6 +40,18 @@ public class Board
         );
         return offset;
     }
+    public static Vector3 OffsetToWorld(Vector2Int offsetPos)
+    {
+        Vector2Int axial = new Vector2Int(
+            offsetPos.x - (offsetPos.y - (offsetPos.y & 1)) / 2,
+            offsetPos.y
+        );
+        float2 cartesian = math.mul(
+            Board.AxialToCartesian,
+            new float3(axial.x, axial.y, 1f)
+        ).xy;
+        return new Vector3(cartesian.x, 0f, cartesian.y);
+    }
 
     /// Position in offset coordinate space
     public static Vector2Int OffsetPos;
@@ -131,5 +143,17 @@ public class Board
             }
         }
         return null;
+    }
+    // `origin` is in offset coordinates
+    public static Vector2Int[] GetNavigableTiles(Vector2Int origin)
+    {
+        // TODO: Add actual tiles, not just neighbors
+        return new Vector2Int[]
+        {
+            new Vector2Int(origin.x + 1, origin.y),
+            new Vector2Int(origin.x - 1, origin.y),
+            new Vector2Int(origin.x, origin.y + 1),
+            new Vector2Int(origin.x, origin.y - 1),
+        };
     }
 }

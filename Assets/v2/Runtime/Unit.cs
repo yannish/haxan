@@ -4,6 +4,7 @@ using Unity.Mathematics;
 public class Unit : MonoBehaviour
 {
     // Position in offset coordinate space
+    [HideInInspector, System.NonSerialized]
     public Vector2Int OffsetPos;
 
     void Start()
