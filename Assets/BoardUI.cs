@@ -104,19 +104,13 @@ public class BoardUI : MonoBehaviour
                 if (unit && unit != selectedUnit)
                 {
                     // ^ A unit was clicked, and it is not already selected
+                    DeselectUnit();
+                    SelectUnit(unit);
                 }
                 else if (unit == null)
                 {
                     // ^ A cell without a unit on it was clicked
-                    mode = Mode.Neutral;
-                    selectedUnit = null;
-                    portrait.SetActive(false);
-                    foreach (Transform child in waypoints.transform)
-                    {
-                        child.transform
-                            .DOScale(0f, 0.05f)
-                            .OnComplete(() => Destroy(child.gameObject));
-                    }
+                    DeselectUnit();
                 }
             }
         }
@@ -137,6 +131,7 @@ public class BoardUI : MonoBehaviour
         // ^ A unit was clicked
         mode = Mode.UnitSelected;
         selectedUnit = unit;
+        portrait.SetActive(true);
         // Show navigable tiles
         var prefab = Resources.Load("Prefabs/Waypoint");
         Vector2Int[] positions = Board.GetNavigableTiles(unit.OffsetPos);
@@ -150,20 +145,48 @@ public class BoardUI : MonoBehaviour
         }
     }
 
+    void DeselectUnit()
+    {
+        mode = Mode.Neutral;
+        selectedUnit = null;
+        portrait.SetActive(false);
+        foreach (Transform child in waypoints.transform)
+        {
+            child.transform
+                .DOScale(0f, 0.05f)
+                .OnComplete(() => Destroy(child.gameObject));
+        }
+    }
+
+    Unit GetUnitByGuid(int unitGuid)
+    {
+        foreach (Unit unit in Board.Units)
+        {
+            if (unit.GetInstanceID() == unitGuid)
+            {
+                return unit;
+            }
+        }
+
+        throw new System.ArgumentException("Unit with given guid not found");
+    }
+
     public void OnPointerEnterUnitButton(/*int unitGuid*/)
     {
+        isPointerInUI = true;
+
         if (mode == Mode.Neutral)
         {
-            isPointerInUI = true;
             portrait.SetActive(true);
         }
     }
 
     public void OnPointerExitUnitButton()
     {
+        isPointerInUI = false;
+
         if (mode == Mode.Neutral)
         {
-            isPointerInUI = false;
             portrait.SetActive(false);
         }
     }
@@ -172,14 +195,14 @@ public class BoardUI : MonoBehaviour
     {
         if (mode == Mode.Neutral)
         {
-            foreach (Unit unit in Board.Units)
-            {
-                if (unit.GetInstanceID() == unitGuid)
-                {
-                    SelectUnit(unit);
-                    break;
-                }
-            }
+            Unit unit = GetUnitByGuid(unitGuid);
+            SelectUnit(unit);
+        }
+        else if (mode == Mode.UnitSelected)
+        {
+            DeselectUnit();
+            Unit unit = GetUnitByGuid(unitGuid);
+            SelectUnit(unit);
         }
     }
 }
