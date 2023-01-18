@@ -73,7 +73,7 @@ public class Grid : MonoBehaviour
         {
             // ^ The board has not been built yet. We only want to do this once
             // across the whole game's startup, not once per Grid.
-            Board.Rebuild();
+            Board.Build();
         }
     }
 }

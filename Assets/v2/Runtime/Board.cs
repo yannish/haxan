@@ -87,7 +87,7 @@ public class Board
         grids.Add(grid);
     }
 
-    public static void Rebuild()
+    public static void Build()
     {
         // Build a list of all cells in the added grids and their min/max bounds
         // in offset coords
@@ -130,6 +130,10 @@ public class Board
 
         Units = Object.FindObjectsOfType<Unit>();
         Debug.Log($"Built a {Cells.GetLength(0)}x{Cells.GetLength(1)} board with {Units.Length} units.");
+
+        var ui = BoardUI.FindObjectOfType<BoardUI>();
+        Debug.Assert(ui != null, "There is no BoardUI in the scene. Please create one.");
+        ui.Init();
     }
 
     public static Unit GetUnitAtPos(Vector2Int pos)

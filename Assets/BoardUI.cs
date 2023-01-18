@@ -16,14 +16,22 @@ public class BoardUI : MonoBehaviour
     GameObject waypoints;
     bool isPointerInUI;
 
-    void Awake()
+    public void Init()
     {
         portrait = transform.Find("portrait").gameObject;
         portrait.SetActive(false);
         waypoints = new GameObject("Waypoints");
-        // TODO: Generate unit buttons dynamically
-        UnitButton btn = transform.Find("unitButton").GetComponent<UnitButton>();
-        btn.Init(this);
+        // Generate one button per unit
+        var prefab = Resources.Load("Prefabs/UnitButton");
+        for (int i = 0; i < Board.Units.Length; i++)
+        {
+            Unit unit = Board.Units[i];
+            GameObject go = (GameObject)Instantiate(prefab, transform);
+            RectTransform rt = go.GetComponent<RectTransform>();
+            rt.anchoredPosition += new Vector2(0f, 110f * i);
+            UnitButton btn = go.GetComponent<UnitButton>();
+            btn.Init(this, unit.GetInstanceID());
+        }
     }
 
     void Update()
@@ -71,20 +79,7 @@ public class BoardUI : MonoBehaviour
                 var unit = Board.GetUnitAtPos(offset);
                 if (unit)
                 {
-                    // ^ A unit was clicked
-                    mode = Mode.UnitSelected;
-                    selectedUnit = unit;
-                    // Show navigable tiles
-                    var prefab = Resources.Load("Prefabs/Waypoint");
-                    Vector2Int[] positions = Board.GetNavigableTiles(offset);
-                    foreach (Vector2Int pos in positions)
-                    {
-                        GameObject waypt = (GameObject)Instantiate(prefab, waypoints.transform);
-                        waypt.transform.position = Board.OffsetToWorld(pos)
-                            + new Vector3(0, 0.1f, 0);
-                        waypt.transform.localScale = Vector3.zero;
-                        waypt.transform.DOScale(0.3f, 0.05f);
-                    }
+                    SelectUnit(unit);
                 }
             }
         }
@@ -137,6 +132,24 @@ public class BoardUI : MonoBehaviour
         return offset;
     }
 
+    void SelectUnit(Unit unit)
+    {
+        // ^ A unit was clicked
+        mode = Mode.UnitSelected;
+        selectedUnit = unit;
+        // Show navigable tiles
+        var prefab = Resources.Load("Prefabs/Waypoint");
+        Vector2Int[] positions = Board.GetNavigableTiles(unit.OffsetPos);
+        foreach (Vector2Int pos in positions)
+        {
+            GameObject waypt = (GameObject)Instantiate(prefab, waypoints.transform);
+            waypt.transform.position = Board.OffsetToWorld(pos)
+                + new Vector3(0, 0.1f, 0);
+            waypt.transform.localScale = Vector3.zero;
+            waypt.transform.DOScale(0.3f, 0.05f);
+        }
+    }
+
     public void OnPointerEnterUnitButton(/*int unitGuid*/)
     {
         if (mode == Mode.Neutral)
@@ -152,6 +165,21 @@ public class BoardUI : MonoBehaviour
         {
             isPointerInUI = false;
             portrait.SetActive(false);
+        }
+    }
+
+    public void OnPointerClickUnitButton(int unitGuid)
+    {
+        if (mode == Mode.Neutral)
+        {
+            foreach (Unit unit in Board.Units)
+            {
+                if (unit.GetInstanceID() == unitGuid)
+                {
+                    SelectUnit(unit);
+                    break;
+                }
+            }
         }
     }
 }
