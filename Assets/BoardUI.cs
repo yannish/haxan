@@ -14,12 +14,16 @@ public class BoardUI : MonoBehaviour
     Vector2Int mouseDownPos;
     Unit selectedUnit;
     GameObject waypoints;
+    bool isPointerInUI;
 
     void Awake()
     {
         portrait = transform.Find("portrait").gameObject;
         portrait.SetActive(false);
         waypoints = new GameObject("Waypoints");
+        // TODO: Generate unit buttons dynamically
+        UnitButton btn = transform.Find("unitButton").GetComponent<UnitButton>();
+        btn.Init(this);
     }
 
     void Update()
@@ -37,7 +41,7 @@ public class BoardUI : MonoBehaviour
     void HandleNeutralMode()
     {
         // ^ We're in neutral mode, where no unit is selected
-        if (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)
+        if (!isPointerInUI && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f))
         {
             // ^ The mouse has moved
             Vector2Int offset = MouseToOffsetPos();
@@ -52,12 +56,12 @@ public class BoardUI : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
+        if (!isPointerInUI && Input.GetMouseButtonDown(0))
         {
             mouseDownPos = MouseToOffsetPos();
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (!isPointerInUI && Input.GetMouseButtonUp(0))
         {
             Vector2Int mouseUpPos = MouseToOffsetPos();
             if (mouseUpPos == mouseDownPos)
@@ -89,12 +93,12 @@ public class BoardUI : MonoBehaviour
     void HandleUnitSelectedMode()
     {
         // ^ We're in the mode where a unit is selected
-        if (Input.GetMouseButtonDown(0))
+        if (!isPointerInUI && Input.GetMouseButtonDown(0))
         {
             mouseDownPos = MouseToOffsetPos();
         }
 
-        if (Input.GetMouseButtonUp(0))
+        if (!isPointerInUI && Input.GetMouseButtonUp(0))
         {
             Vector2Int mouseUpPos = MouseToOffsetPos();
             if (mouseUpPos == mouseDownPos)
@@ -131,5 +135,23 @@ public class BoardUI : MonoBehaviour
         Vector3 worldPos = ray.GetPoint(dist);
         Vector2Int offset = Board.WorldToOffset(worldPos);
         return offset;
+    }
+
+    public void OnPointerEnterUnitButton(/*int unitGuid*/)
+    {
+        if (mode == Mode.Neutral)
+        {
+            isPointerInUI = true;
+            portrait.SetActive(true);
+        }
+    }
+
+    public void OnPointerExitUnitButton()
+    {
+        if (mode == Mode.Neutral)
+        {
+            isPointerInUI = false;
+            portrait.SetActive(false);
+        }
     }
 }
