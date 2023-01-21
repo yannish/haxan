@@ -6,25 +6,25 @@ public class Board
 {
     public static readonly float3x3 CartesianToAxial = math.mul(
         new float3x3(
-            Mathf.Sqrt(3f) / (3f * CellV2.OuterRadius), -1f / (3f * CellV2.OuterRadius), 0f,
-            0f, 2f / (3f * CellV2.OuterRadius), 0f,
+            2f / (3f * CellV2.OuterRadius), 0f, 0f,
+            -1f / (3f * CellV2.OuterRadius), Mathf.Sqrt(3f) / (3f * CellV2.OuterRadius), 0f,
             0f, 0f, 1f
         ),
         new float3x3(
-            1f, 0f, -CellV2.InnerRadius,
-            0f, 1f, -CellV2.OuterRadius,
+            1f, 0f, -CellV2.OuterRadius,
+            0f, 1f, -CellV2.InnerRadius,
             0f, 0f, 1f
         )
     );
     public static readonly float3x3 AxialToCartesian = math.mul(
         new float3x3(
-            1f, 0f, CellV2.InnerRadius,
-            0f, 1f, CellV2.OuterRadius,
+            1f, 0f, CellV2.OuterRadius,
+            0f, 1f, CellV2.InnerRadius,
             0f, 0f, 1f
         ),
         new float3x3(
-            CellV2.InnerRadius * 2f, CellV2.InnerRadius, 0f,
-            0f, 1.5f * CellV2.OuterRadius, 0f,
+            1.5f * CellV2.OuterRadius, 0f, 0f,
+            CellV2.InnerRadius, CellV2.InnerRadius * 2f, 0f,
             0f, 0f, 1f
         )
     );
@@ -35,16 +35,16 @@ public class Board
         float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;
         Vector2Int axial = new Vector2Int(Mathf.RoundToInt(axialFrac.x), Mathf.RoundToInt(axialFrac.y));
         Vector2Int offset = new Vector2Int(
-            axial.x + (axial.y - (axial.y & 1)) / 2,
-            axial.y
+            axial.x,
+            axial.y + (axial.x - (axial.x & 1)) / 2
         );
         return offset;
     }
     public static Vector3 OffsetToWorld(Vector2Int offsetPos)
     {
         Vector2Int axial = new Vector2Int(
-            offsetPos.x - (offsetPos.y - (offsetPos.y & 1)) / 2,
-            offsetPos.y
+            offsetPos.x,
+            offsetPos.y - (offsetPos.x - (offsetPos.x & 1)) / 2
         );
         float2 cartesian = math.mul(
             Board.AxialToCartesian,

@@ -13,15 +13,15 @@ public class Grid : MonoBehaviour
             float3x3 offsetCartesianToAxial = math.mul(
                 Board.CartesianToAxial,
                 new float3x3(
-                    1f, 0f, CellV2.InnerRadius,
-                    0f, 1f, CellV2.OuterRadius,
+                    1f, 0f, CellV2.OuterRadius,
+                    0f, 1f, CellV2.InnerRadius,
                     0f, 0f, 1f
                 )
             );
             float3x3 offsetAxialToCartesian = math.mul(
                 new float3x3(
-                    1f, 0f, -CellV2.InnerRadius,
-                    0f, 1f, -CellV2.OuterRadius,
+                    1f, 0f, -CellV2.OuterRadius,
+                    0f, 1f, -CellV2.InnerRadius,
                     0f, 0f, 1f
                 ),
                 Board.AxialToCartesian
