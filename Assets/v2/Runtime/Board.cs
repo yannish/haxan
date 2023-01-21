@@ -165,6 +165,11 @@ public class Board
         {
             for (int y = Mathf.Max(-range, -x - range); y <= Mathf.Min(range, -x + range); y++)
             {
+                // Skip the original positon
+                if (x == 0 && y == 0)
+                {
+                    continue;
+                }
                 Vector2Int offset = AxialToOffset(centerAxial + new Vector2Int(x, y));
                 // Skip this position if it is outside the Board's bounds
                 if (offset.x < Board.OffsetPos.x ||
