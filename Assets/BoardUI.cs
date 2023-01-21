@@ -134,7 +134,7 @@ public class BoardUI : MonoBehaviour
         portrait.SetActive(true);
         // Show navigable tiles
         var prefab = Resources.Load("Prefabs/Waypoint");
-        Vector2Int[] positions = Board.GetNavigableTiles(unit.OffsetPos);
+        Vector2Int[] positions = Board.GetNavigableTiles(unit);
         foreach (Vector2Int pos in positions)
         {
             GameObject waypt = (GameObject)Instantiate(prefab, waypoints.transform);

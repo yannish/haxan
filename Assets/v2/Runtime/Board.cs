@@ -34,23 +34,30 @@ public class Board
         float3 cartesian = new float3(worldPos.x, worldPos.z, 1f);
         float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;
         Vector2Int axial = new Vector2Int(Mathf.RoundToInt(axialFrac.x), Mathf.RoundToInt(axialFrac.y));
-        Vector2Int offset = new Vector2Int(
-            axial.x,
-            axial.y + (axial.x - (axial.x & 1)) / 2
-        );
-        return offset;
+        return AxialToOffset(axial);
     }
     public static Vector3 OffsetToWorld(Vector2Int offsetPos)
     {
-        Vector2Int axial = new Vector2Int(
-            offsetPos.x,
-            offsetPos.y - (offsetPos.x - (offsetPos.x & 1)) / 2
-        );
+        Vector2Int axial = OffsetToAxial(offsetPos);
         float2 cartesian = math.mul(
             Board.AxialToCartesian,
             new float3(axial.x, axial.y, 1f)
         ).xy;
         return new Vector3(cartesian.x, 0f, cartesian.y);
+    }
+    public static Vector2Int AxialToOffset(Vector2Int axial)
+    {
+        return new Vector2Int(
+            axial.x,
+            axial.y + (axial.x - (axial.x & 1)) / 2
+        );
+    }
+    public static Vector2Int OffsetToAxial(Vector2Int offset)
+    {
+        return new Vector2Int(
+            offset.x,
+            offset.y - (offset.x - (offset.x & 1)) / 2
+        );
     }
 
     /// Position in offset coordinate space
@@ -148,16 +155,33 @@ public class Board
         }
         return null;
     }
-    // `origin` is in offset coordinates
-    public static Vector2Int[] GetNavigableTiles(Vector2Int origin)
+    // Output positions are in offset coordinates
+    public static Vector2Int[] GetNavigableTiles(Unit unit)
     {
-        // TODO: Add actual tiles, not just neighbors
-        return new Vector2Int[]
+        List<Vector2Int> result = new();
+        const int range = 3;
+        Vector2Int centerAxial = OffsetToAxial(unit.OffsetPos);
+        for (int x = -range; x <= range; x++)
         {
-            new Vector2Int(origin.x + 1, origin.y),
-            new Vector2Int(origin.x - 1, origin.y),
-            new Vector2Int(origin.x, origin.y + 1),
-            new Vector2Int(origin.x, origin.y - 1),
-        };
+            for (int y = Mathf.Max(-range, -x - range); y <= Mathf.Min(range, -x + range); y++)
+            {
+                Vector2Int offset = AxialToOffset(centerAxial + new Vector2Int(x, y));
+                // Skip this position if it is outside the Board's bounds
+                if (offset.x < Board.OffsetPos.x ||
+                    offset.x >= Board.OffsetPos.x + Board.Cells.GetLength(0) ||
+                    offset.y < Board.OffsetPos.y ||
+                    offset.y >= Board.OffsetPos.y + Board.Cells.GetLength(1))
+                {
+                    continue;
+                }
+                // Skip this position if it doesn't contain a cell
+                if (Board.Cells[offset.x - Board.OffsetPos.x, offset.y - Board.OffsetPos.y] == null)
+                {
+                    continue;
+                }
+                result.Add(offset);
+            }
+        }
+        return result.ToArray();
     }
 }
