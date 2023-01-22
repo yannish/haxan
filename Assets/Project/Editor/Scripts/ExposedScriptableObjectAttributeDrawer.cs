@@ -19,6 +19,9 @@ public class ExposedScriptableObjectAttributeDrawer : PropertyDrawer
 			property.isExpanded = EditorGUI.Foldout(position, property.isExpanded, GUIContent.none);
 		}
 
+		if (property.objectReferenceValue == null)
+			return;
+
 		if(property.isExpanded)
 		{
 			EditorGUI.indentLevel++;

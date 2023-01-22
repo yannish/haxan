@@ -15,7 +15,7 @@ public class GridSamplerFlowController : FlowController
 		Debug.Log("Entered Grid Sampler flow");
 	}
 
-	public override bool HandleHover(ElementHoveredEvent e)
+	public override bool HandleHoverStart(ElementHoveredEvent e)
 	{
 		if (e.element == null)
 			return false;

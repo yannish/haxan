@@ -2,7 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 public class StepCommand : CharacterCommand
 {
 	public Cell targetCell;
@@ -13,11 +15,11 @@ public class StepCommand : CharacterCommand
 
 
 	public StepCommand(
-		CharacterFlowController characterFlow,
+		Character character,
 		Cell fromCell,
 		Cell targetCell,
 		float duration
-		) : base(characterFlow)
+		) : base(character)
 	{
 		this.targetCell = targetCell;
 		this.fromCell = fromCell;
@@ -27,46 +29,71 @@ public class StepCommand : CharacterCommand
 		endPos = targetCell.occupantPivot.position;
 	}
 
+
 	public override void OnBeginTick()
 	{
 		base.OnBeginTick();
-
-		string log = string.Format("executing from : {0} to : {1}", fromCell.name, targetCell.name);
-		Debog.logGameflow(log);
-		fromCell.Leave(characterFlow.character);
+		fromCell.Leave(character);
+		//string log = string.Format("executing from : {0} to : {1}", fromCell.name, targetCell.name);
+		//Debog.logGameflow(log);
 	}
+
+	public override void OnBeginReverseTick()
+	{
+		base.OnBeginTick();
+		targetCell.Leave(character);
+		//string log = string.Format("executing from : {0} to : {1}", fromCell.name, targetCell.name);
+		//Debog.logGameflow(log);
+	}
+
 
 	public override void OnCompleteTick()
 	{
 		base.OnCompleteTick();
-		targetCell.Enter(characterFlow.character);
+		targetCell.Enter(character);
 	}
+
+	public override void OnCompleteReverseTick()
+	{
+		base.OnCompleteTick();
+		fromCell.Enter(character);
+	}
+
 
 	public override void Execute()
 	{
 		base.Execute();
-		characterFlow.character.currMove--;
-		characterFlow.character.SetVisualPos(Vector3.zero, true);
-		characterFlow.character.MoveAndBindTo(targetCell);
+		character.DecrementMove();
+		character.SetVisualPos(Vector3.zero, true);
+		character.MoveAndBindTo(targetCell);
 	}
 
 	public override void Undo()
 	{
 		base.Undo();
-		characterFlow.character.currMove++;
-		characterFlow.character.MoveAndBindTo(fromCell);
-		characterFlow.character.SetVisualPos(Vector3.zero, true);
+		character.IncrementMove();
+		character.MoveAndBindTo(fromCell);
+		character.SetVisualPos(Vector3.zero, true);
 	}
 
-	public override bool Tick()
+	public override bool Tick(float timeScale = 1f)
 	{
-		currTime += Time.deltaTime;
-		currProgress = Mathf.Clamp01(currTime / duration);
+		base.Tick(timeScale);
 
-		characterFlow.character.SetVisualPos(Vector3.Lerp(startPos, endPos, currProgress));
+		character.SetVisualPos(Vector3.Lerp(startPos, endPos, currProgress));
 
-		return currProgress >= 1f;
+		return CheckComplete(timeScale);
 	}
+
+#if UNITY_EDITOR
+	public override void DrawInspectorContent()
+	{
+		EditorGUILayout.BeginHorizontal();
+		EditorGUILayout.ObjectField("from:", fromCell, typeof(Cell), true);
+		EditorGUILayout.ObjectField("to:", targetCell, typeof(Cell), true);
+		EditorGUILayout.EndHorizontal();
+	}
+#endif
 }
 
 //public class StepCommand : CharacterCommand

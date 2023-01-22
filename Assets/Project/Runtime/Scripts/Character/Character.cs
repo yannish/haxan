@@ -7,21 +7,41 @@ using UnityEngine;
 [SelectionBase]
 public abstract class Character : CellObject
 {
+    public event Action<Character> OnCharacterChanged = delegate { };
+
     //public static event Action<Character> OnHovered = delegate { };
+
     //public static event Action OnUnhovered = delegate { };
 
-	public Ability movementAbility;
+    //public Ability movementAbility;
 
+    public AbilityScrObj movementAbilityScrObj;
+
+    [ReadOnly] public AbilityFlowController movementAbilityFlow;
     
     //... gamestate:
+    [Header("STATE: ")]
     public bool isStunned;
 
     public int maxActions;
     [ReadOnly] public int currActions = -1;
 
     public int maxMoves;
-    [ReadOnly] public int currMove = -1;
+    [ReadOnly] private int currMove = -1;
+    public int CurrMove => currMove;
 
+
+    public void DecrementMove()
+	{
+        currMove--;
+        OnCharacterChanged?.Invoke(this);
+	}
+
+    public void IncrementMove()
+    {
+        currMove++;
+        OnCharacterChanged?.Invoke(this);
+    }
 
     public virtual void Ready()
 	{
@@ -36,5 +56,7 @@ public abstract class Character : CellObject
 
         currActions = maxActions;
         currMove = maxMoves;
+
+        OnCharacterChanged?.Invoke(this);
 	}
 }

@@ -408,6 +408,10 @@ MonoBehaviour:
   currHoverTargetColor: {r: 0, g: 0, b: 0, a: 0}
   currHoverColor: {r: 0, g: 0, b: 0, a: 0}
   currHoverAlpha: 0
+  currHoverAlphaVel: 0
+  currHoverAlphaTarget: 0
+  hoverAlphaSmoothTimeUp: 0.02
+  hoverAlphaSmoothTimeDown: 0.2
   hovered: 0
   hoveredAlpha: 0.5
   hoveredHexRingSize:

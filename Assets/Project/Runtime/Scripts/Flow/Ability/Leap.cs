@@ -4,7 +4,8 @@ using UnityEngine;
 
 
 [CreateAssetMenu(menuName = "Abilities/Leap", fileName = "Leap")]
-public class Leap : ScrObjAbility, ICellCommandDispenser
+public class Leap : ScrObjAbility
+    //, ICellCommandDispenser
 {
     public CellCommand GetCellCommand(Cell cell)
     {

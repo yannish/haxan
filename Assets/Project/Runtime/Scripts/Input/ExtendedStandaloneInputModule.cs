@@ -32,7 +32,7 @@ public class ExtendedStandaloneInputModule : StandaloneInputModule
 
 		if (
 			(Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) 
-			|| (Input.GetMouseButtonDown(1))
+			//|| (Input.GetMouseButtonDown(1))
 			)
 		{
 			Debog.logInput("emptyClick event");

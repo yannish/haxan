@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class RectUIElement : MonoBehaviour
 {
-	//public override void Awake()
 	protected virtual void Awake()
 	{
 		//base.Awake();
@@ -49,8 +48,10 @@ public class RectUIElement : MonoBehaviour
 	//}
 
 	[Header("COLOUR:")]
+	//public float deadFloat;
+	//[ReadOnly] 
+	public Color baseColor;
 	public ColorReference colorRef;
-	[ReadOnly] public Color baseColor;
 	public Image colorImage;
 	public float colorDuration;
 	//[ReadOnly] public Color currColor;

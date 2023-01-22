@@ -59,28 +59,44 @@ public class AbilityDisplay : MonoBehaviour
         //    slot.gameObject.SetActive(true);
         //}
 
+        //foreach (var ability in obj.cellObject.abilities)
+        //{
+        //    if (ability == null)
+        //        continue;
+
+        //    AbilityDisplaySlot slot = slots[abilityCount];
+        //    if (slot == null)
+        //        continue;
+
+        //    SlotAbility(ability, slot);
+
+        //    abilityCount++;
+        //}
+
+
         int abilityCount = 0;
-        foreach (var ability in obj.cellObject.abilities)
-        {
-            if (ability == null)
+        foreach(var flow in obj.cellObject.abilityFlows)
+		{
+            if (flow == null)
                 continue;
 
             AbilityDisplaySlot slot = slots[abilityCount];
             if (slot == null)
                 continue;
 
-            SlotAbility(ability, slot);
+            SlotAbility(flow, slot);
 
             abilityCount++;
-        }
+		}
     }
 
-	private void SlotAbility(Ability ability, AbilityDisplaySlot slot)
+	private void SlotAbility(AbilityFlowController abilityFlow, AbilityDisplaySlot slot)
 	{
         slot.gameObject.SetActive(true);
-        slot.abilityIcon.sprite = ability.icon;
-        slot.abilityText.SetText(ability.abilityName.ToUpper());
-        slot.ability = ability;
+        slot.abilityIcon.sprite = abilityFlow.abilityScrObj.icon; 
+        slot.abilityText.SetText(abilityFlow.abilityScrObj.name.ToUpper());
+        slot.ability = abilityFlow.abilityScrObj;
+        slot.abilityFlow = abilityFlow;
 
         //ability.flow.OnFlowPeeked += slot.OnFlowPeeked;
         //ability.flow.OnFlowUnpeeked += slot.OnFlowUnpeeked;

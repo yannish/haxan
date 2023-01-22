@@ -324,7 +324,10 @@ MonoBehaviour:
   subFlow: {fileID: 0}
   peekedFlow: {fileID: 0}
   lastSubFlow: {fileID: 0}
-  turnFlipTime: 0
+  turnFlipTime:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: b62e954ed23a92e4d947b8f410774041, type: 2}
   currTime: 0
 --- !u!114 &6904084027395656657
 MonoBehaviour:
@@ -339,3 +342,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   logDebug: 0
+  flowableComponent: {fileID: 0}

@@ -28,7 +28,22 @@ public class Wanderer : Character
 		if (!Application.isPlaying)
 			return;
 
-		movementAbility = Instantiate<Ability>(movementAbility, this.transform);
+		abilityScrObjs.ForEach(t => abilityFlows.Add(CloneAbility(t)));
+
+		if(movementAbilityScrObj != null)
+			movementAbilityFlow = CloneAbility(movementAbilityScrObj);
+
+		//if (movementAbilityScrObj)
+		//{
+		//	var newGameObject = new GameObject(movementAbilityScrObj.name, typeof(AbilityFlowController));
+		//	newGameObject.transform.SetParent(this.transform);
+		//	newGameObject.hideFlags = HideFlags.DontSaveInEditor;
+
+		//	var newFlowController = newGameObject.GetComponent<AbilityFlowController>();
+		//	newFlowController.abilityScrObj = movementAbilityScrObj;
+
+		//	movementAbilityFlow = newFlowController;
+		//}
 	}
 
 

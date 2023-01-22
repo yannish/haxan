@@ -7,18 +7,20 @@ public class EnemyFlowController : CharacterFlowController
     [ReadOnly] public Enemy enemy;
     [ReadOnly] public Blackboard blackboard;
 
-    public override bool TryGetInputTurn(ref Turn inputTurn)
-    {
-        enemy.tree.root.Tick();
+  //  public override bool TryGetInputTurn(out Turn inputTurn)
+  //  {
+  //      inputTurn = null;
 
-		//if (!blackboard.currCommandStack.IsNullOrEmpty())
-		//{
-		//	//inputTurn = blackboard.currCommandStack;
-		//	return true;
-		//}
+  //      enemy.tree.root.Tick();
 
-		return false;
-    }
+		////if (!blackboard.currCommandStack.IsNullOrEmpty())
+		////{
+		////	//inputTurn = blackboard.currCommandStack;
+		////	return true;
+		////}
+
+		//return false;
+  //  }
 
     public override void BeginTurn()
     {

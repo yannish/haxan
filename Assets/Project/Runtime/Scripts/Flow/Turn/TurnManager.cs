@@ -20,11 +20,11 @@ public class TurnManager : MonoBehaviour
 	}
 
 	//[SerializeField]
-	public Queue<CharacterCommand> currCommandChain;
+	public Queue<CellObjectCommand> currCommandChain;
 	//private Queue<CharacterCommand> currCommandChain;
 
 	//... REWIND:
-	public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
+	public Queue<CellObjectCommand> commandHistory = new Queue<CellObjectCommand>();
 	//public Queue<CharacterCommand> commandHistory = new Queue<CharacterCommand>();
 
 

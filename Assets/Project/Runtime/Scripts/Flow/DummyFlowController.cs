@@ -65,7 +65,7 @@ public class DummyFlowController : CellObjFlowController
 		}
 	}
 
-	public override bool HandleHover(ElementHoveredEvent e)
+	public override bool HandleHoverStart(ElementHoveredEvent e)
 	{
 		if(pathControl != null)
 		{

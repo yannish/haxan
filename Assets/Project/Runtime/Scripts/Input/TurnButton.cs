@@ -5,7 +5,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.Playables;
 
 [RequireComponent(typeof(TurnButtonFlowController))]
-public class TurnButton : RectUIElement, IFlowable
+public class TurnButton : RectUIElement
+	, IFlowable
 {
 	//[ReadOnly] public RectUIElement rectElement;
 	[ReadOnly] public TurnButtonFlowController turnButtonFlow;
@@ -18,20 +19,42 @@ public class TurnButton : RectUIElement, IFlowable
 		
 		turnButtonFlow = GetComponent<TurnButtonFlowController>();
 
-		//turnButtonFlow.OnFlowPeeked += OnFlowPeeked;
-		//turnButtonFlow.OnFlowUnpeeked += OnFlowUnpeeked;
-		//turnButtonFlow.OnFlowEntered += ClickAndRelease;
+		//TurnButtonFlowController.OnTurnButtonPeeked += (FlowController flow) => Hover();
+		//TurnButtonFlowController.OnTurnButtonUnpeeked += (FlowController flow) => Unhover();
+		//TurnButtonFlowController.OnTurnButtonEntered += (FlowController flow) => Highlight();
+		//TurnButtonFlowController.OnTurnButtonExited += (FlowController flow) => Unhighlight();
+
+		//turnButtonFlow.OnTurnButtonPeeked += (FlowController flow) => Hover();
+		//turnButtonFlow.OnTurnButtonUnpeeked += (FlowController flow) => Unhover();
+		//turnButtonFlow.OnTurnButtonEntered += (FlowController flow) => Highlight();
+		//turnButtonFlow.OnTurnButtonExited += (FlowController flow) => Unhighlight();
 	}
 
-	private void OnFlowPeeked(FlowController obj)
+	void OnEnable()
 	{
-		Hover();
+		TurnButtonFlowController.OnTurnButtonPeeked += (FlowController flow) => Hover();
+		TurnButtonFlowController.OnTurnButtonUnpeeked += (FlowController flow) => Unhover();
+		TurnButtonFlowController.OnTurnButtonEntered += (FlowController flow) => Highlight();
+		TurnButtonFlowController.OnTurnButtonExited += (FlowController flow) => Unhighlight();
 	}
 
-	private void OnFlowUnpeeked(FlowController obj)
+	void OnDisable()
 	{
-		Unhover();
+		TurnButtonFlowController.OnTurnButtonPeeked -= (FlowController flow) => Hover();
+		TurnButtonFlowController.OnTurnButtonUnpeeked -= (FlowController flow) => Unhover();
+		TurnButtonFlowController.OnTurnButtonEntered -= (FlowController flow) => Highlight();
+		TurnButtonFlowController.OnTurnButtonExited -= (FlowController flow) => Unhighlight();
 	}
+
+	//private void OnFlowPeeked(FlowController obj)
+	//{
+	//	Hover();
+	//}
+
+	//private void OnFlowUnpeeked(FlowController obj)
+	//{
+	//	Unhover();
+	//}
 
 
 	//   [Header("TURN BUTTON")]

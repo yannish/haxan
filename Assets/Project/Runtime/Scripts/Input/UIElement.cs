@@ -20,12 +20,8 @@ public class UIElement : MonoBehaviour,
 {
 	public bool logDebug;
 
-	//public virtual void Awake() =>	flowableComponent = GetComponent<IFlowable>();
 
 	//... this'll be Cell on the board, yielding the bound -> cellObj -> flowController?
-	//public IFlowable flowableComponent { get; protected set; }
-
-	//[ReadOnly, SerializeField] private FlowController _flowController;
 
 	public IFlowable flowable;
 	[ReadOnly] public Component flowableComponent;
@@ -73,18 +69,18 @@ public class UIElement : MonoBehaviour,
 	
 	public virtual void OnPointerEnter(PointerEventData eventData)
 	{
-		if(logDebug)
+		//if(logDebug)
 			Debug.Log("pointer entered: " + gameObject.name);
 
-		ControlFlowManager.OnElementHovered.Invoke(new ElementHoveredEvent(this));
+		ControlFlowManager.OnElementHoverStart.Invoke(new ElementHoveredEvent(this));
 	}
 
 	public virtual void OnPointerExit(PointerEventData eventData)
 	{
-		if (logDebug)
+		//if (logDebug)
 			Debug.Log("pointer exited: " + gameObject.name);
 
-		ControlFlowManager.OnElementHovered.Invoke(new ElementHoveredEvent(null));
+		ControlFlowManager.OnElementHoverStop.Invoke(new ElementHoveredEvent(this));
 	}
 
 	public virtual void OnPointerDown(PointerEventData eventData)

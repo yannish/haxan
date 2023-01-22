@@ -14,37 +14,30 @@ using UnityEngine;
 
 public class MainFlowController : FlowController
 {
-	public static void InsertNewTurn(Turn newTurn)
-	{
+	//public static event Action<FlowController> On = delegate { };
 
-	}
+	//public static event Action<FlowController> OnFlowUnpeeked = delegate { };
 
 	[ReadOnly] public TeamPhase currPhase;
+	public ITurnProcessor turnProcessor;
+
+	[ReadOnly] public SerialTurnSystem serialTurnSystem;
 
 	public void Start()
 	{
 		turnProcessor = GetComponentInChildren<ITurnProcessor>();
 		turnProcessor.SetPhase(TeamPhase.PLAYER);
-
-		//dummyTurn = ScriptableObject.CreateInstance<DummyTurn>();
-		//SetPhase(TeamPhase.PLAYER);
 	}
 
-
 	#region TURN PROCESSING:
-
-	public ITurnProcessor turnProcessor;
-	
-    public Character currCharacter;
-
+	//public Character currCharacter;
 	//... the turn waiting to be processed:
-	public Turn currInputTurn;
-
+	//public List<Turn> currInputTurns;
+	//public Turn currInputTurn;
 	#endregion
 
 
 	public bool doBreak;
-
 	private bool wasProcessingLastFrame;
 	private void LateUpdate()
 	{
@@ -55,12 +48,11 @@ public class MainFlowController : FlowController
 			return;
 
 		turnProcessor.ProcessTurns();
+
 		if (turnProcessor.IsProcessing)
 		{
 			if (!wasProcessingLastFrame && subFlow != null)
-			{
 				TransitionTo(null);
-			}
 
 			wasProcessingLastFrame = true;
 			return;
@@ -82,19 +74,19 @@ public class MainFlowController : FlowController
 			}
 		}
 
-		if (currInputTurn == null)
+		if (!turnProcessor.IsProcessing)
 		{
 			if (subFlow != null && subFlow is WandererFlowController)
 			{
 				var currWandererFlow = subFlow as WandererFlowController;
-				if (currWandererFlow.TryGetInputTurn(ref currInputTurn))
+				if (currWandererFlow.TryGetInputCommands(out Queue<CellObjectCommand> newCommands))
 				{
 					if (logDebug)
 					{
 						string log = string.Format(
-							"new turn from {0}, length {1}",
+							"new commands from {0}, length {1}",
 							currWandererFlow.name,
-							currInputTurn.commands.Count
+							newCommands.Count
 							);
 
 						Debog.logGameflow(log);
@@ -102,9 +94,7 @@ public class MainFlowController : FlowController
 
 					TransitionTo(null, true);
 
-					turnProcessor.RecordTurn(currInputTurn);
-
-					currInputTurn = null;
+					turnProcessor.InputCommands(currWandererFlow.character, newCommands);
 				}
 			}
 		}
@@ -129,19 +119,22 @@ public class MainFlowController : FlowController
 
 	#region FLOW PROCESSING:
 
-	public override bool HandleHover(ElementHoveredEvent e)
+	public override bool HandleHoverStart(ElementHoveredEvent e)
 	{
 		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
 			return false;
 
-		if (subFlow != null && subFlow.HandleHover(e))
-			return true;
-
-		if (peekedFlow != null)
+		if (subFlow != null && subFlow.HandleHoverStart(e))
 		{
-			peekedFlow.HoverUnpeek();
-			peekedFlow = null;
+			Debug.LogWarning("... hover start done in main.");
+			return true;
 		}
+
+		//if (peekedFlow != null)
+		//{
+		//	peekedFlow.HoverUnpeek();
+		//	peekedFlow = null;
+		//}
 
 		//... 
 		if (e.element == null || e.element.flowController == null)
@@ -153,9 +146,66 @@ public class MainFlowController : FlowController
 		return false;
 	}
 
+	public override bool HandleHoverStop(ElementHoveredEvent e)
+	{
+		if (subFlow != null && subFlow.HandleHoverStop(e))
+		{
+			Debug.LogWarning("aight, done in main.");
+			return true;
+		}
+
+		if (peekedFlow != null)
+		{
+			peekedFlow.HoverUnpeek();
+			peekedFlow = null;
+		}
+
+		return false;
+	}
+
+	public override FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
+	{
+		if (subFlow != null)
+		{
+			//... you've right clicked the subflow you're currently in, keep it hovered:
+			if (e.element.flowController == subFlow)
+			{
+				Debug.LogWarning("... you've right-cllicked the subflow you're in:");
+				TransitionTo(null, false);
+
+				peekedFlow = e.element.flowController;
+				peekedFlow.HoverPeek();
+
+				return FlowState.YIELD;
+			}
+
+			//... you've right clicked somewhere else, but have a subflow, it should probably fold up:
+			var result = subFlow.HandleBackInput(e);
+			if (result == FlowState.DONE)
+			{
+				Debug.LogWarning("... you've right-cllicked somewhere else:");
+
+				TransitionTo(null, false);
+				return FlowState.YIELD;
+			}
+		}
+
+		return FlowState.RUNNING;
+	}
+
+	public override void HandleEmptyInput(EmptyClickEvent e)
+	{
+		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
+			return;
+
+		base.HandleEmptyInput(e);
+	}
 
 	public override FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null)
 	{
+		if ((turnProcessor as Component) && turnProcessor.IsProcessing)
+			return FlowState.RUNNING;
+
 		var clickedFlow = e.element.flowController;
 		if (clickedFlow == null)
 			return FlowState.RUNNING;
@@ -214,111 +264,6 @@ public class MainFlowController : FlowController
 
 		return FlowState.RUNNING;
 	}
-
-	//public override FlowState HandleInput(ElementClickedEvent e, FlowController owner)
-	//{
-	//	// TODO: how to nullcheck reference to interface..
-	//	if ((turnProcessor as Component) && turnProcessor.IsProcessing)
-	//		return FlowState.RUNNING;
-
-	//	if(logDebug)
-	//		Debog.logInput("Handling input on maincontroller");
-
-	//	//if (currInputTurn != null)
-	//	//{
-	//	//	if (logDebug)
-	//	//		Debog.logGameflow("... curr command stack still being processed");
-	//	//	return FlowState.RUNNING;
-	//	//}
-
- //       //if there's already a subFlow, pass input through that:
- //       if (subFlow != null)
-	//	{
-	//		var subFlowState = subFlow.HandleInput(e, this);
-
-	//		switch (subFlowState)
-	//		{
-	//			case FlowState.YIELD:
-	//				break;
-
-	//			case FlowState.DONE:
-	//				TransitionTo(null);
-	//				return FlowState.RUNNING;
-
-	//			case FlowState.RUNNING:
-	//				//subFlow.Tick();
-	//				return FlowState.RUNNING;
-	//		}
-	//	}
-
-	//	if (logDebug)
-	//		Debog.logGameflow("subflow passed on input in main");
-
-	//	//... if subflow didn't want input, or you've clicked a new one:
-	//	if (e.element.flowController != null)
-	//	{
-	//		Debog.logGameflow("clicked element had a subflow : " + e.element.flowController.name);
-
-	//		if (e.element.flowController is TurnButtonFlowController)
-	//		{
-	//			if (logDebug)
-	//				Debog.logInput("TURN BUTTON PRESSED");
-
-	//			TransitionTo(null);
-
-	//			turnProcessor.SetPhase(TeamPhase.ENEMY);
-
-	//			return FlowState.RUNNING;
-	//		}
-
-	//		if(e.element.flowController is CellFlowController)
-	//		{
-	//			Debog.logGameflow("... it's cell flow: " + e.element.flowController);
-	//			return FlowState.RUNNING;
-	//		}
-
-
-	//		//... HANDLE BELOW IN BASE:
-
-	//		////... clicking the element you're already in:
- //  //         if (e.element.flowController == subFlow)
-	//		//{
-	//		//	Debog.logGameflow("clicked existing element");
-	//		//	TransitionTo(null);
-
-	//		//	//... go back to peeking it:
-	//		//	peekedFlow = e.element.flowController;
-	//		//	peekedFlow.HoverPeek();
-
-	//		//	//... clear out "selected wanderer so that TurnFlow stops ticking it:
-	//		//	//Globals.SelectedWanderer.Items.Clear();
-	//		//}
-	//		//else
-	//		//{
-	//		//	if(logDebug)
-	//		//		Debog.logGameflow("found flow, heading in");
-
-	//		//	TransitionTo(e.element.flowController);
-
-	//		//	//... fill out "selected wanderer" for TurnFlow to reference:
-	//		//	//if (e.element.flowController is WandererFlowController)
-	//		//	//{
-	//		//	//	Debug.Log("... setting selected wanderer");
-
-	//		//	//	Wanderer wanderer = (e.element.flowController as WandererFlowController).wanderer;
-	//		//	//	Globals.SelectedWanderer.Add(wanderer);
-	//		//	//}
-	//		//}
-	//	}
-	//	else
-	//	{
-	//		Debog.logGameflow("... element flow controller was null on maincontroller");
-	//	}
-
-	//	return base.HandleInput(e, this);
-
-	//	//return FlowState.RUNNING;
-	//}
 
 	#endregion
 }

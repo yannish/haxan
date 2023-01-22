@@ -19,7 +19,6 @@ public enum StepPhase
 [RequireComponent(typeof(AbilityFlowController))]
 public abstract class Ability : MonoBehaviour
 {
-
 	[Header("CONFIG:")]
 	public Sprite icon;
 
@@ -32,12 +31,26 @@ public abstract class Ability : MonoBehaviour
 
 	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow) => null;
 
+	//public virtual Queue<CellObjectCommand> FetchCommands(Cell targetCell, CellObject cellObjct, FlowController flow)
+	//{
+	//	Queue<CellObjectCommand> newCommands = new Queue<CellObjectCommand>();
+	//	return newCommands;
+	//}
 
-	public virtual Turn FetchCommandChain(Cell targetCell, CellObject cellObj, FlowController flow) 
+	public virtual Queue<CellObjectCommand> FetchCommandChain(
+		Cell targetCell, 
+		CellObject cellObj, 
+		FlowController flow
+		) 
 	{
-		Turn newTurn = new Turn(cellObj);
-		newTurn.ability = this;
-		return newTurn;
+		Queue<CellObjectCommand> newCommands = new Queue<CellObjectCommand>();
+		return newCommands;
+
+		//Turn newTurn = new Turn();
+		//newTurn.ability = this;
+		//newTurn.instigator = cellObj;
+		//return newTurn;
+
 		//return  new Turn()
 		//return Turn.CreateInstance(cellObj, this);
 	}
@@ -72,7 +85,6 @@ public abstract class Ability : MonoBehaviour
 
 
 	protected Action peekAction;
-
 	public virtual void Peek(Cell targetCell, CharacterFlowController flow) { }
 
 	public virtual void Unpeek() { }

@@ -8,10 +8,14 @@ public class AbilityDisplaySlot : RectUIElement, IFlowable
 {
     [Header("ABILITY:")]
     public Image abilityIcon;
+    
     public TextMeshProUGUI abilityText;
-    [ReadOnly] public Ability ability;
 
-    public FlowController Flow => ability != null ? ability.flow : null;
+    [ReadOnly] public AbilityScrObj ability;
+
+    [ReadOnly] public AbilityFlowController abilityFlow;
+
+    public FlowController Flow => abilityFlow != null ? abilityFlow : null;
 
     //public void DisplayAbility(ScrObjAbility ability)
     //{

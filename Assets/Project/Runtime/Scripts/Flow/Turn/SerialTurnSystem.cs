@@ -15,14 +15,52 @@ public enum TeamPhase
 public class SerialTurnSystem : MonoBehaviour
 	, ITurnProcessor
 {
-	[ReadOnly] public bool isProcessing;
-	public bool IsProcessing => isProcessing;
+
+	//[ReadOnly] public bool isProcessing;
+	public bool IsProcessing => currPlaybackState != TurnPlaybackState.PAUSED;
+
+	[ReadOnly] public TurnPlaybackState currPlaybackState = TurnPlaybackState.PAUSED;
+	public TurnPlaybackState CurrentState => currPlaybackState;
 
 	[ReadOnly] public TeamPhase currPhase;
 	public TeamPhase CurrPhase => currPhase;
 
+
+	[Header("ENEMY PHASE:")]
 	[ReadOnly, SerializeField] Enemy currEnemy;
 	[ReadOnly, SerializeField] List<Enemy> enemyTurnOrder = new List<Enemy>();
+
+
+	[Header("UNDO / REDO:")]
+
+	//... FORWARD TURN PROCESSING:
+	[ReadOnly] public CellObject currInstigator;
+
+	[ReadOnly] public CellObjectCommand currCommand;
+	
+	public Queue<CellObjectCommand> commandsToProcess;
+
+	public Stack<CellObjectCommand> currCommandHistory = new Stack<CellObjectCommand>();
+
+	public Turn currTurn;
+
+
+	//... FORWARD BACKWARD PROCESSING:
+	//[ReadOnly] public CellObjectCommand currBackwardCommand;
+
+	//public Queue<CellObjectCommand> commandsToProcess;
+
+	//public Stack<CellObjectCommand> currCommandHistory = new Stack<CellObjectCommand>();
+
+
+	//... HISTORY:
+	public Stack<Turn> turnHistory = new Stack<Turn>();
+
+	public Stack<Turn> undoneTurns = new Stack<Turn>();
+	
+	public Stack<CellObjectCommand> commandUndoHistory = new Stack<CellObjectCommand>();
+
+	//public Stack<CellObjectCommand> commandHistory = new Stack<CellObjectCommand>();
 
 
 	public void SetPhase(TeamPhase newPhase)
@@ -77,14 +115,18 @@ public class SerialTurnSystem : MonoBehaviour
 		}
 	}
 
-
-	public void RecordTurn(Turn turn)
+	public void InputCommands(CellObject instigator, Queue<CellObjectCommand> commands)
 	{
-		isProcessing = true;
+		Debug.LogWarning("INPUTTING COMMANDS");
 
-		currTurn = turn;
-		currCommand = turn.commands.Dequeue();
+		//isProcessing = true;
+		currPlaybackState = TurnPlaybackState.PLAYING;
+
+		currInstigator = instigator;
+		commandsToProcess = commands;
+		currCommand = commandsToProcess.Dequeue();
 		currCommand.OnBeginTick();
+		currCommandHistory = new Stack<CellObjectCommand>();
 	}
 
 	public void ProcessTurns()
@@ -97,6 +139,56 @@ public class SerialTurnSystem : MonoBehaviour
 		//	}
 		//}
 
+		switch (currPlaybackState)
+		{
+			case TurnPlaybackState.PAUSED:
+				break;
+			
+			case TurnPlaybackState.PLAYING:
+				ProcessTurnForward();
+				break;
+			
+			case TurnPlaybackState.REWINDING:
+				ProcessTurnBackwards();
+				break;
+			
+			default:
+				break;
+		}
+
+		if (currCommand == null)
+			return;
+
+		//if (currCommand.Tick())
+		//{
+		//	currCommand.OnCompleteTick();
+		//	currCommand.Execute();
+		//	currCommandHistory.Push(currCommand);
+		//	currCommand = null;
+
+		//	if (!commandsToProcess.IsNullOrEmpty())
+		//	{
+		//		currCommand = commandsToProcess.Dequeue();
+		//		currCommand.OnBeginTick();
+		//	}
+		//	else
+		//	{
+		//		isProcessing = false;
+
+		//		Turn recordedTurn = new Turn();
+		//		recordedTurn.instigator = currInstigator;
+		//		recordedTurn.commandHistory = currCommandHistory;
+		//		turnHistory.Push(recordedTurn);
+
+		//		Debug.LogWarning("... pushed turn to history: " + currCommandHistory.Count);
+
+		//		currCommandHistory = null;
+		//	}
+		//}
+	}
+
+	void ProcessTurnForward()
+	{
 		if (currCommand == null)
 			return;
 
@@ -104,60 +196,133 @@ public class SerialTurnSystem : MonoBehaviour
 		{
 			currCommand.OnCompleteTick();
 			currCommand.Execute();
-
-			commandHistory.Push(currCommand);
-			
+			currCommandHistory.Push(currCommand);
 			currCommand = null;
 
-			if (!currTurn.commands.IsNullOrEmpty())
+			if (!commandsToProcess.IsNullOrEmpty())
 			{
-				currCommand = currTurn.commands.Dequeue();
+				currCommand = commandsToProcess.Dequeue();
 				currCommand.OnBeginTick();
 			}
 			else
 			{
-				isProcessing = false;
+				//isProcessing = false;
+				currPlaybackState = TurnPlaybackState.PAUSED;
+
+				Turn recordedTurn = new Turn();
+				recordedTurn.instigator = currInstigator;
+				recordedTurn.commandHistory = currCommandHistory;
+				turnHistory.Push(recordedTurn);
+
+				Debug.LogWarning("... pushed turn to history: " + currCommandHistory.Count);
+
+				currCommandHistory = null;
+			}
+		}
+	}
+
+	void ProcessTurnBackwards()
+	{
+		if (currCommand == null)
+			return;
+
+		if (currCommand.Tick(-1f))
+		{
+			currCommand.OnCompleteReverseTick();
+			//currCommand.OnCompleteTick();
+			
+			currCommand.Undo();
+			//currCommand.Execute();
+
+			//commandsToProcess.Enqueue(currCommand);
+			//currCommandHistory.Push(currCommand);
+
+			currCommand = null;
+
+			if (!currCommandHistory.IsNullOrEmpty())
+			{
+				currCommand = currCommandHistory.Pop();
+				currCommand.OnBeginReverseTick();
+			}
+			else
+			{
+				//isProcessing = false;
+				currPlaybackState = TurnPlaybackState.PAUSED;
+
+				currTurn.commands = commandsToProcess;
+				currTurn.commandHistory = null;
+
+				//Turn recordedTurn = new Turn();
+				//recordedTurn.instigator = currInstigator;
+				//recordedTurn.commandHistory = currCommandHistory;
+				//turnHistory.Push(recordedTurn);
+
+				Debug.LogWarning("... undid turn " + currCommandHistory.Count);
+
+				currCommandHistory = null;
 			}
 		}
 	}
 
 
-	[Header("UNDO / REDO")]
-	[ReadOnly] public Turn currTurn;
-	[ReadOnly] public CharacterCommand currCommand;
-	public Stack<CharacterCommand> commandHistory = new Stack<CharacterCommand>();
-	public Stack<CharacterCommand> commandUndoHistory = new Stack<CharacterCommand>();
-
-	public EditorButton undoBtn = new EditorButton("Undo", true);
+	//public EditorButton undoBtn = new EditorButton("UNDO TURN", true);
 	public void Undo()
 	{
-		if(commandHistory.IsNullOrEmpty())
+		if (IsProcessing)
+			return;
+
+		if(turnHistory.IsNullOrEmpty())
 		{
-			Debug.LogWarning("no commands to undo!");
+			Debug.LogWarning("... no turns to undo!");
 			return;
 		}
 
-		CharacterCommand currUndoCommand = commandHistory.Pop();
-		currUndoCommand.Undo();
-		commandUndoHistory.Push(currUndoCommand);
+		Turn turnToUndo = turnHistory.Pop();
+		currCommandHistory = turnToUndo.commandHistory;
+		currCommand = currCommandHistory.Pop();
+
+		currPlaybackState = TurnPlaybackState.REWINDING;
+
+		//while (currCommandHistory.Count > 0)
+		//{
+		//	CellObjectCommand commandToUndo = turnToUndo.commandHistory.Pop();
+		//	commandToUndo.Undo();
+		//	turnToUndo.undoneCommands.Push(commandToUndo);
+		//}
+
+		//undoneTurns.Push(turnToUndo);
+
+		//if(turnToUndo.instigator is Character)
+		//{
+			//Character character = turnToUndo.instigator;
+			//character.flowController.
+		//}
 	}
 
-	public EditorButton redoBtn = new EditorButton("Redo", true);
+	//public EditorButton redoBtn = new EditorButton("REDO TURN", true);
 	public void Redo()
 	{
-		if (commandUndoHistory.IsNullOrEmpty())
+		if (IsProcessing)
+			return;
+
+		if (undoneTurns.IsNullOrEmpty())
 		{
-			Debug.LogWarning("no commands to redo!");
+			Debug.LogWarning("... no turns to redo!");
 			return;
 		}
 
-		CharacterCommand currRedoCommand = commandUndoHistory.Pop();
-		currRedoCommand.Execute();
-		commandHistory.Push(currRedoCommand);
+		Turn turnToRedo = undoneTurns.Pop();
+		while(turnToRedo.undoneCommands.Count > 0)
+		{
+			CellObjectCommand commandToRedo = turnToRedo.undoneCommands.Pop();
+			commandToRedo.Execute();
+			turnToRedo.commandHistory.Push(commandToRedo);
+		}
+
+		turnHistory.Push(turnToRedo);
 	}
 
+#if UNITY_EDITOR
 
-	public List<Turn> playerTurns = new List<Turn>();
-	public List<Turn> enemyTurns = new List<Turn>();
-
+#endif
 }

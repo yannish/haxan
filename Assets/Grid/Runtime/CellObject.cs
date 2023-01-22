@@ -13,7 +13,6 @@ public class CellObject : MonoBehaviour
 
 	[ExposedScriptableObject]
 	public CellObjectPreset preset;
-	//public bool isPassable;
 
 	[Header("FLOW:")]
 	[ReadOnly] public FlowController flowController;
@@ -24,14 +23,23 @@ public class CellObject : MonoBehaviour
 	[Header("ABILITIES:")]
 	public List<Ability> abilities;
 
+	public List<AbilityScrObj> abilityScrObjs = new List<AbilityScrObj>();
 
+	public List<AbilityFlowController> abilityFlows = new List<AbilityFlowController>();
 
 	protected virtual void OnEnable() => this.BindInPlace();
 
 	protected virtual void OnDisable() => this.Unbind();
 
+	private void Awake()
+	{
+		if (Application.isPlaying)
+			abilityScrObjs.ForEach(t => CloneAbility(t));
+	}
+
 	//... awakenedOverGrid rebinds every cellObject to its cell.
 	//... done in Start, because cells are Unbinding themselves on Awake.
+	//... ExecuteAlways means Start is called again when STOPPING play mode... careful.
 	protected virtual void Start()
     {
 		//Debug.LogWarning("Start on cellobj : " + this.gameObject.name, gameObject);
@@ -39,16 +47,37 @@ public class CellObject : MonoBehaviour
 
 		if (gameObject.activeSelf)
             this.AwakenOverGrid();
+
+		//List<Ability> instancedAbilities = new List<Ability>();
+		//foreach(var ability in abilities)
+		//{
+		//	var instancedAbility = Instantiate(ability, this.transform);
+		//	instancedAbilities.Add(instancedAbility);
+		//}
+		//abilities = instancedAbilities;
+
     }
 
 	public Cell currCell => Globals.Grid.cellObjectBindings.TryGetBinding(this, out Cell cell) ? cell : null;
+
+	public AbilityFlowController CloneAbility(AbilityScrObj ability)
+	{
+		var newGameObject = new GameObject(ability.name, typeof(AbilityFlowController));
+		newGameObject.transform.SetParent(this.transform);
+		newGameObject.hideFlags = HideFlags.DontSaveInEditor;
+
+		var newFlowController = newGameObject.GetComponent<AbilityFlowController>();
+		newFlowController.abilityScrObj = ability;
+		//abilityFlows.Add(newFlowController);
+
+		return newFlowController;
+	}
 }
 
 
 
 public static class CellObjectExtensions
 {
-
 	/// <summary>
 	/// Move character.
 	/// </summary>

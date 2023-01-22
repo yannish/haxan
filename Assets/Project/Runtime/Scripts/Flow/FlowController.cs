@@ -48,12 +48,11 @@ public enum FlowState
 
 
 public abstract class FlowController : MonoBehaviour
-//public abstract class FlowController<T> : MonoBehaviour where T : MonoBehaviour
 {
 	public bool logDebug;
 
-	[Header("FLOW:")]
-	[ReadOnly] public FlowController subFlow;// { get; set; }
+	//[Header("FLOW:")]
+	[ReadOnly] public FlowController subFlow;
 	[ReadOnly] public FlowController peekedFlow;
 	[ReadOnly] public FlowController lastSubFlow;
 
@@ -62,9 +61,6 @@ public abstract class FlowController : MonoBehaviour
 	 * There's only ever one of these. 
 	 *	one peeked, one selected.
 	 */
-
-	//[ReadOnly] 
-	//public CellObject baseCellObject;
 
 	public static event Action<FlowController> OnFlowPeeked = delegate { };
 
@@ -89,92 +85,13 @@ public abstract class FlowController : MonoBehaviour
 
 	public virtual void HoverUnpeek() => OnFlowUnpeeked(this);
 
-	public virtual FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null) { return FlowState.YIELD; }
-	//{
-	//	if (e.element.flowController == null)
-	//		return FlowState.YIELD;
-
-	//	if(subFlow != null)
-	//	{
-	//		var subFlowState = subFlow.HandleInput(e, parentController);
-
-	//		switch(subFlowState)
-	//		{
-	//			case FlowState.RUNNING:
-	//				return FlowState.RUNNING;
-
-	//			case FlowState.DONE:
-	//				TransitionTo(null);
-	//				peekedFlow = e.element.flowController;
-	//				peekedFlow.HoverPeek();
-	//				return FlowState.RUNNING;
-
-	//			case FlowState.YIELD:
-	//				break;
-	//		}
-	//	}
-
-	//	//... clicking the element you're already in:
-	//	if (e.element.flowController == this)
-	//	{
-	//		Debog.logGameflow("clicked existing element");
-	//		//TransitionTo(null);
-	//		return FlowState.DONE;
-	//	}
-
-	//	if(e.element.flowController.GetType() == this.GetType())
-	//	{
-	//		Debog.logGameflow("clicked element of same type");
-	//		return FlowState.YIELD;
-	//	}
-
-	//	TransitionTo(e.element.flowController);
-
-	//	return FlowState.RUNNING;
-	//}
+	public virtual FlowState HandleInput(ElementClickedEvent e, FlowController parentController = null) 
+	{ 
+		return FlowState.YIELD; 
+	}
 
 	public virtual FlowState HandleBackInput(ElementBackClickedEvent e, FlowController parentController = null)
 	{
-		Debug.LogWarning("handling back input on " + gameObject.name, this.gameObject);
-
-		if (subFlow != null)
-		{
-			//... you've right clicked the subflow you're currently in, keep it hovered:
-			if (e.element.flowController == subFlow)
-			{
-				TransitionTo(null, false);
-				//peekedFlow = e.element.flowController;
-				//peekedFlow.HoverPeek();
-				return FlowState.YIELD;
-			}
-
-			//... you've right clicked somewhere else, but have a subflow, it should probably fold up:
-			var result = subFlow.HandleBackInput(e);
-			if(result == FlowState.DONE)
-			{
-				TransitionTo(null, false);
-				//if (e.element.flowController != null)
-				//	HandleHover(e);
-				return FlowState.YIELD;
-			}
-
-			//if (subFlow.subFlow == null)
-			//{
-			//	TransitionTo(null);
-			//	return FlowState.YIELD;
-			//}
-			//else
-			//{
-			//	//Debug.Log("... subflow had a subflow: " + subFlow.subFlow.gameObject.name);
-			//	var result = subFlow.HandleBackInput(e);
-			//	if(result == FlowState.DONE)
-			//	{
-			//		TransitionTo(null);
-			//		return FlowState.YIELD;
-			//	}
-			//}
-		}
-
 		return FlowState.RUNNING;
 	}
 
@@ -187,24 +104,11 @@ public abstract class FlowController : MonoBehaviour
 		{
 			TransitionTo(null);
 			return;
-
-			////Debug.Log("... subflow : " + subFlow.gameObject.name);
-			//if (subFlow.subFlow == null)
-			//{
-			//	//Debug.Log("... subflow doesn't have a subflow" );
-			//	TransitionTo(null);
-			//	return;
-			//}
-			//else
-			//{
-			//	//Debug.Log("... subflow had a subflow: " + subFlow.subFlow.gameObject.name);
-			//	subFlow.HandleEmptyInput(e);
-			//}
 		}
 	}
 
 	//... if a flow's HandleHover returns true, it's been "used"...?
-	public virtual bool HandleHover(ElementHoveredEvent e)
+	public virtual bool HandleHoverStart(ElementHoveredEvent e)
 	{
 		//if (subFlow != null && subFlow.HandleHover(e))
 		//	return true;
@@ -231,6 +135,17 @@ public abstract class FlowController : MonoBehaviour
 		//	return subFlow.HandleHover(e);
 		////Debog.logInput("Handling hover in " + gameObject.name);
 		//return false;
+	}
+
+	public virtual bool HandleHoverStop(ElementHoveredEvent e)
+	{
+		//if (peekedFlow != null)
+		//{
+		//	peekedFlow.HoverUnpeek();
+		//	peekedFlow = null;
+		//}
+
+		return false;
 	}
 
 	protected virtual void TransitionTo(FlowController newFlowController, bool clearPeekedFlow = true)

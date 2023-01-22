@@ -7,9 +7,14 @@ using UnityEngine;
 
 public class AbilityFlowController : FlowController
 {
-	public Action previewValidMovesControl;
+	//public Action previewValidMovesControl;
+
+	Action peekValidMovesAction;
+
+	Action previewValidMoveAction;
 
 	public Ability _ability;
+
 	public Ability ability
 	{
 		get
@@ -20,12 +25,17 @@ public class AbilityFlowController : FlowController
 		}
 	}
 
+	[ReadOnly] public AbilityScrObj abilityScrObj;
+
 	public List<Cell> peekedMoves = new List<Cell>();
+
 	public List<Cell> validMoves = new List<Cell>();
+	
 	public List<UIElement> validElements = new List<UIElement>();
 
 	public CharacterFlowController characterFlow;
-	public void ProvideCharacter(CharacterFlowController characterFlow)
+	
+	public void ProvideCharacterFlow(CharacterFlowController characterFlow)
 	{
 		this.characterFlow = characterFlow;
 	}
@@ -50,20 +60,20 @@ public class AbilityFlowController : FlowController
 			peekValidMovesAction = null;
 		}
 
-
-		validMoves = ability.GetValidMoves(characterFlow.character.currCell, characterFlow);
+		validMoves = abilityScrObj.GetValidMoves(characterFlow.character.currCell, characterFlow);
 		if (validMoves.IsNullOrEmpty())
 			return;
 
 		validElements = validMoves.Select(t => t.GetComponent<UIElement>()).ToList();
-		switch (ability.type)
+
+		switch (abilityScrObj.type)
 		{
 			case AbilityType.MOVEMENT:
-				previewValidMovesControl = CellActions.EffectCells<CellPeekPathCommand>(validMoves);
+				peekValidMovesAction = CellActions.EffectCells<CellPeekPathCommand>(validMoves);
 				break;
 
 			case AbilityType.TARGET:
-				previewValidMovesControl = CellActions.EffectCells<CellClickableCommand>(validMoves);
+				peekValidMovesAction = CellActions.EffectCells<CellClickableCommand>(validMoves);
 				break;
 		}
 	}
@@ -73,13 +83,19 @@ public class AbilityFlowController : FlowController
 	{
 		base.Exit();
 
-		if (previewValidMovesControl != null)
+		Debug.LogWarning("EXITING ABILITY FLOW : " + this.gameObject.name, this.gameObject);
+
+		if(peekValidMovesAction != null)
 		{
-			previewValidMovesControl.Invoke();
-			previewValidMovesControl = null;
+			peekValidMovesAction.Invoke();
+			peekValidMovesAction = null;
 		}
 
-		ability.Unpeek();
+		if (previewValidMoveAction != null)
+		{
+			previewValidMoveAction.Invoke();
+			previewValidMoveAction = null;
+		}
 
 		if (!validMoves.IsNullOrEmpty())
 			validMoves.Clear();
@@ -89,21 +105,19 @@ public class AbilityFlowController : FlowController
 	}
 
 
-	Action peekValidMovesAction;
-
 	public override void HoverPeek()
 	{
 		base.HoverPeek();
 
 		Debug.LogWarning("hover peek in ability", this.gameObject);
 
-		peekedMoves = ability.GetValidMoves(characterFlow.character.currCell, characterFlow);
+		peekedMoves = abilityScrObj.GetValidMoves(characterFlow.character.currCell, characterFlow);
 		if (peekedMoves.IsNullOrEmpty())
 			return;
 
 		peekValidMovesAction = CellActions.EffectCells<CellPeekClickableCommand>(peekedMoves);
 
-		ability.PeekValidMoves(characterFlow.character.currCell, characterFlow);
+		//ability.PeekValidMoves(characterFlow.character.currCell, characterFlow);
 	}
 
 
@@ -119,29 +133,52 @@ public class AbilityFlowController : FlowController
 			peekValidMovesAction = null;
 		}
 
-		ability.UnpeekValidMoves(characterFlow.character.currCell, characterFlow);
+		//ability.UnpeekValidMoves(characterFlow.character.currCell, characterFlow);
 	}
 
 
-	public override bool HandleHover(ElementHoveredEvent e)
+	public override bool HandleHoverStart(ElementHoveredEvent e)
 	{
 		//if (logDebug)
-			//Debog.logInput("... handling hover in abilityFlow " + this.ability.name);
+		//Debog.logInput("... handling hover in abilityFlow " + this.ability.name);
 
-		ability.Unpeek();
-
-		if (
-			//!validElements.IsNullOrEmpty() && 
-			validElements.Contains(e.element)
-			)
+		if (peekValidMovesAction != null)
 		{
-			Debog.logGameflow("... it was valid!");
+			peekValidMovesAction.Invoke();
+			peekValidMovesAction = null;
+		}
 
+		if (previewValidMoveAction != null)
+		{
+			previewValidMoveAction.Invoke();
+			previewValidMoveAction = null;
+		}
+
+		//ability.Unpeek();
+
+		if (validElements.Contains(e.element))
+		{
 			var targetCell = e.element.GetComponent<Cell>();
 			if (targetCell != null)
 			{
-				ability.Peek(targetCell, characterFlow);
+				previewValidMoveAction = abilityScrObj.Peek(targetCell, characterFlow);
+				//ability.Peek(targetCell, characterFlow);
 				return true;
+			}
+		}
+
+		if(
+			e.element != null
+			&& e.element.flowController != null 
+			&& e.element.flowController is AbilityFlowController
+			)
+		{
+			AbilityFlowController peekedAbilityFlow = e.element.flowController as AbilityFlowController;
+			if(peekedAbilityFlow.abilityScrObj.type == AbilityType.TARGET)
+			{
+				peekedMoves = peekedAbilityFlow.abilityScrObj.GetValidMoves(characterFlow.character.currCell, characterFlow);
+				if (!peekedMoves.IsNullOrEmpty())
+					peekValidMovesAction = CellActions.EffectCells<CellPeekClickableCommand>(peekedMoves);
 			}
 		}
 
@@ -178,12 +215,19 @@ public class AbilityFlowController : FlowController
 
 		if(validElements.Contains(e.element))
 		{
-			Turn newTurn = ability.FetchCommandChain(cell, characterFlow.character, characterFlow);
-			
-			characterFlow.ProvideInputTurn(newTurn);
-			ability.Unpeek();
+			Queue<CellObjectCommand> newCommands = ability.FetchCommandChain(cell, characterFlow.character, characterFlow);
+			characterFlow.ProvideInputCommands(newCommands);
 
+			if (peekValidMovesAction != null)
+			{
+				peekValidMovesAction.Invoke();
+				peekValidMovesAction = null;
+			}
 
+			//ability.Unpeek();
+
+			//Turn newTurn = ability.FetchCommandChain(cell, characterFlow.character, characterFlow);
+			//characterFlow.ProvideInputTurn(newTurn);
 
 			return FlowState.RUNNING;
 		}

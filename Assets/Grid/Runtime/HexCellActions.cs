@@ -3,15 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ICellCommandDispenser
-{
-	CellCommand GetCellCommand(Cell cell);
-}
-
-//public class HexCell : Cell
+//public interface ICellCommandDispenser
 //{
-
+//	CellCommand GetCellCommand(Cell cell);
 //}
+
 
 public static class CellActions
 {
@@ -52,7 +48,7 @@ public static class CellActions
 
 	public static void SetNeighbour(this Cell cell, Cell newNeighbour, HexDirection direction)
 	{
-		cell.neighbours[(int)direction] = newNeighbour;
+		cell.neighbours[(int)direction] = newNeighbour; 
 		newNeighbour.neighbours[(int)direction.Opposite()] = cell;
 	}
 

@@ -17,26 +17,39 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 	[Header("CHARACTER")]
     [ReadOnly] public Character character;
+
 	[ReadOnly] public QuickStateMachine fsm;
 
 	public Turn inputTurn;
-	public void ProvideInputTurn(Turn newTurn)
+
+	public Queue<CellObjectCommand> inputCommands;
+	
+	public bool inputTurnSet { get; private set; }
+
+
+	protected override void Awake()
 	{
-		Debug.LogWarning("Providing Input Turn");
-		inputTurn = newTurn;
-		if(inputTurn != null)
-			Debug.LogWarning("... so it's no longer null");
+		base.Awake();
+		character = cellObject as Character;
+		fsm = GetComponentInChildren<QuickStateMachine>();
 	}
 
 
-	public virtual bool TryGetInputTurn(ref Turn newInputTurn)
+	public void ProvideInputCommands(Queue<CellObjectCommand> commands)
 	{
-		if (inputTurn != null)
-		{
-			Debog.logGameflow("... RECEIVED AN INPUT TURN");
+		Debug.LogWarning("Providing Input commands");
+		inputCommands = commands;
+	}
 
-			newInputTurn = inputTurn;
-			inputTurn = null;
+
+	public virtual bool TryGetInputCommands(out Queue<CellObjectCommand> newCommands)
+	{
+		newCommands = new Queue<CellObjectCommand>();
+		if(!inputCommands.IsNullOrEmpty())
+		{
+			Debug.LogWarning("NEW COMMANDS!");
+			newCommands = inputCommands;
+			inputCommands = null;
 			return true;
 		}
 
@@ -44,19 +57,11 @@ public abstract class CharacterFlowController : CellObjFlowController
 	}
 
 
-	protected override void Awake()
-    {
-        base.Awake();
-        character = cellObject as Character;
-		fsm = GetComponentInChildren<QuickStateMachine>();
-    }
-
-
     public override void HoverPeek()
     {
 		fsm?.SetTrigger(FSM.hover);
 		OnCharacterFlowPeeked?.Invoke(this);
-		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.hover, true);
+
 		base.HoverPeek();
 	}
 
@@ -64,7 +69,7 @@ public abstract class CharacterFlowController : CellObjFlowController
     {
 		fsm?.SetTrigger(FSM.unhover);
 		OnCharacterFlowUnpeeked?.Invoke(this);
-		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.hover, false);
+		
 		base.HoverUnpeek();
     }
 
@@ -72,18 +77,19 @@ public abstract class CharacterFlowController : CellObjFlowController
 	{
 		fsm?.SetTrigger(FSM.select);
 		OnCharacterFlowEntered?.Invoke(this);
-		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.select, true);
+		
 		base.Enter();
 
-		if (character.movementAbility)
-			TransitionTo(character.movementAbility.flow);
+		//if (character.movementAbilityFlow)
+		//	TransitionTo(character.movementAbilityFlow);
 	}
 
 	public override void Exit()
 	{
+		//Debug.LogWarning("EXITING CHAR FLOW : " + this.gameObject.name, this.gameObject);
 		fsm?.SetTrigger(FSM.deselect);
 		OnCharacterFlowExited?.Invoke(this);
-		//character.currCell.cellFlow.visuals.SetTrigger(FSMtrigger.select, false);
+	
 		base.Exit();
 	}
 
@@ -94,22 +100,22 @@ public abstract class CharacterFlowController : CellObjFlowController
 	}
 
 
-	public override bool HandleHover(ElementHoveredEvent e)
+	public override bool HandleHoverStart(ElementHoveredEvent e)
 	{
 		//Debog.logInput("... handling ability hover in characterflow");
 
 		if (subFlow != null)
 		{
-			var result = subFlow.HandleHover(e);
+			var result = subFlow.HandleHoverStart(e);
 			if (result)
 				return true;
 		}
 
-		if (peekedFlow != null)
-		{
-			peekedFlow.HoverUnpeek();
-			peekedFlow = null;
-		}
+		//if (peekedFlow != null)
+		//{
+		//	peekedFlow.HoverUnpeek();
+		//	peekedFlow = null;
+		//}
 
 		if (e.element == null || e.element.flowController == null)
 			return false;

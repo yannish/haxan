@@ -13,7 +13,7 @@ public class GroundMoveWithBounceAbility : Ability
 	public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController characterFlow)
 	{
 		List<Cell> allCellsInRange = characterFlow.character.currCell.GetCellsInRadius(
-			characterFlow.character.currMove
+			characterFlow.character.CurrMove
 			);
 
 		List<Cell> deflectableCells = new List<Cell>();
@@ -38,7 +38,7 @@ public class GroundMoveWithBounceAbility : Ability
 		}
 
 		List <Cell> unboundCells = characterFlow.character.currCell.GetCellsInRadius(
-			characterFlow.character.currMove,
+			characterFlow.character.CurrMove,
 			t => !t.IsBound()
 			);
 

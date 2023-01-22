@@ -8,8 +8,12 @@ using UnityEngine.UI;
 public class WandererDisplaySlot : RectUIElement
 	, IFlowable
 {
-	[Header("WANDERER")]
+	[Header("COMPONENTS: ")]
 	public Image iconSlot;
+	public Image actionTab;
+	public Image moveTab;
+	
+	//[Header("WANDERER")]
 	[ReadOnly] public Wanderer wanderer;
 
 	public FlowController Flow => wanderer != null ? wanderer.flow : null;
@@ -33,6 +37,31 @@ public class WandererDisplaySlot : RectUIElement
 
 		wanderer.flow.OnCharacterFlowEntered += OnFlowEntered;
 		wanderer.flow.OnCharacterFlowExited += OnFlowExited;
+
+		wanderer.OnCharacterChanged += OnCharacterChanged;
+	}
+
+	private void OnCharacterChanged(Character character)
+	{
+		if(character.CurrMove < character.maxMoves)
+		{
+			moveTab.gameObject.SetActive(false);
+		}
+
+		if(character.currActions < character.maxActions)
+		{
+			actionTab.gameObject.SetActive(false);
+		}
+
+		if(character.CurrMove == character.maxMoves)
+		{
+			moveTab.gameObject.SetActive(true);
+		}
+
+		if (character.currActions == character.maxActions)
+		{
+			actionTab.gameObject.SetActive(true);
+		}
 	}
 
 	private void OnFlowPeeked(FlowController obj) => Hover();

@@ -42,6 +42,10 @@ public class CellVisuals : MonoBehaviour
     [ReadOnly] public Color currHoverTargetColor;
     [ReadOnly] public Color currHoverColor;
     [ReadOnly] public float currHoverAlpha;
+    [ReadOnly] public float currHoverAlphaVel;
+    [ReadOnly] public float currHoverAlphaTarget;
+    public float hoverAlphaSmoothTimeUp;
+    public float hoverAlphaSmoothTimeDown;
 
 
     [ReadOnly] public bool hovered;
@@ -180,8 +184,6 @@ public class CellVisuals : MonoBehaviour
 	}
 
 
-
-
     public void SetTrigger(CellState trigger) => SetTriggerValue(trigger, true);
 
     public void UnsetTrigger(CellState trigger) => SetTriggerValue(trigger, false);
@@ -238,13 +240,19 @@ public class CellVisuals : MonoBehaviour
 
         currHoverTargetColor = interactionBaseColor;
 
-        currHoverAlpha = 0f;
+        currHoverAlphaTarget = 0f;
         if (hovered)
-            currHoverAlpha = hoveredAlpha;
-        if(clickable || selected)
-            currHoverAlpha = 1f;
+            currHoverAlphaTarget = hoveredAlpha;
+        if (clickable || selected)
+            currHoverAlphaTarget = 1f;
 
-        currHoverTargetColor = currHoverTargetColor.With(a: currHoverAlpha);
+        //currHoverAlpha = 0f;
+        //if (hovered)
+        //    currHoverAlpha = hoveredAlpha;
+        //if(clickable || selected)
+        //    currHoverAlpha = 1f;
+
+        //currHoverTargetColor = currHoverTargetColor;//.With(a: currHoverAlpha);
 
 
         //... path:
@@ -280,7 +288,14 @@ public class CellVisuals : MonoBehaviour
                 );
 
             float colorLerp = Mathf.Clamp01(t / colorLerpTime);
-            currHoverColor = Color.Lerp(currHoverColor, currHoverTargetColor, colorLerp);
+            currHoverAlpha = Mathf.SmoothDamp(
+                currHoverAlpha,
+                currHoverAlphaTarget,
+                ref currHoverAlphaVel,
+                currHoverAlphaTarget == 0 ? hoverAlphaSmoothTimeDown : hoverAlphaSmoothTimeUp
+                );
+
+            currHoverColor = Color.Lerp(currHoverColor, currHoverTargetColor, colorLerp).With(a : currHoverAlpha);
 
 
             //... path:
@@ -294,6 +309,8 @@ public class CellVisuals : MonoBehaviour
                 );
             
             pathCurrColor = Color.Lerp(pathCurrColor, currPathTargetColor, Mathf.Clamp01(t / colorLerpTime));
+
+            //Vector3.smooth
             
             UpdateMaterialBlock();
 

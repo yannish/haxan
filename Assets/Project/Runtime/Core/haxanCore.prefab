@@ -44,13 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c7eb44f7c89ca142b568ce1e6853c69, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isProcessing: 0
+  currPlaybackState: 0
   currPhase: 0
   currEnemy: {fileID: 0}
   enemyTurnOrder: []
-  currTurn: {fileID: 0}
-  playerTurns: []
-  enemyTurns: []
+  currInstigator: {fileID: 0}
+  currTurn:
+    numba: 0
+    instigator: {fileID: 0}
+    ability: {fileID: 0}
 --- !u!1 &8513696717898793165
 GameObject:
   m_ObjectHideFlags: 0
@@ -150,8 +152,7 @@ MonoBehaviour:
   peekedFlow: {fileID: 0}
   lastSubFlow: {fileID: 0}
   currPhase: 0
-  currCharacter: {fileID: 0}
-  currInputTurn: {fileID: 0}
+  serialTurnSystem: {fileID: 0}
   doBreak: 0
 --- !u!1 &8513696717982450865
 GameObject:
@@ -232,6 +233,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: cellMarkupSystem
       objectReference: {fileID: 0}
+    - target: {fileID: 2445289224299933742, guid: f6a6bc8f2b6abcf4e89386cfbb1e984a, type: 3}
+      propertyPath: dashMarker
+      value: 
+      objectReference: {fileID: 7420345442982870641, guid: ff5d01be5a39d7d4f922f7b1ee7a3285, type: 3}
     - target: {fileID: 2445289224299933743, guid: f6a6bc8f2b6abcf4e89386cfbb1e984a, type: 3}
       propertyPath: m_RootOrder
       value: 0

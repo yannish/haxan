@@ -12,27 +12,47 @@ public class DummyTurn : InlineScriptableObject
 }
 
 [Serializable]
-public class Turn// : InlineScriptableObject
+public class Turn //: ScriptableObject
 {
-    [ReadOnly] public CellObject owner;
+	public float numba;
+
+    [ReadOnly] public CellObject instigator;
 
     [ReadOnly] public Ability ability;
 
-    public Queue<CharacterCommand> commands = new();
+    public Queue<CellObjectCommand> commands = new();
 
-    public static Turn CreateInstance(CellObject owner, Ability ability)
-	{
-		//var newTurn = ScriptableObject.CreateInstance<Turn>();
-		var newTurn = new Turn(owner);
-		//newTurn.owner = owner;
-		newTurn.ability = ability;
-		newTurn.commands = new Queue<CharacterCommand>();
-		return newTurn;
-	}
+	public Stack<CellObjectCommand> commandHistory = new();
 
-	public Turn(CellObject owner)
-	{
-		this.owner = owner;
-		//this.commands = commands;
-	}
+	public Stack<CellObjectCommand> undoneCommands = new();
+
+ //   public static Turn CreateInstance(CellObject owner, Ability ability)
+	//{
+	//	//var newTurn = ScriptableObject.CreateInstance<Turn>();
+	//	var newTurn = new Turn()
+	//	{
+	//		owner = owner,
+	//		ability = ability,
+	//		commands = new Queue<CharacterCommand>(),
+	//	};
+
+	//	newTurn.owner = owner;
+	//	newTurn.ability = ability;
+	//	newTurn.commands = new Queue<CharacterCommand>();
+	//	return newTurn;
+	//}
+
+	//public Turn()
+	//{
+	//	//this.owner = owner;
+	//	//this.commands = commands;
+	//}
+}
+
+[Serializable]
+public class RecordedTurn
+{
+	[ReadOnly] public CellObject owner;
+	[ReadOnly] public Ability ability;
+	[ReadOnly] public Stack<CellObjectCommand> commandHistory = new Stack<CellObjectCommand>();
 }

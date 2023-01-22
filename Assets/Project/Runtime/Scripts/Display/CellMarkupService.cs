@@ -13,10 +13,36 @@ public class CellMarkupService : Service<CellMarkupService>
 	public PooledMonoBehaviour jointMarker;
 	public PooledMonoBehaviour arrowMarker;
 
+	public PooledMonoBehaviour dashMarker;
 	//[ReadOnly] public List<GameObject> placedMoveMarkers = new List<GameObject>();
 
 	//[ReadOnly] public List<GameObject> placedJointMarkers = new List<GameObject>();
 
+	public Action MarkDashPath(Cell startingCell, List<Cell> pathCells)
+	{
+		Action undo = () => { };
+
+		for (int i = 0; i < pathCells.Count - 1; i++)
+		{
+			Cell currCell = pathCells[i];
+			Cell nextCell = pathCells[i + 1];
+			if (currCell == null || nextCell == null)
+			{
+				Debug.LogWarning("move chain was broken!");
+				return undo;
+			}
+
+			HexDirection toNextCellDir = currCell.To(nextCell);
+			var newDashMarker = dashMarker.GetAndPlay(
+				currCell.transform.position,
+				toNextCellDir.ToVector()
+				);
+
+			undo += () => newDashMarker.gameObject.SetActive(false);
+		}
+
+		return undo;
+	}
 
 	public Action MarkMovePath(Cell startingCell, List<Cell> pathCells)
 	{
