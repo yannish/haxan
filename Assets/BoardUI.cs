@@ -101,11 +101,18 @@ public class BoardUI : MonoBehaviour
                 // ^ The mouse was pressed and released on the same tile
                 Vector2Int offset = MouseToOffsetPos();
                 var unit = Board.GetUnitAtPos(offset);
-                if (unit && unit != selectedUnit)
+                if (unit)
                 {
-                    // ^ A unit was clicked, and it is not already selected
-                    DeselectUnit();
-                    SelectUnit(unit);
+                    if(unit != selectedUnit)
+					{
+                        // ^ A unit was clicked, and it is not already selected
+                        DeselectUnit();
+                        SelectUnit(unit);
+                    }
+					else
+					{
+                        DeselectUnit();
+					}
                 }
                 else if (unit == null)
                 {
