@@ -265,6 +265,10 @@ public class Board
     // Inputs and outputs are in offset coordinates
     public static Vector2Int[] FindPath(Vector2Int src, Vector2Int dst)
     {
+        // Since we don't have access to a priority queue, I've just built one
+        // out of a List of tuples. The dequeuing is done at the end of the list
+        // for efficiency. The priority is high in the beginning of the list,
+        // and low at the end.
         List<(Vector2Int, int)> frontier = new();
         frontier.Add((src, 0));
 
