@@ -112,25 +112,18 @@ public class BoardUI : MonoBehaviour
                 // running the A* algorithm and regenerating pathing markers
                 // when the mouse is moved within the same cell.
                 hoveredCellPos = mousePos;
-                // Destroy existing path gizmos
-                string name = $"Path{selectedUnit.GetInstanceID()}";
-                foreach (Transform child in gizmos.transform)
-                {
-                    if (child.name == name)
-                    {
-                        Destroy(child.gameObject);
-                    }
-                }
+                DestroyPathGizmos(selectedUnit);
                 // Find the shortest path
                 Vector2Int[] path = Board.FindPath(selectedUnit.OffsetPos, hoveredCellPos);
                 // Create new path gizmos
                 var prefab = Resources.Load("Prefabs/PathQuad");
+                string pathName = $"Path{selectedUnit.GetInstanceID()}";
                 for (int i = 0; i < path.Length; i++)
                 {
                     Vector2Int from = (i == 0) ? selectedUnit.OffsetPos : path[i - 1];
                     Vector2Int to = path[i];
                     GameObject pathQuad = (GameObject)Instantiate(prefab, gizmos.transform);
-                    pathQuad.name = name;
+                    pathQuad.name = pathName;
                     pathQuad.transform.position = Board.OffsetToWorld(from);
                     // Rotate the path by locating its index in the neighbor
                     // look-up table
@@ -220,6 +213,7 @@ public class BoardUI : MonoBehaviour
     void DeselectUnit()
     {
         mode = Mode.Neutral;
+        DestroyPathGizmos(selectedUnit);
         selectedUnit = null;
         waypointPositions = null;
         portrait.SetActive(false);
@@ -230,6 +224,18 @@ public class BoardUI : MonoBehaviour
                 child.transform
                     .DOScale(0f, 0.05f)
                     .OnComplete(() => Destroy(child.gameObject));
+            }
+        }
+    }
+
+    void DestroyPathGizmos(Unit unit)
+    {
+        string pathName = $"Path{unit.GetInstanceID()}";
+        foreach (Transform child in gizmos.transform)
+        {
+            if (child.name == pathName)
+            {
+                Destroy(child.gameObject);
             }
         }
     }
