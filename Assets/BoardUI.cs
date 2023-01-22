@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
@@ -13,16 +14,16 @@ public class BoardUI : MonoBehaviour
     Mode mode;
     Vector2Int mouseDownPos;
     Unit selectedUnit;
-    GameObject waypoints;
+    GameObject gizmos;
     Vector2Int[] waypointPositions; // In offset coordinates
-    Vector2Int destPos; // In offset coordinates
+    Vector2Int hoveredCellPos; // In offset coordinates
     bool isPointerInUI;
 
     public void Init()
     {
         portrait = transform.Find("portrait").gameObject;
         portrait.SetActive(false);
-        waypoints = new GameObject("Waypoints");
+        gizmos = new GameObject("Gizmos");
         // Generate one button per unit
         var prefab = Resources.Load("Prefabs/UnitButton");
         for (int i = 0; i < Board.Units.Length; i++)
@@ -104,20 +105,51 @@ public class BoardUI : MonoBehaviour
                     break;
                 }
             }
-            if (hoveredWaypoint && destPos != mousePos)
+            if (hoveredWaypoint && hoveredCellPos != mousePos)
             {
                 // ^ The mouse is hovering over a waypoint, and it is not the
                 // current path's destination. The second check is done to avoid
                 // running the A* algorithm and regenerating pathing markers
                 // when the mouse is moved within the same cell.
-                destPos = mousePos;
-                Vector2Int[] path = Board.FindPath(selectedUnit.OffsetPos, destPos);
-                string str = "";
+                hoveredCellPos = mousePos;
+                // Destroy existing path gizmos
+                string name = $"Path{selectedUnit.GetInstanceID()}";
+                foreach (Transform child in gizmos.transform)
+                {
+                    if (child.name == name)
+                    {
+                        Destroy(child.gameObject);
+                    }
+                }
+                // Find the shortest path
+                Vector2Int[] path = Board.FindPath(selectedUnit.OffsetPos, hoveredCellPos);
+                // Create new path gizmos
+                var prefab = Resources.Load("Prefabs/PathQuad");
                 for (int i = 0; i < path.Length; i++)
                 {
-                    str += $"-> ({path[i].x}, {path[i].y})";
+                    Vector2Int from = (i == 0) ? selectedUnit.OffsetPos : path[i - 1];
+                    Vector2Int to = path[i];
+                    GameObject pathQuad = (GameObject)Instantiate(prefab, gizmos.transform);
+                    pathQuad.name = name;
+                    pathQuad.transform.position = Board.OffsetToWorld(from);
+                    // Rotate the path by locating its index in the neighbor
+                    // look-up table
+                    float degrees = 0f;
+                    {
+                        int parity = from.x & 1;
+                        Vector2Int delta = to - from;
+                        int j;
+                        for (j = 0; j < 6; j++)
+                        {
+                            if (Board.neighborLut[parity, j] == delta)
+                            {
+                                break;
+                            }
+                        }
+                        degrees = (1 + j) * 60f;
+                    }
+                    pathQuad.transform.rotation = Quaternion.Euler(0, degrees, 0);
                 }
-                // Debug.Log(str);
             }
         }
 
@@ -176,7 +208,8 @@ public class BoardUI : MonoBehaviour
         waypointPositions = Board.GetNavigableTiles(unit);
         foreach (Vector2Int pos in waypointPositions)
         {
-            GameObject waypt = (GameObject)Instantiate(prefab, waypoints.transform);
+            GameObject waypt = (GameObject)Instantiate(prefab, gizmos.transform);
+            waypt.name = "Waypoint";
             waypt.transform.position = Board.OffsetToWorld(pos)
                 + new Vector3(0, 0.1f, 0);
             waypt.transform.localScale = Vector3.zero;
@@ -190,11 +223,14 @@ public class BoardUI : MonoBehaviour
         selectedUnit = null;
         waypointPositions = null;
         portrait.SetActive(false);
-        foreach (Transform child in waypoints.transform)
+        foreach (Transform child in gizmos.transform)
         {
-            child.transform
-                .DOScale(0f, 0.05f)
-                .OnComplete(() => Destroy(child.gameObject));
+            if (child.name == "Waypoint")
+            {
+                child.transform
+                    .DOScale(0f, 0.05f)
+                    .OnComplete(() => Destroy(child.gameObject));
+            }
         }
     }
 

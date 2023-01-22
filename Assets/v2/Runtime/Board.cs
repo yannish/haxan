@@ -73,7 +73,7 @@ public class Board
     static List<Grid> grids = new List<Grid>();
 
     // Table of neighbor deltas in offset coordinate space
-    static Vector2Int[,] neighborLut = new Vector2Int[,]
+    public static Vector2Int[,] neighborLut = new Vector2Int[,]
     {
         {
             // even cols 
