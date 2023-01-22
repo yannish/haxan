@@ -1,6 +1,7 @@
 using UnityEngine;
 using Unity.Mathematics;
 
+[SelectionBase]
 public class Unit : MonoBehaviour
 {
     // Position in offset coordinate space
