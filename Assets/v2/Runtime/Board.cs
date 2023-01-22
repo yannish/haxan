@@ -159,7 +159,9 @@ public class Board
     public static Vector2Int[] GetNavigableTiles(Unit unit)
     {
         List<Vector2Int> result = new();
-        const int range = 3;
+        const int range = 2;
+        // For flying movement:
+        /*
         Vector2Int centerAxial = OffsetToAxial(unit.OffsetPos);
         for (int x = -range; x <= range; x++)
         {
@@ -187,6 +189,74 @@ public class Board
                 result.Add(offset);
             }
         }
+        */
+
+        // For ground movement:
+        // Perform a breadth-first walk of the cells
+        Vector2Int[,] neighborLut = new Vector2Int[,]
+        {
+            {
+                // even cols 
+                new Vector2Int(+1, 0),
+                new Vector2Int(+1, -1),
+                new Vector2Int(0, -1),
+                new Vector2Int(-1, -1),
+                new Vector2Int(-1, 0),
+                new Vector2Int(0, +1),
+            },
+            // odd cols 
+            {
+                new Vector2Int(+1, +1),
+                new Vector2Int(+1, 0),
+                new Vector2Int(0, -1),
+                new Vector2Int(-1, 0),
+                new Vector2Int(-1, +1),
+                new Vector2Int(0, +1)
+            }
+        };
+
+        bool[,] visited = new bool[2 * range + 1, 2 * range + 1];
+        Vector2Int visitedPos = unit.OffsetPos - new Vector2Int(range, range);
+        List<List<Vector2Int>> fringes = new();
+
+        visited[unit.OffsetPos.x - visitedPos.x, unit.OffsetPos.y - visitedPos.y] = true;
+        fringes.Add(new List<Vector2Int>() { unit.OffsetPos });
+
+        for (int i = 0; i < range; i++)
+        {
+            fringes.Add(new List<Vector2Int>());
+            foreach (var pos in fringes[i])
+            {
+                int parity = pos.x & 1;
+                for (int j = 0; j < 6; j++)
+                {
+                    Vector2Int neighbor = pos + neighborLut[parity, j];
+                    if (visited[neighbor.x - visitedPos.x, neighbor.y - visitedPos.y])
+                    {
+                        // ^ Already visited. Skip.
+                        continue;
+                    }
+                    if (neighbor.x < Board.OffsetPos.x ||
+                        neighbor.x >= Board.OffsetPos.x + Board.Cells.GetLength(0) ||
+                        neighbor.y < Board.OffsetPos.y ||
+                        neighbor.y >= Board.OffsetPos.y + Board.Cells.GetLength(1))
+                    {
+                        // ^ This position is outside the Board's bounds. Skip.
+                        continue;
+                    }
+                    if (Board.Cells[neighbor.x - Board.OffsetPos.x, neighbor.y - Board.OffsetPos.y] == null)
+                    {
+                        // ^ This position doesn't contain a cell. Skip.
+                        continue;
+                    }
+                    // This cell can be visited.
+                    visited[neighbor.x - visitedPos.x, neighbor.y - visitedPos.y] = true;
+                    fringes[i + 1].Add(neighbor);
+                    result.Add(neighbor);
+                }
+            }
+        }
+
         return result.ToArray();
     }
 }
