@@ -27,11 +27,7 @@ public class GridEditor : Editor
                 {
                     GameObject child = (GameObject)Instantiate(prefab, grid.transform);
                     child.name = $"Cell";
-                    child.transform.localPosition = new Vector3(
-                        (0.5f + x + y * 0.5f - y / 2) * CellV2.InnerRadius * 2f,
-                        0f,
-                        CellV2.OuterRadius + y * (CellV2.OuterRadius * 1.5f)
-                    );
+                    child.transform.localPosition = Board.OffsetToWorld(new Vector2Int(x, y));
                 }
             }
         }
