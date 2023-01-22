@@ -14,6 +14,8 @@ public class BoardUI : MonoBehaviour
     Vector2Int mouseDownPos;
     Unit selectedUnit;
     GameObject waypoints;
+    Vector2Int[] waypointPositions; // In offset coordinates
+    Vector2Int destPos; // In offset coordinates
     bool isPointerInUI;
 
     public void Init()
@@ -88,6 +90,37 @@ public class BoardUI : MonoBehaviour
     void HandleUnitSelectedMode()
     {
         // ^ We're in the mode where a unit is selected
+        if (!isPointerInUI && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f))
+        {
+            // ^ The mouse has moved
+            Vector2Int mousePos = MouseToOffsetPos();
+
+            bool hoveredWaypoint = false;
+            foreach (Vector2Int pos in waypointPositions)
+            {
+                if (pos == mousePos)
+                {
+                    hoveredWaypoint = true;
+                    break;
+                }
+            }
+            if (hoveredWaypoint && destPos != mousePos)
+            {
+                // ^ The mouse is hovering over a waypoint, and it is not the
+                // current path's destination. The second check is done to avoid
+                // running the A* algorithm and regenerating pathing markers
+                // when the mouse is moved within the same cell.
+                destPos = mousePos;
+                Vector2Int[] path = Board.FindPath(selectedUnit.OffsetPos, destPos);
+                string str = "";
+                for (int i = 0; i < path.Length; i++)
+                {
+                    str += $"-> ({path[i].x}, {path[i].y})";
+                }
+                // Debug.Log(str);
+            }
+        }
+
         if (!isPointerInUI && Input.GetMouseButtonDown(0))
         {
             mouseDownPos = MouseToOffsetPos();
@@ -99,20 +132,19 @@ public class BoardUI : MonoBehaviour
             if (mouseUpPos == mouseDownPos)
             {
                 // ^ The mouse was pressed and released on the same tile
-                Vector2Int offset = MouseToOffsetPos();
-                var unit = Board.GetUnitAtPos(offset);
+                var unit = Board.GetUnitAtPos(mouseUpPos);
                 if (unit)
                 {
-                    if(unit != selectedUnit)
-					{
+                    if (unit != selectedUnit)
+                    {
                         // ^ A unit was clicked, and it is not already selected
                         DeselectUnit();
                         SelectUnit(unit);
                     }
-					else
-					{
+                    else
+                    {
                         DeselectUnit();
-					}
+                    }
                 }
                 else if (unit == null)
                 {
@@ -141,8 +173,8 @@ public class BoardUI : MonoBehaviour
         portrait.SetActive(true);
         // Show navigable tiles
         var prefab = Resources.Load("Prefabs/Waypoint");
-        Vector2Int[] positions = Board.GetNavigableTiles(unit);
-        foreach (Vector2Int pos in positions)
+        waypointPositions = Board.GetNavigableTiles(unit);
+        foreach (Vector2Int pos in waypointPositions)
         {
             GameObject waypt = (GameObject)Instantiate(prefab, waypoints.transform);
             waypt.transform.position = Board.OffsetToWorld(pos)
@@ -156,6 +188,7 @@ public class BoardUI : MonoBehaviour
     {
         mode = Mode.Neutral;
         selectedUnit = null;
+        waypointPositions = null;
         portrait.SetActive(false);
         foreach (Transform child in waypoints.transform)
         {

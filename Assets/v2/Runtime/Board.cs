@@ -72,6 +72,30 @@ public class Board
 
     static List<Grid> grids = new List<Grid>();
 
+    // Table of neighbor deltas in offset coordinate space
+    static Vector2Int[,] neighborLut = new Vector2Int[,]
+    {
+        {
+            // even cols 
+            new Vector2Int(+1, 0),
+            new Vector2Int(+1, -1),
+            new Vector2Int(0, -1),
+            new Vector2Int(-1, -1),
+            new Vector2Int(-1, 0),
+            new Vector2Int(0, +1),
+        },
+        // odd cols 
+        {
+            new Vector2Int(+1, +1),
+            new Vector2Int(+1, 0),
+            new Vector2Int(0, -1),
+            new Vector2Int(-1, 0),
+            new Vector2Int(-1, +1),
+            new Vector2Int(0, +1)
+        }
+    };
+
+
     public static void AddGrid(Grid grid)
     {
         bool gridAlreadyAdded = false;
@@ -193,28 +217,6 @@ public class Board
 
         // For ground movement:
         // Perform a breadth-first walk of the cells
-        Vector2Int[,] neighborLut = new Vector2Int[,]
-        {
-            {
-                // even cols 
-                new Vector2Int(+1, 0),
-                new Vector2Int(+1, -1),
-                new Vector2Int(0, -1),
-                new Vector2Int(-1, -1),
-                new Vector2Int(-1, 0),
-                new Vector2Int(0, +1),
-            },
-            // odd cols 
-            {
-                new Vector2Int(+1, +1),
-                new Vector2Int(+1, 0),
-                new Vector2Int(0, -1),
-                new Vector2Int(-1, 0),
-                new Vector2Int(-1, +1),
-                new Vector2Int(0, +1)
-            }
-        };
-
         bool[,] visited = new bool[2 * range + 1, 2 * range + 1];
         Vector2Int visitedPos = unit.OffsetPos - new Vector2Int(range, range);
         List<List<Vector2Int>> fringes = new();
@@ -258,5 +260,107 @@ public class Board
         }
 
         return result.ToArray();
+    }
+
+    // Inputs and outputs are in offset coordinates
+    public static Vector2Int[] FindPath(Vector2Int src, Vector2Int dst)
+    {
+        List<(Vector2Int, int)> frontier = new();
+        frontier.Add((src, 0));
+
+        Dictionary<Vector2Int, Vector2Int> cameFrom = new();
+        Dictionary<Vector2Int, int> costSoFar = new();
+        costSoFar[src] = 0;
+
+        while (frontier.Count > 0)
+        {
+            Vector2Int current = frontier[frontier.Count - 1].Item1;
+            frontier.RemoveAt(frontier.Count - 1);
+
+            if (current == dst)
+            {
+                break;
+            }
+
+            int parity = current.x & 1;
+            for (int i = 0; i < 6; i++)
+            {
+                Vector2Int neighbor = current + neighborLut[parity, i];
+                if (neighbor.x < Board.OffsetPos.x ||
+                    neighbor.x >= Board.OffsetPos.x + Board.Cells.GetLength(0) ||
+                    neighbor.y < Board.OffsetPos.y ||
+                    neighbor.y >= Board.OffsetPos.y + Board.Cells.GetLength(1))
+                {
+                    // ^ This position is outside the Board's bounds. Skip.
+                    continue;
+                }
+                if (Board.Cells[neighbor.x - Board.OffsetPos.x, neighbor.y - Board.OffsetPos.y] == null)
+                {
+                    // ^ This position doesn't contain a cell. Skip.
+                    continue;
+                }
+
+                // Currently, movement cost is fixed to 1. If we want variable
+                // costs per tile, this is the place to add it.
+                int newCost = costSoFar[current] + 1;
+
+                bool contains = costSoFar.TryGetValue(neighbor, out int cost);
+                if (!contains || newCost < cost)
+                {
+                    costSoFar[neighbor] = newCost;
+                    // Calculate the heuristic, which is the distance between
+                    // the destination and the neighbor
+                    int heuristic = 0;
+                    {
+                        Vector2Int dstAxial = OffsetToAxial(dst);
+                        Vector2Int nbrAxial = OffsetToAxial(neighbor);
+                        Vector2Int delta = dstAxial - nbrAxial;
+                        heuristic = (Mathf.Abs(delta.x) + Mathf.Abs(delta.x + delta.y) + Mathf.Abs(delta.y)) / 2;
+                    }
+                    int priority = newCost + heuristic;
+                    // Insert the neighbor into our makeshift priority queue
+                    if (frontier.Count == 0)
+                    {
+                        // ^ The priority queue is empty
+                        frontier.Add((neighbor, priority));
+                    }
+                    else if (frontier[frontier.Count - 1].Item2 > priority)
+                    {
+                        // ^ The lowest priority in the queue is still higher
+                        // than the one we want to insert. Make our item the
+                        // last one, so that it will be dequeued first.
+                        frontier.Add((neighbor, priority));
+                    }
+                    else
+                    {
+
+                        int idx = 0;
+                        for (int j = 0; j < frontier.Count; j++)
+                        {
+                            if (frontier[j].Item2 <= priority)
+                            {
+                                break;
+                            }
+                        }
+                        frontier.Insert(idx, (neighbor, priority));
+                    }
+
+                    cameFrom[neighbor] = current;
+                }
+            }
+        }
+
+        List<Vector2Int> path = new();
+        {
+            Vector2Int current = dst;
+            while (current != src)
+            {
+                path.Add(current);
+                current = cameFrom[current];
+            }
+            path.Reverse();
+        }
+
+        return path.ToArray();
     }
 }
