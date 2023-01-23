@@ -63,6 +63,7 @@ public class Board
     /// Position in offset coordinate space
     public static Vector2Int OffsetPos;
     public static CellV2[,] Cells;
+
     // The assumption here is that there will only ever be a handful of units,
     // so we're not allocating a 2D array of units, one at each position.
     // Instead we're just keeping a 1D array of all units, and to find a unit at
@@ -120,11 +121,14 @@ public class Board
 
     public static void Build()
     {
+        indexToCellLookup.Clear();
+
         // Build a list of all cells in the added grids and their min/max bounds
         // in offset coords
         Vector2Int min = new Vector2Int(int.MaxValue, int.MaxValue);
         Vector2Int max = new Vector2Int(int.MinValue, int.MinValue);
         var cellsAndCoords = new List<(CellV2, Vector2Int)>();
+
         foreach (var g in grids)
         {
             CellV2[] cells = g.GetComponentsInChildren<CellV2>();
@@ -155,6 +159,18 @@ public class Board
             {
                 Cells[x, y] = cell;
             }
+
+            int index = coord.ToIndex();
+            // ^ this could probably just be using GetInstanceID, but I take it that changes between editor & runtime,
+            // which is maybe annoying down the line...? - ian
+            if (!indexToCellLookup.TryGetValue(index, out var foundCell))
+            {
+                indexToCellLookup.Add(index, cell);
+			}
+			else
+			{
+                Debug.LogError($"Cell already added to indexLookup at {coord.x}, {coord.y}");
+			}
         }
 
         OffsetPos = min;
@@ -167,6 +183,8 @@ public class Board
         ui.Init();
     }
 
+
+    static Dictionary<int, CellV2> indexToCellLookup = new Dictionary<int, CellV2>();
     public static Unit GetUnitAtPos(Vector2Int pos)
     {
         foreach (Unit unit in Board.Units)
@@ -179,6 +197,17 @@ public class Board
         }
         return null;
     }
+
+
+    public static CellV2 GetCellAtPos(Vector2Int offsetPos)
+	{
+        if (indexToCellLookup.TryGetValue(offsetPos.ToIndex(), out var foundCell))
+            return foundCell;
+
+        return null;
+	}
+
+
     // Output positions are in offset coordinates
     public static Vector2Int[] GetNavigableTiles(Unit unit)
     {
@@ -238,19 +267,24 @@ public class Board
                         // ^ Already visited. Skip.
                         continue;
                     }
-                    if (neighbor.x < Board.OffsetPos.x ||
+
+                    if (
+                        neighbor.x < Board.OffsetPos.x ||
                         neighbor.x >= Board.OffsetPos.x + Board.Cells.GetLength(0) ||
                         neighbor.y < Board.OffsetPos.y ||
-                        neighbor.y >= Board.OffsetPos.y + Board.Cells.GetLength(1))
+                        neighbor.y >= Board.OffsetPos.y + Board.Cells.GetLength(1)
+                        )
                     {
                         // ^ This position is outside the Board's bounds. Skip.
                         continue;
                     }
+
                     if (Board.Cells[neighbor.x - Board.OffsetPos.x, neighbor.y - Board.OffsetPos.y] == null)
                     {
                         // ^ This position doesn't contain a cell. Skip.
                         continue;
                     }
+
                     // This cell can be visited.
                     visited[neighbor.x - visitedPos.x, neighbor.y - visitedPos.y] = true;
                     fringes[i + 1].Add(neighbor);
@@ -367,4 +401,10 @@ public class Board
 
         return path.ToArray();
     }
+}
+
+public static class BoardExtensions
+{
+
+    public static int ToIndex(this Vector2Int pos) => pos.x + pos.y * 10000;
 }

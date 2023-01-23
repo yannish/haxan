@@ -1,7 +1,10 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UnitButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
+public class UnitButton : MonoBehaviour
+    , IPointerEnterHandler
+    , IPointerExitHandler
+    , IPointerClickHandler
 {
     BoardUI ui;
     int unitGuid;

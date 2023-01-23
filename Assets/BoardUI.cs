@@ -10,10 +10,10 @@ public class BoardUI : MonoBehaviour
         UnitSelected
     }
 
-    GameObject portrait;
+
+
     Mode mode;
     Vector2Int mouseDownPos;
-    Unit selectedUnit;
     GameObject gizmos;
     Vector2Int[] waypointPositions; // In offset coordinates
     Vector2Int hoveredCellPos; // In offset coordinates
@@ -59,11 +59,34 @@ public class BoardUI : MonoBehaviour
             Unit hoveredUnit = Board.GetUnitAtPos(offset);
             if (hoveredUnit)
             {
-                portrait.SetActive(true);
+                if(hoveredUnit != currHoveredUnit)
+				{
+                    UnhoverUnit();
+                    HoverUnit(hoveredUnit);
+				}
             }
             else
             {
-                portrait.SetActive(false);
+                UnhoverUnit();
+            }
+
+            CellV2 hoveredCell = Board.GetCellAtPos(offset);
+            if(hoveredCell != null)
+			{
+                if(hoveredCell != currHoveredCell)
+				{
+                    UnhoverEmptyCell();
+                    HoverEmptyCell(hoveredCell);
+                }
+
+                //Debug.LogWarning($"hit a cell at {offset.x}, {offset.y}.");
+            }
+			else
+			{
+                if (currHoveredCell != null)
+                    UnhoverEmptyCell();
+
+                //Debug.LogWarning($"didn't hit a cell at {offset.x}, {offset.y}.");
             }
         }
 
@@ -105,6 +128,7 @@ public class BoardUI : MonoBehaviour
                     break;
                 }
             }
+
             if (hoveredWaypoint && hoveredCellPos != mousePos)
             {
                 // ^ The mouse is hovering over a waypoint, and it is not the
@@ -113,8 +137,10 @@ public class BoardUI : MonoBehaviour
                 // when the mouse is moved within the same cell.
                 hoveredCellPos = mousePos;
                 DestroyPathGizmos(selectedUnit);
+
                 // Find the shortest path
                 Vector2Int[] path = Board.FindPath(selectedUnit.OffsetPos, hoveredCellPos);
+
                 // Create new path gizmos
                 var prefab = Resources.Load("Prefabs/PathQuad");
                 string pathName = $"Path{selectedUnit.GetInstanceID()}";
@@ -190,12 +216,28 @@ public class BoardUI : MonoBehaviour
         return offset;
     }
 
+    void HoverUnit(Unit unit)
+	{
+        currHoveredUnit = unit;
+        portrait.SetActive(true);
+    }
+
+    void UnhoverUnit()
+	{
+        currHoveredUnit = null;
+        portrait.SetActive(false);
+    }
+
+    GameObject portrait;
+    Unit currHoveredUnit;
+    Unit selectedUnit;
     void SelectUnit(Unit unit)
     {
         // ^ A unit was clicked
         mode = Mode.UnitSelected;
         selectedUnit = unit;
         portrait.SetActive(true);
+
         // Show navigable tiles
         var prefab = Resources.Load("Prefabs/Waypoint");
         waypointPositions = Board.GetNavigableTiles(unit);
@@ -206,7 +248,7 @@ public class BoardUI : MonoBehaviour
             waypt.transform.position = Board.OffsetToWorld(pos)
                 + new Vector3(0, 0.1f, 0);
             waypt.transform.localScale = Vector3.zero;
-            waypt.transform.DOScale(0.3f, 0.05f);
+            waypt.transform.DOScale(0.3f, 0.1f);
         }
     }
 
@@ -224,6 +266,35 @@ public class BoardUI : MonoBehaviour
                 child.transform
                     .DOScale(0f, 0.05f)
                     .OnComplete(() => Destroy(child.gameObject));
+            }
+        }
+    }
+
+    CellV2 currHoveredCell;
+    void HoverEmptyCell(CellV2 cell)
+	{
+        currHoveredCell = cell;
+
+        var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
+        var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
+        newHoverRing.name = "HoveredCell";
+        newHoverRing.transform.position = cell.transform.position;
+        //newHoverRing.transform.localScale = Vector3.zero;
+        //newHoverRing.transform.DOScale(1f, 0.05f);
+    }
+
+    void UnhoverEmptyCell()
+	{
+        currHoveredCell = null;
+
+        foreach (Transform child in gizmos.transform)
+        {
+            if (child.name == "HoveredCell")
+            {
+                Destroy(child.gameObject);
+                //child.transform
+                //    .DOScale(0f, 0.05f)
+                //    .OnComplete(() => Destroy(child.gameObject));
             }
         }
     }

@@ -5542,6 +5542,8 @@ MonoBehaviour:
     entries:
     - forwardEntry: {fileID: 445951496}
       backwardEntry: {fileID: 2004336989}
+    - forwardEntry: {fileID: 1584158305}
+      backwardEntry: {fileID: 480121577}
     - forwardEntry: {fileID: 751135664}
       backwardEntry: {fileID: 4144163391699838849}
     - forwardEntry: {fileID: 1642146163}
@@ -5550,8 +5552,6 @@ MonoBehaviour:
       backwardEntry: {fileID: 707073794}
     - forwardEntry: {fileID: 1422151813}
       backwardEntry: {fileID: 981193085}
-    - forwardEntry: {fileID: 1584158305}
-      backwardEntry: {fileID: 480121577}
   cells:
   - {fileID: 857254251}
   - {fileID: 967826902}
@@ -14480,30 +14480,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 261812299}
     m_Modifications:
-    - target: {fileID: 6118579500404496673, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
-      propertyPath: orthographic
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6118579500404496673, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
-      propertyPath: field of view
-      value: 11.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6118579500404496673, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
-      propertyPath: orthographic size
-      value: 12
-      objectReference: {fileID: 0}
-    - target: {fileID: 6118579500404496686, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -129.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6118579500404496686, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6118579500404496686, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 8
-      objectReference: {fileID: 0}
     - target: {fileID: 6118579500715266852, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
       propertyPath: m_Name
       value: haxanCam
