@@ -12,7 +12,6 @@ public class BoardUI : MonoBehaviour
     }
 
 
-
     Mode mode;
     Vector2Int mouseDownPos;
     GameObject gizmos;
@@ -30,6 +29,9 @@ public class BoardUI : MonoBehaviour
         for (int i = 0; i < Board.Units.Length; i++)
         {
             Unit unit = Board.Units[i];
+            if (!(unit is PlayerUnit))
+                continue;
+
             GameObject go = (GameObject)Instantiate(prefab, transform);
             RectTransform rt = go.GetComponent<RectTransform>();
             rt.anchoredPosition += new Vector2(0f, 110f * i);
@@ -324,8 +326,7 @@ public class BoardUI : MonoBehaviour
         {
             GameObject waypt = (GameObject)Instantiate(prefab, gizmos.transform);
             waypt.name = "Waypoint";
-            waypt.transform.position = Board.OffsetToWorld(pos)
-                + new Vector3(0, 0.1f, 0);
+            waypt.transform.position = Board.OffsetToWorld(pos) + new Vector3(0, 0.1f, 0);
             waypt.transform.localScale = Vector3.zero;
             waypt.transform.DOScale(0.3f, 0.1f);
         }
