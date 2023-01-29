@@ -60,6 +60,45 @@ public class Board
         );
     }
 
+    //... Hej Apoorva. Added these because I was going back through Amit's stuff, trying to get my bearings,
+    //    and at some point I got bit tired of manually doing the conversion. Normally I myself might make
+    //    use of extensions or operator overloading, but if you dislike feel free to chirp up in #tech.
+    public static Vector2Int CubicToAxial(Vector3Int cubic)
+	{
+        return new Vector2Int(cubic.x, cubic.y);
+	}
+	public static Vector2Int CubicToOffset(Vector3Int cubic)
+	{
+        Vector2Int axial = Board.CubicToAxial(cubic);
+        return Board.AxialToOffset(axial);
+	}
+	public static Vector3Int OffsetToCubic(Vector2Int offset)
+	{
+        Vector2Int axial = OffsetToAxial(offset);
+        return new Vector3Int(axial.x, axial.y, -axial.x - axial.y);
+	}
+
+    //... here I was looking at this neat little trick: https://www.redblobgames.com/grids/hexagons/directions.html
+    //... didn't quite get it to work though, think I misunderstood. probably just easier to do some dumb vector math instead
+    //... feel free to clear this out, especially if you find a better approach to ClosetCardinalTo.
+    public static Vector3Int OffsetToWeird(Vector2Int offset)
+    {
+        Vector3Int cubicCoord = OffsetToCubic(offset);
+        return new Vector3Int(
+            cubicCoord.x - cubicCoord.y,
+            cubicCoord.y - cubicCoord.z,
+            cubicCoord.z - cubicCoord.x
+            );
+    }
+    public static Vector3Int CubicToWeird(Vector3Int cubicCoord)
+    {
+        return new Vector3Int(
+            cubicCoord.x - cubicCoord.y,
+            cubicCoord.y - cubicCoord.z,
+            cubicCoord.z - cubicCoord.x
+            );
+    }
+
     /// Position in offset coordinate space
     public static Vector2Int OffsetPos;
     public static CellV2[,] Cells;
@@ -78,21 +117,21 @@ public class Board
     {
         {
             // even cols 
-            new Vector2Int(+1, 0),
-            new Vector2Int(+1, -1),
-            new Vector2Int(0, -1),
-            new Vector2Int(-1, -1),
-            new Vector2Int(-1, 0),
-            new Vector2Int(0, +1),
+            new Vector2Int(+1, 0),  // SE
+            new Vector2Int(+1, -1), // NE
+            new Vector2Int(0, -1),  // N
+            new Vector2Int(-1, -1), // NW
+            new Vector2Int(-1, 0),  // SW
+            new Vector2Int(0, +1),  // S
         },
         // odd cols 
         {
-            new Vector2Int(+1, +1),
-            new Vector2Int(+1, 0),
-            new Vector2Int(0, -1),
-            new Vector2Int(-1, 0),
-            new Vector2Int(-1, +1),
-            new Vector2Int(0, +1)
+            new Vector2Int(+1, +1), // SE
+            new Vector2Int(+1, 0),  // NE
+            new Vector2Int(0, -1),  // N
+            new Vector2Int(-1, 0),  // NW
+            new Vector2Int(-1, +1), // SW
+            new Vector2Int(0, +1)   // S
         }
     };
 
@@ -199,7 +238,7 @@ public class Board
     }
 
 
-    public static CellV2 GetCellAtPos(Vector2Int offsetPos)
+    public static CellV2 TryGetCellAtPos(Vector2Int offsetPos)
 	{
         if (indexToCellLookup.TryGetValue(offsetPos.ToIndex(), out var foundCell))
             return foundCell;

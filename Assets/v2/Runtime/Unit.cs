@@ -1,9 +1,19 @@
 using UnityEngine;
 using Unity.Mathematics;
+using System.Collections.Generic;
 
 [SelectionBase]
 public class Unit : MonoBehaviour
 {
+	[Header("STATE:")]
+	public HexDirectionFT Facing;
+
+    [Header("CONFIG:")]
+    public List<AbilityV2> Abilities = new List<AbilityV2>();
+
+    [Header("BITS:")]
+    public Transform pivot;
+
     // Position in offset coordinate space
     [HideInInspector, System.NonSerialized]
     public Vector2Int OffsetPos;
@@ -13,7 +23,12 @@ public class Unit : MonoBehaviour
         OffsetPos = Board.WorldToOffset(transform.position);
     }
 
-    void OnDrawGizmos()
+	private void OnValidate()
+	{
+        this.SetFacing(Facing);
+	}
+
+	void OnDrawGizmos()
     {
         if (transform.hasChanged)
         {
@@ -32,4 +47,20 @@ public class Unit : MonoBehaviour
             transform.hasChanged = false;
         }
     }
+}
+
+public static class UnitExtensions
+{
+    public static void SetFacing(this Unit unit, HexDirectionFT dir)
+	{
+        if (unit.pivot == null)
+		{
+            Debug.LogWarning($"unit {unit.name} is missing its pivot.");
+            return;
+		}
+
+        var newFacingDir = dir.ToVector();
+        unit.pivot.rotation = Quaternion.LookRotation(newFacingDir);
+        unit.Facing = dir;
+	}
 }

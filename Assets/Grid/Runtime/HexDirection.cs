@@ -59,6 +59,11 @@ public static class HexDirectionExtensions
 		//return Quaternion.AngleAxis(30f + 60f * (int)direction, Vector3.up) * Vector3.forward;
 	}
 
+	public static Vector3 ToVector(this HexDirectionFT dir)
+	{
+		return Quaternion.AngleAxis(HexFTAngleLookup[dir], Vector3.up) * Vector3.forward;
+	}
+
 
 	private static Vector3[] _VectorHexDirections;
 	public static Vector3[] VectorHexDirections
@@ -145,13 +150,10 @@ public static class HexDirectionExtensions
 		return direction == HexDirectionFT.NW ? HexDirectionFT.N : (direction + 1);
 	}
 
-
 	public static HexDirection To(this Cell from, Cell to)
 	{
 		return (HexDirection)Array.IndexOf(from.neighbours, to);
 	}
-
-
 
 	public static int StepsTo(this HexDirection direction, HexDirection targetDirection)
 	{
@@ -247,6 +249,8 @@ public static class HexCoordinateExtensions
 
 		return returnDir;
 	}
+
+	
 
 	public static List<Cell> GetCardinalCross(
 		this HexCoordinates start,

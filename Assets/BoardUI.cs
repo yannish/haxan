@@ -7,7 +7,8 @@ public class BoardUI : MonoBehaviour
     enum Mode
     {
         Neutral,
-        UnitSelected
+        UnitSelected,
+        AbilitySelected
     }
 
 
@@ -18,7 +19,6 @@ public class BoardUI : MonoBehaviour
     Vector2Int[] waypointPositions; // In offset coordinates
     Vector2Int hoveredCellPos; // In offset coordinates
     bool isPointerInUI;
-
     public void Init()
     {
         portrait = transform.Find("portrait").gameObject;
@@ -26,6 +26,7 @@ public class BoardUI : MonoBehaviour
         gizmos = new GameObject("Gizmos");
         // Generate one button per unit
         var prefab = Resources.Load("Prefabs/UnitButton");
+
         for (int i = 0; i < Board.Units.Length; i++)
         {
             Unit unit = Board.Units[i];
@@ -35,9 +36,16 @@ public class BoardUI : MonoBehaviour
             UnitButton btn = go.GetComponent<UnitButton>();
             btn.Init(this, unit.GetInstanceID());
         }
+
+        abilityDisplay = portrait.transform.Find("abilities").gameObject;
+        abilityButtons = portrait.GetComponentsInChildren<AbilityButton>();
+        foreach (var abilityButton in abilityButtons)
+            abilityButton.gameObject.SetActive(false);
+        abilityDisplay.SetActive(false);
     }
 
-    void Update()
+
+	void Update()
     {
         if (mode == Mode.Neutral)
         {
@@ -70,13 +78,16 @@ public class BoardUI : MonoBehaviour
                 UnhoverUnit();
             }
 
-            CellV2 hoveredCell = Board.GetCellAtPos(offset);
+            CellV2 hoveredCell = Board.TryGetCellAtPos(offset);
             if(hoveredCell != null)
 			{
                 if(hoveredCell != currHoveredCell)
 				{
                     UnhoverEmptyCell();
                     HoverEmptyCell(hoveredCell);
+
+                    //int parity = offset.x & 1;
+                    //Debug.LogWarning($"offset.x: {offset.x} , parity: {parity}");
                 }
 
                 //Debug.LogWarning($"hit a cell at {offset.x}, {offset.y}.");
@@ -111,15 +122,25 @@ public class BoardUI : MonoBehaviour
         }
     }
 
+    Vector2Int mousePosLastFrame;
+    bool hoveredWaypointLastFrame;
     void HandleUnitSelectedMode()
     {
         // ^ We're in the mode where a unit is selected
-        if (!isPointerInUI && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f))
+        
+        Vector2Int mousePos = MouseToOffsetPos();
+        bool hoveredWaypoint = false;
+        bool mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
+        //bool hovereNewCell = mousePos != mousePosLastFrame;
+
+        if (
+            !isPointerInUI 
+            && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)
+            )
         {
             // ^ The mouse has moved
-            Vector2Int mousePos = MouseToOffsetPos();
 
-            bool hoveredWaypoint = false;
+            //bool hoveredWaypoint = false;
             foreach (Vector2Int pos in waypointPositions)
             {
                 if (pos == mousePos)
@@ -129,7 +150,7 @@ public class BoardUI : MonoBehaviour
                 }
             }
 
-            if (hoveredWaypoint && hoveredCellPos != mousePos)
+            if (hoveredWaypoint && mousePosLastFrame != mousePos)
             {
                 // ^ The mouse is hovering over a waypoint, and it is not the
                 // current path's destination. The second check is done to avoid
@@ -170,6 +191,11 @@ public class BoardUI : MonoBehaviour
                     pathQuad.transform.rotation = Quaternion.Euler(0, degrees, 0);
                 }
             }
+
+            if(!hoveredWaypoint && hoveredWaypointLastFrame)
+			{
+				DestroyPathGizmos(selectedUnit);
+			}
         }
 
         if (!isPointerInUI && Input.GetMouseButtonDown(0))
@@ -204,6 +230,17 @@ public class BoardUI : MonoBehaviour
                 }
             }
         }
+
+        //if (
+        //    !hoveredWaypoint && hoveredWaypointLastFrame
+        //    //&& mousePos != mousePosLastFrame
+        //    )
+        //{
+        //    DestroyPathGizmos(selectedUnit);
+        //}
+
+        mousePosLastFrame = mousePos;
+        hoveredWaypointLastFrame = hoveredWaypoint;
     }
 
     Vector2Int MouseToOffsetPos()
@@ -216,21 +253,63 @@ public class BoardUI : MonoBehaviour
         return offset;
     }
 
+
+    CellV2 currHoveredCell;
+    void HoverEmptyCell(CellV2 cell)
+    {
+        currHoveredCell = cell;
+
+        var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
+        var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
+        newHoverRing.name = "HoveredCell";
+        newHoverRing.transform.position = cell.transform.position;
+        //newHoverRing.transform.localScale = Vector3.zero;
+        //newHoverRing.transform.DOScale(1f, 0.05f);
+    }
+
+    void UnhoverEmptyCell()
+    {
+        currHoveredCell = null;
+
+        foreach (Transform child in gizmos.transform)
+        {
+            if (child.name == "HoveredCell")
+            {
+                Destroy(child.gameObject);
+                //child.transform
+                //    .DOScale(0f, 0.05f)
+                //    .OnComplete(() => Destroy(child.gameObject));
+            }
+        }
+    }
+
+
+    //... UNIT:
+    GameObject portrait;
+    Unit currHoveredUnit;
+    Unit selectedUnit;
+
     void HoverUnit(Unit unit)
 	{
         currHoveredUnit = unit;
         portrait.SetActive(true);
+        abilityDisplay.SetActive(true);
+        for (int i = 0, j = 0; i < unit.Abilities.Count && j < 4; i++, j++)
+        {
+            abilityButtons[i].gameObject.SetActive(true);
+            abilityButtons[i].Init(this, unit.Abilities[i]);
+        }
     }
 
     void UnhoverUnit()
 	{
         currHoveredUnit = null;
         portrait.SetActive(false);
+        foreach (var abilityButton in abilityButtons)
+            abilityButton.gameObject.SetActive(false);
+        abilityDisplay.SetActive(false);
     }
 
-    GameObject portrait;
-    Unit currHoveredUnit;
-    Unit selectedUnit;
     void SelectUnit(Unit unit)
     {
         // ^ A unit was clicked
@@ -270,35 +349,6 @@ public class BoardUI : MonoBehaviour
         }
     }
 
-    CellV2 currHoveredCell;
-    void HoverEmptyCell(CellV2 cell)
-	{
-        currHoveredCell = cell;
-
-        var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
-        var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
-        newHoverRing.name = "HoveredCell";
-        newHoverRing.transform.position = cell.transform.position;
-        //newHoverRing.transform.localScale = Vector3.zero;
-        //newHoverRing.transform.DOScale(1f, 0.05f);
-    }
-
-    void UnhoverEmptyCell()
-	{
-        currHoveredCell = null;
-
-        foreach (Transform child in gizmos.transform)
-        {
-            if (child.name == "HoveredCell")
-            {
-                Destroy(child.gameObject);
-                //child.transform
-                //    .DOScale(0f, 0.05f)
-                //    .OnComplete(() => Destroy(child.gameObject));
-            }
-        }
-    }
-
     void DestroyPathGizmos(Unit unit)
     {
         string pathName = $"Path{unit.GetInstanceID()}";
@@ -327,21 +377,15 @@ public class BoardUI : MonoBehaviour
     public void OnPointerEnterUnitButton(/*int unitGuid*/)
     {
         isPointerInUI = true;
-
         if (mode == Mode.Neutral)
-        {
             portrait.SetActive(true);
-        }
     }
 
     public void OnPointerExitUnitButton()
     {
         isPointerInUI = false;
-
         if (mode == Mode.Neutral)
-        {
             portrait.SetActive(false);
-        }
     }
 
     public void OnPointerClickUnitButton(int unitGuid)
@@ -358,4 +402,94 @@ public class BoardUI : MonoBehaviour
             SelectUnit(unit);
         }
     }
+
+
+    //... ABILITY:
+    [ReadOnly] public AbilityButton[] abilityButtons;
+    [ReadOnly] public AbilityV2 hoveredAbility;
+    GameObject abilityDisplay;
+    AbilityV2 selectedAbility;
+    List<Vector2Int> validAbilityCoords;
+    List<GameObject> validMoveMarkers;
+
+    internal void OnPointerEnteredAbilityButton(AbilityV2 ability)
+    {
+        //Debug.LogWarning("HOVERING ABILITY: " + ability.name);
+        isPointerInUI = true;
+        HoverAbility(ability);
+    }
+
+    internal void OnPointerExitedAbilityButton(AbilityV2 ability)
+    {
+        //Debug.LogWarning("UNHOVERING ABILITY: " + ability.name);
+        isPointerInUI = false;
+        UnhoverAbility();
+    }
+
+    internal void OnPointerClickedAbilityButton(AbilityV2 ability)
+    {
+        //Debug.LogWarning("SELECTED ABILITY: " + ability.name);
+        switch (mode)
+        {
+            case Mode.Neutral:
+                break;
+            case Mode.UnitSelected:
+                SelectAbility(ability);
+                break;
+            case Mode.AbilitySelected:
+                DeselectAbility();
+                SelectAbility(ability);
+                break;
+            default:
+                break;
+        }
+    }
+
+    void HoverAbility(AbilityV2 ability)
+	{
+        validAbilityCoords = ability.GetValidMoves(
+            Board.WorldToOffset(selectedUnit.transform.position),
+            selectedUnit
+            );
+
+        if (validAbilityCoords.IsNullOrEmpty())
+            return;
+
+        foreach(var coord in validAbilityCoords)
+		{
+            Vector3 worldPos = Board.OffsetToWorld(coord);
+            //var newMarker = 
+
+            var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
+            var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
+            newHoverRing.name = "ValidMove";
+            newHoverRing.transform.position = worldPos + new Vector3(0, 0.1f, 0);
+            newHoverRing.transform.SetParent(gizmos.transform);
+        }
+	}
+
+    void UnhoverAbility()
+	{
+        foreach (Transform child in gizmos.transform)
+        {
+            if (child.name == "ValidMove")
+            {
+                Destroy(child.gameObject);
+                //child.transform
+                //    .DOScale(0f, 0.05f)
+                //    .OnComplete(() => Destroy(child.gameObject));
+            }
+        }
+    }
+
+	void SelectAbility(AbilityV2 ability)
+	{
+		mode = Mode.AbilitySelected;
+        selectedAbility = ability;
+	}
+
+	void DeselectAbility()
+	{
+		
+	}
 }
