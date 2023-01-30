@@ -12,6 +12,10 @@ public class BoardUI : MonoBehaviour
     }
 
 
+    [Header("PREFABS:")]
+    public PooledMonoBehaviour cellMarker;
+
+
     Mode mode;
     Vector2Int mouseDownPos;
     GameObject gizmos;
@@ -44,6 +48,9 @@ public class BoardUI : MonoBehaviour
         foreach (var abilityButton in abilityButtons)
             abilityButton.gameObject.SetActive(false);
         abilityDisplay.SetActive(false);
+
+
+        Pool.GetPool(cellMarker);
     }
 
 
@@ -257,14 +264,20 @@ public class BoardUI : MonoBehaviour
 
 
     CellV2 currHoveredCell;
+    CellVisuals currHoveredCellVisuals;
     void HoverEmptyCell(CellV2 cell)
     {
         currHoveredCell = cell;
 
-        var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
-        var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
-        newHoverRing.name = "HoveredCell";
-        newHoverRing.transform.position = cell.transform.position;
+        //var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
+        //var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
+        //newHoverRing.name = "HoveredCell";
+        //newHoverRing.transform.position = cell.transform.position;
+
+        var newCellMarker = cellMarker.GetAndPlay(cell.transform.position, Quaternion.identity);
+        currHoveredCellVisuals = newCellMarker.GetComponentInChildren<CellVisuals>();
+        currHoveredCellVisuals.SetTrigger(CellState.hover);
+
         //newHoverRing.transform.localScale = Vector3.zero;
         //newHoverRing.transform.DOScale(1f, 0.05f);
     }
@@ -273,16 +286,22 @@ public class BoardUI : MonoBehaviour
     {
         currHoveredCell = null;
 
-        foreach (Transform child in gizmos.transform)
-        {
-            if (child.name == "HoveredCell")
-            {
-                Destroy(child.gameObject);
-                //child.transform
-                //    .DOScale(0f, 0.05f)
-                //    .OnComplete(() => Destroy(child.gameObject));
-            }
-        }
+        if(currHoveredCellVisuals != null)
+		{
+            currHoveredCellVisuals.UnsetTrigger(CellState.hover);
+            currHoveredCellVisuals = null;
+		}
+
+        //foreach (Transform child in gizmos.transform)
+        //{
+        //    if (child.name == "HoveredCell")
+        //    {
+        //        Destroy(child.gameObject);
+        //        //child.transform
+        //        //    .DOScale(0f, 0.05f)
+        //        //    .OnComplete(() => Destroy(child.gameObject));
+        //    }
+        //}
     }
 
 

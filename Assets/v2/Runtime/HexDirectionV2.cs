@@ -61,6 +61,81 @@ public static class HexDirectionV2
 		return cellsInOuterRadius;
 	}
 
+	public static List<Vector2Int> GetCardinalLine(
+		Vector2Int originCoord, 
+		HexDirectionFT dir, 
+		int length, 
+		int min = 0, 
+		HexOcclusion occlusionType = HexOcclusion.NONE, 
+		Predicate<Vector2Int> check = null
+		)
+	{
+		var coords = new List<Vector2Int>();
+
+		for (int i = min; i <= length; i++)
+		{
+			var coord = originCoord.Step(dir, i);
+
+			if (Board.TryGetCellAtPos(coord))
+			{
+				if(check != null && check.Invoke(coord))
+				{
+					if (occlusionType == HexOcclusion.NONE)
+						continue;
+
+					//... if you're running w/ excl occlusion, we DON'T include the failed cell:
+					else if (occlusionType == HexOcclusion.EXCLUSIVE)
+						break;
+					else
+					{
+						//... if you're running w/ incl occlusion, we DO include the failed cell:
+						coords.Add(coord);
+						break;
+					}
+				}
+				else
+				{
+					coords.Add(coord);
+				}
+			}
+		}
+
+		return coords;
+	}
+
+	public static Vector2Int Step(this Vector2Int offsetCoord, HexDirectionFT direction, int distance)
+	{
+		if (distance == 0)
+			return offsetCoord;
+
+		Vector2Int axialCoord = Board.OffsetToAxial(offsetCoord);
+		Vector2Int steppedCoord = axialCoord;
+
+		switch (direction)
+		{
+			case HexDirectionFT.N:
+				steppedCoord = new Vector2Int(axialCoord.x, axialCoord.y - distance);
+				break;
+			case HexDirectionFT.NE:
+				steppedCoord = new Vector2Int(axialCoord.x + distance, axialCoord.y - distance);
+				break;
+			case HexDirectionFT.SE:
+				steppedCoord = new Vector2Int(axialCoord.x + distance, axialCoord.y);
+				break;
+			case HexDirectionFT.S:
+				steppedCoord = new Vector2Int(axialCoord.x, axialCoord.y + distance);
+				break;
+			case HexDirectionFT.SW:
+				steppedCoord = new Vector2Int(axialCoord.x - distance, axialCoord.y + distance);
+				break;
+			case HexDirectionFT.NW:
+				steppedCoord = new Vector2Int(axialCoord.x - distance, axialCoord.y);
+				break;
+		}
+
+		return Board.AxialToOffset(steppedCoord);
+	}
+
 	public static HexDirectionFT ClosetCardinalTo(this Vector2Int originOffsetCoord, Vector2Int targetOffsetCoord)
 	{
 		HexDirectionFT returnDir = HexDirectionFT.N;
