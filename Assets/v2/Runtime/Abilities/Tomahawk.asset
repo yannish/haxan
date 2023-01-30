@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Tomahawk
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: a50ae3a22cedf054b95180a7fd98401a, type: 3}
-  phase: 0
-  type: 0
-  range: 5
+  phase: 2
+  type: 1
+  range: 10

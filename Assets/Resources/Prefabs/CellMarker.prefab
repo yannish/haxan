@@ -259,7 +259,7 @@ MonoBehaviour:
   currHoverAlphaVel: 0
   currHoverAlphaTarget: 0
   hoverAlphaSmoothTimeUp: 0.02
-  hoverAlphaSmoothTimeDown: 0.06
+  hoverAlphaSmoothTimeDown: 0.2
   hovered: 0
   hoveredAlpha: 0.5
   hoveredHexRingSize:
@@ -305,7 +305,7 @@ MonoBehaviour:
   pathTargetSize: {x: 0, y: 0, z: 0}
   pathCurrColor: {r: 0, g: 0, b: 0, a: 0}
   currPathTargetColor: {r: 0, g: 0, b: 0, a: 0}
-  smoothTime: 1.2
+  smoothTime: 2.4
   colorLerpTime: 1
   interactionFrequency:
     UseConstant: 0

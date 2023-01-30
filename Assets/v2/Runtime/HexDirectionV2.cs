@@ -62,7 +62,7 @@ public static class HexDirectionV2
 	}
 
 	public static List<Vector2Int> GetCardinalLine(
-		Vector2Int originCoord, 
+		this Vector2Int originCoord, 
 		HexDirectionFT dir, 
 		int length, 
 		int min = 0, 
@@ -103,6 +103,24 @@ public static class HexDirectionV2
 		return coords;
 	}
 
+	public static List<Vector2Int> GetCardinalCross(
+		this Vector2Int originCoord,
+		int radius,
+		int min = 0,
+		HexOcclusion occlusionType = HexOcclusion.NONE,
+		Predicate<Vector2Int> check = null
+		)
+	{
+		var coords = new List<Vector2Int>();
+
+		for (HexDirectionFT dir = HexDirectionFT.N; dir <= HexDirectionFT.NW; dir++)
+		{
+			coords.AddRange(GetCardinalLine(originCoord, dir, radius, min, occlusionType, check));
+		}
+
+		return coords;
+	}
+
 	public static Vector2Int Step(this Vector2Int offsetCoord, HexDirectionFT direction, int distance)
 	{
 		if (distance == 0)
@@ -111,29 +129,33 @@ public static class HexDirectionV2
 		Vector2Int axialCoord = Board.OffsetToAxial(offsetCoord);
 		Vector2Int steppedCoord = axialCoord;
 
-		switch (direction)
-		{
-			case HexDirectionFT.N:
-				steppedCoord = new Vector2Int(axialCoord.x, axialCoord.y - distance);
-				break;
-			case HexDirectionFT.NE:
-				steppedCoord = new Vector2Int(axialCoord.x + distance, axialCoord.y - distance);
-				break;
-			case HexDirectionFT.SE:
-				steppedCoord = new Vector2Int(axialCoord.x + distance, axialCoord.y);
-				break;
-			case HexDirectionFT.S:
-				steppedCoord = new Vector2Int(axialCoord.x, axialCoord.y + distance);
-				break;
-			case HexDirectionFT.SW:
-				steppedCoord = new Vector2Int(axialCoord.x - distance, axialCoord.y + distance);
-				break;
-			case HexDirectionFT.NW:
-				steppedCoord = new Vector2Int(axialCoord.x - distance, axialCoord.y);
-				break;
-		}
+		Vector2Int axialStep = Board.hexDirToStep[direction];
 
-		return Board.AxialToOffset(steppedCoord);
+		return Board.AxialToOffset(axialCoord + axialStep * distance);
+
+		//switch (direction)
+		//{
+		//	case HexDirectionFT.N:
+		//		steppedCoord = new Vector2Int(axialCoord.x, axialCoord.y - distance);
+		//		break;
+		//	case HexDirectionFT.NE:
+		//		steppedCoord = new Vector2Int(axialCoord.x + distance, axialCoord.y - distance);
+		//		break;
+		//	case HexDirectionFT.SE:
+		//		steppedCoord = new Vector2Int(axialCoord.x + distance, axialCoord.y);
+		//		break;
+		//	case HexDirectionFT.S:
+		//		steppedCoord = new Vector2Int(axialCoord.x, axialCoord.y + distance);
+		//		break;
+		//	case HexDirectionFT.SW:
+		//		steppedCoord = new Vector2Int(axialCoord.x - distance, axialCoord.y + distance);
+		//		break;
+		//	case HexDirectionFT.NW:
+		//		steppedCoord = new Vector2Int(axialCoord.x - distance, axialCoord.y);
+		//		break;
+		//}
+
+		//return Board.AxialToOffset(steppedCoord);
 	}
 
 	public static HexDirectionFT ClosetCardinalTo(this Vector2Int originOffsetCoord, Vector2Int targetOffsetCoord)

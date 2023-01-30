@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Unit))]
+[CustomEditor(typeof(Unit), true)]
 public class UnitEditor : Editor
 {
 	//GUIStyle headerStyle;
@@ -36,10 +36,11 @@ public class UnitEditor : Editor
 
 			Vector3Int unitCubicCoord = Board.OffsetToCubic(unitCoord);
 			Vector3Int targetCubicCoord = Board.OffsetToCubic(targetCoord);
-			Vector3Int deltaCubicCoord = targetCubicCoord - unitCubicCoord;
+			Vector3Int deltaCubicCoord = unitCubicCoord - targetCubicCoord;
 
 			Debug.LogWarning("targetOffset: " + targetCoord);
 			Debug.LogWarning("targetCubicCoord: " + targetCubicCoord);
+			Debug.LogWarning("fullAxialCoord: " + fullAxialCoord);
 
 			Debug.LogWarning("unitCubic: " + unitCubicCoord);
 			Debug.LogWarning("deltaCubicCoord: " + deltaCubicCoord);

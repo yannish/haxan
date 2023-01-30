@@ -16,6 +16,7 @@ public class GridProbeV2 : Unit
 
 	[Header("PROBE:")]
 	public int radius;
+	public int min;
 	public HexDirectionFT direction;
 	//[ReadOnly] public 
 	List<GameObject> grabMarkers = new List<GameObject>();
@@ -43,10 +44,34 @@ public class GridProbeV2 : Unit
 		GrabCellsAt(
 			HexDirectionV2.GetCardinalLine(Board.WorldToOffset(this.transform.position),
 			direction,
-			radius
+			radius,
+			min
 			));
 	}
 
+	public EditorButton grabCrossBtn = new EditorButton("GrabCross", true);
+	public void GrabCross()
+	{
+		GrabCellsAt(
+			HexDirectionV2.GetCardinalCross(Board.WorldToOffset(this.transform.position),
+			radius,
+			min
+			));
+	}
+
+	public EditorButton grabCellBtn = new EditorButton("GrabCell", true);
+	public Vector3Int cellGrabOffset;
+	public void GrabCell()
+	{
+		Vector2Int offsetCoord = Board.WorldToOffset(this.transform.position);
+		Debug.LogWarning("offset: " + offsetCoord);
+		Vector3Int cubicCoor = Board.OffsetToCubic(offsetCoord);
+		Debug.LogWarning("cubic: " + offsetCoord);
+		Vector3Int newCubicCoord = cubicCoor + cellGrabOffset;
+		Vector2Int newOffsetCoord = Board.CubicToOffset(newCubicCoord);
+
+		GrabCellsAt(new List<Vector2Int> { newOffsetCoord });
+	}
 
 	private void GrabCellsAt(List<Vector2Int> offsetCoords)
 	{

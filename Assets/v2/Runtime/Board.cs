@@ -135,6 +135,15 @@ public class Board
         }
     };
 
+    public static Dictionary<HexDirectionFT, Vector2Int> hexDirToStep = new Dictionary<HexDirectionFT, Vector2Int>()
+    {
+        {HexDirectionFT.N, new Vector2Int(0, 1) },
+        {HexDirectionFT.NE, new Vector2Int(1, 0) },
+        {HexDirectionFT.SE, new Vector2Int(1, -1) },
+        {HexDirectionFT.S, new Vector2Int(0, -1) },
+        {HexDirectionFT.SW, new Vector2Int(-1, 0) },
+        {HexDirectionFT.NW, new Vector2Int(-1, 1) }
+    };
 
     public static void AddGrid(Grid grid)
     {

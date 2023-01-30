@@ -35,7 +35,12 @@ public class CellVisuals : MonoBehaviour
         return currSmoothTime > 0f || hovered || selected || clickable;
     }
 
-    public void Return() { }
+    public Action onReturnToPool;
+    public void Return() 
+    {
+        onReturnToPool?.Invoke();
+        onReturnToPool = null;
+    }
 
 
     public bool logDebug;

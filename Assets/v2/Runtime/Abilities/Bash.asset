@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Bash
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 60b26d47933b2db469f2b970d8f570ca, type: 3}
-  phase: 0
-  type: 0
+  phase: 2
+  type: 1

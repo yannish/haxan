@@ -11,12 +11,14 @@ public class BoardUI : MonoBehaviour
         AbilitySelected
     }
 
+    [ReadOnly, SerializeField] private Mode mode;
+
 
     [Header("PREFABS:")]
     public PooledMonoBehaviour cellMarker;
+    Dictionary<Vector2Int, CellVisuals> coordToCellMarkerLookup = new Dictionary<Vector2Int, CellVisuals>();
 
 
-    Mode mode;
     Vector2Int mouseDownPos;
     GameObject gizmos;
     Vector2Int[] waypointPositions; // In offset coordinates
@@ -48,7 +50,6 @@ public class BoardUI : MonoBehaviour
         foreach (var abilityButton in abilityButtons)
             abilityButton.gameObject.SetActive(false);
         abilityDisplay.SetActive(false);
-
 
         Pool.GetPool(cellMarker);
     }
@@ -264,19 +265,36 @@ public class BoardUI : MonoBehaviour
 
 
     CellV2 currHoveredCell;
-    CellVisuals currHoveredCellVisuals;
+    //CellVisuals currHoveredCellVisuals;
     void HoverEmptyCell(CellV2 cell)
     {
         currHoveredCell = cell;
 
-        //var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
-        //var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
-        //newHoverRing.name = "HoveredCell";
-        //newHoverRing.transform.position = cell.transform.position;
+        Vector2Int offsetCellCoord = Board.WorldToOffset(cell.transform.position);
 
-        var newCellMarker = cellMarker.GetAndPlay(cell.transform.position, Quaternion.identity);
-        currHoveredCellVisuals = newCellMarker.GetComponentInChildren<CellVisuals>();
-        currHoveredCellVisuals.SetTrigger(CellState.hover);
+		//var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
+		//var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
+		//newHoverRing.name = "HoveredCell";
+		//newHoverRing.transform.position = cell.transform.position;
+
+		if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+		{
+            //Debug.LogWarning("Hovering existing cellMarker");
+            foundCellMarker.SetTrigger(CellState.hover);
+		}
+		else
+		{
+            //Debug.LogWarning("Hovering NEW cellMarker");
+
+            var newCellMarker = cellMarker.GetAndPlay(cell.transform.position, Quaternion.identity);
+            var newCellMarkerVisuals = newCellMarker.GetComponentInChildren<CellVisuals>();
+            newCellMarkerVisuals.SetTrigger(CellState.hover);
+            newCellMarkerVisuals.onReturnToPool += () =>
+            {
+                coordToCellMarkerLookup.Remove(offsetCellCoord);
+            };
+            coordToCellMarkerLookup.Add(offsetCellCoord, newCellMarkerVisuals);
+        }
 
         //newHoverRing.transform.localScale = Vector3.zero;
         //newHoverRing.transform.DOScale(1f, 0.05f);
@@ -284,13 +302,14 @@ public class BoardUI : MonoBehaviour
 
     void UnhoverEmptyCell()
     {
-        currHoveredCell = null;
-
-        if(currHoveredCellVisuals != null)
+        if(currHoveredCell != null)
 		{
-            currHoveredCellVisuals.UnsetTrigger(CellState.hover);
-            currHoveredCellVisuals = null;
-		}
+            Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredCell.transform.position);
+            if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+                foundCellMarker.UnsetTrigger(CellState.hover);
+        }
+
+        currHoveredCell = null;
 
         //foreach (Transform child in gizmos.transform)
         //{

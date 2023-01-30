@@ -9,6 +9,6 @@ public class TomahawkV2 : AbilityV2
 
 	public override List<Vector2Int> GetValidMoves(Vector2Int origin, Unit unit)
 	{
-		return origin.GetCardinalRing(range);
+		return origin.GetCardinalCross(range, 1, HexOcclusion.INCLUSIVE);
 	}
 }
