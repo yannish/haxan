@@ -42,4 +42,32 @@ public class PoolTester : MonoBehaviour
 
 		spot += Vector3.right * bump;
 	}
+
+	public PooledMonoBehaviour poolAbilityMarker;
+	public EditorButton doAbilityMarker = new EditorButton("DoAbilityMarker", true);
+	List<AbilityMarker> allAbilityMarkers = new List<AbilityMarker>();
+	public void DoAbilityMarker()
+	{
+		var newMarker = poolAbilityMarker.GetAndPlay(
+			transform.position + spot,
+			Quaternion.identity
+			);
+
+		spot += Vector3.right * bump;
+
+		var abilityMarker = newMarker.GetComponentInChildren<AbilityMarker>();
+		abilityMarker.Mark();
+		allAbilityMarkers.Add(abilityMarker);
+	}
+
+	public EditorButton releaseAbilityMarkers = new EditorButton("ReleaseAbilityMarkers", true);
+	public void ReleaseAbilityMarkers()
+	{
+		foreach(var marker in allAbilityMarkers)
+		{
+			marker.Unmark();
+		}
+
+		allAbilityMarkers.Clear();
+	}
 }

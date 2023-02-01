@@ -239,9 +239,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92706310b13d94af4a56ea22480a97db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cellMarker: {fileID: 942997024419733215, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
+  mode: 0
+  hoverCellMarker: {fileID: 942997024419733215, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
   abilityButtons: []
   hoveredAbility: {fileID: 0}
+  abilityPreviewMarker: {fileID: 2003857084417268403, guid: 50892034a6429bd438ecfa597a2c1fec, type: 3}
 --- !u!1 &1789624
 GameObject:
   m_ObjectHideFlags: 0
@@ -2314,67 +2316,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 539281123}
   m_Mesh: {fileID: -7499294750944336344, guid: 04edd8a57eb37104e87bc6d39fede239, type: 3}
---- !u!1001 &645456893
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 942997024419733209, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_Name
-      value: CellMarker
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_RootOrder
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
 --- !u!1 &688657121
 GameObject:
   m_ObjectHideFlags: 0
@@ -3113,8 +3054,9 @@ MonoBehaviour:
   poolPrefab: {fileID: 3092873505840638228, guid: e385f33d0d582ca42ba8209c97154e76, type: 3}
   spot: {x: 0, y: 0, z: 0}
   normal: {x: 0, y: 0, z: 1}
-  bump: 1
-  poolCell: {fileID: 942997024419733215, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
+  bump: 4
+  poolCell: {fileID: 2003857084417268403, guid: 50892034a6429bd438ecfa597a2c1fec, type: 3}
+  poolAbilityMarker: {fileID: 2003857084417268403, guid: 50892034a6429bd438ecfa597a2c1fec, type: 3}
 --- !u!4 &853390237
 Transform:
   m_ObjectHideFlags: 0
@@ -3687,6 +3629,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 6118579500404496673, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
+      propertyPath: m_ClearFlags
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118579500404496673, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0.122641504
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118579500404496673, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0.11097513
+      objectReference: {fileID: 0}
+    - target: {fileID: 6118579500404496673, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0.10355108
+      objectReference: {fileID: 0}
     - target: {fileID: 6118579500715266852, guid: f88ac1b979d74c6459db0777b7a94a0b, type: 3}
       propertyPath: m_Name
       value: haxanCam

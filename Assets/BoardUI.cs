@@ -14,9 +14,7 @@ public class BoardUI : MonoBehaviour
     [ReadOnly, SerializeField] private Mode mode;
 
 
-    [Header("PREFABS:")]
-    public PooledMonoBehaviour cellMarker;
-    Dictionary<Vector2Int, CellVisuals> coordToCellMarkerLookup = new Dictionary<Vector2Int, CellVisuals>();
+
 
 
     Vector2Int mouseDownPos;
@@ -26,6 +24,8 @@ public class BoardUI : MonoBehaviour
     bool isPointerInUI;
     public void Init()
     {
+        Application.targetFrameRate = 60;
+
         portrait = transform.Find("portrait").gameObject;
         portrait.SetActive(false);
         gizmos = new GameObject("Gizmos");
@@ -51,7 +51,8 @@ public class BoardUI : MonoBehaviour
             abilityButton.gameObject.SetActive(false);
         abilityDisplay.SetActive(false);
 
-        Pool.GetPool(cellMarker);
+        Pool.GetPool(hoverCellMarker);
+        Pool.GetPool(abilityPreviewMarker);
     }
 
 
@@ -264,6 +265,9 @@ public class BoardUI : MonoBehaviour
     }
 
 
+    [Header("HOVER CELLS:")]
+    public PooledMonoBehaviour hoverCellMarker;
+    Dictionary<Vector2Int, CellVisuals> coordToHoverMarkerLookup = new Dictionary<Vector2Int, CellVisuals>();
     CellV2 currHoveredCell;
     //CellVisuals currHoveredCellVisuals;
     void HoverEmptyCell(CellV2 cell)
@@ -277,7 +281,7 @@ public class BoardUI : MonoBehaviour
 		//newHoverRing.name = "HoveredCell";
 		//newHoverRing.transform.position = cell.transform.position;
 
-		if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+		if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
 		{
             //Debug.LogWarning("Hovering existing cellMarker");
             foundCellMarker.SetTrigger(CellState.hover);
@@ -286,14 +290,14 @@ public class BoardUI : MonoBehaviour
 		{
             //Debug.LogWarning("Hovering NEW cellMarker");
 
-            var newCellMarker = cellMarker.GetAndPlay(cell.transform.position, Quaternion.identity);
+            var newCellMarker = hoverCellMarker.GetAndPlay(cell.transform.position, Quaternion.identity);
             var newCellMarkerVisuals = newCellMarker.GetComponentInChildren<CellVisuals>();
             newCellMarkerVisuals.SetTrigger(CellState.hover);
             newCellMarkerVisuals.onReturnToPool += () =>
             {
-                coordToCellMarkerLookup.Remove(offsetCellCoord);
+                coordToHoverMarkerLookup.Remove(offsetCellCoord);
             };
-            coordToCellMarkerLookup.Add(offsetCellCoord, newCellMarkerVisuals);
+            coordToHoverMarkerLookup.Add(offsetCellCoord, newCellMarkerVisuals);
         }
 
         //newHoverRing.transform.localScale = Vector3.zero;
@@ -305,7 +309,7 @@ public class BoardUI : MonoBehaviour
         if(currHoveredCell != null)
 		{
             Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredCell.transform.position);
-            if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+            if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
                 foundCellMarker.UnsetTrigger(CellState.hover);
         }
 
@@ -357,17 +361,7 @@ public class BoardUI : MonoBehaviour
         selectedUnit = unit;
         portrait.SetActive(true);
 
-        // Show navigable tiles
-        var prefab = Resources.Load("Prefabs/Waypoint");
-        waypointPositions = Board.GetNavigableTiles(unit);
-        foreach (Vector2Int pos in waypointPositions)
-        {
-            GameObject waypt = (GameObject)Instantiate(prefab, gizmos.transform);
-            waypt.name = "Waypoint";
-            waypt.transform.position = Board.OffsetToWorld(pos) + new Vector3(0, 0.1f, 0);
-            waypt.transform.localScale = Vector3.zero;
-            waypt.transform.DOScale(0.3f, 0.1f);
-        }
+        ShowNavigableTiles(unit);
     }
 
     void DeselectUnit()
@@ -377,13 +371,35 @@ public class BoardUI : MonoBehaviour
         selectedUnit = null;
         waypointPositions = null;
         portrait.SetActive(false);
+
+        HideNavigableTiles();
+    }
+
+    void ShowNavigableTiles(Unit unit)
+	{
+        var prefab = Resources.Load("Prefabs/Waypoint");
+        waypointPositions = Board.GetNavigableTiles(unit);
+
+        foreach (Vector2Int pos in waypointPositions)
+        {
+            GameObject waypt = (GameObject)Instantiate(prefab, gizmos.transform);
+            waypt.name = "Waypoint";
+            waypt.transform.position = Board.OffsetToWorld(pos) + new Vector3(0, 0.1f, 0);
+			waypt.transform.localScale = Vector3.one * 0.5f;
+			//waypt.transform.DOScale(0.3f, 0.1f);
+		}
+    }
+
+    void HideNavigableTiles()
+	{
         foreach (Transform child in gizmos.transform)
         {
             if (child.name == "Waypoint")
             {
-                child.transform
-                    .DOScale(0f, 0.05f)
-                    .OnComplete(() => Destroy(child.gameObject));
+                Destroy(child.gameObject);
+                //child.transform
+                //    .DOScale(0f, 0.05f)
+                //    .OnComplete(() => Destroy(child.gameObject));
             }
         }
     }
@@ -444,12 +460,15 @@ public class BoardUI : MonoBehaviour
 
 
     //... ABILITY:
+
+    [Header("ABILITIES:")]
     [ReadOnly] public AbilityButton[] abilityButtons;
     [ReadOnly] public AbilityV2 hoveredAbility;
     GameObject abilityDisplay;
     AbilityV2 selectedAbility;
     List<Vector2Int> validAbilityCoords;
     List<GameObject> validMoveMarkers;
+
 
     internal void OnPointerEnteredAbilityButton(AbilityV2 ability)
     {
@@ -484,8 +503,13 @@ public class BoardUI : MonoBehaviour
         }
     }
 
+    Dictionary<Vector2Int, AbilityMarker> coordToAbillityMarkerLookup = new Dictionary<Vector2Int, AbilityMarker>();
+    public PooledMonoBehaviour abilityPreviewMarker;
+
     void HoverAbility(AbilityV2 ability)
 	{
+        HideNavigableTiles();
+
         validAbilityCoords = ability.GetValidMoves(
             Board.WorldToOffset(selectedUnit.transform.position),
             selectedUnit
@@ -496,30 +520,48 @@ public class BoardUI : MonoBehaviour
 
         foreach(var coord in validAbilityCoords)
 		{
-            Vector3 worldPos = Board.OffsetToWorld(coord);
-            //var newMarker = 
+            if (coordToAbillityMarkerLookup.TryGetValue(coord, out var foundCellMarker))
+            {
+                foundCellMarker.Mark();
+            }
+            else
+            {
+                Vector3 worldPos = Board.OffsetToWorld(coord);
 
-            var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
-            var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
-            newHoverRing.name = "ValidMove";
-            newHoverRing.transform.position = worldPos + new Vector3(0, 0.1f, 0);
-            newHoverRing.transform.SetParent(gizmos.transform);
+                var newElement = abilityPreviewMarker.GetAndPlay(worldPos, Quaternion.identity);
+                var newAbilityMarker = newElement.GetComponentInChildren<AbilityMarker>();
+
+                newAbilityMarker.Mark();
+                newAbilityMarker.onReturnToPool += () =>
+                {
+                    coordToAbillityMarkerLookup.Remove(coord);
+				};
+                coordToAbillityMarkerLookup.Add(coord, newAbilityMarker);
+            }
         }
 	}
 
     void UnhoverAbility()
-	{
-        foreach (Transform child in gizmos.transform)
-        {
-            if (child.name == "ValidMove")
-            {
-                Destroy(child.gameObject);
-                //child.transform
-                //    .DOScale(0f, 0.05f)
-                //    .OnComplete(() => Destroy(child.gameObject));
-            }
-        }
+    {
+        ShowNavigableTiles(selectedUnit);
+
+        foreach(var kvp in coordToAbillityMarkerLookup)
+		{
+            var abilityMarker = kvp.Value;
+            abilityMarker.Unmark();
+		}
     }
+
+    void HighlightValidAbilityCells(List<Vector2Int> coords)
+	{
+
+	}
+
+    void UnhighlightValidAbilityCells()
+	{
+
+	}
+
 
 	void SelectAbility(AbilityV2 ability)
 	{
