@@ -2,14 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CellMarker : MonoBehaviour
+public class CellMarker_OLD : MonoBehaviour
     , IPoolable
 {
 	public bool IsProcessing() => true;
 
-	public void Play(Vector3 pos, Vector3 normal) { }
+	public void Play(int playParams = 0) { }
+
+	public void Stop(int stopParams = 0) { }
 
 	public void Return() { }
 
 	public void Tick() { }
+
 }

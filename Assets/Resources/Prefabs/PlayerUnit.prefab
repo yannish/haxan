@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Facing: 0
+  preset: {fileID: 11400000, guid: 73055d742ffbf55488b6cbff85e4b529, type: 2}
   Abilities: []
   pivot: {fileID: 1721545541782618465}
 --- !u!1 &4846485477433418467

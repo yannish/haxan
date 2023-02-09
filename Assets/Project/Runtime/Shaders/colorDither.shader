@@ -1,4 +1,4 @@
-Shader "Unlit/colorDither"
+Shader "UI/colorDither"
 {
     Properties
     {
@@ -9,7 +9,10 @@ Shader "Unlit/colorDither"
 
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Blend SrcAlpha OneMinusSrcAlpha
+
+        Tags { "Queue" = "Transparent" }
+        //Tags { "RenderType"="Opaque" }
         LOD 100
 
         Pass
@@ -84,7 +87,7 @@ Shader "Unlit/colorDither"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                fixed4 col = _Color;
+                fixed4 col = fixed4(_Color.rgb, _Color.a);
                 return col;
             }
             ENDCG
@@ -156,6 +159,7 @@ Shader "Unlit/colorDither"
                 float lookup = bigDitherTable[screenPixel.y % 4][screenPixel.x % 4] * 0.25f;
                 clip(lookup - _Dither);
 
+                //return 0;
                 return _DitherColor;
             }
 

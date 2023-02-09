@@ -11,7 +11,13 @@ public static class HexDirectionV2
 		Predicate<Vector2Int> check = null
 		)
 	{
+
 		List<Vector2Int> offsetCoords = new List<Vector2Int>();
+		if(radius == 0)
+		{
+			offsetCoords.Add(originOffsetCoord);
+			return offsetCoords;
+		}
 
 		Vector3Int originCubicCoord = Board.OffsetToCubic(originOffsetCoord);
 
@@ -48,8 +54,8 @@ public static class HexDirectionV2
 		if (radius == 0)
 			return null;
 
-		if (radius == 1)
-			return GetCellsInRadius(originOffsetCoord, radius);
+		//if (radius == 1)
+		//	return GetCellsInRadius(originOffsetCoord, radius);
 
 		var cellsInInnerRadius = GetCellsInRadius(originOffsetCoord, radius - 1);
 		var cellsInOuterRadius = GetCellsInRadius(

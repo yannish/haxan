@@ -37,7 +37,7 @@ public class PoolTester : MonoBehaviour
 			Quaternion.identity
 			);
 
-		var visuals = newCell.GetComponentInChildren<CellVisuals>();
+		var visuals = newCell.GetComponentInChildren<PooledCellVisuals>();
 		visuals.SetTrigger(CellState.hover);
 
 		spot += Vector3.right * bump;
@@ -45,7 +45,7 @@ public class PoolTester : MonoBehaviour
 
 	public PooledMonoBehaviour poolAbilityMarker;
 	public EditorButton doAbilityMarker = new EditorButton("DoAbilityMarker", true);
-	List<AbilityMarker> allAbilityMarkers = new List<AbilityMarker>();
+	List<CellMarker> allAbilityMarkers = new List<CellMarker>();
 	public void DoAbilityMarker()
 	{
 		var newMarker = poolAbilityMarker.GetAndPlay(
@@ -55,7 +55,7 @@ public class PoolTester : MonoBehaviour
 
 		spot += Vector3.right * bump;
 
-		var abilityMarker = newMarker.GetComponentInChildren<AbilityMarker>();
+		var abilityMarker = newMarker.GetComponentInChildren<CellMarker>();
 		abilityMarker.Mark();
 		allAbilityMarkers.Add(abilityMarker);
 	}

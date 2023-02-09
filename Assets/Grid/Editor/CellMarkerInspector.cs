@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(CellMarker))]
+[CustomEditor(typeof(CellMarker_OLD))]
 public class CellMarkerInspector : Editor
 {
 	private void OnSceneGUI()
 	{
-		var cellMarker = target as CellMarker;
+		var cellMarker = target as CellMarker_OLD;
 		//var currControlID = GUIUtility.GetControlID(FocusType.Passive);
 
 		Event e = Event.current;

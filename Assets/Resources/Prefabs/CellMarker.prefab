@@ -149,7 +149,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 942997024419733214}
-  - component: {fileID: 942997024419733215}
+  - component: {fileID: 7442397779138924845}
   m_Layer: 0
   m_Name: CellMarker
   m_TagString: Untagged
@@ -176,7 +176,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &942997024419733215
+--- !u!114 &7442397779138924845
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -185,12 +185,118 @@ MonoBehaviour:
   m_GameObject: {fileID: 942997024419733209}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edfee8f9564af0f4d9c467bb0e904292, type: 3}
+  m_Script: {fileID: 11500000, guid: 77c458ab58745b9459c537b484bd2106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   tickOnFixedUpdate: 0
   growOnExhaustion: 1
-  initialPoolSize: 32
+  initialPoolSize: 10
+  logDebug: 0
+  hoverBlock: {fileID: 942997025797877964}
+  interactionHexSize:
+    propName: _Size
+    weight: -1
+    floatValue: 0
+  interactionHexThickness:
+    propName: _Thickness
+    weight: -1
+    floatValue: 0
+  interactionColor:
+    propName: _Color
+    weight: -1
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+  interactionBaseColor: {r: 0.882353, g: 1, b: 0, a: 1}
+  currInteractionSize: {x: 0, y: 0, z: 0}
+  currInteractionTargetSize: {x: 0, y: 0, z: 0}
+  currInteractionSizeVelocity: {x: 0, y: 0, z: 0}
+  currHoverTargetColor: {r: 0, g: 0, b: 0, a: 0}
+  currHoverColor: {r: 0, g: 0, b: 0, a: 0}
+  currHoverAlpha: 0
+  currHoverAlphaVel: 0
+  currHoverAlphaTarget: 0
+  hoverAlphaSmoothTimeUp: 0.05
+  hoverAlphaSmoothTimeDown: 0.2
+  hovered: 0
+  hoveredAlpha: 0.5
+  hoveredHexRingSize:
+    size: 0.75
+    thickness: 0.2
+  unhoveredHexRingSize:
+    size: 0.7
+    thickness: 0.2
+  clickable: 0
+  clickableSize:
+    size: 0.8
+    thickness: 0.2
+  selected: 0
+  selectedSize:
+    size: 0.9
+    thickness: 0.3
+  pathBlock: {fileID: 942997024324381194}
+  pathBlockSize:
+    propName: _Size
+    weight: -1
+    floatValue: 0
+  pathBlockThickness:
+    propName: _Thickness
+    weight: -1
+    floatValue: 0
+  pathBlockColor:
+    propName: _Color
+    weight: -1
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+  pathableColor: {r: 0, g: 0.8000001, b: 0.23529413, a: 1}
+  pathHinted: 0
+  pathShown: 0
+  pathShownSize:
+    size: 0.5
+    thickness: 0.5
+  pathHintSize:
+    size: 0.3
+    thickness: 0.5
+  pathHiddenSize:
+    size: 0
+    thickness: 0
+  pathCurrSize: {x: 0, y: 0, z: 0}
+  pathTargetSize: {x: 0, y: 0, z: 0}
+  pathCurrColor: {r: 0, g: 0, b: 0, a: 0}
+  currPathTargetColor: {r: 0, g: 0, b: 0, a: 0}
+  smoothTime: 2.4
+  colorLerpTime: 1
+  interactionFrequency:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: f477aca8f152a4a46a46afb8170f5faa, type: 2}
+  interactionFrequencyRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: bfdca1a8b9fdee249aa7b5b6aa8949d4, type: 2}
+  interactionDamping:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: 2c24b5709bae3e64ca7cf8f4e09c6235, type: 2}
+  interactionDampingRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: d5b3df348d607104b9bf6dcb156cd26a, type: 2}
+  pathFrequency:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: 3ad4f7e18e4cd7048a6cd49a10b59939, type: 2}
+  pathFrequencyRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: e2b6c53d7b89159479fd06f0ec37474d, type: 2}
+  pathDamping:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: f34a050fe33b4ed459ecbc40255d6095, type: 2}
+  pathDampingRange:
+    UseConstant: 0
+    ConstantValue: 0
+    Variable: {fileID: 11400000, guid: 24657665b1ba36147be04c98fc24c9f8, type: 2}
+  threatColor: {r: 0, g: 0, b: 0, a: 0}
+  currSmoothTime: -1
 --- !u!1 &942997024525482007
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +313,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &942997024525482004
 Transform:
   m_ObjectHideFlags: 0
@@ -235,6 +341,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c458ab58745b9459c537b484bd2106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tickOnFixedUpdate: 0
+  growOnExhaustion: 0
+  initialPoolSize: 10
   logDebug: 0
   hoverBlock: {fileID: 942997025797877964}
   interactionHexSize:
@@ -340,6 +449,7 @@ MonoBehaviour:
     ConstantValue: 0
     Variable: {fileID: 11400000, guid: 24657665b1ba36147be04c98fc24c9f8, type: 2}
   threatColor: {r: 0, g: 0, b: 0, a: 0}
+  currSmoothTime: -1
 --- !u!1 &942997024576918927
 GameObject:
   m_ObjectHideFlags: 0

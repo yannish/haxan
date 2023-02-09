@@ -231,7 +231,6 @@ public class Board
         ui.Init();
     }
 
-
     static Dictionary<int, CellV2> indexToCellLookup = new Dictionary<int, CellV2>();
     public static Unit GetUnitAtPos(Vector2Int pos)
     {
@@ -246,7 +245,6 @@ public class Board
         return null;
     }
 
-
     public static CellV2 TryGetCellAtPos(Vector2Int offsetPos)
 	{
         if (indexToCellLookup.TryGetValue(offsetPos.ToIndex(), out var foundCell))
@@ -255,12 +253,12 @@ public class Board
         return null;
 	}
 
-
     // Output positions are in offset coordinates
     public static Vector2Int[] GetNavigableTiles(Unit unit)
     {
         List<Vector2Int> result = new();
-        const int range = 2;
+        //const int range = 2;
+        //const int range = 2;
         // For flying movement:
         /*
         Vector2Int centerAxial = OffsetToAxial(unit.OffsetPos);
@@ -294,14 +292,14 @@ public class Board
 
         // For ground movement:
         // Perform a breadth-first walk of the cells
-        bool[,] visited = new bool[2 * range + 1, 2 * range + 1];
-        Vector2Int visitedPos = unit.OffsetPos - new Vector2Int(range, range);
+        bool[,] visited = new bool[2 * unit.groundedMovementRange + 1, 2 * unit.groundedMovementRange + 1];
+        Vector2Int visitedPos = unit.OffsetPos - new Vector2Int(unit.groundedMovementRange, unit.groundedMovementRange);
         List<List<Vector2Int>> fringes = new();
 
         visited[unit.OffsetPos.x - visitedPos.x, unit.OffsetPos.y - visitedPos.y] = true;
         fringes.Add(new List<Vector2Int>() { unit.OffsetPos });
 
-        for (int i = 0; i < range; i++)
+        for (int i = 0; i < unit.groundedMovementRange; i++)
         {
             fringes.Add(new List<Vector2Int>());
             foreach (var pos in fringes[i])
@@ -332,6 +330,22 @@ public class Board
                         // ^ This position doesn't contain a cell. Skip.
                         continue;
                     }
+
+
+                    bool cellIsImpassable = false;
+                    foreach (var otherUnit in Board.Units)
+                    {
+                        if (otherUnit.OffsetPos == neighbor)
+                        {
+                            if (otherUnit.preset != null && !otherUnit.preset.isPassable)
+                                cellIsImpassable = true;
+                            else
+                                cellIsImpassable = true;
+                        }
+                    }
+
+                    if (cellIsImpassable)
+                        continue;
 
                     // This cell can be visited.
                     visited[neighbor.x - visitedPos.x, neighbor.y - visitedPos.y] = true;
@@ -372,10 +386,12 @@ public class Board
             for (int i = 0; i < 6; i++)
             {
                 Vector2Int neighbor = current + neighborLut[parity, i];
-                if (neighbor.x < Board.OffsetPos.x ||
+                if (
+                    neighbor.x < Board.OffsetPos.x ||
                     neighbor.x >= Board.OffsetPos.x + Board.Cells.GetLength(0) ||
                     neighbor.y < Board.OffsetPos.y ||
-                    neighbor.y >= Board.OffsetPos.y + Board.Cells.GetLength(1))
+                    neighbor.y >= Board.OffsetPos.y + Board.Cells.GetLength(1)
+                    )
                 {
                     // ^ This position is outside the Board's bounds. Skip.
                     continue;
@@ -386,9 +402,22 @@ public class Board
                     continue;
                 }
 
-                // Currently, movement cost is fixed to 1. If we want variable
-                // costs per tile, this is the place to add it.
-                int newCost = costSoFar[current] + 1;
+                bool cellIsImpassable = false;
+                foreach(var unit in Board.Units)
+				{
+                    if (unit.OffsetPos == neighbor)
+                        if (unit.preset != null && !unit.preset.isPassable)
+                            cellIsImpassable = true;
+                        else
+                            cellIsImpassable = true;
+                }
+
+                if (cellIsImpassable)
+                    continue;
+
+				// Currently, movement cost is fixed to 1. If we want variable
+				// costs per tile, this is the place to add it.
+				int newCost = costSoFar[current] + 1;
 
                 bool contains = costSoFar.TryGetValue(neighbor, out int cost);
                 if (!contains || newCost < cost)
@@ -453,6 +482,50 @@ public class Board
 
 public static class BoardExtensions
 {
+    public static void SnapToGrid(this Transform transform)
+	{
+        float3 cartesian = new float3(transform.position.x, transform.position.z, 1f);
+        float2 axial = math.mul(Board.CartesianToAxial, cartesian).xy;
+        axial = math.round(axial);
+        float2 roundedCartesian = math.mul(Board.AxialToCartesian, new float3(axial.x, axial.y, 1f)).xy;
+
+        Vector3 pos = new Vector3(
+            roundedCartesian.x,
+            0f,
+            roundedCartesian.y
+        );
+
+        transform.position = pos;
+        transform.hasChanged = false;
+    }
 
     public static int ToIndex(this Vector2Int pos) => pos.x + pos.y * 10000;
+
+    public static bool IsOccupied(this Vector2Int coord)
+	{
+        foreach (var unit in Board.Units)
+        {
+            if (unit.OffsetPos == coord)
+                return true;
+
+                //if (unit.preset != null && !unit.preset.isPassable)
+                //    cellIsImpassable = true;
+                //else
+                //    cellIsImpassable = true;
+        }
+
+        return false;
+    }
+
+    public static bool TryGetUnitAtCoord(this Vector2Int coord, out Unit foundUnit)
+	{
+        foundUnit = null;
+        Unit unit = Board.GetUnitAtPos(coord);
+        if(unit != null)
+		{
+            foundUnit = unit;
+            return true;
+		}
+        return false;
+	}
 }

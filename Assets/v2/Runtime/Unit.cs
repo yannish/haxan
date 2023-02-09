@@ -9,6 +9,8 @@ public class Unit : MonoBehaviour
 	public HexDirectionFT Facing;
 
     [Header("CONFIG:")]
+    public int groundedMovementRange;
+    public UnitPreset preset;
     public List<AbilityV2> Abilities = new List<AbilityV2>();
 
     [Header("BITS:")]
@@ -31,36 +33,47 @@ public class Unit : MonoBehaviour
 	void OnDrawGizmos()
     {
         if (transform.hasChanged)
-        {
-            float3 cartesian = new float3(transform.position.x, transform.position.z, 1f);
-            float2 axial = math.mul(Board.CartesianToAxial, cartesian).xy;
-            axial = math.round(axial);
-            float2 roundedCartesian = math.mul(Board.AxialToCartesian, new float3(axial.x, axial.y, 1f)).xy;
-
-            Vector3 pos = new Vector3(
-                roundedCartesian.x,
-                0f,
-                roundedCartesian.y
-            );
-
-            transform.position = pos;
-            transform.hasChanged = false;
+		{
+            transform.SnapToGrid();
+            OffsetPos = Board.WorldToOffset(transform.position);
         }
     }
+
+
 }
 
 public static class UnitExtensions
 {
-    public static void SetFacing(this Unit unit, HexDirectionFT dir)
+ //   public static void SetFacing(this GridSnap unit, HexDirectionFT dir)
+	//{
+ //       if (unit.pivot == null)
+	//	{
+ //           Debug.LogWarning($"unit {unit.name} is missing its pivot.");
+ //           return;
+	//	}
+
+ //       var newFacingDir = dir.ToVector();
+ //       unit.pivot.rotation = Quaternion.LookRotation(newFacingDir);
+ //       unit.Facing = dir;
+	//}
+
+    public static void SetFacing(this Transform pivot, HexDirectionFT dir)
 	{
+        var newFacingDir = dir.ToVector();
+        pivot.rotation = Quaternion.LookRotation(newFacingDir);
+        //unit.Facing = dir;
+    }
+
+    public static void SetFacing(this Unit unit, HexDirectionFT dir)
+    {
         if (unit.pivot == null)
-		{
+        {
             Debug.LogWarning($"unit {unit.name} is missing its pivot.");
             return;
-		}
+        }
 
         var newFacingDir = dir.ToVector();
         unit.pivot.rotation = Quaternion.LookRotation(newFacingDir);
         unit.Facing = dir;
-	}
+    }
 }

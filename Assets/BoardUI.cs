@@ -14,21 +14,18 @@ public class BoardUI : MonoBehaviour
     [ReadOnly, SerializeField] private Mode mode;
 
 
-
-
-
     Vector2Int mouseDownPos;
     GameObject gizmos;
     Vector2Int[] waypointPositions; // In offset coordinates
     Vector2Int hoveredCellPos; // In offset coordinates
     bool isPointerInUI;
+
     public void Init()
     {
-        Application.targetFrameRate = 60;
-
         portrait = transform.Find("portrait").gameObject;
         portrait.SetActive(false);
         gizmos = new GameObject("Gizmos");
+
         // Generate one button per unit
         var prefab = Resources.Load("Prefabs/UnitButton");
 
@@ -52,12 +49,15 @@ public class BoardUI : MonoBehaviour
         abilityDisplay.SetActive(false);
 
         Pool.GetPool(hoverCellMarker);
-        Pool.GetPool(abilityPreviewMarker);
+        Pool.GetPool(abilityValidMarker);
+
+        Application.targetFrameRate = 60;
     }
 
-
-	void Update()
+    void Update()
     {
+        mousePos = MouseToOffsetPos();
+
         if (mode == Mode.Neutral)
         {
             HandleNeutralMode();
@@ -66,6 +66,21 @@ public class BoardUI : MonoBehaviour
         {
             HandleUnitSelectedMode();
         }
+        else if (mode == Mode.AbilitySelected)
+        {
+            HandleAbilitySelectedMode();
+        }
+    }
+
+    Vector2Int mousePos;
+    Vector2Int MouseToOffsetPos()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, Vector3.zero);
+        plane.Raycast(ray, out float dist);
+        Vector3 worldPos = ray.GetPoint(dist);
+        Vector2Int offset = Board.WorldToOffset(worldPos);
+        return offset;
     }
 
     void HandleNeutralMode()
@@ -73,43 +88,46 @@ public class BoardUI : MonoBehaviour
         // ^ We're in neutral mode, where no unit is selected
         if (!isPointerInUI && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f))
         {
-            // ^ The mouse has moved
-            Vector2Int offset = MouseToOffsetPos();
-            Unit hoveredUnit = Board.GetUnitAtPos(offset);
-            if (hoveredUnit)
-            {
-                if(hoveredUnit != currHoveredUnit)
-				{
-                    UnhoverUnit();
-                    HoverUnit(hoveredUnit);
-				}
-            }
-            else
-            {
-                UnhoverUnit();
-            }
-
-            CellV2 hoveredCell = Board.TryGetCellAtPos(offset);
-            if(hoveredCell != null)
+			// ^ The mouse has moved
+			Unit hoveredUnit = Board.GetUnitAtPos(mousePos);
+			if (hoveredUnit)
 			{
-                if(hoveredCell != currHoveredCell)
+				if (hoveredUnit != currHoveredUnit)
 				{
-                    UnhoverEmptyCell();
-                    HoverEmptyCell(hoveredCell);
-
-                    //int parity = offset.x & 1;
-                    //Debug.LogWarning($"offset.x: {offset.x} , parity: {parity}");
-                }
-
-                //Debug.LogWarning($"hit a cell at {offset.x}, {offset.y}.");
-            }
+					UnhoverUnit();
+					HoverUnit(hoveredUnit);
+				}
+			}
 			else
 			{
-                if (currHoveredCell != null)
-                    UnhoverEmptyCell();
+				UnhoverUnit();
+			}
 
-                //Debug.LogWarning($"didn't hit a cell at {offset.x}, {offset.y}.");
+			if (mousePos != mousePosLastFrame)
+			{
+                CellV2 hoveredCell = Board.TryGetCellAtPos(mousePos);
+                if (hoveredCell != null)
+                {
+                    if (hoveredCell != currHoveredEmptyCell)
+                    {
+                        UnhoverEmptyCell();
+                        HoverEmptyCell(hoveredCell);
+                    }
+                }
+                else
+                {
+                    if (currHoveredEmptyCell != null)
+                        UnhoverEmptyCell();
+                }
+
+                //Debug.LogWarning("new cell");
             }
+
+
+			//if (!hoveredUnit)
+			//{
+			
+            //}
         }
 
         if (!isPointerInUI && Input.GetMouseButtonDown(0))
@@ -131,21 +149,24 @@ public class BoardUI : MonoBehaviour
                 }
             }
         }
+
+        mousePosLastFrame = mousePos;
     }
+
 
     Vector2Int mousePosLastFrame;
     bool hoveredWaypointLastFrame;
     void HandleUnitSelectedMode()
     {
         // ^ We're in the mode where a unit is selected
-        
+
         Vector2Int mousePos = MouseToOffsetPos();
         bool hoveredWaypoint = false;
         bool mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
         //bool hovereNewCell = mousePos != mousePosLastFrame;
 
         if (
-            !isPointerInUI 
+            !isPointerInUI
             && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)
             )
         {
@@ -203,10 +224,10 @@ public class BoardUI : MonoBehaviour
                 }
             }
 
-            if(!hoveredWaypoint && hoveredWaypointLastFrame)
-			{
-				DestroyPathGizmos(selectedUnit);
-			}
+            if (!hoveredWaypoint && hoveredWaypointLastFrame)
+            {
+                DestroyPathGizmos(selectedUnit);
+            }
         }
 
         if (!isPointerInUI && Input.GetMouseButtonDown(0))
@@ -242,90 +263,51 @@ public class BoardUI : MonoBehaviour
             }
         }
 
-        //if (
-        //    !hoveredWaypoint && hoveredWaypointLastFrame
-        //    //&& mousePos != mousePosLastFrame
-        //    )
-        //{
-        //    DestroyPathGizmos(selectedUnit);
-        //}
-
         mousePosLastFrame = mousePos;
         hoveredWaypointLastFrame = hoveredWaypoint;
     }
 
-    Vector2Int MouseToOffsetPos()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, Vector3.zero);
-        plane.Raycast(ray, out float dist);
-        Vector3 worldPos = ray.GetPoint(dist);
-        Vector2Int offset = Board.WorldToOffset(worldPos);
-        return offset;
-    }
 
 
     [Header("HOVER CELLS:")]
-    public PooledMonoBehaviour hoverCellMarker;
-    Dictionary<Vector2Int, CellVisuals> coordToHoverMarkerLookup = new Dictionary<Vector2Int, CellVisuals>();
-    CellV2 currHoveredCell;
-    //CellVisuals currHoveredCellVisuals;
-    void HoverEmptyCell(CellV2 cell)
+    public PooledCellVisuals hoverCellMarker;
+    Dictionary<Vector2Int, PooledCellVisuals> coordToHoverMarkerLookup = new Dictionary<Vector2Int, PooledCellVisuals>();
+    CellV2 currHoveredEmptyCell;
+
+	//... BARE GRID:
+	void HoverEmptyCell(CellV2 cell)
     {
-        currHoveredCell = cell;
+        currHoveredEmptyCell = cell;
 
         Vector2Int offsetCellCoord = Board.WorldToOffset(cell.transform.position);
-
-		//var hoverPrefab = Resources.Load("Prefabs/HoveredCell");
-		//var newHoverRing = (GameObject)Instantiate(hoverPrefab, gizmos.transform);
-		//newHoverRing.name = "HoveredCell";
-		//newHoverRing.transform.position = cell.transform.position;
-
-		if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
-		{
-            //Debug.LogWarning("Hovering existing cellMarker");
-            foundCellMarker.SetTrigger(CellState.hover);
-		}
-		else
-		{
-            //Debug.LogWarning("Hovering NEW cellMarker");
-
-            var newCellMarker = hoverCellMarker.GetAndPlay(cell.transform.position, Quaternion.identity);
-            var newCellMarkerVisuals = newCellMarker.GetComponentInChildren<CellVisuals>();
-            newCellMarkerVisuals.SetTrigger(CellState.hover);
-            newCellMarkerVisuals.onReturnToPool += () =>
+        if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+        {
+            foundCellMarker.Hover();
+        }
+        else
+        {
+            var newCellMarker = hoverCellMarker.GetAndPlay(cell.transform.position, Quaternion.identity, play: false);
+            newCellMarker.Hover();
+            newCellMarker.OnReturnedToPool += () =>
             {
                 coordToHoverMarkerLookup.Remove(offsetCellCoord);
             };
-            coordToHoverMarkerLookup.Add(offsetCellCoord, newCellMarkerVisuals);
+            coordToHoverMarkerLookup.Add(offsetCellCoord, newCellMarker);
         }
-
-        //newHoverRing.transform.localScale = Vector3.zero;
-        //newHoverRing.transform.DOScale(1f, 0.05f);
     }
 
     void UnhoverEmptyCell()
     {
-        if(currHoveredCell != null)
-		{
-            Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredCell.transform.position);
+        if (currHoveredEmptyCell != null)
+        {
+            Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredEmptyCell.transform.position);
             if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
-                foundCellMarker.UnsetTrigger(CellState.hover);
+                foundCellMarker.Unhover();
         }
 
-        currHoveredCell = null;
-
-        //foreach (Transform child in gizmos.transform)
-        //{
-        //    if (child.name == "HoveredCell")
-        //    {
-        //        Destroy(child.gameObject);
-        //        //child.transform
-        //        //    .DOScale(0f, 0.05f)
-        //        //    .OnComplete(() => Destroy(child.gameObject));
-        //    }
-        //}
+        currHoveredEmptyCell = null;
     }
+
 
 
     //... UNIT:
@@ -334,7 +316,7 @@ public class BoardUI : MonoBehaviour
     Unit selectedUnit;
 
     void HoverUnit(Unit unit)
-	{
+    {
         currHoveredUnit = unit;
         portrait.SetActive(true);
         abilityDisplay.SetActive(true);
@@ -343,16 +325,44 @@ public class BoardUI : MonoBehaviour
             abilityButtons[i].gameObject.SetActive(true);
             abilityButtons[i].Init(this, unit.Abilities[i]);
         }
-    }
+
+		if (coordToHoverMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+		{
+			foundCellMarker.Clickable();
+		}
+		else
+		{
+			var newCellMarker = hoverCellMarker.GetAndPlay(unit.transform.position, Quaternion.identity, playParams: (int)CellStateV2.HOVERED);
+			newCellMarker.Hover();
+            newCellMarker.Clickable();
+			newCellMarker.OnReturnedToPool += () =>
+			{
+				coordToHoverMarkerLookup.Remove(unit.OffsetPos);
+			};
+			coordToHoverMarkerLookup.Add(unit.OffsetPos, newCellMarker);
+		}
+	}
 
     void UnhoverUnit()
-	{
-        currHoveredUnit = null;
-        portrait.SetActive(false);
-        foreach (var abilityButton in abilityButtons)
-            abilityButton.gameObject.SetActive(false);
-        abilityDisplay.SetActive(false);
-    }
+    {
+        if (currHoveredUnit == null)
+            return;
+
+		Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredUnit.transform.position);
+		if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+		{
+            foundCellMarker.Unhover();
+            foundCellMarker.Unclickable();
+		}
+
+		currHoveredUnit = null;
+		portrait.SetActive(false);
+
+		foreach (var abilityButton in abilityButtons)
+			abilityButton.gameObject.SetActive(false);
+
+		abilityDisplay.SetActive(false);
+	}
 
     void SelectUnit(Unit unit)
     {
@@ -361,22 +371,40 @@ public class BoardUI : MonoBehaviour
         selectedUnit = unit;
         portrait.SetActive(true);
 
-        ShowNavigableTiles(unit);
+        if(selectedUnit is PlayerUnit)
+            ShowNavigableTiles(unit);
+
+        if (coordToHoverMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+        {
+            foundCellMarker.Select();
+        }
     }
 
     void DeselectUnit()
     {
         mode = Mode.Neutral;
         DestroyPathGizmos(selectedUnit);
-        selectedUnit = null;
         waypointPositions = null;
         portrait.SetActive(false);
 
         HideNavigableTiles();
+
+        if (coordToHoverMarkerLookup.TryGetValue(selectedUnit.OffsetPos, out var foundCellMarker))
+        {
+            foundCellMarker.Deselect();
+
+            if(mousePos != selectedUnit.OffsetPos)
+			{
+                foundCellMarker.Unhover();
+                foundCellMarker.Unclickable();
+			}
+        }
+
+        selectedUnit = null;
     }
 
     void ShowNavigableTiles(Unit unit)
-	{
+    {
         var prefab = Resources.Load("Prefabs/Waypoint");
         waypointPositions = Board.GetNavigableTiles(unit);
 
@@ -385,21 +413,18 @@ public class BoardUI : MonoBehaviour
             GameObject waypt = (GameObject)Instantiate(prefab, gizmos.transform);
             waypt.name = "Waypoint";
             waypt.transform.position = Board.OffsetToWorld(pos) + new Vector3(0, 0.1f, 0);
-			waypt.transform.localScale = Vector3.one * 0.5f;
-			//waypt.transform.DOScale(0.3f, 0.1f);
-		}
+            waypt.transform.localScale = Vector3.one * 0.5f;
+            //waypt.transform.DOScale(0.3f, 0.1f);
+        }
     }
 
     void HideNavigableTiles()
-	{
+    {
         foreach (Transform child in gizmos.transform)
         {
             if (child.name == "Waypoint")
             {
                 Destroy(child.gameObject);
-                //child.transform
-                //    .DOScale(0f, 0.05f)
-                //    .OnComplete(() => Destroy(child.gameObject));
             }
         }
     }
@@ -469,24 +494,28 @@ public class BoardUI : MonoBehaviour
     List<Vector2Int> validAbilityCoords;
     List<GameObject> validMoveMarkers;
 
-
     internal void OnPointerEnteredAbilityButton(AbilityV2 ability)
     {
-        //Debug.LogWarning("HOVERING ABILITY: " + ability.name);
         isPointerInUI = true;
+
+        if (mode != Mode.UnitSelected)
+            return;
+
         HoverAbility(ability);
     }
 
     internal void OnPointerExitedAbilityButton(AbilityV2 ability)
     {
-        //Debug.LogWarning("UNHOVERING ABILITY: " + ability.name);
         isPointerInUI = false;
+
+        if (mode != Mode.UnitSelected)
+            return;
+
         UnhoverAbility();
     }
 
     internal void OnPointerClickedAbilityButton(AbilityV2 ability)
     {
-        //Debug.LogWarning("SELECTED ABILITY: " + ability.name);
         switch (mode)
         {
             case Mode.Neutral:
@@ -503,8 +532,135 @@ public class BoardUI : MonoBehaviour
         }
     }
 
-    Dictionary<Vector2Int, AbilityMarker> coordToAbillityMarkerLookup = new Dictionary<Vector2Int, AbilityMarker>();
+
+    Dictionary<Vector2Int, PooledMonoBehaviour> abilityPreviewLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
     public PooledMonoBehaviour abilityPreviewMarker;
+    Vector2Int hoveredValidAbilityCoord;
+    bool hoveredValidMoveLastFrame;
+
+    Dictionary<Vector2Int, PooledMonoBehaviour> abilityValidLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
+    public PooledMonoBehaviour abilityValidMarker;
+    Vector2Int validMoveCoord;
+    Vector2Int prevValidMoveCoord;
+    [ReadOnly] public bool hoveredValidMove;
+
+    private void HandleAbilitySelectedMode()
+    {
+        Vector2Int mousePos = MouseToOffsetPos();
+		bool mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
+
+        if (mousePos == selectedUnit.OffsetPos && Input.GetMouseButtonDown(0))
+        {
+            DeselectAbility();
+            return;
+        }
+
+        hoveredValidMove = false;
+        foreach (var coord in validAbilityCoords)
+        {
+            if (coord == mousePos)
+            {
+                hoveredValidMove = true;
+                validMoveCoord = mousePos;
+                break;
+            }
+        }
+
+        if (hoveredValidMove)
+        {
+            if (prevValidMoveCoord != validMoveCoord)
+                UnhoverValidAbilityMove();
+
+            if (prevValidMoveCoord != validMoveCoord || !hoveredValidMoveLastFrame)
+			    HoverValidAbilityMove(validMoveCoord);
+		}
+		else
+		{
+            if (hoveredValidMoveLastFrame)
+                UnhoverValidAbilityMove();
+		}
+
+        hoveredValidMoveLastFrame = hoveredValidMove;
+        prevValidMoveCoord = validMoveCoord;
+        mousePosLastFrame = mousePos;
+
+
+        //if (mousePos != mousePosLastFrame)
+        //{
+        //    //Debug.LogWarning("MOVED MOUSE.");
+        //    UnhoverValidAbilityMove();
+        //}
+
+   //     if (
+   //         mousePos != mousePosLastFrame 
+   //         && hoveredValidMove
+   //         && !hoveredValidMoveLastFrame
+   //         )
+   //     {
+   //         Debug.LogWarning("STARTED HOVERING A VALID MOVE");
+
+   //         hoveredValidAbilityCoord = mousePos;
+			////UnhoverValidAbilityMove();
+			////HoverValidAbilityMove(mousePos);
+   //     }
+
+   //     if (
+   //         mousePos != mousePosLastFrame 
+   //         && !hoveredValidMove
+   //         && hoveredValidMoveLastFrame 
+   //         )
+   //     {
+			//if (hoveredValidMoveLastFrame)
+			//{
+   //             Debug.LogWarning("STOPPED HOVERING PREVIOUS VALID MOVE");
+   //         }
+
+   //         Debug.LogWarning("STOPPED HOVERING A VALID MOVE");
+   //         //UnhoverValidAbilityMove();
+   //     }
+
+    }
+
+    void HoverValidAbilityMove(Vector2Int hoveredCoord)
+    {
+        Debug.LogWarning("hovered a valid ability move");
+
+        validMoveCoord = hoveredCoord;
+
+        var affectedCoords = selectedAbility.GetAffectedCells(selectedUnit.OffsetPos, validMoveCoord);
+
+        foreach(var affectedCoord in affectedCoords)
+		{
+            if(abilityPreviewLookup.TryGetValue(affectedCoord, out var previewMarker))
+			{
+                previewMarker.Play();
+			}
+			else
+			{
+                var newPreviewMarker = selectedAbility.PreviewAffectedCell(selectedUnit.OffsetPos, affectedCoord);
+                if (newPreviewMarker == null)
+                    continue;
+
+                newPreviewMarker.OnReturnedToPool += () =>
+                {
+                    abilityPreviewLookup.Remove(affectedCoord);
+                    Debug.LogWarning("removed " + newPreviewMarker.name + " from lookup.", newPreviewMarker.gameObject);
+                };
+                abilityPreviewLookup.Add(affectedCoord, newPreviewMarker);
+			}
+		}
+    }
+
+    void UnhoverValidAbilityMove()
+    {
+		Debug.LogWarning("unhovered a valid ability move, clearing: " + abilityPreviewLookup.Count);
+
+		foreach (var kvp in abilityPreviewLookup)
+        {
+            var abilityMarker = kvp.Value;
+            abilityMarker.Stop();
+        }
+    }
 
     void HoverAbility(AbilityV2 ability)
 	{
@@ -520,23 +676,18 @@ public class BoardUI : MonoBehaviour
 
         foreach(var coord in validAbilityCoords)
 		{
-            if (coordToAbillityMarkerLookup.TryGetValue(coord, out var foundCellMarker))
+            if (abilityValidLookup.TryGetValue(coord, out var foundCellMarker))
             {
-                foundCellMarker.Mark();
+                foundCellMarker.Play();
             }
             else
             {
-                Vector3 worldPos = Board.OffsetToWorld(coord);
-
-                var newElement = abilityPreviewMarker.GetAndPlay(worldPos, Quaternion.identity);
-                var newAbilityMarker = newElement.GetComponentInChildren<AbilityMarker>();
-
-                newAbilityMarker.Mark();
-                newAbilityMarker.onReturnToPool += () =>
+                var newAbilityMarker = abilityValidMarker.GetAndPlay(Board.OffsetToWorld(coord), Quaternion.identity);
+                newAbilityMarker.OnReturnedToPool += () =>
                 {
-                    coordToAbillityMarkerLookup.Remove(coord);
+                    abilityValidLookup.Remove(coord);
 				};
-                coordToAbillityMarkerLookup.Add(coord, newAbilityMarker);
+                abilityValidLookup.Add(coord, newAbilityMarker);
             }
         }
 	}
@@ -545,10 +696,10 @@ public class BoardUI : MonoBehaviour
     {
         ShowNavigableTiles(selectedUnit);
 
-        foreach(var kvp in coordToAbillityMarkerLookup)
+        foreach(var kvp in abilityValidLookup)
 		{
             var abilityMarker = kvp.Value;
-            abilityMarker.Unmark();
+            abilityMarker.Stop();
 		}
     }
 
@@ -562,7 +713,6 @@ public class BoardUI : MonoBehaviour
 
 	}
 
-
 	void SelectAbility(AbilityV2 ability)
 	{
 		mode = Mode.AbilitySelected;
@@ -571,6 +721,7 @@ public class BoardUI : MonoBehaviour
 
 	void DeselectAbility()
 	{
-		
+        UnhoverAbility();
+        SelectUnit(selectedUnit);
 	}
 }

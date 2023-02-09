@@ -15,3 +15,6 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 60b26d47933b2db469f2b970d8f570ca, type: 3}
   phase: 2
   type: 1
+  range: 1
+  pushableMarker: {fileID: 896178287657779941, guid: 6fbdd9c6b966fae4e8f7fba0ce31d7e6, type: 3}
+  unpushableMarker: {fileID: 4960268334033378908, guid: d76b9dce4633adf47844d0642d056dbf, type: 3}

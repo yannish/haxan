@@ -34,7 +34,7 @@ public class Cell : MonoBehaviour
     public OffsetCoordinates offsetCoords;
 	public HexCoordinates coords;
 
-	[ReadOnly] public CellVisuals visuals;
+	[ReadOnly] public PooledCellVisuals visuals;
 	[ReadOnly] public CellFlowController cellFlow;
 	[ReadOnly] public Cell[] neighbours = new Cell[6];
 	public Cell[] validNeighbours { get { return neighbours.Where(t => t != null && t.IsPassable).ToArray(); } }
@@ -54,7 +54,7 @@ public class Cell : MonoBehaviour
 
 	void Awake()
 	{
-		visuals = GetComponentInChildren<CellVisuals>();
+		visuals = GetComponentInChildren<PooledCellVisuals>();
 		cellFlow = GetComponent<CellFlowController>();
         this.Unbind();
 	}

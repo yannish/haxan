@@ -3,12 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AbilityMarker : MonoBehaviour
+public class CellMarker : MonoBehaviour
     , IPoolable
 {
-    public void Play(Vector3 pos, Vector3 normal) { }
+    public void Play(int custom) => Mark();
 
-    public void Tick() { }
+    public void Stop(int stopParams) => Unmark();
+
+    public void Tick() => SmoothChange();
 
     public bool IsProcessing() => marked || currSmoothTime > 0f;
 
@@ -33,6 +35,7 @@ public class AbilityMarker : MonoBehaviour
     {
         marked = true;
         UpdateVisuals();
+        //StartCoroutine(DoSmoothChange());
     }
 
     public EditorButton unmarkBtn = new EditorButton("Unmark", true);
@@ -40,10 +43,12 @@ public class AbilityMarker : MonoBehaviour
     {
         marked = false;
         UpdateVisuals();
+        //StartCoroutine(DoSmoothChange());
     }
 
 
     [Header("SIZE:")]
+    public bool doSize = true;
     public float markedSize = 1f;
     public float unmarkedSize = 1f;
     public float sizeFreq;
@@ -54,6 +59,7 @@ public class AbilityMarker : MonoBehaviour
 
 
     [Header("COLOR:")]
+    public bool doColor = true;
     public Color markedColor;
     public Color unmarkedColor;
     public float colorSmoothTime;
@@ -74,38 +80,61 @@ public class AbilityMarker : MonoBehaviour
         UpdateMaterialBlock();
 	}
 
-	Coroutine updateCoroutine;
+	//Coroutine updateCoroutine;
     void UpdateVisuals()
 	{
-        if (updateCoroutine != null)
-            StopCoroutine(updateCoroutine);
+        //if (updateCoroutine != null)
+        //    StopCoroutine(updateCoroutine);
 
         targetSize = marked ? markedSize : unmarkedSize;
         targetAlpha = marked ? markedColor.a : unmarkedColor.a;
 
-        StartCoroutine(SmoothChange());
+        currSmoothTime = smoothTime;
 	}
 
     float currSmoothTime;
-    IEnumerator SmoothChange()
+    void SmoothChange()
+	{
+        if(currSmoothTime > 0f)
+		{
+            if(doColor)
+                currAlpha = Mathf.SmoothDamp(currAlpha, targetAlpha, ref alphaVelocity, colorSmoothTime);
+            
+            if(doSize)
+                Springy.Spring(ref currSize, ref sizeVelocity, targetSize, sizeDamp, sizeFreq, Time.deltaTime);
+
+            currSmoothTime -= Time.deltaTime;
+
+            UpdateMaterialBlock();
+        }
+    }
+
+	IEnumerator DoSmoothChange()
 	{
 		for (currSmoothTime = smoothTime; currSmoothTime > 0f; currSmoothTime -= Time.deltaTime)
 		{
-            currAlpha = Mathf.SmoothDamp(currAlpha, targetAlpha, ref alphaVelocity, colorSmoothTime);
-            Springy.Spring(ref currSize, ref sizeVelocity, targetSize, sizeDamp, sizeFreq, Time.deltaTime);
+			currAlpha = Mathf.SmoothDamp(currAlpha, targetAlpha, ref alphaVelocity, colorSmoothTime);
+			Springy.Spring(ref currSize, ref sizeVelocity, targetSize, sizeDamp, sizeFreq, Time.deltaTime);
 
-            UpdateMaterialBlock();
+			UpdateMaterialBlock();
 
-            yield return 0;
-        }
+			yield return 0;
+		}
 	}
 
-    void UpdateMaterialBlock()
+	void UpdateMaterialBlock()
 	{
-        blockColor.colorValue = markedColor.With(a: currAlpha);
-        blockSize.floatValue = currSize;
-        matBlockHandle.RecordChange(blockColor);
-        matBlockHandle.RecordChange(blockSize);
+		if (doColor)
+		{
+            blockColor.colorValue = markedColor.With(a: currAlpha);
+            matBlockHandle.RecordChange(blockColor);
+        }
+
+		if (doSize)
+		{
+            blockSize.floatValue = currSize;
+            matBlockHandle.RecordChange(blockSize);
+		}
     }
 
 

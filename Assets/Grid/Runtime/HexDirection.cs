@@ -117,7 +117,6 @@ public static class HexDirectionExtensions
 		return (int) direction < 3 ? (direction + 3) : (direction - 3);
 	}
 
-
 	public static HexDirection Rotate(this HexDirection direction, int steps)
 	{
 		return (HexDirection)(((int)direction + steps) % 6);
@@ -128,7 +127,6 @@ public static class HexDirectionExtensions
 		return (HexDirectionFT)(((int)direction + steps) % 6);
 	}
 
-
 	public static HexDirection Previous(this HexDirection direction)
 	{
 		return direction == HexDirection.NE ? HexDirection.NW : (direction - 1);
@@ -138,7 +136,6 @@ public static class HexDirectionExtensions
 	{
 		return direction == HexDirectionFT.N ? HexDirectionFT.NW : (direction - 1);
 	}
-
 
 	public static HexDirection Next(this HexDirection direction)
 	{

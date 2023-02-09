@@ -5,17 +5,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
+public enum CellStateV2
+{
+    HOVERED = 1 << 1,
+    CLICKABLE = 1 << 2,
+    SELECTED = 1 << 3
+}
+
 [Serializable]
 public struct HexRingSize
 {
     public float size;
     public float thickness;
-
     public static implicit operator Vector2(HexRingSize cellHexState)
     {
         return new Vector2(cellHexState.size, cellHexState.thickness);
     }
-
     public static implicit operator Vector3(HexRingSize cellHexState)
     {
         return new Vector3(cellHexState.size, cellHexState.thickness, 0f);
@@ -23,24 +28,67 @@ public struct HexRingSize
 }
 
 
-public class CellVisuals : MonoBehaviour
-    , IPoolable
+public class PooledCellVisuals : PooledMonoBehaviour
 {
-    public void Play(Vector3 pos, Vector3 normal) { }
-
-    public void Tick() { }
-
-    public bool IsProcessing()
+    public override void Play(int playParams)
     {
-        return currSmoothTime > 0f || hovered || selected || clickable;
+        //      CellStateV2 state = (CellStateV2)playParams;
+        //switch (state)
+        //{
+        //	case CellStateV2.HOVERED:
+        //              Debug.LogWarning("HOVERING CELL:");
+        //              SetTrigger(CellState.hover);
+        //              break;
+        //	case CellStateV2.CLICKABLE:
+        //              SetTrigger(CellState.clickable);
+        //              break;
+        //	case CellStateV2.SELECTED:
+        //              SetTrigger(CellState.select);
+        //              break;
+        //	default:
+        //		break;
+        //}
     }
 
-    public Action onReturnToPool;
-    public void Return() 
+    public override void Stop(int stopParams)
     {
-        onReturnToPool?.Invoke();
-        onReturnToPool = null;
+        //CellStateV2 state = (CellStateV2)stopParams;
+        //switch (state)
+        //{
+        //    case CellStateV2.HOVERED:
+        //        UnsetTrigger(CellState.hover);
+        //        break;
+        //    case CellStateV2.CLICKABLE:
+        //        UnsetTrigger(CellState.clickable);
+        //        break;
+        //    case CellStateV2.SELECTED:
+        //        UnsetTrigger(CellState.select);
+        //        break;
+        //    default:
+        //        break;
+        //}
+
+        //UnsetTrigger(CellState.hover);
     }
+
+    public override void Tick()
+	{
+        SmoothChange();
+        base.Tick();
+	}
+
+    public override bool IsProcessing()
+    {
+        bool result = currSmoothTime > 0f || hovered || selected || clickable;
+        return result;
+    }
+
+    //public Action onReturnToPool;
+    //public void Return() 
+    //{
+    //    onReturnToPool?.Invoke();
+    //    onReturnToPool = null;
+    //}
 
 
     public bool logDebug;
@@ -72,16 +120,16 @@ public class CellVisuals : MonoBehaviour
     void HoverOn()
     {
         SetTrigger(CellState.hover);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     public EditorButton hoverOffBtn = new EditorButton("HoverOff", true);
     void HoverOff()
     {
         UnsetTrigger(CellState.hover);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
-   
+
     public float hoveredAlpha = 0.5f;
     public HexRingSize hoveredHexRingSize;
     public HexRingSize unhoveredHexRingSize;
@@ -93,14 +141,14 @@ public class CellVisuals : MonoBehaviour
     void ClickableOn()
     {
         SetTrigger(CellState.clickable);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     public EditorButton clickableOffBtn = new EditorButton("ClickableOff", true);
     void ClickableOff()
     {
         UnsetTrigger(CellState.clickable);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     //[ReadOnly] 
@@ -116,14 +164,14 @@ public class CellVisuals : MonoBehaviour
     void SelectOn()
     {
         SetTrigger(CellState.select);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     public EditorButton selectOffBtn = new EditorButton("SelectOff", true);
     void SelectOff()
     {
         UnsetTrigger(CellState.select);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
     public HexRingSize selectedSize;
 
@@ -141,14 +189,14 @@ public class CellVisuals : MonoBehaviour
     void PathHintOn()
     {
         SetTrigger(CellState.pathHint);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     public EditorButton pathHintOffBtn = new EditorButton("PathHintOff", true);
     void PathHintOff()
     {
         UnsetTrigger(CellState.pathHint);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     //[ReadOnly] 
@@ -157,14 +205,14 @@ public class CellVisuals : MonoBehaviour
     void PathShownOn()
     {
         SetTrigger(CellState.pathShown);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     public EditorButton pathShownOffBtn = new EditorButton("PathShownOff", true);
     void PathShownOff()
     {
         UnsetTrigger(CellState.pathShown);
-        UpdateVisuals();
+        UpdateVisualTargets();
     }
 
     public HexRingSize pathShownSize;
@@ -186,13 +234,13 @@ public class CellVisuals : MonoBehaviour
 
     public FloatReference interactionFrequency;
     public FloatReference interactionFrequencyRange;
-    
+
     public FloatReference interactionDamping;
     public FloatReference interactionDampingRange;
 
     public FloatReference pathFrequency;
     public FloatReference pathFrequencyRange;
-                          
+
     public FloatReference pathDamping;
     public FloatReference pathDampingRange;
 
@@ -202,17 +250,47 @@ public class CellVisuals : MonoBehaviour
 
 
 
-    private void Awake()
+	protected override void Awake()
 	{
-		//UpdateMaterialBlock();
-
 		currInteractionSize = hoveredHexRingSize;
+        UpdateMaterialBlock();
+    }
 
-        UpdateVisuals();
+    public void Hover()
+    {
+        hovered = true;
+        UpdateVisualTargets();
+    }
 
-        //currSmoothTime = -1f;
-	}
+    public void Unhover()
+    {
+        hovered = false;
+        UpdateVisualTargets();
+    }
 
+    public void Clickable()
+	{
+        clickable = true;
+        UpdateVisualTargets();
+    }
+
+    public void Unclickable()
+	{
+        clickable = false;
+        UpdateVisualTargets();
+    }
+
+    public void Select()
+	{
+        selected = true;
+        UpdateVisualTargets();
+    }
+
+    public void Deselect()
+	{
+        selected = false;
+        UpdateVisualTargets();
+    }
 
     public void SetTrigger(CellState trigger) => SetTriggerValue(trigger, true);
 
@@ -246,17 +324,13 @@ public class CellVisuals : MonoBehaviour
 				break;
 		}
 
-        UpdateVisuals();
+        UpdateVisualTargets();
 	}
 
 
     Coroutine updateCoroutine;
-    void UpdateVisuals()
+    void UpdateVisualTargets()
     {
-        if (updateCoroutine != null)
-            StopCoroutine(updateCoroutine);
-
-
         //... hover:
         currInteractionTargetSize = unhoveredHexRingSize;
         if (hovered)
@@ -276,15 +350,6 @@ public class CellVisuals : MonoBehaviour
         if (clickable || selected)
             currHoverAlphaTarget = 1f;
 
-        //currHoverAlpha = 0f;
-        //if (hovered)
-        //    currHoverAlpha = hoveredAlpha;
-        //if(clickable || selected)
-        //    currHoverAlpha = 1f;
-
-        //currHoverTargetColor = currHoverTargetColor;//.With(a: currHoverAlpha);
-
-
         //... path:
         pathTargetSize = pathHiddenSize;
         if (pathShown)
@@ -294,58 +359,58 @@ public class CellVisuals : MonoBehaviour
 
         currPathTargetColor = (pathShown || pathHinted ) ? pathableColor.With(a: 1f) : pathableColor.With(a: 0f);
 
-		updateCoroutine = StartCoroutine(SmoothChange());
-	}
+        currSmoothTime = smoothTime;
+    }
 
-	float currSmoothTime = -1f;
-	IEnumerator SmoothChange()
+
+	[ReadOnly] public float currSmoothTime = -1f;
+	void SmoothChange()
 	{
+        if (currSmoothTime < 0f)
+            return;
+
         float interactionDampingOffset = UnityEngine.Random.Range(-interactionDampingRange, interactionDampingRange);
         float interactionFrequencyOffset = UnityEngine.Random.Range(-interactionFrequencyRange, interactionFrequencyRange);
 
         float pathDampingOffset = UnityEngine.Random.Range(-pathDampingRange, pathDampingRange);
         float pathFrequencyOffset = UnityEngine.Random.Range(-pathFrequencyRange, pathFrequencyRange);
 
-        for (currSmoothTime = smoothTime; currSmoothTime > 0f; currSmoothTime -= Time.deltaTime)
-        {
-            //... hover:
-            Springy.Spring(
-                ref currInteractionSize, 
-                ref currInteractionSizeVelocity, 
-                currInteractionTargetSize, 
-                interactionDamping + interactionDampingOffset, 
-                interactionFrequency + interactionFrequencyOffset, 
-                Time.deltaTime
-                );
+        //... hover:
+        Springy.Spring(
+            ref currInteractionSize,
+            ref currInteractionSizeVelocity,
+            currInteractionTargetSize,
+            interactionDamping + interactionDampingOffset,
+            interactionFrequency + interactionFrequencyOffset,
+            Time.deltaTime
+            );
 
-            float colorLerp = Mathf.Clamp01(currSmoothTime / colorLerpTime);
-            currHoverAlpha = Mathf.SmoothDamp(
-                currHoverAlpha,
-                currHoverAlphaTarget,
-                ref currHoverAlphaVel,
-                currHoverAlphaTarget == 0 ? hoverAlphaSmoothTimeDown : hoverAlphaSmoothTimeUp
-                );
+        float colorLerp = Mathf.Clamp01(currSmoothTime / colorLerpTime);
+        
+        currHoverAlpha = Mathf.SmoothDamp(
+            currHoverAlpha,
+            currHoverAlphaTarget,
+            ref currHoverAlphaVel,
+            currHoverAlphaTarget == 0 ? hoverAlphaSmoothTimeDown : hoverAlphaSmoothTimeUp
+            );
 
-            currHoverColor = Color.Lerp(currHoverColor, currHoverTargetColor, colorLerp).With(a : currHoverAlpha);
+        currHoverColor = Color.Lerp(currHoverColor, currHoverTargetColor, colorLerp).With(a: currHoverAlpha);
 
-            //... path:
-            Springy.Spring(
-                ref pathCurrSize, 
-                ref pathSizeVelocity, 
-                pathTargetSize,
-                pathDamping + pathDampingOffset,
-                pathFrequency + pathFrequencyOffset, 
-                Time.deltaTime
-                );
-            
-            pathCurrColor = Color.Lerp(pathCurrColor, currPathTargetColor, Mathf.Clamp01(currSmoothTime / colorLerpTime));
+        //... path:
+        Springy.Spring(
+            ref pathCurrSize,
+            ref pathSizeVelocity,
+            pathTargetSize,
+            pathDamping + pathDampingOffset,
+            pathFrequency + pathFrequencyOffset,
+            Time.deltaTime
+            );
 
-            //Vector3.smooth
-            
-            UpdateMaterialBlock();
+        pathCurrColor = Color.Lerp(pathCurrColor, currPathTargetColor, Mathf.Clamp01(currSmoothTime / colorLerpTime));
 
-            yield return 0;
-        }
+        UpdateMaterialBlock();
+
+        currSmoothTime -= Time.deltaTime;
     }
 
     void UpdateMaterialBlock()
@@ -359,7 +424,6 @@ public class CellVisuals : MonoBehaviour
 		hoverBlock.RecordChange(interactionHexThickness);
 		hoverBlock.RecordChange(interactionColor);
 
-
         //... path:
         pathBlockSize.floatValue = pathCurrSize.x;
         pathBlockThickness.floatValue = 1f;
@@ -369,7 +433,6 @@ public class CellVisuals : MonoBehaviour
         pathBlock.RecordChange(pathBlockThickness);
         pathBlock.RecordChange(pathBlockSize);
     }
-
 
     Sequence seq;
 	public void TweenToTarget()
@@ -381,38 +444,4 @@ public class CellVisuals : MonoBehaviour
 
         seq.SetAutoKill();
     }
-
-
-	//public EditorButton setInsetBig = new EditorButton("SetInsetBig", true);
-	//   public void SetInsetBig()
-	//{
-	//       //currHoverTargetInset = unhoveredInset;
-	//       StartCoroutine(SmoothChange());
-	//       //TweenToTarget();
-	//}
-
-	//   public EditorButton setInsetSmall = new EditorButton("SetInsetSmall", true);
-	//   public void SetInsetSmall()
-	//{
-	//       //currHoverTargetInset = hoveredInset;
-	//       StartCoroutine(SmoothChange());
-	//       //TweenToTarget();
-	//   }
-
-
-	//   public EditorButton setOutsetBig = new EditorButton("SetOutsetBig", true);
-	//   public void SetOutsetBig()
-	//   {
-	//       //currHoverTargetOutset = unhoveredOutset;
-	//       StartCoroutine(SmoothChange());
-	//       //TweenToTarget();
-	//   }
-
-	//   public EditorButton setOutsetSmall = new EditorButton("SetOutsetSmall", true);
-	//   public void SetOutsetSmall()
-	//   {
-	//       //currHoverTargetOutset = hoveredOutset;
-	//       StartCoroutine(SmoothChange());
-	//       //TweenToTarget();
-	//   }
 }
