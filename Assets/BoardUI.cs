@@ -8,13 +8,16 @@ public class BoardUI : MonoBehaviour
     {
         Neutral,
         UnitSelected,
-        AbilitySelected
+        AbilitySelected,
+
+        ProcessingCommands
     }
 
     [ReadOnly, SerializeField] private Mode mode;
 
 
     Vector2Int mouseDownPos;
+    Vector2Int mouseUpPos;
     GameObject gizmos;
     Vector2Int[] waypointPositions; // In offset coordinates
     Vector2Int hoveredCellPos; // In offset coordinates
@@ -70,9 +73,18 @@ public class BoardUI : MonoBehaviour
         {
             HandleAbilitySelectedMode();
         }
+        else if(mode == Mode.ProcessingCommands)
+		{
+            HandleCommandProcessing();
+		}
     }
 
-    Vector2Int mousePos;
+	private void HandleCommandProcessing()
+	{
+		
+	}
+
+	Vector2Int mousePos;
     Vector2Int MouseToOffsetPos()
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -119,15 +131,7 @@ public class BoardUI : MonoBehaviour
                     if (currHoveredEmptyCell != null)
                         UnhoverEmptyCell();
                 }
-
-                //Debug.LogWarning("new cell");
             }
-
-
-			//if (!hoveredUnit)
-			//{
-			
-            //}
         }
 
         if (!isPointerInUI && Input.GetMouseButtonDown(0))
@@ -137,7 +141,7 @@ public class BoardUI : MonoBehaviour
 
         if (!isPointerInUI && Input.GetMouseButtonUp(0))
         {
-            Vector2Int mouseUpPos = MouseToOffsetPos();
+            mouseUpPos = MouseToOffsetPos();
             if (mouseUpPos == mouseDownPos)
             {
                 // ^ The mouse was pressed and released on the same tile
@@ -163,24 +167,64 @@ public class BoardUI : MonoBehaviour
         Vector2Int mousePos = MouseToOffsetPos();
         bool hoveredWaypoint = false;
         bool mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
+
         //bool hovereNewCell = mousePos != mousePosLastFrame;
 
         if (
-            !isPointerInUI
-            && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f)
+            !isPointerInUI 
+            && mouseMoved
             )
         {
-            // ^ The mouse has moved
-
-            //bool hoveredWaypoint = false;
-            foreach (Vector2Int pos in waypointPositions)
+            Unit hoveredUnit = Board.GetUnitAtPos(mousePos);
+            if (hoveredUnit)
             {
-                if (pos == mousePos)
+                if (hoveredUnit != currHoveredUnit)
                 {
-                    hoveredWaypoint = true;
-                    break;
+                    UnhoverUnit();
+                    HoverUnit(hoveredUnit);
                 }
             }
+            else
+            {
+                UnhoverUnit();
+            }
+
+            if (mousePos != mousePosLastFrame)
+            {
+                CellV2 hoveredCell = Board.TryGetCellAtPos(mousePos);
+                if (hoveredCell != null)
+                {
+                    if (hoveredCell != currHoveredEmptyCell)
+                    {
+                        UnhoverEmptyCell();
+                        HoverEmptyCell(hoveredCell);
+                    }
+                }
+                else
+                {
+                    if (currHoveredEmptyCell != null)
+                        UnhoverEmptyCell();
+                }
+            }
+        }
+
+
+        if (
+            !isPointerInUI
+            && mouseMoved
+            )
+        {
+            //bool hoveredWaypoint = false;
+
+            if(waypointPositions != null)
+                foreach (Vector2Int pos in waypointPositions)
+                {
+                    if (pos == mousePos)
+                    {
+                        hoveredWaypoint = true;
+                        break;
+                    }
+                }
 
             if (hoveredWaypoint && mousePosLastFrame != mousePos)
             {
@@ -271,7 +315,7 @@ public class BoardUI : MonoBehaviour
 
     [Header("HOVER CELLS:")]
     public PooledCellVisuals hoverCellMarker;
-    Dictionary<Vector2Int, PooledCellVisuals> coordToHoverMarkerLookup = new Dictionary<Vector2Int, PooledCellVisuals>();
+    Dictionary<Vector2Int, PooledCellVisuals> coordToCellMarkerLookup = new Dictionary<Vector2Int, PooledCellVisuals>();
     CellV2 currHoveredEmptyCell;
 
 	//... BARE GRID:
@@ -280,7 +324,7 @@ public class BoardUI : MonoBehaviour
         currHoveredEmptyCell = cell;
 
         Vector2Int offsetCellCoord = Board.WorldToOffset(cell.transform.position);
-        if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+        if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
         {
             foundCellMarker.Hover();
         }
@@ -290,9 +334,9 @@ public class BoardUI : MonoBehaviour
             newCellMarker.Hover();
             newCellMarker.OnReturnedToPool += () =>
             {
-                coordToHoverMarkerLookup.Remove(offsetCellCoord);
+                coordToCellMarkerLookup.Remove(offsetCellCoord);
             };
-            coordToHoverMarkerLookup.Add(offsetCellCoord, newCellMarker);
+            coordToCellMarkerLookup.Add(offsetCellCoord, newCellMarker);
         }
     }
 
@@ -301,7 +345,7 @@ public class BoardUI : MonoBehaviour
         if (currHoveredEmptyCell != null)
         {
             Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredEmptyCell.transform.position);
-            if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+            if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
                 foundCellMarker.Unhover();
         }
 
@@ -326,7 +370,7 @@ public class BoardUI : MonoBehaviour
             abilityButtons[i].Init(this, unit.Abilities[i]);
         }
 
-		if (coordToHoverMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+		if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
 		{
 			foundCellMarker.Clickable();
 		}
@@ -337,9 +381,9 @@ public class BoardUI : MonoBehaviour
             newCellMarker.Clickable();
 			newCellMarker.OnReturnedToPool += () =>
 			{
-				coordToHoverMarkerLookup.Remove(unit.OffsetPos);
+				coordToCellMarkerLookup.Remove(unit.OffsetPos);
 			};
-			coordToHoverMarkerLookup.Add(unit.OffsetPos, newCellMarker);
+			coordToCellMarkerLookup.Add(unit.OffsetPos, newCellMarker);
 		}
 	}
 
@@ -349,7 +393,7 @@ public class BoardUI : MonoBehaviour
             return;
 
 		Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredUnit.transform.position);
-		if (coordToHoverMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+		if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
 		{
             foundCellMarker.Unhover();
             foundCellMarker.Unclickable();
@@ -374,7 +418,7 @@ public class BoardUI : MonoBehaviour
         if(selectedUnit is PlayerUnit)
             ShowNavigableTiles(unit);
 
-        if (coordToHoverMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+        if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
         {
             foundCellMarker.Select();
         }
@@ -389,7 +433,7 @@ public class BoardUI : MonoBehaviour
 
         HideNavigableTiles();
 
-        if (coordToHoverMarkerLookup.TryGetValue(selectedUnit.OffsetPos, out var foundCellMarker))
+        if (coordToCellMarkerLookup.TryGetValue(selectedUnit.OffsetPos, out var foundCellMarker))
         {
             foundCellMarker.Deselect();
 
@@ -533,18 +577,18 @@ public class BoardUI : MonoBehaviour
     }
 
 
-    Dictionary<Vector2Int, PooledMonoBehaviour> abilityPreviewLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
+    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPreviewLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
     public PooledMonoBehaviour abilityPreviewMarker;
     Vector2Int hoveredValidAbilityCoord;
     bool hoveredValidMoveLastFrame;
 
     Dictionary<Vector2Int, PooledMonoBehaviour> abilityValidLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
     public PooledMonoBehaviour abilityValidMarker;
-    Vector2Int validMoveCoord;
+    Vector2Int currValidMoveCoord;
     Vector2Int prevValidMoveCoord;
     [ReadOnly] public bool hoveredValidMove;
 
-    private void HandleAbilitySelectedMode()
+    void HandleAbilitySelectedMode()
     {
         Vector2Int mousePos = MouseToOffsetPos();
 		bool mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
@@ -561,18 +605,28 @@ public class BoardUI : MonoBehaviour
             if (coord == mousePos)
             {
                 hoveredValidMove = true;
-                validMoveCoord = mousePos;
                 break;
             }
         }
 
         if (hoveredValidMove)
         {
-            if (prevValidMoveCoord != validMoveCoord)
+            if (prevValidMoveCoord != mousePos)
+			{
                 UnhoverValidAbilityMove();
+			}
+			else
+			{
+                //Debug.LogWarning("")
+			}
 
-            if (prevValidMoveCoord != validMoveCoord || !hoveredValidMoveLastFrame)
-			    HoverValidAbilityMove(validMoveCoord);
+            currValidMoveCoord = mousePos;
+
+            if (prevValidMoveCoord != currValidMoveCoord || !hoveredValidMoveLastFrame)
+			{
+                Debug.LogWarning("hovering valid move at : " + currValidMoveCoord.ToString());
+			    HoverValidAbilityMove(currValidMoveCoord);
+			}                
 		}
 		else
 		{
@@ -580,58 +634,79 @@ public class BoardUI : MonoBehaviour
                 UnhoverValidAbilityMove();
 		}
 
+        if (!isPointerInUI && Input.GetMouseButtonDown(0))
+        {
+            mouseDownPos = MouseToOffsetPos();
+        }
+
+        if (!isPointerInUI && Input.GetMouseButtonDown(0))
+        {
+            mouseUpPos = MouseToOffsetPos();
+        }
+
+
+        foreach (var coord in validAbilityCoords)
+		{
+			if (coord == mouseUpPos)
+			{
+                var newCommandQueue = selectedAbility.FetchCommandChain(currValidMoveCoord, selectedUnit);
+
+			    //... clicked a valid move, time to process it.
+			    mode = Mode.ProcessingCommands;
+                return;
+			}
+		}
+
+        if (
+            !hoveredValidMove
+            && !isPointerInUI 
+            && Input.GetMouseButtonUp(0)
+            )
+        {
+            Vector2Int mouseUpPos = MouseToOffsetPos();
+            if (mouseUpPos == mouseDownPos)
+            {
+                // ^ The mouse was pressed and released on the same tile
+                var unit = Board.GetUnitAtPos(mouseUpPos);
+                if (unit)
+                {
+                    if (unit != selectedUnit)
+                    {
+                        // ^ A unit was clicked, and it is not already selected
+                        DeselectAbility();
+                        DeselectUnit();
+                        SelectUnit(unit);
+                    }
+                    else
+                    {
+                        DeselectUnit();
+                        // ^^ maybe weird, sometimes you'd be using ability on selected unit
+                        //... guess that's caught above if it's a valid move.
+                    }
+                }
+                else if (unit == null)
+                {
+                    // ^ A cell without a unit on it was clicked
+                    DeselectUnit();
+                }
+            }
+        }
+
         hoveredValidMoveLastFrame = hoveredValidMove;
-        prevValidMoveCoord = validMoveCoord;
+        prevValidMoveCoord = currValidMoveCoord;
+
         mousePosLastFrame = mousePos;
-
-
-        //if (mousePos != mousePosLastFrame)
-        //{
-        //    //Debug.LogWarning("MOVED MOUSE.");
-        //    UnhoverValidAbilityMove();
-        //}
-
-   //     if (
-   //         mousePos != mousePosLastFrame 
-   //         && hoveredValidMove
-   //         && !hoveredValidMoveLastFrame
-   //         )
-   //     {
-   //         Debug.LogWarning("STARTED HOVERING A VALID MOVE");
-
-   //         hoveredValidAbilityCoord = mousePos;
-			////UnhoverValidAbilityMove();
-			////HoverValidAbilityMove(mousePos);
-   //     }
-
-   //     if (
-   //         mousePos != mousePosLastFrame 
-   //         && !hoveredValidMove
-   //         && hoveredValidMoveLastFrame 
-   //         )
-   //     {
-			//if (hoveredValidMoveLastFrame)
-			//{
-   //             Debug.LogWarning("STOPPED HOVERING PREVIOUS VALID MOVE");
-   //         }
-
-   //         Debug.LogWarning("STOPPED HOVERING A VALID MOVE");
-   //         //UnhoverValidAbilityMove();
-   //     }
-
     }
 
     void HoverValidAbilityMove(Vector2Int hoveredCoord)
     {
         Debug.LogWarning("hovered a valid ability move");
 
-        validMoveCoord = hoveredCoord;
-
-        var affectedCoords = selectedAbility.GetAffectedCells(selectedUnit.OffsetPos, validMoveCoord);
+        var affectedCoords = selectedAbility.GetAffectedCells(selectedUnit.OffsetPos, currValidMoveCoord);
 
         foreach(var affectedCoord in affectedCoords)
 		{
-            if(abilityPreviewLookup.TryGetValue(affectedCoord, out var previewMarker))
+            if(coordToPreviewLookup.TryGetValue(affectedCoord, out var previewMarker))
 			{
                 previewMarker.Play();
 			}
@@ -643,19 +718,42 @@ public class BoardUI : MonoBehaviour
 
                 newPreviewMarker.OnReturnedToPool += () =>
                 {
-                    abilityPreviewLookup.Remove(affectedCoord);
-                    Debug.LogWarning("removed " + newPreviewMarker.name + " from lookup.", newPreviewMarker.gameObject);
+                    coordToPreviewLookup.Remove(affectedCoord);
                 };
-                abilityPreviewLookup.Add(affectedCoord, newPreviewMarker);
+
+                coordToPreviewLookup.Add(affectedCoord, newPreviewMarker);
 			}
+		}
+
+        if(coordToCellMarkerLookup.TryGetValue(hoveredCoord, out var foundCellMarker))
+		{
+            foundCellMarker.Hover();
+            foundCellMarker.Clickable();
+		}
+		else
+		{
+            var newCellMarker = hoverCellMarker.GetAndPlay(Board.OffsetToWorld(hoveredCoord), Quaternion.identity);
+            newCellMarker.Hover();
+            newCellMarker.Clickable();
+
+            newCellMarker.OnReturnedToPool += () =>
+            {
+                coordToCellMarkerLookup.Remove(hoveredCoord);
+            };
+
+            coordToCellMarkerLookup.Add(hoveredCoord, newCellMarker);
 		}
     }
 
     void UnhoverValidAbilityMove()
     {
-		Debug.LogWarning("unhovered a valid ability move, clearing: " + abilityPreviewLookup.Count);
+        if(coordToCellMarkerLookup.TryGetValue(currValidMoveCoord, out var foundCellMarker))
+		{
+            foundCellMarker.Unhover();
+            foundCellMarker.Unclickable();
+		}
 
-		foreach (var kvp in abilityPreviewLookup)
+		foreach (var kvp in coordToPreviewLookup)
         {
             var abilityMarker = kvp.Value;
             abilityMarker.Stop();

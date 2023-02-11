@@ -31,9 +31,26 @@ public class AbilityV2 : ScriptableObject
     // ^^ given unit's position, where can the ability be targeted?
 
     //List<Vector2Int> 
-    public virtual List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int targetCoord) => null;
+    public virtual List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int targetCoord) => new List<Vector2Int>();
 
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
+
+    public virtual Queue<CellObjectCommand> FetchCommandChain(
+        Vector2Int targetCoord,
+        Unit unit
+        )
+    {
+        Queue<CellObjectCommand> newCommands = new Queue<CellObjectCommand>();
+        return newCommands;
+
+        //Turn newTurn = new Turn();
+        //newTurn.ability = this;
+        //newTurn.instigator = cellObj;
+        //return newTurn;
+
+        //return  new Turn()
+        //return Turn.CreateInstance(cellObj, this);
+    }
 
     //public virtual void PreviewEffectOnCell
 
