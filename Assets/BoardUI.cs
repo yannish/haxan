@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using TMPro;
 
 public class BoardUI : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class BoardUI : MonoBehaviour
     public void Init()
     {
         portrait = transform.Find("portrait").gameObject;
+        unitNameDisplay = portrait.GetComponentInChildren<TextMeshProUGUI>();
         portrait.SetActive(false);
         gizmos = new GameObject("Gizmos");
 
@@ -98,7 +100,14 @@ public class BoardUI : MonoBehaviour
     void HandleNeutralMode()
     {
         // ^ We're in neutral mode, where no unit is selected
-        if (!isPointerInUI && (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f))
+
+        bool mouseMoved = mousePos != mousePosLastFrame;
+        //bool mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
+
+        if (
+            !isPointerInUI 
+            && mouseMoved
+            )
         {
 			// ^ The mouse has moved
 			Unit hoveredUnit = Board.GetUnitAtPos(mousePos);
@@ -106,31 +115,35 @@ public class BoardUI : MonoBehaviour
 			{
 				if (hoveredUnit != currHoveredUnit)
 				{
-					UnhoverUnit();
-					HoverUnit(hoveredUnit);
+					UnhoverUnitFromNeutral();
+					HoverUnitFromNeutral(hoveredUnit);
 				}
 			}
 			else
 			{
-				UnhoverUnit();
+                //Debug.LogWarning("UNHOVERING IN NEUTRAL");
+				UnhoverUnitFromNeutral();
 			}
+
+
+            CellV2 hoveredCell = Board.TryGetCellAtPos(mousePos);
+            if (hoveredCell != null)
+            {
+                if (hoveredCell != currHoveredEmptyCell)
+                {
+                    UnhoverEmptyCell();
+                    HoverEmptyCell(hoveredCell);
+                }
+            }
+            else
+            {
+                if (currHoveredEmptyCell != null)
+                    UnhoverEmptyCell();
+            }
 
 			if (mousePos != mousePosLastFrame)
 			{
-                CellV2 hoveredCell = Board.TryGetCellAtPos(mousePos);
-                if (hoveredCell != null)
-                {
-                    if (hoveredCell != currHoveredEmptyCell)
-                    {
-                        UnhoverEmptyCell();
-                        HoverEmptyCell(hoveredCell);
-                    }
-                }
-                else
-                {
-                    if (currHoveredEmptyCell != null)
-                        UnhoverEmptyCell();
-                }
+                
             }
         }
 
@@ -175,21 +188,21 @@ public class BoardUI : MonoBehaviour
             && mouseMoved
             )
         {
-            Unit hoveredUnit = Board.GetUnitAtPos(mousePos);
-            if (hoveredUnit)
-            {
-                if (hoveredUnit != currHoveredUnit)
-                {
-                    UnhoverUnit();
-                    HoverUnit(hoveredUnit);
-                }
-            }
-            else
-            {
-                UnhoverUnit();
-            }
+			Unit hoveredUnit = Board.GetUnitAtPos(mousePos);
+			if (hoveredUnit)
+			{
+				if (hoveredUnit != currHoveredUnit)
+				{
+					UnhoverUnitFromSelected();
+					HoverUnitFromSelected(hoveredUnit);
+				}
+			}
+			else
+			{
+				UnhoverUnitFromSelected();
+			}
 
-            if (mousePos != mousePosLastFrame)
+			if (mousePos != mousePosLastFrame)
             {
                 CellV2 hoveredCell = Board.TryGetCellAtPos(mousePos);
                 if (hoveredCell != null)
@@ -356,14 +369,19 @@ public class BoardUI : MonoBehaviour
 
     //... UNIT:
     GameObject portrait;
+    public TextMeshProUGUI unitNameDisplay;
+
+    //Text
     Unit currHoveredUnit;
     Unit selectedUnit;
 
-    void HoverUnit(Unit unit)
+    void HoverUnitFromNeutral(Unit unit)
     {
         currHoveredUnit = unit;
         portrait.SetActive(true);
-        abilityDisplay.SetActive(true);
+        unitNameDisplay.SetText(unit.name.ToUpper());
+
+		abilityDisplay.SetActive(true);
         for (int i = 0, j = 0; i < unit.Abilities.Count && j < 4; i++, j++)
         {
             abilityButtons[i].gameObject.SetActive(true);
@@ -387,7 +405,7 @@ public class BoardUI : MonoBehaviour
 		}
 	}
 
-    void UnhoverUnit()
+    void UnhoverUnitFromNeutral()
     {
         if (currHoveredUnit == null)
             return;
@@ -400,6 +418,7 @@ public class BoardUI : MonoBehaviour
 		}
 
 		currHoveredUnit = null;
+
 		portrait.SetActive(false);
 
 		foreach (var abilityButton in abilityButtons)
@@ -407,6 +426,40 @@ public class BoardUI : MonoBehaviour
 
 		abilityDisplay.SetActive(false);
 	}
+
+    void HoverUnitFromSelected(Unit unit)
+	{
+        if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+        {
+            foundCellMarker.Clickable();
+        }
+        else
+        {
+            var newCellMarker = hoverCellMarker.GetAndPlay(unit.transform.position, Quaternion.identity, playParams: (int)CellStateV2.HOVERED);
+            newCellMarker.Hover();
+            newCellMarker.Clickable();
+            newCellMarker.OnReturnedToPool += () =>
+            {
+                coordToCellMarkerLookup.Remove(unit.OffsetPos);
+            };
+            coordToCellMarkerLookup.Add(unit.OffsetPos, newCellMarker);
+        }
+    }
+
+    void UnhoverUnitFromSelected()
+	{
+        if (currHoveredUnit == null)
+            return;
+
+        Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredUnit.transform.position);
+        if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+        {
+            foundCellMarker.Unhover();
+            foundCellMarker.Unclickable();
+        }
+
+        currHoveredUnit = null;
+    }
 
     void SelectUnit(Unit unit)
     {
