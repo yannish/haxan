@@ -20,7 +20,10 @@ public class BoardUI : MonoBehaviour
     Vector2Int mouseDownPos;
     Vector2Int mouseUpPos;
     GameObject gizmos;
+
+    GameObject waypointPrefab;
     Vector2Int[] waypointPositions; // In offset coordinates
+    
     Vector2Int hoveredCellPos; // In offset coordinates
     bool isPointerInUI;
 
@@ -30,6 +33,9 @@ public class BoardUI : MonoBehaviour
         unitNameDisplay = portrait.GetComponentInChildren<TextMeshProUGUI>();
         portrait.SetActive(false);
         gizmos = new GameObject("Gizmos");
+
+        waypointPrefab = (GameObject)Resources.Load("Prefabs/BoardUI/Waypoint");
+
 
         // Generate one button per unit
         var prefab = Resources.Load("Prefabs/UnitButton");
@@ -502,12 +508,12 @@ public class BoardUI : MonoBehaviour
 
     void ShowNavigableTiles(Unit unit)
     {
-        var prefab = Resources.Load("Prefabs/Waypoint");
+        //var prefab = Resources.Load("Prefabs/BoardUI/Waypoint");
         waypointPositions = Board.GetNavigableTiles(unit);
 
         foreach (Vector2Int pos in waypointPositions)
         {
-            GameObject waypt = (GameObject)Instantiate(prefab, gizmos.transform);
+            GameObject waypt = (GameObject)Instantiate(waypointPrefab, gizmos.transform);
             waypt.name = "Waypoint";
             waypt.transform.position = Board.OffsetToWorld(pos) + new Vector3(0, 0.1f, 0);
             waypt.transform.localScale = Vector3.one * 0.5f;

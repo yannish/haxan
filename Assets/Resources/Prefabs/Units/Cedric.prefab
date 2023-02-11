@@ -61,6 +61,10 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8774887126539967731, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
+      propertyPath: groundedMovementRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8774887126539967731, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: Abilities.Array.data[0]
       value: 
       objectReference: {fileID: 11400000, guid: a785a0b84a5fd504782531d4b775b46d, type: 2}
