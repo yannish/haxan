@@ -2,12 +2,12 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(CellV2))]
+[CustomEditor(typeof(CellV2_NEW))]
 public class CellEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        CellV2 cell = (CellV2)target;
+        CellV2_NEW cell = (CellV2_NEW)target;
         float3 cartesian = new float3(cell.transform.position.x, cell.transform.position.z, 1f);
         // Axial coordinates
         float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;

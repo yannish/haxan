@@ -14,8 +14,12 @@ public class AbilityButton : MonoBehaviour
 	AbilityV2 ability;
 
 	public Image icon;
+	public Image background;
 	public TextMeshProUGUI abilityName;
 
+	public Color deselectedColor;
+	public Color selectedColor;
+	public Color hoveredColor;
 
 	public void Init(BoardUI ui, AbilityV2 ability)
 	{
@@ -25,19 +29,61 @@ public class AbilityButton : MonoBehaviour
 		this.abilityName.SetText(ability.name.ToUpper());
 	}
 
+	bool hovered;
+	bool selected;
+
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		ui.OnPointerEnteredAbilityButton(ability);
+		ui.OnPointerEnteredAbilityButton(ability, this);
+		hovered = true;
+		UpdateVisual();
 	}
 
 	public void OnPointerExit(PointerEventData eventData)
 	{
-		ui.OnPointerExitedAbilityButton(ability);
+		ui.OnPointerExitedAbilityButton(ability, this);
+		hovered = false;
+		UpdateVisual();
 	}
 
 	public void OnPointerClick(PointerEventData eventData)
 	{
-		ui.OnPointerClickedAbilityButton(ability);
+		ui.OnPointerClickedAbilityButton(ability, this);
 	}
 
+	public void Select()
+	{
+		selected = true;
+		UpdateVisual();
+	}
+
+	public void Deselect()
+	{
+		selected = false;
+		UpdateVisual();
+	}
+
+	public void Hide()
+	{
+		selected = false;
+		hovered = false;
+		UpdateVisual();
+	}
+
+	void UpdateVisual()
+	{
+		if(selected)
+		{
+			background.color = selectedColor;
+			return;
+		}
+
+		if(hovered)
+		{
+			background.color = hoveredColor;
+			return;
+		}
+
+		background.color = deselectedColor;
+	}
 }

@@ -27,34 +27,31 @@ public class AbilityV2 : ScriptableObject
 
     public AbilityTypeV2 type;
 
-    public virtual List<Vector2Int> GetValidMoves(Vector2Int origin, Unit unit) => null;
+
+    public virtual void ShowValidMoves(Vector2Int origin, Unit unit) { }
+
+    public virtual void HideValidMoves() { }
+
+    public virtual void ShowPreview(Vector2Int target, Unit unit) { }
+
+    public virtual void HidePreview() { }
+
+
+
+
+    public virtual List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit) => null;
     // ^^ given unit's position, where can the ability be targeted?
 
-    //List<Vector2Int> 
-    public virtual List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int targetCoord) => new List<Vector2Int>();
+    public virtual List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int targetCoord, Unit unit) => new List<Vector2Int>();
 
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
 
-    public virtual Queue<CellObjectCommand> FetchCommandChain(
+    public virtual Queue<UnitCommand> FetchCommandChain(
         Vector2Int targetCoord,
         Unit unit
         )
     {
-        Queue<CellObjectCommand> newCommands = new Queue<CellObjectCommand>();
+        Queue<UnitCommand> newCommands = new Queue<UnitCommand>();
         return newCommands;
-
-        //Turn newTurn = new Turn();
-        //newTurn.ability = this;
-        //newTurn.instigator = cellObj;
-        //return newTurn;
-
-        //return  new Turn()
-        //return Turn.CreateInstance(cellObj, this);
     }
-
-    //public virtual void PreviewEffectOnCell
-
-    // ^^ given where the ability is being targeted, which other cells are going to be effected?
-
-    //public virtual void PreviewEffect(Vector2Int origin, List<Vector2Int> coords) { }
 }

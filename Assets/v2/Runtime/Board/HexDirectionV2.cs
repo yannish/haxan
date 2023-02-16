@@ -8,7 +8,8 @@ public static class HexDirectionV2
 	public static List<Vector2Int> GetCellsInRadius(
 		this Vector2Int originOffsetCoord,
 		int radius,
-		Predicate<Vector2Int> check = null
+		Predicate<Vector2Int> check = null,
+		bool includeOrigin = false
 		)
 	{
 
@@ -36,6 +37,9 @@ public static class HexDirectionV2
 			{
 				Vector2Int axial = new Vector2Int(x, y);
 				Vector2Int offsetCoord = Board.AxialToOffset(axial);
+
+				if (!includeOrigin && offsetCoord == originOffsetCoord)
+					continue;
 
 				if (Board.TryGetCellAtPos(offsetCoord))
 				{

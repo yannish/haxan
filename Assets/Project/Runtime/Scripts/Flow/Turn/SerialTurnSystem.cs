@@ -209,7 +209,7 @@ public class SerialTurnSystem : MonoBehaviour
 				//isProcessing = false;
 				currPlaybackState = TurnPlaybackState.PAUSED;
 
-				Turn recordedTurn = new Turn();
+				Turn recordedTurn = new();
 				recordedTurn.instigator = currInstigator;
 				recordedTurn.commandHistory = currCommandHistory;
 				turnHistory.Push(recordedTurn);

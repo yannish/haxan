@@ -22,7 +22,6 @@ public class CellMarker : MonoBehaviour
     }
 
 
-
     public FloatSpring sizeSpring;
 
     public MaterialBlockHandle matBlockHandle;
@@ -136,6 +135,4 @@ public class CellMarker : MonoBehaviour
             matBlockHandle.RecordChange(blockSize);
 		}
     }
-
-
 }

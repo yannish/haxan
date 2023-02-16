@@ -9,7 +9,8 @@ public enum CellStateV2
 {
     HOVERED = 1 << 1,
     CLICKABLE = 1 << 2,
-    SELECTED = 1 << 3
+    SELECTED = 1 << 3,
+    PATHHINTED = 1 << 4
 }
 
 [Serializable]
@@ -79,7 +80,7 @@ public class PooledCellVisuals : PooledMonoBehaviour
 
     public override bool IsProcessing()
     {
-        bool result = currSmoothTime > 0f || hovered || selected || clickable;
+        bool result = currSmoothTime > 0f || hovered || selected || clickable || pathHinted;
         return result;
     }
 
@@ -249,7 +250,6 @@ public class PooledCellVisuals : PooledMonoBehaviour
     public Color threatColor;
 
 
-
 	protected override void Awake()
 	{
 		currInteractionSize = hoveredHexRingSize;
@@ -291,6 +291,18 @@ public class PooledCellVisuals : PooledMonoBehaviour
         selected = false;
         UpdateVisualTargets();
     }
+
+    public void HintPath()
+	{
+        pathHinted = true;
+        UpdateVisualTargets();
+	}
+
+    public void UnhintPath()
+	{
+        pathHinted = false;
+        UpdateVisualTargets();
+	}
 
     public void SetTrigger(CellState trigger) => SetTriggerValue(trigger, true);
 
