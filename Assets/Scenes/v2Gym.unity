@@ -248,6 +248,7 @@ MonoBehaviour:
   abilityButtons: []
   hoveredAbility: {fileID: 0}
   pathValidMarker: {fileID: 2003857084417268403, guid: 9865dfd6db68bfc47ad6fab49c41f5e5, type: 3}
+  lookupOffset: 0
   playbackState: 0
 --- !u!1 &10160256
 GameObject:
@@ -5282,6 +5283,83 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1402910337}
   m_Mesh: {fileID: -7499294750944336344, guid: 04edd8a57eb37104e87bc6d39fede239, type: 3}
+--- !u!1001 &1441360679
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1672413957465144264, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: parity
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144264, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: offsetDir
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_RootOrder
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 6.928203
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144265, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144267, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_Name
+      value: GridProbe
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957590543916, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957590543916, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
 --- !u!1001 &1455971922
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5732,7 +5810,7 @@ Transform:
   - {fileID: 1886460771}
   - {fileID: 691037160}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!224 &1591289232 stripped
 RectTransform:

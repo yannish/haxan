@@ -12,8 +12,6 @@ public class BashV2 : AbilityV2
 	public PooledMonoBehaviour pushableMarker;
 	public PooledMonoBehaviour unpushableMarker;
 
-	//public PooledMonoBehaviour previewMarker;
-
 
 	public override void ShowValidMoves(Vector2Int origin, Unit unit)
 	{
@@ -101,12 +99,6 @@ public class BashV2 : AbilityV2
 
 		PooledMonoBehaviour newMarker = null;
 
-		//newMarker = pushableMarker.GetAndPlay(
-		//	affectedWorldPos,
-		//	originToAffectedDir
-		//	);
-
-		//PooledMonoBehaviour newMarker = null;
 		if (affectedCoord.TryGetUnitAtCoord(out var foundUnit))
 		{
 			if (
@@ -130,15 +122,4 @@ public class BashV2 : AbilityV2
 
 		return newMarker;
 	}
-
-	//public override void ShowPreviewEffect(Vector2Int originList, <Vector2Int> coords)
-	//{
-	//	//Action undo = null;
-	//	//return undo;
-	//}
-
-	//public override void HidePreviewEffect()
-	//{
-
-	//}
 }

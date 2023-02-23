@@ -29,10 +29,7 @@ public enum HexOcclusion
 
 public static class HexDirectionExtensions
 {
-    public static float ToAngle(this HexDirection direction)
-	{
-		return HexPTAngleLookup[direction];
-	}
+    public static float ToAngle(this HexDirection direction) => HexPTAngleLookup[direction];
 
 	public static HexDirection ClosestCardinal(this Vector3 vector)
 	{
@@ -53,19 +50,12 @@ public static class HexDirectionExtensions
 		return closestCardinal;
 	}
 
-	public static Vector3 ToVector(this HexDirection direction)
-	{
-		return Quaternion.AngleAxis(HexPTAngleLookup[direction], Vector3.up) * Vector3.forward;
-		//return Quaternion.AngleAxis(30f + 60f * (int)direction, Vector3.up) * Vector3.forward;
-	}
+	public static Vector3 ToVector(this HexDirection direction) => Quaternion.AngleAxis(HexPTAngleLookup[direction], Vector3.up) * Vector3.forward;
 
-	public static Vector3 ToVector(this HexDirectionFT dir)
-	{
-		return Quaternion.AngleAxis(HexFTAngleLookup[dir], Vector3.up) * Vector3.forward;
-	}
-
+	public static Vector3 ToVector(this HexDirectionFT dir) => Quaternion.AngleAxis(HexFTAngleLookup[dir], Vector3.up) * Vector3.forward;
 
 	private static Vector3[] _VectorHexDirections;
+
 	public static Vector3[] VectorHexDirections
 	{
 		get

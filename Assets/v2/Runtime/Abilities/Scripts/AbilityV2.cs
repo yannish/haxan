@@ -37,8 +37,6 @@ public class AbilityV2 : ScriptableObject
     public virtual void HidePreview() { }
 
 
-
-
     public virtual List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit) => null;
     // ^^ given unit's position, where can the ability be targeted?
 
@@ -46,12 +44,5 @@ public class AbilityV2 : ScriptableObject
 
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
 
-    public virtual Queue<UnitCommand> FetchCommandChain(
-        Vector2Int targetCoord,
-        Unit unit
-        )
-    {
-        Queue<UnitCommand> newCommands = new Queue<UnitCommand>();
-        return newCommands;
-    }
+    public virtual Queue<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommand>();
 }

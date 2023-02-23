@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using System;
 
 public class Board
 {
@@ -28,6 +29,7 @@ public class Board
             0f, 0f, 1f
         )
     );
+
 
     public static Vector2Int WorldToOffset(Vector3 worldPos)
     {
@@ -117,21 +119,21 @@ public class Board
     {
         {
             // even cols 
-            new Vector2Int(+1, 0),  // SE
-            new Vector2Int(+1, -1), // NE
-            new Vector2Int(0, -1),  // N
-            new Vector2Int(-1, -1), // NW
-            new Vector2Int(-1, 0),  // SW
-            new Vector2Int(0, +1),  // S
+            new Vector2Int(0, +1),  // N
+            new Vector2Int(+1, 0),  // NE
+            new Vector2Int(+1, -1), // SE
+            new Vector2Int(0, -1),  // S
+            new Vector2Int(-1, -1), // SW
+            new Vector2Int(-1, 0),  // NW
         },
         // odd cols 
         {
-            new Vector2Int(+1, +1), // SE
-            new Vector2Int(+1, 0),  // NE
-            new Vector2Int(0, -1),  // N
-            new Vector2Int(-1, 0),  // NW
-            new Vector2Int(-1, +1), // SW
-            new Vector2Int(0, +1)   // S
+            new Vector2Int(0, +1),  // N
+            new Vector2Int(+1, +1), // NE
+            new Vector2Int(+1, 0),  // SE
+            new Vector2Int(0, -1),  // S
+            new Vector2Int(-1, 0),  // SW
+            new Vector2Int(-1, +1), // NW
         }
     };
 
@@ -184,9 +186,11 @@ public class Board
             foreach (var cell in cells)
             {
                 Vector2Int offset = WorldToOffset(cell.transform.position);
+
                 // Potentially update the bounds
                 min = Vector2Int.Min(min, offset);
                 max = Vector2Int.Max(max, offset);
+                
                 // Add the coords and the cell to the list of tuples
                 cellsAndCoords.Add((cell, offset));
             }
@@ -223,7 +227,7 @@ public class Board
 
         OffsetPos = min;
 
-        Units = Object.FindObjectsOfType<Unit>();
+        Units = UnityEngine.Object.FindObjectsOfType<Unit>();
         Debug.Log($"Built a {Cells.GetLength(0)}x{Cells.GetLength(1)} board with {Units.Length} units.");
 
         var ui = BoardUI.FindObjectOfType<BoardUI>();
@@ -482,6 +486,123 @@ public class Board
 
 public static class BoardExtensions
 {
+    public static Vector2Int?[] GetNeighbouringCoords(this Vector2Int coord)
+	{
+        //CellV2_NEW[] neighbs = new CellV2_NEW[6];
+        Vector2Int?[] neighbours = new Vector2Int?[6];
+
+        Debug.LogWarning("checking neighbs at: " + coord.ToString());
+
+        int parity = coord.x & 1;
+        for (int i = 0; i < 6; i++)
+        {
+            Vector2Int neighbour = coord + Board.neighborLut[parity, i];
+
+            //Debug.LogWarning("checking neighb at: " + ((HexDirectionFT)i).ToString());
+
+            if (
+                neighbour.x < Board.OffsetPos.x ||
+                neighbour.x >= Board.OffsetPos.x + Board.Cells.GetLength(0) ||
+                neighbour.y < Board.OffsetPos.y ||
+                neighbour.y >= Board.OffsetPos.y + Board.Cells.GetLength(1)
+                )
+            {
+                neighbours[i] = null;
+                // ^ This position is outside the Board's bounds. Skip.
+                continue;
+            }
+
+			//neighbours[i] = Board.Cells[neighbour.x - Board.OffsetPos.x, neighbour.y - Board.OffsetPos.y];
+
+			if (Board.Cells[neighbour.x - Board.OffsetPos.x, neighbour.y - Board.OffsetPos.y] == null)
+			{
+                //Debug.LogWarning("")
+				neighbours[i] = null;
+				// ^ This position doesn't contain a cell. Skip.
+				continue;
+			}
+
+            Debug.LogWarning("... neighb to the: " + ((HexDirectionFT)i).ToString() + " " + neighbour.ToString());
+
+            neighbours[i] = neighbour;
+		}
+
+        return neighbours;
+    }
+
+    public static bool IsNeighbourOf(this Vector2Int coord, Vector2Int targetCoord)
+	{
+        int parity = coord.x & 1;
+        Vector2Int delta = targetCoord - coord;
+        int j;
+        for(j = 0; j < 6; j++)
+		{
+            if (Board.neighborLut[parity, j] == delta)
+                return true;
+		}
+
+        return false;
+	}
+
+    public static CellV2_NEW[] GetNeighbouringCells(this Vector2Int coord)
+    {
+        CellV2_NEW[] neighbs = new CellV2_NEW[6];
+        //List<Vector2Int> neighbours = new List<Vector2Int>();
+
+        int parity = coord.x & 1;
+        for (int i = 0; i < 6; i++)
+        {
+            Vector2Int neighbour = coord + Board.neighborLut[parity, i];
+
+            Debug.LogWarning("checking neighb at: " + ((HexDirectionFT)i).ToString());
+
+            if (
+                neighbour.x < Board.OffsetPos.x ||
+                neighbour.x >= Board.OffsetPos.x + Board.Cells.GetLength(0) ||
+                neighbour.y < Board.OffsetPos.y ||
+                neighbour.y >= Board.OffsetPos.y + Board.Cells.GetLength(1)
+                )
+            {
+                neighbs[i] = null;
+                // ^ This position is outside the Board's bounds. Skip.
+                continue;
+            }
+
+            neighbs[i] = Board.Cells[neighbour.x - Board.OffsetPos.x, neighbour.y - Board.OffsetPos.y];
+
+            //if (Board.Cells[neighbour.x - Board.OffsetPos.x, neighbour.y - Board.OffsetPos.y] == null)
+            //{
+            //    neighbs[i] = null;
+            //    // ^ This position doesn't contain a cell. Skip.
+            //    continue;
+            //}
+
+            //neighbs[i] = 
+
+            //neighbours.Add(neighbour);
+        }
+
+
+        return neighbs;
+    }
+
+    public static HexDirectionFT To(this Vector2Int from, Vector2Int to)
+	{
+        if (!from.IsNeighbourOf(to))
+            return (HexDirectionFT)(-1);
+
+        int parity = from.x & 1;
+        Vector2Int delta = to - from;
+        int i;
+		for (i = 0; i < 6; i++)
+		{
+            if (Board.neighborLut[parity, i] == delta)
+                break;
+		}
+
+        return (HexDirectionFT)i;
+    }
+
     public static void SnapToGrid(this Transform transform)
 	{
         float3 cartesian = new float3(transform.position.x, transform.position.z, 1f);

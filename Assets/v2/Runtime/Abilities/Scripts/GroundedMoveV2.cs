@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+
 [CreateAssetMenu(menuName = "AbilitiesV2/GroundedMove", fileName = "GroundedMove")]
 public class GroundedMoveV2 : AbilityV2
 {
@@ -19,6 +20,22 @@ public class GroundedMoveV2 : AbilityV2
 	public override List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int destination, Unit unit)
 	{
 		Vector2Int[] path = Board.FindPath(origin, destination);
+
+		for (int i = 0; i < path.Length; i++)
+		{
+			Vector2Int from = (i == 0) ? unit.OffsetPos : path[i - 1];
+			Vector2Int to = path[i];
+
+			GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab);
+			pathQuad.transform.position = Board.OffsetToWorld(from);
+
+			HexDirectionFT hexDir = from.To(to);
+			Vector3 lookDir = hexDir.ToVector();
+
+			pathQuad.transform.rotation = Quaternion.LookRotation(lookDir);
+
+			pathQuads.Add(pathQuad);
+		}
 
 		//string pathName = $"Path{unit.GetInstanceID()}";
 
@@ -49,5 +66,38 @@ public class GroundedMoveV2 : AbilityV2
 		return path.ToList();
 	}
 
-	//public 
+	public override void HidePreview()
+	{
+		foreach(var quad in pathQuads)
+		{
+			Destroy(quad.gameObject);
+		}
+
+		pathQuads.Clear();
+	}
+
+	public override Queue<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit)
+	{
+		//... might not really need these checks...
+		if (targetCoord == unit.OffsetPos)
+			return null;
+
+		CellV2_NEW originCell = Board.TryGetCellAtPos(targetCoord);
+		if (originCell == null)
+			return null;
+
+		Unit foundUnit = Board.GetUnitAtPos(targetCoord);
+		if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
+			return null;
+
+		Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
+		if (path.Length == 0)
+			return null;
+
+		Queue<UnitCommand> commands = new Queue<UnitCommand>();
+
+		//HexDirectionFT toFirstCellDir = targetCoord.
+
+		return commands;
+	}
 }

@@ -33,16 +33,25 @@ public class Unit : MonoBehaviour
         this.SetFacing(Facing);
 	}
 
-	void OnDrawGizmos()
+    //public HexDirectionFT offsetDir;
+    public int parity;
+    void OnDrawGizmos()
     {
         if (transform.hasChanged)
 		{
             transform.SnapToGrid();
             OffsetPos = Board.WorldToOffset(transform.position);
+            //Debug.LogWarning("snapped to : " + OffsetPos.ToString());
         }
+
+        //parity = this.OffsetPos.x & 1;
+
+        //Vector2Int offset = Board.neighborLut[parity, (int)offsetDir];
+        //Vector2Int offsetPos = this.OffsetPos + offset;
+        //Vector3 worldPos = Board.OffsetToWorld(offsetPos);
+
+        //Gizmos.DrawSphere(worldPos, 1f);
     }
-
-
 }
 
 public static class UnitExtensions

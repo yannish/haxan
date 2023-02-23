@@ -273,6 +273,8 @@ public class BoardUI : MonoBehaviour
 
     List<Vector2Int> currPath;
 
+    public int lookupOffset;
+
     //... UNIT:
     void HandleUnitSelectedMode()
     {
@@ -354,41 +356,49 @@ public class BoardUI : MonoBehaviour
                     hoveredCellPos = mousePos;
                     DestroyPathGizmos(selectedUnit);
 
-                    currPath = selectedUnit.MovementAbility.GetAffectedCells(
+                    selectedUnit.MovementAbility.GetAffectedCells(
                         selectedUnit.OffsetPos, 
-                        hoveredCellPos,
+                        hoveredCellPos, 
                         selectedUnit
                         );
+
+                    //currPath = selectedUnit.MovementAbility.GetAffectedCells(
+                    //    selectedUnit.OffsetPos, 
+                    //    hoveredCellPos,
+                    //    selectedUnit
+                    //    );
 
                     // Find the shortest path
                     //Vector2Int[] path = Board.FindPath(selectedUnit.OffsetPos, hoveredCellPos);
 
                     // Create new path gizmos
                     //var pathQuadPrefab = Resources.Load("Prefabs/BoardUI/PathQuad");
-                    string pathName = $"Path{selectedUnit.GetInstanceID()}";
-                    for (int i = 0; i < currPath.Count; i++)
-                    {
-                        Vector2Int from = (i == 0) ? selectedUnit.OffsetPos : currPath[i - 1];
-                        Vector2Int to = currPath[i];
-                        GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab, gizmos.transform);
-                        pathQuad.name = pathName;
-                        pathQuad.transform.position = Board.OffsetToWorld(from);
-                        // Rotate the path by locating its index in the neighbor
-                        // look-up table
-                        float degrees = 0f;
-                        {
-                            int parity = from.x & 1;
-                            Vector2Int delta = to - from;
-                            int j;
-                            for (j = 0; j < 6; j++)
-                            {
-                                if (Board.neighborLut[parity, j] == delta)
-                                    break;
-                            }
-                            degrees = (1 + j) * 60f;
-                        }
-                        pathQuad.transform.rotation = Quaternion.Euler(0, degrees, 0);
-                    }
+
+                    //string pathName = $"Path{selectedUnit.GetInstanceID()}";
+
+                    //for (int i = 0; i < currPath.Count; i++)
+                    //{
+                    //    Vector2Int from = (i == 0) ? selectedUnit.OffsetPos : currPath[i - 1];
+                    //    Vector2Int to = currPath[i];
+                    //    GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab, gizmos.transform);
+                    //    pathQuad.name = pathName;
+                    //    pathQuad.transform.position = Board.OffsetToWorld(from);
+                    //    // Rotate the path by locating its index in the neighbor
+                    //    // look-up table
+                    //    float degrees = 0f;
+                    //    {
+                    //        int parity = from.x & 1;
+                    //        Vector2Int delta = to - from;
+                    //        int j;
+                    //        for (j = 0; j < 6; j++)
+                    //        {
+                    //            if (Board.neighborLut[parity, j] == delta)
+                    //                break;
+                    //        }
+                    //        degrees = (lookupOffset + j) * 60f;
+                    //    }
+                    //    pathQuad.transform.rotation = Quaternion.Euler(0, degrees, 0);
+                    //}
                 }
             }
 
@@ -668,14 +678,19 @@ public class BoardUI : MonoBehaviour
 
     void DestroyPathGizmos(Unit unit)
     {
-        string pathName = $"Path{unit.GetInstanceID()}";
-        foreach (Transform child in gizmos.transform)
-        {
-            if (child.name == pathName)
-            {
-                Destroy(child.gameObject);
-            }
-        }
+        if(unit.MovementAbility != null)
+		{
+            unit.MovementAbility.HidePreview();
+		}
+
+        //string pathName = $"Path{unit.GetInstanceID()}";
+        //foreach (Transform child in gizmos.transform)
+        //{
+        //    if (child.name == pathName)
+        //    {
+        //        Destroy(child.gameObject);
+        //    }
+        //}
     }
 
     Unit GetUnitByGuid(int unitGuid)

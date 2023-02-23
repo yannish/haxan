@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GridProbe : CellObject
 {
+
 	[Space(10)]
 	[Header("GRID TESTING:")]
     public int maxLength;

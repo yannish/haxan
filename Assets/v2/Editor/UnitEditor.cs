@@ -34,22 +34,28 @@ public class UnitEditor : Editor
 			Vector2Int axialCoord = Board.OffsetToAxial(targetCoord);
 			Vector3Int fullAxialCoord = new Vector3Int(axialCoord.x, axialCoord.y, -axialCoord.x - axialCoord.y);
 
-			Vector3Int unitCubicCoord = Board.OffsetToCubic(unitCoord);
-			Vector3Int targetCubicCoord = Board.OffsetToCubic(targetCoord);
-			Vector3Int deltaCubicCoord = unitCubicCoord - targetCubicCoord;
+			Debug.LogWarning("... is neighbour: " + unitCoord.IsNeighbourOf(targetCoord));
 
-			Debug.LogWarning("targetOffset: " + targetCoord);
-			Debug.LogWarning("targetCubicCoord: " + targetCubicCoord);
-			Debug.LogWarning("fullAxialCoord: " + fullAxialCoord);
+			HexDirectionFT toTarget = unitCoord.To(targetCoord);
 
-			Debug.LogWarning("unitCubic: " + unitCubicCoord);
-			Debug.LogWarning("deltaCubicCoord: " + deltaCubicCoord);
+			Debug.LogWarning("to target: " + toTarget.ToString());
 
-			Vector3Int weirdCoord = new Vector3Int(
-				deltaCubicCoord.x - deltaCubicCoord.y,
-				deltaCubicCoord.y - deltaCubicCoord.z,
-				deltaCubicCoord.z - deltaCubicCoord.x
-				);
+			//Vector3Int unitCubicCoord = Board.OffsetToCubic(unitCoord);
+			//Vector3Int targetCubicCoord = Board.OffsetToCubic(targetCoord);
+			//Vector3Int deltaCubicCoord = unitCubicCoord - targetCubicCoord;
+
+			//Debug.LogWarning("targetOffset: " + targetCoord);
+			//Debug.LogWarning("targetCubicCoord: " + targetCubicCoord);
+			//Debug.LogWarning("fullAxialCoord: " + fullAxialCoord);
+
+			//Debug.LogWarning("unitCubic: " + unitCubicCoord);
+			//Debug.LogWarning("deltaCubicCoord: " + deltaCubicCoord);
+
+			//Vector3Int weirdCoord = new Vector3Int(
+			//	deltaCubicCoord.x - deltaCubicCoord.y,
+			//	deltaCubicCoord.y - deltaCubicCoord.z,
+			//	deltaCubicCoord.z - deltaCubicCoord.x
+			//	);
 		}
 
 		if(Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.RightArrow)
