@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edfee8f9564af0f4d9c467bb0e904292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tickTiming: 1
   tickOnFixedUpdate: 0
   growOnExhaustion: 1
   initialPoolSize: 32

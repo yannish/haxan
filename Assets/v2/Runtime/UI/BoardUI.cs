@@ -246,34 +246,59 @@ public class BoardUI : MonoBehaviour
         mousePosLastFrame = mousePos;
     }
 
+    PooledCellVisuals GetCellMarker(Vector2Int cellCoord)
+	{
+        if (coordToCellMarkerLookup.TryGetValue(cellCoord, out var foundCellMarker))
+        {
+            return foundCellMarker;
+        }
+        else
+		{
+            Vector3 cellPos = Board.OffsetToWorld(cellCoord);
+            var newCellMarker = hoverCellMarker.GetAndPlay(cellPos, Quaternion.identity, play: false);
+			newCellMarker.OnReturnedToPool += () =>
+			{
+				coordToCellMarkerLookup.Remove(cellCoord);
+			};
+			coordToCellMarkerLookup.Add(cellCoord, newCellMarker);
+            return newCellMarker;
+        }
+    }
+
     void HoverEmptyCell(Cell cell)
     {
         currHoveredEmptyCell = cell;
 
         Vector2Int offsetCellCoord = Board.WorldToOffset(cell.transform.position);
-        if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
-        {
-            foundCellMarker.Hover();
-        }
-        else
-        {
-            var newCellMarker = hoverCellMarker.GetAndPlay(cell.transform.position, Quaternion.identity, play: false);
-            newCellMarker.Hover();
-            newCellMarker.OnReturnedToPool += () =>
-            {
-                coordToCellMarkerLookup.Remove(offsetCellCoord);
-            };
-            coordToCellMarkerLookup.Add(offsetCellCoord, newCellMarker);
-        }
+        var cellMarker = GetCellMarker(offsetCellCoord);
+        cellMarker.Hover();
+
+        //if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+        //{
+        //    foundCellMarker.Hover();
+        //}
+        //else
+        //{
+        //    var newCellMarker = hoverCellMarker.GetAndPlay(cell.transform.position, Quaternion.identity, play: false);
+        //    newCellMarker.Hover();
+        //    newCellMarker.OnReturnedToPool += () =>
+        //    {
+        //        coordToCellMarkerLookup.Remove(offsetCellCoord);
+        //    };
+        //    coordToCellMarkerLookup.Add(offsetCellCoord, newCellMarker);
+        //}
     }
 
     void UnhoverEmptyCell()
     {
         if (currHoveredEmptyCell != null)
         {
-            Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredEmptyCell.transform.position);
-            if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
-                foundCellMarker.Unhover();
+            Vector2Int cellCoord = Board.WorldToOffset(currHoveredEmptyCell.transform.position);
+            var cellMarker = GetCellMarker(cellCoord);
+            cellMarker.Unhover();
+
+            //if (coordToCellMarkerLookup.TryGetValue(cellCoord, out var foundCellMarker))
+                //foundCellMarker.Unhover();
         }
 
         currHoveredEmptyCell = null;
@@ -445,21 +470,26 @@ public class BoardUI : MonoBehaviour
             abilityButtons[i].Init(this, unit.Abilities[i]);
         }
 
-		if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
-		{
-			foundCellMarker.Clickable();
-		}
-		else
-		{
-			var newCellMarker = hoverCellMarker.GetAndPlay(unit.transform.position, Quaternion.identity, playParams: (int)CellStateV2.HOVERED);
-			newCellMarker.Hover();
-            newCellMarker.Clickable();
-			newCellMarker.OnReturnedToPool += () =>
-			{
-				coordToCellMarkerLookup.Remove(unit.OffsetPos);
-			};
-			coordToCellMarkerLookup.Add(unit.OffsetPos, newCellMarker);
-		}
+        Vector2Int unitCoord = Board.WorldToOffset(unit.transform.position);
+        var cellMarker = GetCellMarker(unitCoord);
+        cellMarker.Hover();
+        cellMarker.Clickable();
+
+		//if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+		//{
+		//	foundCellMarker.Clickable();
+		//}
+		//else
+		//{
+		//	var newCellMarker = hoverCellMarker.GetAndPlay(unit.transform.position, Quaternion.identity, playParams: (int)CellStateV2.HOVERED);
+		//	newCellMarker.Hover();
+  //          newCellMarker.Clickable();
+		//	newCellMarker.OnReturnedToPool += () =>
+		//	{
+		//		coordToCellMarkerLookup.Remove(unit.OffsetPos);
+		//	};
+		//	coordToCellMarkerLookup.Add(unit.OffsetPos, newCellMarker);
+		//}
 
         if (currHoveredUnit is PlayerUnit && currHoveredUnit.MovementAbility != null)
         {
@@ -473,11 +503,15 @@ public class BoardUI : MonoBehaviour
             return;
 
 		Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredUnit.transform.position);
-		if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
-		{
-            foundCellMarker.Unhover();
-            foundCellMarker.Unclickable();
-		}
+        var cellMarker = GetCellMarker(offsetCellCoord);
+        cellMarker.Unhover();
+        cellMarker.Unclickable();
+
+		//if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+		//{
+  //          foundCellMarker.Unhover();
+  //          foundCellMarker.Unclickable();
+		//}
 
 		currHoveredUnit = null;
 
@@ -498,21 +532,26 @@ public class BoardUI : MonoBehaviour
 	{
         currHoveredUnit = unit;
 
-        if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
-        {
-            foundCellMarker.Clickable();
-        }
-        else
-        {
-            var newCellMarker = hoverCellMarker.GetAndPlay(unit.transform.position, Quaternion.identity, playParams: (int)CellStateV2.HOVERED);
-            newCellMarker.Hover();
-            newCellMarker.Clickable();
-            newCellMarker.OnReturnedToPool += () =>
-            {
-                coordToCellMarkerLookup.Remove(unit.OffsetPos);
-            };
-            coordToCellMarkerLookup.Add(unit.OffsetPos, newCellMarker);
-        }
+        var cellMarker = GetCellMarker(Board.WorldToOffset(unit.transform.position));
+        cellMarker.Hover();
+        //... ^^ needed..?
+        cellMarker.Clickable();
+
+        //if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+        //{
+        //    foundCellMarker.Clickable();
+        //}
+        //else
+        //{
+        //    var newCellMarker = hoverCellMarker.GetAndPlay(unit.transform.position, Quaternion.identity, playParams: (int)CellStateV2.HOVERED);
+        //    newCellMarker.Hover();
+        //    newCellMarker.Clickable();
+        //    newCellMarker.OnReturnedToPool += () =>
+        //    {
+        //        coordToCellMarkerLookup.Remove(unit.OffsetPos);
+        //    };
+        //    coordToCellMarkerLookup.Add(unit.OffsetPos, newCellMarker);
+        //}
     }
 
     void UnhoverUnitFromSelected()
@@ -523,11 +562,15 @@ public class BoardUI : MonoBehaviour
             return;
 
         Vector2Int offsetCellCoord = Board.WorldToOffset(currHoveredUnit.transform.position);
-        if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
-        {
-            foundCellMarker.Unhover();
-            foundCellMarker.Unclickable();
-        }
+        var cellMarker = GetCellMarker(offsetCellCoord);
+        cellMarker.Unhover();
+        cellMarker.Unclickable();
+        
+        //if (coordToCellMarkerLookup.TryGetValue(offsetCellCoord, out var foundCellMarker))
+        //{
+        //    foundCellMarker.Unhover();
+        //    foundCellMarker.Unclickable();
+        //}
 
         currHoveredUnit = null;
     }
@@ -556,10 +599,13 @@ public class BoardUI : MonoBehaviour
 			ShowValidMoves(unit);
 		}
 
-		if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
-        {
-            foundCellMarker.Select();
-        }
+        var cellMarker = GetCellMarker(Board.WorldToOffset(unit.transform.position));
+        cellMarker.Select();
+
+		//if (coordToCellMarkerLookup.TryGetValue(unit.OffsetPos, out var foundCellMarker))
+  //      {
+  //          foundCellMarker.Select();
+  //      }
     }
 
     void DeselectUnit()
@@ -575,16 +621,25 @@ public class BoardUI : MonoBehaviour
 
         UnhoverAbility();
 
-        if (coordToCellMarkerLookup.TryGetValue(selectedUnit.OffsetPos, out var foundCellMarker))
-        {
-            foundCellMarker.Deselect();
-
-            if(mousePos != selectedUnit.OffsetPos)
-			{
-                foundCellMarker.Unhover();
-                foundCellMarker.Unclickable();
-			}
+        Vector2Int selectedUnitCoord = Board.WorldToOffset(selectedUnit.transform.position);
+        var cellMarker = GetCellMarker(selectedUnitCoord);
+        cellMarker.Deselect();
+        if(mousePos != selectedUnitCoord)
+		{
+            cellMarker.Unhover();
+            cellMarker.Unclickable();
         }
+
+   //     if (coordToCellMarkerLookup.TryGetValue(selectedUnit.OffsetPos, out var foundCellMarker))
+   //     {
+   //         foundCellMarker.Deselect();
+
+   //         if(mousePos != selectedUnit.OffsetPos)
+			//{
+   //             foundCellMarker.Unhover();
+   //             foundCellMarker.Unclickable();
+			//}
+   //     }
 
         lastSelectedUnit = selectedUnit;
         selectedUnit = null;
@@ -1021,51 +1076,55 @@ public class BoardUI : MonoBehaviour
     {
         Debug.LogWarning("hovered a valid ability move");
 
-  //      var affectedCoords = selectedAbility.GetAffectedCells(
-  //          selectedUnit.OffsetPos, 
-  //          currValidMoveCoord, 
-  //          selectedUnit
-  //          );
+        //      var affectedCoords = selectedAbility.GetAffectedCells(
+        //          selectedUnit.OffsetPos, 
+        //          currValidMoveCoord, 
+        //          selectedUnit
+        //          );
 
-  //      foreach(var affectedCoord in affectedCoords)
+        //      foreach(var affectedCoord in affectedCoords)
+        //{
+        //          if(coordToPreviewLookup.TryGetValue(affectedCoord, out var previewMarker))
+        //	{
+        //              previewMarker.Play();
+        //	}
+        //	else
+        //	{
+        //              var newPreviewMarker = selectedAbility.PreviewAffectedCell(selectedUnit.OffsetPos, affectedCoord);
+        //              if (newPreviewMarker == null)
+        //                  continue;
+
+        //              newPreviewMarker.OnReturnedToPool += () =>
+        //              {
+        //                  coordToPreviewLookup.Remove(affectedCoord);
+        //              };
+
+        //              coordToPreviewLookup.Add(affectedCoord, newPreviewMarker);
+        //	}
+        //}
+
+        var cellMarker = GetCellMarker(hoveredCoord);
+        cellMarker.Hover();
+        cellMarker.Clickable();
+
+  //      if(coordToCellMarkerLookup.TryGetValue(hoveredCoord, out var foundCellMarker))
 		//{
-  //          if(coordToPreviewLookup.TryGetValue(affectedCoord, out var previewMarker))
-		//	{
-  //              previewMarker.Play();
-		//	}
-		//	else
-		//	{
-  //              var newPreviewMarker = selectedAbility.PreviewAffectedCell(selectedUnit.OffsetPos, affectedCoord);
-  //              if (newPreviewMarker == null)
-  //                  continue;
-
-  //              newPreviewMarker.OnReturnedToPool += () =>
-  //              {
-  //                  coordToPreviewLookup.Remove(affectedCoord);
-  //              };
-
-  //              coordToPreviewLookup.Add(affectedCoord, newPreviewMarker);
-		//	}
+  //          foundCellMarker.Hover();
+  //          foundCellMarker.Clickable();
 		//}
+		//else
+		//{
+  //          var newCellMarker = hoverCellMarker.GetAndPlay(Board.OffsetToWorld(hoveredCoord), Quaternion.identity);
+  //          newCellMarker.Hover();
+  //          newCellMarker.Clickable();
 
-        if(coordToCellMarkerLookup.TryGetValue(hoveredCoord, out var foundCellMarker))
-		{
-            foundCellMarker.Hover();
-            foundCellMarker.Clickable();
-		}
-		else
-		{
-            var newCellMarker = hoverCellMarker.GetAndPlay(Board.OffsetToWorld(hoveredCoord), Quaternion.identity);
-            newCellMarker.Hover();
-            newCellMarker.Clickable();
+  //          newCellMarker.OnReturnedToPool += () =>
+  //          {
+  //              coordToCellMarkerLookup.Remove(hoveredCoord);
+  //          };
 
-            newCellMarker.OnReturnedToPool += () =>
-            {
-                coordToCellMarkerLookup.Remove(hoveredCoord);
-            };
-
-            coordToCellMarkerLookup.Add(hoveredCoord, newCellMarker);
-		}
+  //          coordToCellMarkerLookup.Add(hoveredCoord, newCellMarker);
+		//}
     }
 
     void UnhoverValidAbilityMove()

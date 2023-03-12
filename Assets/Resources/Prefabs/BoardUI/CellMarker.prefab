@@ -47,11 +47,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c458ab58745b9459c537b484bd2106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tickTiming: 1
   tickOnFixedUpdate: 0
   growOnExhaustion: 1
   initialPoolSize: 10
   logDebug: 0
-  hoverBlock: {fileID: 0}
+  hoverBlock: {fileID: 7514143976346608760}
   interactionHexSize:
     propName: _Size
     weight: -1
@@ -200,6 +201,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c458ab58745b9459c537b484bd2106, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tickTiming: 0
   tickOnFixedUpdate: 0
   growOnExhaustion: 0
   initialPoolSize: 10
@@ -350,6 +352,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 942997025797877967}
+  - component: {fileID: 7514143976346608760}
   m_Layer: 0
   m_Name: interactionMatBlock
   m_TagString: Untagged
@@ -372,6 +375,31 @@ Transform:
   m_Father: {fileID: 942997024419733214}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7514143976346608760
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 942997025797877966}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc84656d74cbbaa4695683074ce7ec34, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetObjects:
+  - {fileID: 942997025694717099}
+  _renderers:
+  - {fileID: 942997025833472736}
+  debug: 0
+  debugColorBlock:
+    propName: _Color
+    weight: -1
+    colorValue: {r: 0, g: 0, b: 0, a: 0}
+  debugFloatBlock:
+    propName: _Color
+    weight: -1
+    floatValue: 0
 --- !u!1 &942997025833472739
 GameObject:
   m_ObjectHideFlags: 0

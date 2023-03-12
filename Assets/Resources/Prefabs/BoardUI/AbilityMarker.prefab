@@ -79,6 +79,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: edfee8f9564af0f4d9c467bb0e904292, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tickTiming: 1
   tickOnFixedUpdate: 0
   growOnExhaustion: 1
   initialPoolSize: 32
@@ -142,10 +143,12 @@ MonoBehaviour:
     weight: -1
     floatValue: 0
   marked: 0
+  doSize: 1
   markedSize: 0.85
   unmarkedSize: 0.4
   sizeFreq: 22
   sizeDamp: 0.6
+  doColor: 1
   markedColor: {r: 1, g: 0.9019608, b: 0, a: 0.6117647}
   unmarkedColor: {r: 1, g: 0.9019608, b: 0, a: 0}
   colorSmoothTime: 0.1
