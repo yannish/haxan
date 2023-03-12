@@ -7,8 +7,8 @@ using UnityEditor;
 #endif
 public class StepCommand : CharacterCommand
 {
-	public Cell targetCell;
-	public Cell fromCell;
+	public Cell_OLD targetCell;
+	public Cell_OLD fromCell;
 
 	public Vector3 startPos;
 	public Vector3 endPos;
@@ -16,8 +16,8 @@ public class StepCommand : CharacterCommand
 
 	public StepCommand(
 		Character character,
-		Cell fromCell,
-		Cell targetCell,
+		Cell_OLD fromCell,
+		Cell_OLD targetCell,
 		float duration
 		) : base(character)
 	{
@@ -89,8 +89,8 @@ public class StepCommand : CharacterCommand
 	public override void DrawInspectorContent()
 	{
 		EditorGUILayout.BeginHorizontal();
-		EditorGUILayout.ObjectField("from:", fromCell, typeof(Cell), true);
-		EditorGUILayout.ObjectField("to:", targetCell, typeof(Cell), true);
+		EditorGUILayout.ObjectField("from:", fromCell, typeof(Cell_OLD), true);
+		EditorGUILayout.ObjectField("to:", targetCell, typeof(Cell_OLD), true);
 		EditorGUILayout.EndHorizontal();
 	}
 #endif

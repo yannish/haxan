@@ -17,8 +17,8 @@ public class GridV2Editor : Editor
             GridV2 grid = (GridV2)target;
             
             // Destroy all children that are cells
-            CellV2_NEW[] cells = grid.GetComponentsInChildren<CellV2_NEW>();
-            foreach (CellV2_NEW cell in cells)
+            Cell[] cells = grid.GetComponentsInChildren<Cell>();
+            foreach (Cell cell in cells)
             {
                 DestroyImmediate(cell.gameObject);
             }

@@ -14,8 +14,8 @@ public class CellInfoDisplay : MonoBehaviour
 		//Events.instance.AddListener<ElementHoveredEvent>(CellHovered);
 		slots = GetComponentsInChildren<CellDisplaySlot>();
 
-		Cell.OnCellHovered += DisplayCell;
-		Cell.OnCellUnhovered += Clear;
+		Cell_OLD.OnCellHovered += DisplayCell;
+		Cell_OLD.OnCellUnhovered += Clear;
 
 		Clear();
 	}
@@ -35,7 +35,7 @@ public class CellInfoDisplay : MonoBehaviour
 			DisplayCell((e.element.flowController as CellFlowController).cell);
 	}
 
-	private void DisplayCell(Cell cell)
+	private void DisplayCell(Cell_OLD cell)
 	{
 		//Debug.Log("... displaying cell ");
 

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Unity.Mathematics;
 
-public class CellV2_NEW : MonoBehaviour
+public class Cell : MonoBehaviour
 {
     public static readonly float OuterRadius = 2f;
     public static readonly float InnerRadius = OuterRadius * 0.866025404f;
@@ -24,5 +24,8 @@ public class CellV2_NEW : MonoBehaviour
             transform.localPosition = pos;
             transform.hasChanged = false;
         }
+
+        Vector2Int offsetCoord = Board.WorldToOffset(transform.position);
+        transform.position.DrawString($"{offsetCoord.x}, {offsetCoord.y}", Color.green, -40f);
     }
 }

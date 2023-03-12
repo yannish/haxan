@@ -27,9 +27,9 @@ public class AbilityFlowController : FlowController
 
 	[ReadOnly] public AbilityScrObj abilityScrObj;
 
-	public List<Cell> peekedMoves = new List<Cell>();
+	public List<Cell_OLD> peekedMoves = new List<Cell_OLD>();
 
-	public List<Cell> validMoves = new List<Cell>();
+	public List<Cell_OLD> validMoves = new List<Cell_OLD>();
 	
 	public List<UIElement> validElements = new List<UIElement>();
 
@@ -45,7 +45,7 @@ public class AbilityFlowController : FlowController
 	{
 		base.Awake();
 
-		validMoves = new List<Cell>();
+		validMoves = new List<Cell_OLD>();
 		validElements = new List<UIElement>();
 	}
 
@@ -158,7 +158,7 @@ public class AbilityFlowController : FlowController
 
 		if (validElements.Contains(e.element))
 		{
-			var targetCell = e.element.GetComponent<Cell>();
+			var targetCell = e.element.GetComponent<Cell_OLD>();
 			if (targetCell != null)
 			{
 				previewValidMoveAction = abilityScrObj.Peek(targetCell, characterFlow);
@@ -209,7 +209,7 @@ public class AbilityFlowController : FlowController
 		if (validElements.IsNullOrEmpty())
 			return FlowState.YIELD;
 
-		Cell cell = e.element.GetComponent<Cell>();
+		Cell_OLD cell = e.element.GetComponent<Cell_OLD>();
 		if (cell == null)
 			return FlowState.YIELD;
 

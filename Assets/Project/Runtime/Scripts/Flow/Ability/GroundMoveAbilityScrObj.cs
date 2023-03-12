@@ -11,7 +11,7 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
     public FloatReference turnDuration;
 
 
-	public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow)
+	public override List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow)
 	{
 		return flow.character.currCell.GetCellsInRadius(
 			flow.character.CurrMove,
@@ -20,7 +20,7 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
 	}
 
 
-	public override Action Peek(Cell targetCell, CharacterFlowController flow)
+	public override Action Peek(Cell_OLD targetCell, CharacterFlowController flow)
 	{
 		Action peekControl;
 
@@ -35,7 +35,7 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
 
 
 	public override Queue<CellObjectCommand> FetchCommandChain(
-		Cell targetCell,
+		Cell_OLD targetCell,
 		CellObject cellObj,
 		FlowController flow
 		)
@@ -86,8 +86,8 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
 		HexDirection lastFacingDirection = toFirstCellDir;
 		for (int i = 0; i < pathToCell.Count; i++)
 		{
-			Cell fromCell = i == 0 ? cellObj.currCell : pathToCell[i - 1];
-			Cell toCell = pathToCell[i];
+			Cell_OLD fromCell = i == 0 ? cellObj.currCell : pathToCell[i - 1];
+			Cell_OLD toCell = pathToCell[i];
 			HexDirection toNextCellDir = fromCell.To(toCell);
 			if (lastFacingDirection != toNextCellDir)
 			{

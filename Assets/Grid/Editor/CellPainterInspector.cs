@@ -73,11 +73,11 @@ public class CellPainterInspector : Editor
 			{
 				//Debug.Log("CLICK IN CELLPAINTER HIT SOMETHING");
 
-				if (hit.transform.GetComponentInParent<Cell>() != null)
+				if (hit.transform.GetComponentInParent<Cell_OLD>() != null)
 				{
 					Undo.RecordObject(cellPainter, "Painted Tile");
 					Event.current.Use();
-					var paintedCell = hit.transform.GetComponentInParent<Cell>();
+					var paintedCell = hit.transform.GetComponentInParent<Cell_OLD>();
 
 					if (!cellPainter.presets.IsNullOrEmpty())
 						CellPainter.PaintCell(paintedCell, cellPainter.presets[0]);

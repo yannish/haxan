@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TomahawkAbility : Ability
 {
-    public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow)
+    public override List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow)
 	{
 		return cell.GetCardinalRing(2);
 	}

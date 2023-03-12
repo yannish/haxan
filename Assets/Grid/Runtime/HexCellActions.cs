@@ -12,8 +12,8 @@ using UnityEngine;
 public static class CellActions
 {
 	public static bool HasPathTo(
-		this Cell fromCell,
-		Cell toCell,
+		this Cell_OLD fromCell,
+		Cell_OLD toCell,
 		int maxLength = -1
 		)
 	{
@@ -28,9 +28,9 @@ public static class CellActions
 	}
 
 	public static bool HasPathTo(
-		this Cell fromCell, 
-		Cell toCell, 
-		out List<Cell> foundPath,
+		this Cell_OLD fromCell, 
+		Cell_OLD toCell, 
+		out List<Cell_OLD> foundPath,
 		int maxLength = -1
 		)
 	{
@@ -46,18 +46,18 @@ public static class CellActions
 
 	//public static bool HasPathTo
 
-	public static void SetNeighbour(this Cell cell, Cell newNeighbour, HexDirection direction)
+	public static void SetNeighbour(this Cell_OLD cell, Cell_OLD newNeighbour, HexDirection direction)
 	{
 		cell.neighbours[(int)direction] = newNeighbour; 
 		newNeighbour.neighbours[(int)direction.Opposite()] = cell;
 	}
 
-	public static Cell GetNeighbour(this Cell cell, HexDirection direction)
+	public static Cell_OLD GetNeighbour(this Cell_OLD cell, HexDirection direction)
 	{
 		return cell.neighbours[(int)direction];
 	}
 
-	public static Action EffectCells<T>(List<Cell> cells) where T : CellCommand, new()
+	public static Action EffectCells<T>(List<Cell_OLD> cells) where T : CellCommand, new()
 	{
 		Action undo = () => { };
 

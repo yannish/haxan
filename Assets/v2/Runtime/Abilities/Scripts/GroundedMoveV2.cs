@@ -1,3 +1,4 @@
+using BOG;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,8 +8,12 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "AbilitiesV2/GroundedMove", fileName = "GroundedMove")]
 public class GroundedMoveV2 : AbilityV2
 {
-	public GameObject pathQuadPrefab;
+	[Header("TIMING:")]
+	public float stepDuration;
+	public float turnDuration;
 
+	[Header("VISUALS:")]
+	public GameObject pathQuadPrefab;
 	List<GameObject> pathQuads;
 
     public override List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit)
@@ -29,7 +34,7 @@ public class GroundedMoveV2 : AbilityV2
 			GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab);
 			pathQuad.transform.position = Board.OffsetToWorld(from);
 
-			HexDirectionFT hexDir = from.To(to);
+			HexDirectionFT hexDir = from.ToNeighbour(to);
 			Vector3 lookDir = hexDir.ToVector();
 
 			pathQuad.transform.rotation = Quaternion.LookRotation(lookDir);
@@ -82,7 +87,7 @@ public class GroundedMoveV2 : AbilityV2
 		if (targetCoord == unit.OffsetPos)
 			return null;
 
-		CellV2_NEW originCell = Board.TryGetCellAtPos(targetCoord);
+		Cell originCell = Board.TryGetCellAtPos(targetCoord);
 		if (originCell == null)
 			return null;
 
@@ -96,7 +101,51 @@ public class GroundedMoveV2 : AbilityV2
 
 		Queue<UnitCommand> commands = new Queue<UnitCommand>();
 
-		//HexDirectionFT toFirstCellDir = targetCoord.
+		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+
+		if(unit.Facing != toFirstCellDir)
+		{
+			TurnCommandV2 newTurnCommand = new TurnCommandV2(
+				unit,
+				unit.Facing,
+				toFirstCellDir,
+				turnDuration
+				);
+
+			commands.Enqueue(newTurnCommand);
+
+			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+			Debog.logGameflow(firstTurnLog);
+		}
+
+		HexDirectionFT lastFacingDir = toFirstCellDir;
+		for (int i = 0; i < path.Length; i++)
+		{
+			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
+			Vector2Int toCell = path[i];
+			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
+			if(lastFacingDir != toNextCellDir)
+			{
+				TurnCommandV2 newTurnCommand = new TurnCommandV2(
+					unit,
+					lastFacingDir,
+					toNextCellDir,
+					turnDuration
+					);
+
+				commands.Enqueue(newTurnCommand);
+				lastFacingDir = toNextCellDir;
+
+				string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
+				Debog.logGameflow(firstTurnLog);
+			}
+
+			var newStepCommand = new StepCommandV2(unit, fromCell, toCell, stepDuration);
+			commands.Enqueue(newStepCommand);
+
+			string nextLog = $"from: {fromCell} to {toCell}";
+			Debog.logGameflow(nextLog);
+		}
 
 		return commands;
 	}

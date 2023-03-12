@@ -39,7 +39,7 @@ public class CellMarkerInspector : Editor
 
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity, HexGrid.Mask))
 			{
-				var hitCell = hit.transform.GetComponentInParent<Cell>();
+				var hitCell = hit.transform.GetComponentInParent<Cell_OLD>();
 				if (hitCell != null)
 				{
 					Undo.RecordObject(cellMarker, "Snap Cellmarker To Grid");

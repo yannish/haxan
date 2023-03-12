@@ -36,7 +36,7 @@ public class UnitEditor : Editor
 
 			Debug.LogWarning("... is neighbour: " + unitCoord.IsNeighbourOf(targetCoord));
 
-			HexDirectionFT toTarget = unitCoord.To(targetCoord);
+			HexDirectionFT toTarget = unitCoord.ToNeighbour(targetCoord);
 
 			Debug.LogWarning("to target: " + toTarget.ToString());
 

@@ -7,7 +7,7 @@ using UnityEngine;
 public class Leap : ScrObjAbility
     //, ICellCommandDispenser
 {
-    public CellCommand GetCellCommand(Cell cell)
+    public CellCommand GetCellCommand(Cell_OLD cell)
     {
         throw new System.NotImplementedException();
     }

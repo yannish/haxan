@@ -29,7 +29,7 @@ public abstract class Ability : MonoBehaviour
 	public AbilityType type;
 
 
-	public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow) => null;
+	public virtual List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow) => null;
 
 	//public virtual Queue<CellObjectCommand> FetchCommands(Cell targetCell, CellObject cellObjct, FlowController flow)
 	//{
@@ -38,7 +38,7 @@ public abstract class Ability : MonoBehaviour
 	//}
 
 	public virtual Queue<CellObjectCommand> FetchCommandChain(
-		Cell targetCell, 
+		Cell_OLD targetCell, 
 		CellObject cellObj, 
 		FlowController flow
 		) 
@@ -59,12 +59,12 @@ public abstract class Ability : MonoBehaviour
 
 	//... when you hover / unhover flow:
 	Action peekValidMovesAction;
-	public virtual void PeekValidMoves(Cell targetCell, CharacterFlowController flow)
+	public virtual void PeekValidMoves(Cell_OLD targetCell, CharacterFlowController flow)
 	{
 		Debug.LogWarning("peeking valid moves on " + this.gameObject.name);
 	}
 
-	public virtual void UnpeekValidMoves(Cell targetCell, CharacterFlowController flow)
+	public virtual void UnpeekValidMoves(Cell_OLD targetCell, CharacterFlowController flow)
 	{
 		Debug.LogWarning("unpeeking  valid moves on " + this.gameObject.name);
 	}
@@ -72,20 +72,20 @@ public abstract class Ability : MonoBehaviour
 
 	//... when you enter / exit flow:
 	Action showValidMovesAction;
-	public virtual void ShowValidMoves(Cell targetCell, CharacterFlowController flow) { }
+	public virtual void ShowValidMoves(Cell_OLD targetCell, CharacterFlowController flow) { }
 
-	public virtual void HideValidMoves(Cell targetCell, CharacterFlowController flow) { }
+	public virtual void HideValidMoves(Cell_OLD targetCell, CharacterFlowController flow) { }
 
 
 	//... when you hover / unhover specific valid moves
 	Action peekMovesAction;
-	public virtual void PeekMove(Cell targetCell, CharacterFlowController flow) { }
+	public virtual void PeekMove(Cell_OLD targetCell, CharacterFlowController flow) { }
 
-	public virtual void UnpeekMove(Cell targetCell, CharacterFlowController flow) { }
+	public virtual void UnpeekMove(Cell_OLD targetCell, CharacterFlowController flow) { }
 
 
 	protected Action peekAction;
-	public virtual void Peek(Cell targetCell, CharacterFlowController flow) { }
+	public virtual void Peek(Cell_OLD targetCell, CharacterFlowController flow) { }
 
 	public virtual void Unpeek() { }
 

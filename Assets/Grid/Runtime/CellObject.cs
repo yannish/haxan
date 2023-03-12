@@ -58,7 +58,7 @@ public class CellObject : MonoBehaviour
 
     }
 
-	public Cell currCell => Globals.Grid.cellObjectBindings.TryGetBinding(this, out Cell cell) ? cell : null;
+	public Cell_OLD currCell => Globals.Grid.cellObjectBindings.TryGetBinding(this, out Cell_OLD cell) ? cell : null;
 
 	public AbilityFlowController CloneAbility(AbilityScrObj ability)
 	{
@@ -112,12 +112,12 @@ public static class CellObjectExtensions
 		cellObj.facing = dir;
 	}
 
-	public static Cell NearestCell(this CellObject cellObj)
+	public static Cell_OLD NearestCell(this CellObject cellObj)
 	{
 		Ray ray = new Ray(cellObj.transform.position + Vector3.up * 10f, Vector3.down);
 		if(Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, HexGrid.Mask))
 		{
-			Cell hitCell = hit.transform.GetComponentInParent<Cell>();
+			Cell_OLD hitCell = hit.transform.GetComponentInParent<Cell_OLD>();
 			if ( hitCell != null)
 				return hitCell;
 		}

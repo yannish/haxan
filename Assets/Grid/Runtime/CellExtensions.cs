@@ -4,13 +4,13 @@ using UnityEngine;
 
 public static class BindingMapExtensions
 {
-	public static bool TryGetBoundCell(this CellObject cellObj, out Cell cell)
+	public static bool TryGetBoundCell(this CellObject cellObj, out Cell_OLD cell)
 	{
-		cell = default(Cell);
+		cell = default(Cell_OLD);
 		return Globals.Grid.cellObjectBindings.TryGetBinding(cellObj, out cell);
 	}
 
-	public static bool TryGetBoundCellObject(this Cell cell, out CellObject cellObject)
+	public static bool TryGetBoundCellObject(this Cell_OLD cell, out CellObject cellObject)
 	{
 		cellObject = default(CellObject);
 		return Globals.Grid.cellObjectBindings.TryGetBinding(cell, out cellObject);
@@ -24,7 +24,7 @@ public static class BindingMapExtensions
 		return Globals.Grid.cellObjectBindings.CheckIsBound(cellObject);
 	}
 
-	public static bool IsBound(this Cell cell)
+	public static bool IsBound(this Cell_OLD cell)
 	{
 		if (Globals.Grid == null)
 			return false;
@@ -32,7 +32,7 @@ public static class BindingMapExtensions
 		return Globals.Grid.cellObjectBindings.CheckIsBound(cell);
 	}
 
-	public static bool Unbind(this Cell cell)
+	public static bool Unbind(this Cell_OLD cell)
 	{
 		if (cell.IsBound())
 		{
@@ -54,19 +54,19 @@ public static class BindingMapExtensions
 		return false;
 	}
 
-	public static bool Bind(this CellObject cellObject, Cell cell)
+	public static bool Bind(this CellObject cellObject, Cell_OLD cell)
 	{
 		return DoBind(cellObject, cell);
 	}
 
-	public static bool Bind(this Cell cell, CellObject cellObject)
+	public static bool Bind(this Cell_OLD cell, CellObject cellObject)
 	{
 		return DoBind(cellObject, cell);
 	}
 
 	public static void BindInPlace(this CellObject cellObj)
 	{
-		Cell foundCell = cellObj.NearestCell();
+		Cell_OLD foundCell = cellObj.NearestCell();
 
 		if (foundCell)
 			Bind(foundCell, cellObj);
@@ -74,7 +74,7 @@ public static class BindingMapExtensions
 			Debug.LogWarning(cellObj.name + " wasn't able to bind in place", cellObj);
 	}
 
-	private static bool DoBind(CellObject cellObject, Cell cell)
+	private static bool DoBind(CellObject cellObject, Cell_OLD cell)
 	{
 		if (cellObject.IsBound() || cell.IsBound())
 		{

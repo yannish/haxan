@@ -9,7 +9,7 @@ public class CellFlowController : FlowController
 {
 	[ReadOnly] public PooledCellVisuals visuals;
     [ReadOnly] public QuickStateMachine fsm;
-    [ReadOnly] public Cell cell;
+    [ReadOnly] public Cell_OLD cell;
 
 	public override bool IsEnterable => false;
 
@@ -17,7 +17,7 @@ public class CellFlowController : FlowController
 	{
 		visuals = GetComponentInChildren<PooledCellVisuals>();
         fsm = GetComponentInChildren<QuickStateMachine>();
-		cell = GetComponent<Cell>();
+		cell = GetComponent<Cell_OLD>();
     }
 
 	//public override void HoverPeek() => visuals?.SetTrigger(FSMtrigger.hover, true);

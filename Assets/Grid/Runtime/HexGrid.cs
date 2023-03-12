@@ -11,9 +11,9 @@ public class HexGrid : MonoBehaviour
 
 	public CellObjectBindingMap cellObjectBindings = new CellObjectBindingMap();
 
-    public Dictionary<HexCoordinates, Cell> coordCellLookup = new Dictionary<HexCoordinates, Cell>();
+    public Dictionary<HexCoordinates, Cell_OLD> coordCellLookup = new Dictionary<HexCoordinates, Cell_OLD>();
 
-	public Cell[] cells;
+	public Cell_OLD[] cells;
 }
 
 
@@ -39,12 +39,12 @@ public static class GridActions
 			return;
 
 		//Debug.LogWarning("Awakening " + cellObject.name + " over grid...", cellObject);
-		Cell foundCell = cellObject.pivot.position.PollGrid();
+		Cell_OLD foundCell = cellObject.pivot.position.PollGrid();
 		if(foundCell != null)
 			cellObject.MoveAndBindTo(foundCell);
 	}
 
-	public static bool MoveAndBindTo(this CellObject cellObj, Cell cell)
+	public static bool MoveAndBindTo(this CellObject cellObj, Cell_OLD cell)
 	{
 		if(!cell.IsBound())
 		{
@@ -59,7 +59,7 @@ public static class GridActions
 		return false;
 	}
 
-	public static void MoveAndFace(this CellObject cellObj, Cell cell, HexDirection dir)
+	public static void MoveAndFace(this CellObject cellObj, Cell_OLD cell, HexDirection dir)
 	{
 		cellObj.transform.position = cell.occupantPivot.position;
 		//cellObj.transform.rotation.SetLookRotation()
@@ -67,14 +67,14 @@ public static class GridActions
 		cellObj.transform.rotation = Quaternion.LookRotation(dir.ToVector());
 	}
 
-	public static Cell PollGrid(this Vector3 position)
+	public static Cell_OLD PollGrid(this Vector3 position)
 	{
 		Ray checkRay = new Ray(position + Vector3.up * 1.8f, Vector3.down);
 		RaycastHit hit;
 
 		if (Physics.Raycast(checkRay, out hit, Mathf.Infinity, HexGrid.Mask))
 		{
-			var cell = hit.collider.GetComponentInParent<Cell>();
+			var cell = hit.collider.GetComponentInParent<Cell_OLD>();
 			if (cell)
 				return cell;
 		}

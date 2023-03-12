@@ -10,13 +10,13 @@ public class GroundMoveWithBounceAbility : Ability
 
 	private Action pathControl;
 
-	public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController characterFlow)
+	public override List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController characterFlow)
 	{
-		List<Cell> allCellsInRange = characterFlow.character.currCell.GetCellsInRadius(
+		List<Cell_OLD> allCellsInRange = characterFlow.character.currCell.GetCellsInRadius(
 			characterFlow.character.CurrMove
 			);
 
-		List<Cell> deflectableCells = new List<Cell>();
+		List<Cell_OLD> deflectableCells = new List<Cell_OLD>();
 
 		foreach(var inRangeCell in allCellsInRange)
 		{
@@ -37,7 +37,7 @@ public class GroundMoveWithBounceAbility : Ability
 			}
 		}
 
-		List <Cell> unboundCells = characterFlow.character.currCell.GetCellsInRadius(
+		List <Cell_OLD> unboundCells = characterFlow.character.currCell.GetCellsInRadius(
 			characterFlow.character.CurrMove,
 			t => !t.IsBound()
 			);

@@ -29,7 +29,10 @@ public enum HexOcclusion
 
 public static class HexDirectionExtensions
 {
-    public static float ToAngle(this HexDirection direction) => HexPTAngleLookup[direction];
+	public static float ToAngle(this HexDirection direction) => HexPTAngleLookup[direction];
+
+	public static float ToAngle(this HexDirectionFT direction) => HexFTAngleLookup[direction];
+
 
 	public static HexDirection ClosestCardinal(this Vector3 vector)
 	{
@@ -60,7 +63,7 @@ public static class HexDirectionExtensions
 	{
 		get
 		{
-			if(_VectorHexDirections.IsNullOrEmpty())
+			if (_VectorHexDirections.IsNullOrEmpty())
 			{
 				Vector3[] directions = new Vector3[6];
 				int i = 0;
@@ -96,6 +99,7 @@ public static class HexDirectionExtensions
 		{HexDirectionFT.SW, 240f },
 		{HexDirectionFT.NW, 300f }
 	};
+
 
 	public static HexDirection Opposite(this HexDirection direction)
 	{
@@ -137,7 +141,7 @@ public static class HexDirectionExtensions
 		return direction == HexDirectionFT.NW ? HexDirectionFT.N : (direction + 1);
 	}
 
-	public static HexDirection To(this Cell from, Cell to)
+	public static HexDirection To(this Cell_OLD from, Cell_OLD to)
 	{
 		return (HexDirection)Array.IndexOf(from.neighbours, to);
 	}
@@ -195,7 +199,7 @@ public static class HexCoordinateExtensions
 	//	return grabbedCells.Contains(toCell) ? direction : (HexDirection)(-1);
 	//}
 
-	public static HexDirection ClosestCardinalTo(this Cell cell, Cell targetCell)
+	public static HexDirection ClosestCardinalTo(this Cell_OLD cell, Cell_OLD targetCell)
 	{
 		var deltaCoord = new HexCoordinates(
 			cell.coords.X - targetCell.coords.X,
@@ -239,15 +243,15 @@ public static class HexCoordinateExtensions
 
 	
 
-	public static List<Cell> GetCardinalCross(
+	public static List<Cell_OLD> GetCardinalCross(
 		this HexCoordinates start,
 		int length,
 		int min = 0, 
 		HexOcclusion occlusionType = HexOcclusion.NONE,
-		Predicate<Cell> check = null
+		Predicate<Cell_OLD> check = null
 		)
 	{
-		var cells = new List<Cell>();
+		var cells = new List<Cell_OLD>();
 
 		for(HexDirection dir = HexDirection.NE; dir <= HexDirection.NW; dir++)
 		{
@@ -258,14 +262,14 @@ public static class HexCoordinateExtensions
 		return cells;
 	}
 
-	public static List<Cell> GetCardinalArc(
-		this Cell cell,
+	public static List<Cell_OLD> GetCardinalArc(
+		this Cell_OLD cell,
 		HexDirection direction,
 		int radius,
-		Predicate<Cell> check = null
+		Predicate<Cell_OLD> check = null
 		)
 	{
-		var cells = new List<Cell>();
+		var cells = new List<Cell_OLD>();
 
 		//HexCoordinates frontCoord = cell.coords.Step(direction, radius);
 		//HexCoordinates leftCoord = cell.coords.Step(direction.Previous(), radius);
@@ -295,13 +299,13 @@ public static class HexCoordinateExtensions
 		return cells;
 	}
 
-	public static List<Cell> GetCardinalRing(
-		this Cell cell,
+	public static List<Cell_OLD> GetCardinalRing(
+		this Cell_OLD cell,
 		int radius,
-		Predicate<Cell> check = null
+		Predicate<Cell_OLD> check = null
 		)
 	{
-		var cells = new List<Cell>();
+		var cells = new List<Cell_OLD>();
 
 		for (HexDirection dir = HexDirection.NE; dir <= HexDirection.NW; dir++)
 		{
@@ -319,16 +323,16 @@ public static class HexCoordinateExtensions
 		return cells;
 	}
 
-	public static List<Cell> GetCardinalLine(
+	public static List<Cell_OLD> GetCardinalLine(
 		this HexCoordinates startCoords,
 		HexDirection direction,
 		int length,
 		int min = 0,
 		HexOcclusion occlusionType = HexOcclusion.NONE,
-		Predicate<Cell> check = null
+		Predicate<Cell_OLD> check = null
 		)
 	{
-		var cells = new List<Cell>();
+		var cells = new List<Cell_OLD>();
 
 		for (int i = min; i <= length; i++)
 		{
@@ -338,7 +342,7 @@ public static class HexCoordinateExtensions
 			//Debug.Log("... lookup had : " + Globals.Grid.coordCellLookup.Count);
 
 			//... if there's an actual cell at this coordinate:
-			if (Globals.Grid.coordCellLookup.TryGetValue(coord, out Cell foundCell))
+			if (Globals.Grid.coordCellLookup.TryGetValue(coord, out Cell_OLD foundCell))
 			{
 				if (foundCell)
 				{
@@ -369,17 +373,17 @@ public static class HexCoordinateExtensions
 		return cells;
 	}
 
-	public static List<Cell> GetCellsInRadius(
-		this Cell cell,
+	public static List<Cell_OLD> GetCellsInRadius(
+		this Cell_OLD cell,
 		int radius,
-		Predicate<Cell> check = null
+		Predicate<Cell_OLD> check = null
 		)
 	{
 		if (radius < 1) 
 			return null;
 
 		//var cell = Globals.Selector.CheckGrid(cell.transform.position);
-		var grabbedCells = new List<Cell>();
+		var grabbedCells = new List<Cell_OLD>();
 
 		//if (radius == 1) { grabbedCells.Add(cell); return grabbedCells; }
 
@@ -394,7 +398,7 @@ public static class HexCoordinateExtensions
 		{
 			for (int z = Mathf.Max(zMin, -x - yMax); z <= Mathf.Min(zMax, -x - yMin); z++)
 			{
-				if(Globals.Grid.coordCellLookup.TryGetValue(new HexCoordinates(x, z), out Cell foundCell))
+				if(Globals.Grid.coordCellLookup.TryGetValue(new HexCoordinates(x, z), out Cell_OLD foundCell))
 				{
 					if (check != null && !check.Invoke(foundCell)) 
 						continue;

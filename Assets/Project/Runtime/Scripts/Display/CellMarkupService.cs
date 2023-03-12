@@ -18,14 +18,14 @@ public class CellMarkupService : Service<CellMarkupService>
 
 	//[ReadOnly] public List<GameObject> placedJointMarkers = new List<GameObject>();
 
-	public Action MarkDashPath(Cell startingCell, List<Cell> pathCells)
+	public Action MarkDashPath(Cell_OLD startingCell, List<Cell_OLD> pathCells)
 	{
 		Action undo = () => { };
 
 		for (int i = 0; i < pathCells.Count - 1; i++)
 		{
-			Cell currCell = pathCells[i];
-			Cell nextCell = pathCells[i + 1];
+			Cell_OLD currCell = pathCells[i];
+			Cell_OLD nextCell = pathCells[i + 1];
 			if (currCell == null || nextCell == null)
 			{
 				Debug.LogWarning("move chain was broken!");
@@ -44,7 +44,7 @@ public class CellMarkupService : Service<CellMarkupService>
 		return undo;
 	}
 
-	public Action MarkMovePath(Cell startingCell, List<Cell> pathCells)
+	public Action MarkMovePath(Cell_OLD startingCell, List<Cell_OLD> pathCells)
 	{
 		Action undo = () => { };
 
@@ -62,8 +62,8 @@ public class CellMarkupService : Service<CellMarkupService>
 
 		for (int i = 0; i < pathCells.Count - 1; i++)
 		{
-			Cell currCell = pathCells[i];
-			Cell nextCell = pathCells[i + 1];
+			Cell_OLD currCell = pathCells[i];
+			Cell_OLD nextCell = pathCells[i + 1];
 
 			if(currCell == null || nextCell == null)
 			{
@@ -101,7 +101,7 @@ public class CellMarkupService : Service<CellMarkupService>
 	[ReadOnly] public List<GameObject> placedPushMarkers = new List<GameObject>();
 
 
-    public Action MarkCellPush(Cell cell, HexDirection pushDir)
+    public Action MarkCellPush(Cell_OLD cell, HexDirection pushDir)
 	{
 		if (pushMarker == null)
 			return null;

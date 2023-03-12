@@ -66,14 +66,14 @@ public class CellObjectInspector : Editor
 
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity, HexGrid.Mask))
 			{
-				var hitCell = hit.transform.GetComponentInParent<Cell>();
+				var hitCell = hit.transform.GetComponentInParent<Cell_OLD>();
 
 				if (hitCell != null)
 				{
 					Undo.RecordObject(cellObject, "Snap CelObject To Grid");
 					Event.current.Use();
 
-					if(cellObject.TryGetBoundCell(out Cell boundCell))
+					if(cellObject.TryGetBoundCell(out Cell_OLD boundCell))
 					{
 						if (hitCell == boundCell)
 						{

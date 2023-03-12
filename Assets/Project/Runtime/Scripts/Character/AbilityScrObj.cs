@@ -13,10 +13,10 @@ public class AbilityScrObj : ScriptableObject
     public AbilityType type;
 
 
-    public virtual List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow) => null;
+    public virtual List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow) => null;
 
     public virtual Queue<CellObjectCommand> FetchCommandChain(
-        Cell targetCell,
+        Cell_OLD targetCell,
         CellObject cellObj,
         FlowController flow
         )
@@ -25,7 +25,7 @@ public class AbilityScrObj : ScriptableObject
         return newCommands;
     }
 
-    public virtual Action Peek(Cell targetCell, CharacterFlowController flow) => null;
+    public virtual Action Peek(Cell_OLD targetCell, CharacterFlowController flow) => null;
 
     public virtual Action Unpeek() => null;
 }

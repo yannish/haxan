@@ -14,7 +14,7 @@ public class WandererFlowController : CharacterFlowController
 
 	Action previewValidMoveAction;
 
-	public List<Cell> validMoves = new List<Cell>();
+	public List<Cell_OLD> validMoves = new List<Cell_OLD>();
 
 	public List<UIElement> validElements = new List<UIElement>();
 
@@ -133,7 +133,7 @@ public class WandererFlowController : CharacterFlowController
 		//... handle a move:
 		if (validElements.Contains(e.element))
 		{
-			var targetCell = e.element.GetComponent<Cell>();
+			var targetCell = e.element.GetComponent<Cell_OLD>();
 			if (targetCell != null)
 			{
 				previewValidMoveAction = character.movementAbilityScrObj.Peek(targetCell, this);

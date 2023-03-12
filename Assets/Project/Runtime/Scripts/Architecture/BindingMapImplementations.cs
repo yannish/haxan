@@ -7,4 +7,4 @@ using UnityEngine;
 public class GameObject2GameObjectBindingMap : BindingMap<GameObject, GameObject> { }
 
 [Serializable]
-public class CellObjectBindingMap : BindingMap<Cell, CellObject> { }
+public class CellObjectBindingMap : BindingMap<Cell_OLD, CellObject> { }

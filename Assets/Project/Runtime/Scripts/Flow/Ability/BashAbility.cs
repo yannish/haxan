@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BashAbility : Ability
 {
-	public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow)
+	public override List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow)
 	{
 		return cell.GetCardinalRing(1);
 		//return base.GetValidMoves(cell, flow);

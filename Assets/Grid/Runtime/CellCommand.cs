@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class CellCommand
 {
-	public Cell cell;
+	public Cell_OLD cell;
 
 	public abstract CellState triggerType { get; }
 

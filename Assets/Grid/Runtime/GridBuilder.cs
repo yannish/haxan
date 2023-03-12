@@ -14,7 +14,7 @@ public class GridBuilder : MonoBehaviour
 
 	[Header("Cells:")]
 	public GameObject cellPrefab;
-	public Cell[] cells
+	public Cell_OLD[] cells
 	{
 		get { return hexGrid.cells; }
 		set { hexGrid.cells = value; }
@@ -37,7 +37,7 @@ public class GridBuilder : MonoBehaviour
 	{
 		ClearGrid();
 
-		cells = new Cell[gridHeight * gridWidth];
+		cells = new Cell_OLD[gridHeight * gridWidth];
 		for (int z = 0, i = 0; z < gridHeight; z++)
 			for (int x = 0; x < gridWidth; x++)
 				CreateCell(x, z, i++);
@@ -103,7 +103,7 @@ public class GridBuilder : MonoBehaviour
 		//Cell cell = cells[i] = Instantiate(cellPrefab).GetComponent<Cell>();
 
 		var cellPrefabObj = PrefabUtility.InstantiatePrefab(cellPrefab) as GameObject;
-		Cell cell = cells[i] = cellPrefabObj.GetComponent<Cell>();
+		Cell_OLD cell = cells[i] = cellPrefabObj.GetComponent<Cell_OLD>();
 		if (cell == null)
 			return;
 

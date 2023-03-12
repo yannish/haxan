@@ -6,7 +6,6 @@ using UnityEngine;
 public class UnitCommand 
 {
 	public Unit unit;
-
 	public float currTime;
 	public float currProgress;
 	public float duration = -1f;
@@ -28,7 +27,10 @@ public class UnitCommand
 	public virtual bool Tick(float timeScale = 1f)
 	{
 		if (duration == 0f)
+		{
+			Debug.LogWarning("... this command's duration is 0?");
 			return false;
+		}
 
 		currTime += Time.deltaTime * timeScale;
 		currProgress = Mathf.Clamp01(currTime / duration);
@@ -37,6 +39,10 @@ public class UnitCommand
 	}
 
 	public virtual bool CheckComplete(float scale = 1f) => Mathf.Sign(scale) > 0f ? currProgress >= 1f : currProgress <= 0f;
+
+	public virtual bool StepsTimeForward() => true;
+
+
 }
 
 //public class UnitCommandBase<T> where T : Unit

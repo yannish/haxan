@@ -3,6 +3,7 @@ using UnityEngine;
 using DG.Tweening;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class BoardUI : MonoBehaviour
 {
@@ -15,8 +16,14 @@ public class BoardUI : MonoBehaviour
         ProcessingCommands
     }
 
+    [Header("DEBUG:")]
+    public bool drawCellCoords;
+
+
     [Header("STATE:")]
-    [ReadOnly, SerializeField] private Mode mode;
+    [SerializeField] private Mode mode;
+    [SerializeField] private TurnPlaybackState playbackState;
+    [SerializeField] private int currTimeStep;
 
     Vector2Int mousePos;
     Vector2Int mousePosLastFrame;
@@ -34,7 +41,7 @@ public class BoardUI : MonoBehaviour
         return offset;
     }
 
-    GameObject waypointPrefab;
+	GameObject waypointPrefab;
     GameObject pathQuadPrefab;
     Vector2Int[] waypointPositions; // In offset coordinates
     
@@ -121,8 +128,8 @@ public class BoardUI : MonoBehaviour
 
     [Header("HOVER CELLS:")]
     public PooledCellVisuals hoverCellMarker;
-    Dictionary<Vector2Int, PooledCellVisuals> coordToCellMarkerLookup = new Dictionary<Vector2Int, PooledCellVisuals>();
-    CellV2_NEW currHoveredEmptyCell;
+    public Dictionary<Vector2Int, PooledCellVisuals> coordToCellMarkerLookup = new Dictionary<Vector2Int, PooledCellVisuals>();
+    Cell currHoveredEmptyCell;
 
 
     [Header("UNITS:")]
@@ -130,8 +137,10 @@ public class BoardUI : MonoBehaviour
     GameObject portraitDisplay;
     Image portrait;
     TextMeshProUGUI unitNameDisplay;
-    Unit currHoveredUnit;
-    Unit selectedUnit;
+    [ReadOnly] public Unit currHoveredUnit;
+    [ReadOnly] public Unit selectedUnit;
+    [ReadOnly] public Unit lastSelectedUnit;
+    //[ReadOnly] public Unit ;
     bool hoveredWaypointLastFrame;
     List<Vector2Int> validMoveCoords;
 
@@ -193,7 +202,7 @@ public class BoardUI : MonoBehaviour
             }
 
 
-            CellV2_NEW hoveredCell = Board.TryGetCellAtPos(mousePos);
+            Cell hoveredCell = Board.TryGetCellAtPos(mousePos);
             if (hoveredCell != null)
             {
                 if (hoveredCell != currHoveredEmptyCell)
@@ -237,7 +246,7 @@ public class BoardUI : MonoBehaviour
         mousePosLastFrame = mousePos;
     }
 
-    void HoverEmptyCell(CellV2_NEW cell)
+    void HoverEmptyCell(Cell cell)
     {
         currHoveredEmptyCell = cell;
 
@@ -270,10 +279,10 @@ public class BoardUI : MonoBehaviour
         currHoveredEmptyCell = null;
     }
 
-
     List<Vector2Int> currPath;
 
     public int lookupOffset;
+
 
     //... UNIT:
     void HandleUnitSelectedMode()
@@ -307,7 +316,7 @@ public class BoardUI : MonoBehaviour
 
             if (mousePos != mousePosLastFrame)
             {
-                CellV2_NEW hoveredCell = Board.TryGetCellAtPos(mousePos);
+                Cell hoveredCell = Board.TryGetCellAtPos(mousePos);
                 if (hoveredCell != null)
                 {
                     if (hoveredCell != currHoveredEmptyCell)
@@ -350,7 +359,6 @@ public class BoardUI : MonoBehaviour
                 // current path's destination. The second check is done to avoid
                 // running the A* algorithm and regenerating pathing markers
                 // when the mouse is moved within the same cell.
-
                 if (selectedUnit.MovementAbility != null)
 				{
                     hoveredCellPos = mousePos;
@@ -361,44 +369,6 @@ public class BoardUI : MonoBehaviour
                         hoveredCellPos, 
                         selectedUnit
                         );
-
-                    //currPath = selectedUnit.MovementAbility.GetAffectedCells(
-                    //    selectedUnit.OffsetPos, 
-                    //    hoveredCellPos,
-                    //    selectedUnit
-                    //    );
-
-                    // Find the shortest path
-                    //Vector2Int[] path = Board.FindPath(selectedUnit.OffsetPos, hoveredCellPos);
-
-                    // Create new path gizmos
-                    //var pathQuadPrefab = Resources.Load("Prefabs/BoardUI/PathQuad");
-
-                    //string pathName = $"Path{selectedUnit.GetInstanceID()}";
-
-                    //for (int i = 0; i < currPath.Count; i++)
-                    //{
-                    //    Vector2Int from = (i == 0) ? selectedUnit.OffsetPos : currPath[i - 1];
-                    //    Vector2Int to = currPath[i];
-                    //    GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab, gizmos.transform);
-                    //    pathQuad.name = pathName;
-                    //    pathQuad.transform.position = Board.OffsetToWorld(from);
-                    //    // Rotate the path by locating its index in the neighbor
-                    //    // look-up table
-                    //    float degrees = 0f;
-                    //    {
-                    //        int parity = from.x & 1;
-                    //        Vector2Int delta = to - from;
-                    //        int j;
-                    //        for (j = 0; j < 6; j++)
-                    //        {
-                    //            if (Board.neighborLut[parity, j] == delta)
-                    //                break;
-                    //        }
-                    //        degrees = (lookupOffset + j) * 60f;
-                    //    }
-                    //    pathQuad.transform.rotation = Quaternion.Euler(0, degrees, 0);
-                    //}
                 }
             }
 
@@ -413,6 +383,19 @@ public class BoardUI : MonoBehaviour
 
         if (!isPointerInUI && Input.GetMouseButtonUp(0))
             mouseUpPos = MouseToOffsetPos();
+
+        //... handle valid move:
+        if (hoveredWaypoint && !isPointerInUI && Input.GetMouseButtonUp(0))
+        {
+            Debug.Log("CLICKED A VALID MOVE)");
+            var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain(mouseUpPos, selectedUnit);
+            StartProcessingCommands(fetchedCommands);
+
+            mousePosLastFrame = mousePos;
+            hoveredWaypointLastFrame = hoveredWaypoint;
+
+            return;
+        }
 
         if (!isPointerInUI && Input.GetMouseButtonUp(0))
         {
@@ -442,15 +425,6 @@ public class BoardUI : MonoBehaviour
                 }
             }
         }
-
-        if (hoveredWaypoint && !isPointerInUI && Input.GetMouseButtonUp(0))
-		{
-			Debug.Log("CLICKED A VALID MOVE)");
-			if (!currPath.IsNullOrEmpty())
-			{
-
-			}
-		}
 
         mousePosLastFrame = mousePos;
         hoveredWaypointLastFrame = hoveredWaypoint;
@@ -561,15 +535,16 @@ public class BoardUI : MonoBehaviour
     void SelectUnit(Unit unit)
     {
         //Debug.LogWarning("Selecting unit.");
+  //      if(selectedUnit != unit)
+		//{
 
-        if(selectedUnit != unit)
-		{
-
-		}
+		//}
 
         // ^ A unit was clicked
         mode = Mode.UnitSelected;
         selectedUnit = unit;
+
+        Debug.LogWarning("... selected unit: " + selectedUnit.OffsetPos);
 
         ShowUnitPortrait(unit);
 
@@ -611,6 +586,7 @@ public class BoardUI : MonoBehaviour
 			}
         }
 
+        lastSelectedUnit = selectedUnit;
         selectedUnit = null;
 
         foreach (var button in abilityButtons)
@@ -854,17 +830,21 @@ public class BoardUI : MonoBehaviour
             if (coord == mouseUpPos)
             {
                 DeselectAbility();
+                var fetchedCommands = selectedAbility.FetchCommandChain(currValidMoveCoord, selectedUnit);
+                StartProcessingCommands(fetchedCommands);
 
-                commandsToProcess = selectedAbility.FetchCommandChain(currValidMoveCoord, selectedUnit);
-                if (!commandsToProcess.IsNullOrEmpty())
-                {
-                    currCommand = commandsToProcess.Dequeue();
-                    currCommand.OnBeginTick();
-                    currCommandHistory = new Stack<UnitCommand>();
-                }
-                //... clicked a valid move, time to process it.
-                mode = Mode.ProcessingCommands;
-                playbackState = TurnPlaybackState.PLAYING;
+                //if (!commandsToProcess.IsNullOrEmpty())
+                //{
+                //    currCommand = commandsToProcess.Dequeue();
+                //    currCommand.OnBeginTick();
+                //    currCommandHistory = new Stack<UnitCommand>();
+                //}
+                
+                ////... clicked a valid move, time to process it.
+                //mode = Mode.ProcessingCommands;
+                //playbackState = TurnPlaybackState.PLAYING;
+
+                //Debug.LogWarning("GOT A NEW COMMAND CHAIN!");
 
                 return;
             }
@@ -910,6 +890,21 @@ public class BoardUI : MonoBehaviour
         mousePosLastFrame = mousePos;
     }
 
+    void StartProcessingCommands(Queue<UnitCommand> commands)
+	{
+        currInstigator = selectedUnit;
+        DeselectUnit();
+
+        commandsToProcess = commands;
+        currCommand = commandsToProcess.Dequeue();
+        currCommand.OnBeginTick();
+        currCommandHistory = new Stack<UnitCommand>();
+
+        mode = Mode.ProcessingCommands;
+        playbackState = TurnPlaybackState.PLAYING;
+
+        Debug.Log("STARTED PROCESSING COMMANDS");
+    }
 
     internal void OnPointerEnteredAbilityButton(AbilityV2 ability, AbilityButton button)
     {
@@ -1111,7 +1106,8 @@ public class BoardUI : MonoBehaviour
 	void DeselectAbility()
 	{
         //Debug.LogWarning("...DESELECTED ABILITY:");
-
+        if (selectedAbility != null)
+            selectedAbility.HidePreview();
         UnhoverAbility();
         SelectUnit(selectedUnit);
         selectedAbillityButton.Deselect();
@@ -1120,14 +1116,14 @@ public class BoardUI : MonoBehaviour
 
 
     //... TURNS:
-    public TurnPlaybackState playbackState;
+    //[Header("TURNS:")]
     Unit currInstigator;
     UnitCommand currCommand;
     Queue<UnitCommand> commandsToProcess;
-    Stack<UnitCommand> currCommandHistory;
-    Stack<TurnV2> turnHistory;
+    public Stack<UnitCommand> currCommandHistory;
+    public Stack<TurnV2> turnHistory;
 
-    private void HandleCommandProcessing()
+	private void HandleCommandProcessing()
     {
 		switch (playbackState)
 		{
@@ -1139,7 +1135,9 @@ public class BoardUI : MonoBehaviour
 				{
                     Debug.LogWarning("DONE WITH TURN, BACK TO FLOW");
                     playbackState = TurnPlaybackState.PAUSED;
-                    mode = Mode.UnitSelected;
+					//mode = Mode.UnitSelected;
+					SelectUnit(lastSelectedUnit);
+					currInstigator = null;
 				}
 				break;
 			case TurnPlaybackState.REWINDING:
@@ -1160,6 +1158,8 @@ public class BoardUI : MonoBehaviour
             currCommand.OnCompleteTick();
             currCommand.Execute();
             currCommandHistory.Push(currCommand);
+            if (currCommand.StepsTimeForward())
+                currTimeStep++;
             currCommand = null;
 
 			if (!commandsToProcess.IsNullOrEmpty())
@@ -1176,13 +1176,53 @@ public class BoardUI : MonoBehaviour
                 recordedTurn.commandHistory = currCommandHistory;
                 turnHistory.Push(recordedTurn);
 
-                currCommandHistory = null;
+				currCommandHistory = null;
 			}
 		}
     }
 
+    public void Undo()
+    {
+        if (mode != Mode.UnitSelected)
+            return;
+
+        mode = Mode.ProcessingCommands;
+        playbackState = TurnPlaybackState.REWINDING;
+
+        TurnV2 turnToUndo = turnHistory.Pop();
+        currCommandHistory = turnToUndo.commandHistory;
+        currCommand = currCommandHistory.Pop();
+    }
+
     private void HandleTurnBackward()
 	{
-		
+        if (currCommand == null)
+            return;
+
+		if (currCommand.Tick(-1f))
+		{
+            currCommand.OnCompleteReverseTick();
+            currCommand.Undo();
+            currCommand = null;
+
+			if (!currCommandHistory.IsNullOrEmpty())
+			{
+                currCommand = currCommandHistory.Pop();
+                currCommand.OnBeginReverseTick();
+			}
+            else
+			{
+                playbackState = TurnPlaybackState.PAUSED;
+                currCommandHistory = null;
+			}
+		}
+	}
+
+	private void OnDrawGizmos()
+	{
+		if (drawCellCoords)
+		{
+            //foreach()
+		}
 	}
 }

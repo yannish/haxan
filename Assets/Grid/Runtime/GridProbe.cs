@@ -10,7 +10,7 @@ public class GridProbe : CellObject
 	[Header("GRID TESTING:")]
     public int maxLength;
 
-    public List<Cell> foundPath = new List<Cell>();
+    public List<Cell_OLD> foundPath = new List<Cell_OLD>();
 
     private Action grabControl;
 

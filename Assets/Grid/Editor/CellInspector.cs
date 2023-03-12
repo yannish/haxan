@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Cell))]
+[CustomEditor(typeof(Cell_OLD))]
 public class CellInspector : Editor
 {
 	private HexGrid foundHexGrid;
@@ -17,7 +17,7 @@ public class CellInspector : Editor
 		if (!foundHexGrid)
 			EditorGUILayout.LabelField("DIDN'T FIND GRID");
 
-		Cell cell = target as Cell;
+		Cell_OLD cell = target as Cell_OLD;
 
 		if (Globals.Grid != null && cell.TryGetBoundCellObject(out CellObject foundCellObj))
 		{

@@ -437,13 +437,13 @@ public class PooledCellVisuals : PooledMonoBehaviour
 		hoverBlock.RecordChange(interactionColor);
 
         //... path:
-        pathBlockSize.floatValue = pathCurrSize.x;
-        pathBlockThickness.floatValue = 1f;
-        pathBlockColor.colorValue = pathCurrColor;
+        //pathBlockSize.floatValue = pathCurrSize.x;
+        //pathBlockThickness.floatValue = 1f;
+        //pathBlockColor.colorValue = pathCurrColor;
 
-        pathBlock.RecordChange(pathBlockColor);
-        pathBlock.RecordChange(pathBlockThickness);
-        pathBlock.RecordChange(pathBlockSize);
+        //pathBlock.RecordChange(pathBlockColor);
+        //pathBlock.RecordChange(pathBlockThickness);
+        //pathBlock.RecordChange(pathBlockSize);
     }
 
     Sequence seq;

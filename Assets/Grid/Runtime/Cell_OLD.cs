@@ -5,7 +5,7 @@ using System.Linq;
 using UnityEngine;
 
 [SelectionBase, RequireComponent(typeof(CellFlowController))]
-public class Cell : MonoBehaviour
+public class Cell_OLD : MonoBehaviour
 	, IFlowable
 {
 	//... cells are the IFlowables of their UIElements component.
@@ -25,7 +25,7 @@ public class Cell : MonoBehaviour
 		}
 	}
 
-	public static event Action<Cell> OnCellHovered = delegate { };
+	public static event Action<Cell_OLD> OnCellHovered = delegate { };
 
 	public static event Action OnCellUnhovered = delegate { };
 
@@ -36,8 +36,8 @@ public class Cell : MonoBehaviour
 
 	[ReadOnly] public PooledCellVisuals visuals;
 	[ReadOnly] public CellFlowController cellFlow;
-	[ReadOnly] public Cell[] neighbours = new Cell[6];
-	public Cell[] validNeighbours { get { return neighbours.Where(t => t != null && t.IsPassable).ToArray(); } }
+	[ReadOnly] public Cell_OLD[] neighbours = new Cell_OLD[6];
+	public Cell_OLD[] validNeighbours { get { return neighbours.Where(t => t != null && t.IsPassable).ToArray(); } }
 
 
 	//... assigned components:
@@ -82,7 +82,6 @@ public class Cell : MonoBehaviour
 		}
 	}
 
-
 	public void Leave(CellObject cellObj)
 	{
 		if (preset == null || preset.configs.IsNullOrEmpty())
@@ -94,7 +93,6 @@ public class Cell : MonoBehaviour
 				(config as IExitHandler).OnExit(cellObj);
 		}
 	}
-
 
 	public bool IsPassable
 	{

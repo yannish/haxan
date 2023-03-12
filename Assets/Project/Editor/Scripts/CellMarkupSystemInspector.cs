@@ -47,7 +47,7 @@ public class CellMarkupSystemInspector : Editor
 
 			if (Physics.Raycast(ray, out hit, Mathf.Infinity, HexGrid.Mask))
 			{
-				var hitCell = hit.transform.GetComponentInParent<Cell>();
+				var hitCell = hit.transform.GetComponentInParent<Cell_OLD>();
 
 				if (hitCell != null)
 				{

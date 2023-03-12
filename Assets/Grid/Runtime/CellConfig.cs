@@ -9,7 +9,7 @@ public class CellConfig : ScriptableObject
 	public Material baseMat;
 	//public Mesh baseMesh;
 
-	public virtual void Paint(Cell cell)
+	public virtual void Paint(Cell_OLD cell)
 	{
 		if (baseMat != null)
 		{

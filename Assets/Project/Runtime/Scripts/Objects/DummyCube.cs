@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class DummyCube : CellObject
 {
-    public List<Cell> grabbedCells = new List<Cell>();
+    public List<Cell_OLD> grabbedCells = new List<Cell_OLD>();
 
 	protected override void Start()
 	{

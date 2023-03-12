@@ -20,7 +20,7 @@ public class GridSamplerFlowController : FlowController
 		if (e.element == null)
 			return false;
 
-		Cell hoveredHexCell = e.element.GetComponent<Cell>();
+		Cell_OLD hoveredHexCell = e.element.GetComponent<Cell_OLD>();
 		if (hoveredHexCell)
 		{
 			Debug.Log("Hovered a hexCell: " + hoveredHexCell.coords.ToString());

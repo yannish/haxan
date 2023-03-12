@@ -7,7 +7,7 @@ public static class HexMetrics
 	public const float outerRadius = 2f;
 	public const float innerRadius = outerRadius * 0.866025404f;
 
-	public static int CubeDistance(this Cell from, Cell to)
+	public static int CubeDistance(this Cell_OLD from, Cell_OLD to)
 	{
 		return Mathf.Max(
 			Mathf.Abs(from.coords.X - to.coords.X),

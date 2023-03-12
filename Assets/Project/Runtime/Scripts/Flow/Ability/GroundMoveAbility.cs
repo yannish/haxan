@@ -12,7 +12,7 @@ public class GroundMoveAbility : Ability
 
 	private Action pathControl;
 
-    public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow)
+    public override List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow)
 	{
 		return flow.character.currCell.GetCellsInRadius(
 			flow.character.CurrMove,
@@ -53,7 +53,7 @@ public class GroundMoveAbility : Ability
 		//return pathableCells;
 	}
 
-	public override void Peek(Cell targetCell, CharacterFlowController flow)
+	public override void Peek(Cell_OLD targetCell, CharacterFlowController flow)
 	{
 		var path = Pathfinder.GetPath(flow.character.currCell, targetCell);
 		if (path.IsNullOrEmpty())
@@ -73,7 +73,7 @@ public class GroundMoveAbility : Ability
 	}
 
 	public override Queue<CellObjectCommand> FetchCommandChain(
-		Cell targetCell, 
+		Cell_OLD targetCell, 
 		CellObject cellObj, 
 		FlowController flow
 		)
@@ -124,8 +124,8 @@ public class GroundMoveAbility : Ability
 		HexDirection lastFacingDirection = toFirstCellDir;
 		for (int i = 0; i < pathToCell.Count; i++)
 		{
-			Cell fromCell = i == 0 ? cellObj.currCell : pathToCell[i - 1];
-			Cell toCell = pathToCell[i];
+			Cell_OLD fromCell = i == 0 ? cellObj.currCell : pathToCell[i - 1];
+			Cell_OLD toCell = pathToCell[i];
 			HexDirection toNextCellDir = fromCell.To(toCell);
 			if(lastFacingDirection != toNextCellDir)
 			{

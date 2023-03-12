@@ -7,25 +7,25 @@ public class Board
 {
     public static readonly float3x3 CartesianToAxial = math.mul(
         new float3x3(
-            2f / (3f * CellV2_NEW.OuterRadius), 0f, 0f,
-            -1f / (3f * CellV2_NEW.OuterRadius), Mathf.Sqrt(3f) / (3f * CellV2_NEW.OuterRadius), 0f,
+            2f / (3f * Cell.OuterRadius), 0f, 0f,
+            -1f / (3f * Cell.OuterRadius), Mathf.Sqrt(3f) / (3f * Cell.OuterRadius), 0f,
             0f, 0f, 1f
         ),
         new float3x3(
-            1f, 0f, -CellV2_NEW.OuterRadius,
-            0f, 1f, -CellV2_NEW.InnerRadius,
+            1f, 0f, -Cell.OuterRadius,
+            0f, 1f, -Cell.InnerRadius,
             0f, 0f, 1f
         )
     );
     public static readonly float3x3 AxialToCartesian = math.mul(
         new float3x3(
-            1f, 0f, CellV2_NEW.OuterRadius,
-            0f, 1f, CellV2_NEW.InnerRadius,
+            1f, 0f, Cell.OuterRadius,
+            0f, 1f, Cell.InnerRadius,
             0f, 0f, 1f
         ),
         new float3x3(
-            1.5f * CellV2_NEW.OuterRadius, 0f, 0f,
-            CellV2_NEW.InnerRadius, CellV2_NEW.InnerRadius * 2f, 0f,
+            1.5f * Cell.OuterRadius, 0f, 0f,
+            Cell.InnerRadius, Cell.InnerRadius * 2f, 0f,
             0f, 0f, 1f
         )
     );
@@ -103,7 +103,7 @@ public class Board
 
     /// Position in offset coordinate space
     public static Vector2Int OffsetPos;
-    public static CellV2_NEW[,] Cells;
+    public static Cell[,] Cells;
 
     // The assumption here is that there will only ever be a handful of units,
     // so we're not allocating a 2D array of units, one at each position.
@@ -177,11 +177,11 @@ public class Board
         // in offset coords
         Vector2Int min = new Vector2Int(int.MaxValue, int.MaxValue);
         Vector2Int max = new Vector2Int(int.MinValue, int.MinValue);
-        var cellsAndCoords = new List<(CellV2_NEW, Vector2Int)>();
+        var cellsAndCoords = new List<(Cell, Vector2Int)>();
 
         foreach (var g in grids)
         {
-            CellV2_NEW[] cells = g.GetComponentsInChildren<CellV2_NEW>();
+            Cell[] cells = g.GetComponentsInChildren<Cell>();
             cellsAndCoords.Capacity = cellsAndCoords.Count + cells.Length;
             foreach (var cell in cells)
             {
@@ -196,7 +196,7 @@ public class Board
             }
         }
 
-        Cells = new CellV2_NEW[max.x - min.x + 1, max.y - min.y + 1];
+        Cells = new Cell[max.x - min.x + 1, max.y - min.y + 1];
         foreach (var (cell, coord) in cellsAndCoords)
         {
             int x = coord.x - min.x;
@@ -235,7 +235,8 @@ public class Board
         ui.Init();
     }
 
-    static Dictionary<int, CellV2_NEW> indexToCellLookup = new Dictionary<int, CellV2_NEW>();
+    static Dictionary<int, Cell> indexToCellLookup = new Dictionary<int, Cell>();
+    
     public static Unit GetUnitAtPos(Vector2Int pos)
     {
         foreach (Unit unit in Board.Units)
@@ -249,7 +250,19 @@ public class Board
         return null;
     }
 
-    public static CellV2_NEW TryGetCellAtPos(Vector2Int offsetPos)
+    public static bool TryGetCellAtPos(Vector2Int offsetPos, out Cell foundCell)
+	{
+        foundCell = null;
+        if (indexToCellLookup.TryGetValue(offsetPos.ToIndex(), out var cell))
+		{
+            foundCell = cell;
+            return true;
+		}
+
+        return false;
+    }
+
+    public static Cell TryGetCellAtPos(Vector2Int offsetPos)
 	{
         if (indexToCellLookup.TryGetValue(offsetPos.ToIndex(), out var foundCell))
             return foundCell;
@@ -482,6 +495,34 @@ public class Board
 
         return path.ToArray();
     }
+
+    public static void RespondToCommandBeginTick(Unit unit, UnitCommand command)
+	{
+
+	}
+
+    public static void RespondToCommandCompleteTick(Unit unit, UnitCommand command)
+	{
+        if (command is StepCommandV2)
+        {
+            //... ^^ run splashes, we're touching down in the "to" coord here.
+            StepCommandV2 stepCommand = command as StepCommandV2;
+			if (TryGetCellAtPos(stepCommand.toCoord, out var foundCell))
+			{
+
+			}
+        }
+    }
+
+    public static void OnUnitEnteredCell(Unit unit, Vector2Int coord) 
+    { 
+    
+    }
+
+    public static void OnUnitExitedCell(Unit unit, Vector2Int coord) 
+    { 
+    
+    }
 }
 
 public static class BoardExtensions
@@ -544,9 +585,9 @@ public static class BoardExtensions
         return false;
 	}
 
-    public static CellV2_NEW[] GetNeighbouringCells(this Vector2Int coord)
+    public static Cell[] GetNeighbouringCells(this Vector2Int coord)
     {
-        CellV2_NEW[] neighbs = new CellV2_NEW[6];
+        Cell[] neighbs = new Cell[6];
         //List<Vector2Int> neighbours = new List<Vector2Int>();
 
         int parity = coord.x & 1;
@@ -586,7 +627,7 @@ public static class BoardExtensions
         return neighbs;
     }
 
-    public static HexDirectionFT To(this Vector2Int from, Vector2Int to)
+    public static HexDirectionFT ToNeighbour(this Vector2Int from, Vector2Int to)
 	{
         if (!from.IsNeighbourOf(to))
             return (HexDirectionFT)(-1);
@@ -601,6 +642,79 @@ public static class BoardExtensions
 		}
 
         return (HexDirectionFT)i;
+    }
+
+    public static int ClockwiseTo(this HexDirectionFT fromDir, HexDirectionFT toDir)
+	{
+        if (fromDir == toDir)
+            return 0;
+
+        int increment = 0;
+        int tempDir = (int)fromDir;
+
+		for (int i = 0; i < 6; i++)
+		{
+            increment++;
+            tempDir++;
+
+            if (tempDir >= 6)
+                tempDir = 0;
+
+            if ((HexDirectionFT)tempDir == toDir)
+                return increment;
+		}
+
+        return -1;
+
+  //      if (from == to)
+  //          return 0;
+
+  //      if((6 - (int)to) < (to - from))
+		//{
+  //          return (6 - (int)to) + (int)from;
+		//}
+
+  //      if((6 - (int)to) > (to - from))
+		//{
+  //          return to - from;
+		//}
+
+  //      return 3;
+	}
+
+    public static int CounterClockwiseTo(this HexDirectionFT fromDir, HexDirectionFT toDir)
+    {
+        if (fromDir == toDir)
+            return 0;
+
+        int increment = 0;
+        int tempDir = (int)fromDir;
+
+        for (int i = 0; i < 6; i++)
+        {
+            increment++;
+            tempDir--;
+
+            if (tempDir < 0)
+                tempDir = 5;
+
+            if ((HexDirectionFT)tempDir == toDir)
+                return increment;
+        }
+
+        return -1;
+
+        //if ((int)to < (from - to))
+        //{
+        //    return (6 - (int)to) + (int)from;
+        //}
+
+        //if ((6 - (int)to) > (to - from))
+        //{
+        //    return to - from;
+        //}
+
+        //return 3;
     }
 
     public static void SnapToGrid(this Transform transform)

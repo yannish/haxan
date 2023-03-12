@@ -8,9 +8,9 @@ public class PuffAbility : Ability
 	public FloatReference turnDuration;
 
 
-	public override List<Cell> GetValidMoves(Cell cell, CharacterFlowController flow)
+	public override List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow)
 	{
-		List<Cell> validCells = flow.character.currCell.GetCellsInRadius(
+		List<Cell_OLD> validCells = flow.character.currCell.GetCellsInRadius(
 			1,
 			cell => !cell.IsBound()
 			);
@@ -19,7 +19,7 @@ public class PuffAbility : Ability
 	}
 
 	public override Queue<CellObjectCommand> FetchCommandChain(
-		Cell targetCell,
+		Cell_OLD targetCell,
 		CellObject cellObj,
 		FlowController flow
 		)

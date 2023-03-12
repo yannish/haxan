@@ -13,15 +13,15 @@ public class GridV2 : MonoBehaviour
             float3x3 offsetCartesianToAxial = math.mul(
                 Board.CartesianToAxial,
                 new float3x3(
-                    1f, 0f, CellV2_NEW.OuterRadius,
-                    0f, 1f, CellV2_NEW.InnerRadius,
+                    1f, 0f, Cell.OuterRadius,
+                    0f, 1f, Cell.InnerRadius,
                     0f, 0f, 1f
                 )
             );
             float3x3 offsetAxialToCartesian = math.mul(
                 new float3x3(
-                    1f, 0f, -CellV2_NEW.OuterRadius,
-                    0f, 1f, -CellV2_NEW.InnerRadius,
+                    1f, 0f, -Cell.OuterRadius,
+                    0f, 1f, -Cell.InnerRadius,
                     0f, 0f, 1f
                 ),
                 Board.AxialToCartesian
@@ -42,18 +42,18 @@ public class GridV2 : MonoBehaviour
         }
         // Draw rect around child extents
         {
-            var cells = GetComponentsInChildren<CellV2_NEW>();
+            var cells = GetComponentsInChildren<Cell>();
             Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
             Vector2 max = new Vector2(-float.MaxValue, -float.MaxValue);
-            foreach (CellV2_NEW cell in cells)
+            foreach (Cell cell in cells)
             {
                 min = new Vector2(Mathf.Min(min.x, cell.transform.position.x), Mathf.Min(min.y, cell.transform.position.z));
                 max = new Vector2(Mathf.Max(max.x, cell.transform.position.x), Mathf.Max(max.y, cell.transform.position.z));
             }
             // Min and max contain the bounds of the tile centers.
             // Now offset by radii of the tiles to get the bounding min and max.
-            Vector2 bmin = min - new Vector2(CellV2_NEW.InnerRadius, CellV2_NEW.OuterRadius);
-            Vector2 bmax = max + new Vector2(CellV2_NEW.InnerRadius, CellV2_NEW.OuterRadius);
+            Vector2 bmin = min - new Vector2(Cell.InnerRadius, Cell.OuterRadius);
+            Vector2 bmax = max + new Vector2(Cell.InnerRadius, Cell.OuterRadius);
 
             Gizmos.DrawLine(new Vector3(bmin.x, 0f, bmin.y), new Vector3(bmin.x, 0f, bmax.y));
             Gizmos.DrawLine(new Vector3(bmin.x, 0f, bmin.y), new Vector3(bmax.x, 0f, bmin.y));

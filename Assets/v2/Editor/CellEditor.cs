@@ -2,16 +2,19 @@ using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(CellV2_NEW))]
+[CustomEditor(typeof(Cell))]
 public class CellEditor : Editor
 {
     public override void OnInspectorGUI()
     {
-        CellV2_NEW cell = (CellV2_NEW)target;
+        Cell cell = (Cell)target;
+        
         float3 cartesian = new float3(cell.transform.position.x, cell.transform.position.z, 1f);
+        
         // Axial coordinates
         float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;
         Vector2Int axial = new Vector2Int(Mathf.RoundToInt(axialFrac.x), Mathf.RoundToInt(axialFrac.y));
+
         EditorGUI.BeginChangeCheck();
         axial = EditorGUILayout.Vector2IntField("Global axial coords", axial);
         if (EditorGUI.EndChangeCheck())
@@ -21,11 +24,14 @@ public class CellEditor : Editor
             Undo.RecordObject(cell.transform, "Changed cell position");
             cell.transform.position = new Vector3(newCartesian.x, cell.transform.position.y, newCartesian.y);
         }
+
         // Offset coordinates
-        Vector2Int offset = new Vector2Int(
-            axial.x + (axial.y - (axial.y & 1)) / 2,
-            axial.y
-        );
+        Vector2Int offset = Board.WorldToOffset(cell.transform.position);
+        //Vector2Int offset = new Vector2Int(
+        //    axial.x + (axial.y - (axial.y & 1)) / 2,
+        //    axial.y
+        //);
+
         EditorGUI.BeginChangeCheck();
         offset = EditorGUILayout.Vector2IntField("Global offset coords", offset);
         if (EditorGUI.EndChangeCheck())

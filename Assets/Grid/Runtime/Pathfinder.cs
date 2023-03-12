@@ -4,22 +4,22 @@ using UnityEngine;
 
 public static class Pathfinder
 {
-	public static List<Cell> exploredCells = new List<Cell>();
-	public static List<Cell> foundPath = new List<Cell>();
+	public static List<Cell_OLD> exploredCells = new List<Cell_OLD>();
+	public static List<Cell_OLD> foundPath = new List<Cell_OLD>();
 
-	public static Dictionary<Cell, float> shortestDistToSource = new Dictionary<Cell, float>();
-	public static Dictionary<Cell, Cell> previousNode = new Dictionary<Cell, Cell>();
+	public static Dictionary<Cell_OLD, float> shortestDistToSource = new Dictionary<Cell_OLD, float>();
+	public static Dictionary<Cell_OLD, Cell_OLD> previousNode = new Dictionary<Cell_OLD, Cell_OLD>();
 
-	public static List<Cell> GetPath(
-		Cell source,
-		Cell destination,
-		List<Cell> restrictedCells = null
+	public static List<Cell_OLD> GetPath(
+		Cell_OLD source,
+		Cell_OLD destination,
+		List<Cell_OLD> restrictedCells = null
 		)
 	{
 		if (source == null)
 			return null;
 
-		Queue<Cell> nodesToCheck = new Queue<Cell>();
+		Queue<Cell_OLD> nodesToCheck = new Queue<Cell_OLD>();
 		nodesToCheck.Enqueue(source);
 
 		exploredCells.Clear();
@@ -42,7 +42,7 @@ public static class Pathfinder
 
 			if(inspectedNode == destination)
 			{
-				var path = new List<Cell>();
+				var path = new List<Cell_OLD>();
 				path.Add(destination);
 
 				var backNode = previousNode[inspectedNode];
@@ -60,7 +60,7 @@ public static class Pathfinder
 
 			var neighbours = inspectedNode.validNeighbours;
 
-			foreach(Cell neighbour in neighbours)
+			foreach(Cell_OLD neighbour in neighbours)
 			{
 				if (neighbour == null)
 					continue;
