@@ -11,7 +11,9 @@ public class UnitCommandTimeline : MonoBehaviour
 {
     public int length;
 
-    public List<FakeCommand> commands = new List<FakeCommand>();
+    public float itemHeight;
+    public float itemWidth = 200f;
 
-    
+    public List<TimeStepSequence> sequences = new List<TimeStepSequence>();
+    //public List<FakeCommand> commands = new List<FakeCommand>();
 }

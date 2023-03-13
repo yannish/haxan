@@ -32,12 +32,13 @@ public class UnitCommandTimelineWindow : EditorWindow
 			timeline = FindObjectOfType<UnitCommandTimeline>();
 	}
 
+	Vector2 scrollPos;
 	private void OnGUI()
 	{
-		if(timeline == null)
+		if (timeline == null)
 		{
 			GUILayout.Label("... no timeline found.", EditorStyles.boldLabel);
-			if(GUILayout.Button("CREATE TIMELINE"))
+			if (GUILayout.Button("CREATE TIMELINE"))
 			{
 				GameObject newObj = new GameObject("Command Timeline");
 				timeline = newObj.AddComponent<UnitCommandTimeline>();
@@ -46,12 +47,27 @@ public class UnitCommandTimelineWindow : EditorWindow
 			return;
 		}
 
-		EditorGUILayout.BeginHorizontal();
-		for (int i = 0; i < timeline.length; i++)
+		scrollPos = EditorGUILayout.BeginScrollView(scrollPos);//, GUILayout.Width(100), GUILayout.Height(100));
+		using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
 		{
-			GUILayout.Button(i.ToString());
+			for (int i = 0; i < timeline.length; i++)
+			{
+				GUILayout.Label(
+					i.ToString(), EditorStyles.helpBox, 
+					GUILayout.Height(timeline.itemHeight), GUILayout.Width(timeline.itemWidth)
+					);
+				//, GUILayout.ExpandHeight(true));
+				//GUILayout.Label(i.ToString(), EditorStyles.)
+				//GUILayout.Button(i.ToString());
+			}
+
+			//using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+			//{
+			//	EditorGUILayout.BeginHorizontal();
+			//EditorGUILayout.EndHorizontal();
+			//}
 		}
-		EditorGUILayout.EndHorizontal();
+		EditorGUILayout.EndScrollView();
 	}
 
 	//// Start is called before the first frame update
