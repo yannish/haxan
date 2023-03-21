@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
 
 public class GridV2 : MonoBehaviour
 {
-    void OnDrawGizmosSelected()
+
+    [ReadOnly] public List<Cell> cells;
+
+	void OnDrawGizmosSelected()
     {
         if (transform.hasChanged)
         {
@@ -42,10 +46,10 @@ public class GridV2 : MonoBehaviour
         }
         // Draw rect around child extents
         {
-            var cells = GetComponentsInChildren<Cell>();
+            var tempCells = GetComponentsInChildren<Cell>();
             Vector2 min = new Vector2(float.MaxValue, float.MaxValue);
             Vector2 max = new Vector2(-float.MaxValue, -float.MaxValue);
-            foreach (Cell cell in cells)
+            foreach (Cell cell in tempCells)
             {
                 min = new Vector2(Mathf.Min(min.x, cell.transform.position.x), Mathf.Min(min.y, cell.transform.position.z));
                 max = new Vector2(Mathf.Max(max.x, cell.transform.position.x), Mathf.Max(max.y, cell.transform.position.z));

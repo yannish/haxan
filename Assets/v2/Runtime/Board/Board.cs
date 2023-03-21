@@ -3,8 +3,15 @@ using UnityEngine;
 using Unity.Mathematics;
 using System;
 
+//[InitializeOnLoad]
 public class Board
 {
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    static void OnSceneLoad()
+	{
+        Debug.LogWarning("SCENE LOADED");
+	}
+
     public static readonly float3x3 CartesianToAxial = math.mul(
         new float3x3(
             2f / (3f * Cell.OuterRadius), 0f, 0f,
@@ -103,6 +110,7 @@ public class Board
 
     /// Position in offset coordinate space
     public static Vector2Int OffsetPos;
+
     public static Cell[,] Cells;
 
     // The assumption here is that there will only ever be a handful of units,
@@ -113,6 +121,8 @@ public class Board
     public static Unit[] Units;
 
     static List<GridV2> grids = new List<GridV2>();
+
+    static Dictionary<int, Cell> indexToCellLookup = new Dictionary<int, Cell>();
 
     // Table of neighbor deltas in offset coordinate space
     public static Vector2Int[,] neighborLut = new Vector2Int[,]
@@ -146,6 +156,7 @@ public class Board
         {HexDirectionFT.SW, new Vector2Int(-1, 0) },
         {HexDirectionFT.NW, new Vector2Int(-1, 1) }
     };
+
 
     public static void AddGrid(GridV2 grid)
     {
@@ -235,7 +246,6 @@ public class Board
         ui.Init();
     }
 
-    static Dictionary<int, Cell> indexToCellLookup = new Dictionary<int, Cell>();
     
     public static Unit GetUnitAtPos(Vector2Int pos)
     {
@@ -509,7 +519,10 @@ public class Board
             StepCommandV2 stepCommand = command as StepCommandV2;
 			if (TryGetCellAtPos(stepCommand.toCoord, out var foundCell))
 			{
-
+				if ((foundCell.surfaceFlags & CellSurfaceFlags.DAMP) == CellSurfaceFlags.DAMP)
+				{
+					Debug.LogWarning($"cell at {stepCommand.toCoord} was damp.");
+				}
 			}
         }
     }

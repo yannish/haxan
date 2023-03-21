@@ -9,6 +9,8 @@ public class GridSnapEditor : Editor
 	private void OnSceneGUI()
 	{
 		GridSnap gridSnap = target as GridSnap;
+		if (gridSnap == null || gridSnap.Pivot == null)
+			return;
 
 		if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.RightArrow)
 		{

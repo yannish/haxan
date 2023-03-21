@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ee66096d7f541c46af9f0c15ea612c6, type: 3}
+  m_Name: CellSwatches
+  m_EditorClassIdentifier: 
+  swatches:
+  - {fileID: 11400000, guid: ac974fff22fcac94ba314b2091834dc5, type: 2}
+  - {fileID: 11400000, guid: 837924aaf006fc545816e3c55e9ddf45, type: 2}
+  - {fileID: 11400000, guid: ac378095508b7a54cb8870521b85f3d7, type: 2}
+  - {fileID: 11400000, guid: cd41ddc7d8bcc254197c80e82664812f, type: 2}
+  selectedSwatch: {fileID: 11400000, guid: ac974fff22fcac94ba314b2091834dc5, type: 2}

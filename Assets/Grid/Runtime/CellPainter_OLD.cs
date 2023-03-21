@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 
-public class CellPainter : MonoBehaviour
+public class CellPainter_OLD : MonoBehaviour
 {
 	public CellPreset currentPaint;
 

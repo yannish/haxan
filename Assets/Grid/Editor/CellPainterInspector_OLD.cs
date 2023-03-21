@@ -4,8 +4,8 @@ using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
 
-[CustomEditor(typeof(CellPainter)), CanEditMultipleObjects]
-public class CellPainterInspector : Editor
+[CustomEditor(typeof(CellPainter_OLD)), CanEditMultipleObjects]
+public class CellPainterInspector_OLD : Editor
 {
 	public override void OnInspectorGUI()
 	{
@@ -58,7 +58,7 @@ public class CellPainterInspector : Editor
 
 	private void OnSceneGUI()
 	{
-		var cellPainter = target as CellPainter;
+		var cellPainter = target as CellPainter_OLD;
 
 		Event e = Event.current;
 
@@ -80,7 +80,7 @@ public class CellPainterInspector : Editor
 					var paintedCell = hit.transform.GetComponentInParent<Cell_OLD>();
 
 					if (!cellPainter.presets.IsNullOrEmpty())
-						CellPainter.PaintCell(paintedCell, cellPainter.presets[0]);
+						CellPainter_OLD.PaintCell(paintedCell, cellPainter.presets[0]);
 				}
 			}
 		}

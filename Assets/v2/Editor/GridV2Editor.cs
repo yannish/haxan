@@ -1,5 +1,8 @@
 using UnityEngine;
 using UnityEditor;
+#if UNITY_EDITOR
+using UnityEditor.SceneManagement;
+#endif
 
 [CustomEditor(typeof(GridV2))]
 public class GridV2Editor : Editor
@@ -9,6 +12,8 @@ public class GridV2Editor : Editor
     public override void OnInspectorGUI()
     {
         serializedObject.DrawScriptField();
+
+        EditorGUILayout.PropertyField(serializedObject.FindProperty("cells"));
 
         NumCells = EditorGUILayout.Vector2IntField("Number of cells to fill", NumCells);
 
@@ -23,17 +28,43 @@ public class GridV2Editor : Editor
                 DestroyImmediate(cell.gameObject);
             }
 
+            grid.cells.Clear();
+
             // Create new cells
             var prefab = Resources.Load("Prefabs/SimpleCell");
             for (int x = 0; x < NumCells.x; x++)
             {
                 for (int y = 0; y < NumCells.y; y++)
                 {
-                    GameObject child = (GameObject)Instantiate(prefab, grid.transform);
-                    child.name = $"Cell";
-                    child.transform.localPosition = Board.OffsetToWorld(new Vector2Int(x, y));
+                    grid.AddCell(new Vector2Int(x, y), prefab);
+
+                    //Cell newCell = ((GameObject)Instantiate(prefab, grid.transform)).GetComponent<Cell>();
+                    //newCell.name = $"Cell";
+                    //newCell.transform.localPosition = Board.OffsetToWorld(new Vector2Int(x, y));
+                    //grid.cells.Add(newCell);
                 }
             }
+
+#if UNITY_EDITOR
+            BoardManager.RefreshBoardData();
+            //EditorSceneManager.MarkSceneDirty(grid.gameObject.scene);
+ #endif
+
+            //Scene scene = grid.gameObject.scene;
+            //BoardData boardData = FindObjectOfType<BoardData>();
+            //if (boardData != null)
+            //    boardData.Refresh();
         }
+    }
+}
+
+public static class GridActions
+{
+    public static void AddCell(this GridV2 grid, Vector2Int coord, Object cellPrefab)
+	{
+        Cell newCell = ((GameObject)GameObject.Instantiate(cellPrefab, grid.transform)).GetComponent<Cell>();
+        newCell.name = $"Cell";
+        newCell.transform.localPosition = Board.OffsetToWorld(coord);
+        grid.cells.Add(newCell);
     }
 }

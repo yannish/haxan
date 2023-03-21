@@ -55,7 +55,6 @@ public class CellObjectInspector : Editor
 			}
 		}
 
-
 		if (Event.current.type == EventType.MouseDown && Event.current.button == 1)
 		{
 			Ray ray = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);

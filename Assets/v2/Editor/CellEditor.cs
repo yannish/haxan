@@ -5,12 +5,49 @@ using UnityEngine;
 [CustomEditor(typeof(Cell))]
 public class CellEditor : Editor
 {
-    public override void OnInspectorGUI()
+    SerializedProperty surfaceFlagsProp;
+    SerializedProperty pivotProp;
+
+    private void OnEnable()
+	{
+        surfaceFlagsProp = serializedObject.FindProperty("surfaceFlags");
+        pivotProp = serializedObject.FindProperty("pivot");
+    }
+
+	private void OnDisable()
+	{
+		
+	}
+
+	public override void OnInspectorGUI()
     {
+        serializedObject.DrawScriptField();
+
+        serializedObject.Update();
+
+        DrawProperties();
+
+        GUILayout.Space(20);
+
+        DrawCoords();
+
+        serializedObject.ApplyModifiedProperties();
+    }
+
+    void DrawProperties()
+	{
+        EditorGUILayout.LabelField("MARKUP: ", EditorStyles.boldLabel);
+        EditorGUILayout.PropertyField(pivotProp);
+        EditorGUILayout.PropertyField(surfaceFlagsProp);
+    }
+
+    void DrawCoords()
+	{
         Cell cell = (Cell)target;
-        
+
+        EditorGUILayout.LabelField("COORDS: ", EditorStyles.boldLabel);
         float3 cartesian = new float3(cell.transform.position.x, cell.transform.position.z, 1f);
-        
+
         // Axial coordinates
         float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;
         Vector2Int axial = new Vector2Int(Mathf.RoundToInt(axialFrac.x), Mathf.RoundToInt(axialFrac.y));

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public enum CellStateV2
+public enum CellVisualState
 {
     HOVERED = 1 << 1,
     CLICKABLE = 1 << 2,

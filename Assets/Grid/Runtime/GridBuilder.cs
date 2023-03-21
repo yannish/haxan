@@ -117,7 +117,7 @@ public class GridBuilder : MonoBehaviour
 
 		if (cell.preset)
 		{
-			CellPainter.PaintCell(cell, cell.preset);
+			CellPainter_OLD.PaintCell(cell, cell.preset);
 		}
 
 

@@ -101,7 +101,7 @@ public class ParticleStepSequence : MonoBehaviour
 		float dt = Mathf.Min(Mathf.Abs(timeToTarget), Time.deltaTime);
 		float newPfxTime = currPfxTime - dt;
 		pfx.Simulate(newPfxTime, true, true, false);
-		Debug.LogWarning("Backwards: " + pfx.time);
+
 		if (Mathf.Abs(timeToTarget) < Time.deltaTime)
 		{
 			mode = StepMode.PAUSED;
@@ -109,41 +109,6 @@ public class ParticleStepSequence : MonoBehaviour
 	}
 
 
-
-	public EditorButton playBtn = new EditorButton("OnPlay", true);
-	public void OnPlay()
-	{
-		pfx.Play();
-		//pfx.Pause();
-	}
-
-	public EditorButton pauseBtn = new EditorButton("Pause", true);
-	public void Pause()
-	{
-		pfx.Pause();
-	}
-
-	//void Update() => pfx.Simulate(Time.deltaTime, true, false);
-
-	public float currTime;
-
-	public EditorButton tickBtn = new EditorButton("QuickTick", true);
-	public void QuickTick()
-	{
-		//currTime = pfx.time;
-		pfx.Simulate(currTime, false, false, false);
-		currTime += Time.deltaTime;
-		Debug.LogWarning("stepped: " + pfx.time);
-	}
-
-	public EditorButton dtTickBtn = new EditorButton("OtherTick", true);
-	public void OtherTick()
-	{
-		//currTime = pfx.time;
-		pfx.Simulate(Time.deltaTime, false, false, false);
-		//currTime += Time.deltaTime;
-		Debug.LogWarning("stepped: " + pfx.time);
-	}
 
 	public void OnComplete()
 	{
@@ -161,6 +126,11 @@ public class ParticleStepSequence : MonoBehaviour
 	}
 
 	public void Tick(float timeScale = 1)
+	{
+		
+	}
+
+	public void OnPlay()
 	{
 		
 	}
