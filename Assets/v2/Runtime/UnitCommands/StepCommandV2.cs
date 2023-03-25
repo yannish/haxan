@@ -13,6 +13,8 @@ public class StepCommandV2 : UnitCommand
 	public Vector3 startPos;
 	public Vector3 endPos;
 
+	public const string kDampStepPath = "Prefabs/Sequences/DampStepSequence";
+ 
 	public StepCommandV2(Unit unit, Vector2Int fromCoord, Vector2Int toCoord, float duration)
 	{
         this.unit = unit;
@@ -39,6 +41,7 @@ public class StepCommandV2 : UnitCommand
 	{
 		Board.OnUnitEnteredCell(unit, toCoord);
 		Board.RespondToCommandCompleteTick(unit, this);
+		UnitCommandTimeline.I.RespondToCommandBeginTick(unit, this);
 	}
 
 	public override void OnCompleteReverseTick()

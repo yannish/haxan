@@ -4,109 +4,156 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
-[EditorTool("New Cell Painter", typeof(BoardData))]
-public class CellPainterTool : EditorTool
+[EditorTool("Cell Paint Tool", typeof(GridV2))]
+class CellPainterTool : BaseEditorTool
 {
-	const string iconPath = "Assets/Editor/ToolIcons/";
+	internal override EventModifiers WhitelistModifiers => EventModifiers.Shift; 
+	internal override string iconName => "PaintIcon.png";
 
-	// Never assigned warning
-#pragma warning disable CS0649
-	[SerializeField]
-	Texture2D m_ToolIcon;
-#pragma warning restore CS0649
-	GUIContent m_IconContent;
-	string m_DisplayName;
-	string m_Tooltip;
+	public CellPainterTool()
+	{
+		displayName = "Paint Tool";
+		tooltip = "Apply & Clear surface flags on cells in this grid.";
+	}
 
 	private CellPainterWindow window;
 	private BoardData boardData;
+	private GridV2 grid;
 
-	private void OnEnable()
-	{
-        Debug.LogWarning("Enabled painter tool.");
-		boardData = target as BoardData;
-		if (boardData != null)
-			Debug.LogWarning("... have board data!");
-
-		this.m_ToolIcon = AssetDatabase.LoadAssetAtPath<Texture2D>(iconPath + "PaintIcon.png");
-
-		m_IconContent = new GUIContent()
-		{
-			image = m_ToolIcon,
-			text = m_DisplayName,
-			tooltip = m_Tooltip,
-		};
-	}
-	
-	public override GUIContent toolbarIcon => m_IconContent;
-
+	private GameObject dummyCellInstance;
+	private Object cellPrefab;
+	private Renderer cellRenderer;
+	Renderer[] listOfRenderers = new Renderer[1];
 	public override void OnActivated()
 	{
-		Debug.LogWarning("Activated painter tool.");
+		Debug.LogWarning("Activated stamper tool.");
 		window = EditorWindow.GetWindow<CellPainterWindow>();
-		//SceneView.duringSceneGui -= DrawColorSwatch;
-		//SceneView.duringSceneGui += DrawColorSwatch;
+		boardData = FindObjectOfType<BoardData>();
+		grid = target as GridV2;
+
+		var dummyCellPrefab = Resources.Load("Prefabs/DummyToolCell") as GameObject;
+		dummyCellInstance = (GameObject)Instantiate(dummyCellPrefab);
+		cellRenderer = dummyCellInstance.GetComponentInChildren<Renderer>();
+
+		cellPrefab = Resources.Load("Prefabs/SimpleCell") as GameObject;
+		//cellRenderer.enabled = false;
+		//cellInstance.hideFlags = 
 	}
 
 	public override void OnWillBeDeactivated()
 	{
-		Debug.LogWarning("Deactivated painter tool.");
-		base.OnWillBeDeactivated();
-		//SceneView.duringSceneGui -= DrawColorSwatch;
+		DestroyImmediate(dummyCellInstance);
 	}
 
+	protected virtual bool IsEraser() => Event.current.modifiers == EventModifiers.Shift;
 
-	public override void OnToolGUI(EditorWindow sceneWindow)
+	Vector3 currMousePos;
+	Vector2Int currCoord;
+	Cell hoveredCell;
+	private bool needsRefresh;
+
+	public override void DrawHandles()
 	{
-		if (boardData == null)
-			return;
+		currMousePos = GetCurrentMousePositionInScene();
+		Handles.DrawWireDisc(currMousePos, Vector3.up, 1f, 2f);
 
-		if (!(sceneWindow is SceneView))
-			return;
+		currCoord = Board.WorldToOffset(currMousePos);
 
-		//If we're not the active tool, exit.
-		if (!ToolManager.IsActiveTool(this))
-			return;
+		hoveredCell = null;
+		needsRefresh = false;
 
-		Vector3 currMousePos = GetCurrentMousePositionInScene();
-		Handles.DrawWireDisc(GetCurrentMousePositionInScene(), Vector3.up, 0.5f);
-
-		// Override Editor HotControls to capture cursor
-		if (Event.current.type == EventType.Layout)
+		if (boardData.indexToCellLookup.TryGetValue(currCoord.ToIndex(), out var foundCell))
 		{
-			HandleUtility.AddDefaultControl(0);
-		}
+			hoveredCell = foundCell;
 
-		Vector2Int currCoord = Board.WorldToOffset(currMousePos);
-		if(boardData.indexToCellLookup.TryGetValue(currCoord.ToIndex(), out var foundCell))
+			if (Event.current.type == EventType.Repaint)
+			{
+				var foundRenderer = foundCell.GetComponentInChildren<Renderer>();
+				//var listOfRenderers = new Renderer[1];
+				listOfRenderers[0] = foundRenderer;
+				Color drawColor = IsEraser() ? Color.red : Color.green;
+				Handles.DrawOutline(listOfRenderers, drawColor, 0.2f);
+			}
+		}
+		else
 		{
 			if (Event.current.type == EventType.Repaint)
 			{
-				var renderer = foundCell.GetComponentInChildren<Renderer>();
+				dummyCellInstance.transform.position = Board.OffsetToWorld(currCoord);
+				//var renderer = cellInstance.GetComponentInChildren<Renderer>();
 				var listOfRenderers = new Renderer[1];
-				listOfRenderers[0] = renderer;
-				if (Event.current.type == EventType.Repaint)
-					Handles.DrawOutline(listOfRenderers, Color.green, 0.35f);
-			}
-
-			if (Event.current.type == EventType.MouseDown && Event.current.button == 1)
-			{
-				Debug.LogWarning("right clickin in tool!");
-
-				Undo.RecordObject(boardData, "Painted Cell");
-				Event.current.Use();
-				CellSwatch swatchToPaint = window.SelectedSwatch;
-				if(swatchToPaint != null)
-				{
-					PaintCell(foundCell, swatchToPaint);
-				}
+				listOfRenderers[0] = cellRenderer;
+				Color drawColor = Color.grey;
+				Handles.DrawOutline(listOfRenderers, drawColor, 0.2f);
 			}
 		}
+	}
 
-		sceneWindow.Repaint();
+	public override void LateTick()
+	{
+		if (!needsRefresh)
+			return;
 
-		// You can access settings now
-		//int foo = window.someSetting;
+		boardData.Refresh();
+		needsRefresh = false;
+	}
+
+	public override void OnMouseDown()
+	{
+		if (!IsEraser())
+		{
+			Debug.LogWarning("BRUSH DOWN IN PAINT TOOL");
+
+			if (
+				hoveredCell != null
+				&& window != null 
+				&& window.SelectedSwatch != null
+				)
+			{
+				PaintCell(hoveredCell, window.SelectedSwatch);
+			}
+		}
+		else
+		{
+			if (hoveredCell != null)
+			{
+				ClearCell(hoveredCell);
+				//Debug.LogWarning("ERASING CELL");
+				//DestroyImmediate(hoveredCell.gameObject);
+				//needsRefresh = true;
+			}
+		}
+	}
+
+	public override void OnMouseUp()
+	{
+		Debug.LogWarning("... mouse up in quick tool.");
+		if (needsRefresh)
+		{
+			boardData.Refresh();
+		}
+	}
+
+	public override void OnMouseDrag()
+	{
+		if (!IsEraser())
+		{
+			Debug.LogWarning("DRAG IN BRUSH TOOL");
+		}
+		else
+		{
+			Debug.LogWarning("ERASER DRAG IN BRUSH TOOL");
+		}
+	}
+
+	private void ClearCell(Cell foundCell)
+	{
+		var allBrushStrokes = foundCell.GetComponentsInChildren<CellBrushStroke>();
+		foreach (var brushStroke in allBrushStrokes)
+			DestroyImmediate(brushStroke.gameObject);
+
+		foundCell.surfaceFlags = 0;
+		needsRefresh = true;
 	}
 
 	private void PaintCell(Cell foundCell, CellSwatch swatchToPaint)
@@ -114,24 +161,25 @@ public class CellPainterTool : EditorTool
 		Debug.LogWarning("PAINTING CELL!");
 
 		var allBrushStrokes = foundCell.GetComponentsInChildren<CellBrushStroke>();
-		foreach(var brushStroke in allBrushStrokes)
-		{
+		foreach (var brushStroke in allBrushStrokes)
 			DestroyImmediate(brushStroke.gameObject);
-		}
 
-		var strokeToInstantiate = swatchToPaint.strokes[UnityEngine.Random.Range(0, swatchToPaint.strokes.Count)];
-		if (strokeToInstantiate == null)
-			return;
+		foundCell.surfaceFlags = swatchToPaint.cellState;
+
+		//var strokeToInstantiate = swatchToPaint.strokes[UnityEngine.Random.Range(0, swatchToPaint.strokes.Count)];
+		//if (strokeToInstantiate == null)
+		//	return;
 
 		var brushStrokeInstance = PrefabUtility.InstantiatePrefab(
-			strokeToInstantiate.gameObject,
+			swatchToPaint.strokes[UnityEngine.Random.Range(0, swatchToPaint.strokes.Count)].gameObject,
 			foundCell.pivot
 			) as GameObject;
 
-		brushStrokeInstance.transform.rotation = Quaternion.AngleAxis(
-			UnityEngine.Random.Range(0, 6),
-			Vector3.up
-			);
+		brushStrokeInstance.transform.localPosition = Vector3.zero;
+		brushStrokeInstance.transform.rotation = Quaternion.identity;
+		brushStrokeInstance.transform.rotation *= Quaternion.AngleAxis(Random.Range(0, 6) * 60f, Vector3.up);
+
+		needsRefresh = true;
 
 		//if (brushStrokeInstance == null)
 		//	return;
@@ -143,18 +191,10 @@ public class CellPainterTool : EditorTool
 		//var pivot = foundCell.transform.GetChild()
 	}
 
-	Vector3 GetCurrentMousePositionInScene()
-	{
-		Vector3 mousePosition = Event.current.mousePosition;
-		var placeObject = HandleUtility.PlaceObject(mousePosition, out var newPosition, out var normal);
-		return placeObject ? newPosition : HandleUtility.GUIPointToWorldRay(mousePosition).GetPoint(10);
-	}
-
-	// Bonus shortcut to activate tool when scene is focused and 'M' pressed
 	[UnityEditor.ShortcutManagement.Shortcut("Cell Painter Tool", null, KeyCode.C)]
 	static void ToolShortcut()
 	{
-		if (Selection.GetFiltered<BoardData>(SelectionMode.TopLevel).Length > 0)
+		if (Selection.GetFiltered<GridV2>(SelectionMode.TopLevel).Length > 0)
 			ToolManager.SetActiveTool<CellPainterTool>();
 	}
 }

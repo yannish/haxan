@@ -4,15 +4,15 @@ using UnityEditor;
 using UnityEditor.EditorTools;
 using UnityEngine;
 
-[EditorTool("Quick Tool", typeof(GridV2))]
-class QuickEditorTool : BaseEditorTool
+[EditorTool("Cell Stamp Tool", typeof(GridV2))]
+class CellStamperTool : BaseEditorTool
 {
     internal override EventModifiers WhitelistModifiers => EventModifiers.Shift;
 
-    public QuickEditorTool()
+    public CellStamperTool()
 	{
-        displayName = "Quick Tool";
-        tooltip = "Paint this grid.";
+        displayName = "Stamp Tool";
+        tooltip = "Add & remove cells in this grid.";
 
         Debug.LogWarning("Grabbin a quick tool");
     }
@@ -29,7 +29,7 @@ class QuickEditorTool : BaseEditorTool
     Renderer[] listOfRenderers = new Renderer[1];
     public override void OnActivated()
     {
-        Debug.LogWarning("Activated painter tool.");
+        Debug.LogWarning("Activated stamper tool.");
         window = EditorWindow.GetWindow<CellPainterWindow>();
         boardData = FindObjectOfType<BoardData>();
         grid = target as GridV2;
@@ -88,10 +88,8 @@ class QuickEditorTool : BaseEditorTool
         }
     }
 
-    protected virtual bool IsEraser()
-    {
-        return Event.current.modifiers == EventModifiers.Shift;
-    }
+    protected virtual bool IsEraser() => Event.current.modifiers == EventModifiers.Shift;
+
 
     bool needsRefresh;
 	public override void LateTick()
@@ -107,12 +105,11 @@ class QuickEditorTool : BaseEditorTool
 	{
 		if (!IsEraser())
 		{
-            Debug.LogWarning("BRUSH DOWN IN QUICK TOOL");
-
             if (hoveredCell == null)
 			{
-                grid.AddCell(currCoord, cellPrefab);
-                needsRefresh = true;
+                StampCell(currCoord);
+                //grid.AddCell(currCoord, cellPrefab);
+                //needsRefresh = true;
                 //Cell newCell 
 			}
 		}
@@ -120,9 +117,7 @@ class QuickEditorTool : BaseEditorTool
 		{
             if (hoveredCell != null)
 			{
-                Debug.LogWarning("ERASING CELL");
-                DestroyImmediate(hoveredCell.gameObject);
-                needsRefresh = true;
+                DeleteCell(hoveredCell);
 			}
         }
     }
@@ -130,18 +125,46 @@ class QuickEditorTool : BaseEditorTool
     public override void OnMouseUp()
     {
         Debug.LogWarning("... mouse up in quick tool.");
-        boardData.Refresh();
+        if (needsRefresh)
+        {
+            boardData.Refresh();
+        }
     }
 
     public override void OnMouseDrag()
 	{
         if (!IsEraser())
         {
-            Debug.LogWarning("BRUSH DRAG IN QUICK TOOL");
+            Debug.LogWarning("DRAG IN STAMP TOOL");
+            if(hoveredCell == null)
+                StampCell(currCoord);
         }
         else
         {
-            Debug.LogWarning("ERASER DRAG IN QUICK TOOL");
+            Debug.LogWarning("ERASER DRAG IN STEMP TOOL");
+            if (hoveredCell != null)
+                DeleteCell(hoveredCell);
         }
+    }
+
+    void StampCell(Vector2Int coord)
+	{
+        Debug.LogWarning("ADDING CELL");
+        grid.AddCell(coord, cellPrefab);
+        needsRefresh = true;
+	}
+
+    void DeleteCell(Cell cell)
+	{
+        Debug.LogWarning("ERASING CELL");
+        DestroyImmediate(hoveredCell.gameObject);
+        needsRefresh = true;
+    }
+
+    [UnityEditor.ShortcutManagement.Shortcut("Cell Stamper Tool", null, KeyCode.V)]
+    static void ToolShortcut()
+    {
+        if (Selection.GetFiltered<GridV2>(SelectionMode.TopLevel).Length > 0)
+            ToolManager.SetActiveTool<CellStamperTool>();
     }
 }

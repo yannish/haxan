@@ -5,6 +5,7 @@ using System;
 public class Cell : MonoBehaviour
 {
     public CellSurfaceFlags surfaceFlags;
+
     public Transform pivot;
 
     public static readonly float OuterRadius = 2f;

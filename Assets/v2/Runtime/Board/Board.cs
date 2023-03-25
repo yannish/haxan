@@ -6,6 +6,8 @@ using System;
 //[InitializeOnLoad]
 public class Board
 {
+    public static int currTimeStep = -1;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void OnSceneLoad()
 	{
@@ -180,6 +182,9 @@ public class Board
         grids.Add(grid);
     }
 
+
+    //... RESOURCES:
+    static GameObject dampStepSequence;
     public static void Build()
     {
         indexToCellLookup.Clear();
@@ -244,6 +249,9 @@ public class Board
         var ui = BoardUI.FindObjectOfType<BoardUI>();
         Debug.Assert(ui != null, "There is no BoardUI in the scene. Please create one.");
         ui.Init();
+
+        dampStepSequence = Resources.Load(StepCommandV2.kDampStepPath) as GameObject;
+        currTimeStep = 0;
     }
 
     
@@ -506,6 +514,13 @@ public class Board
         return path.ToArray();
     }
 
+    //... TODO: maybe something more continuous could be done.
+    //... every command gets its own little authored timings
+    //...   ie. at 0.68f seconds of normalized time, do a splash.
+    public static void ProcessCommandFrame(Unit unit, UnitCommand command)
+	{
+	}
+
     public static void RespondToCommandBeginTick(Unit unit, UnitCommand command)
 	{
 
@@ -513,6 +528,10 @@ public class Board
 
     public static void RespondToCommandCompleteTick(Unit unit, UnitCommand command)
 	{
+        //if (UnitCommandTimeline.I == null)
+        //    return;
+
+        Debug.LogWarning("responding to command tick complete");
         if (command is StepCommandV2)
         {
             //... ^^ run splashes, we're touching down in the "to" coord here.
@@ -522,6 +541,15 @@ public class Board
 				if ((foundCell.surfaceFlags & CellSurfaceFlags.DAMP) == CellSurfaceFlags.DAMP)
 				{
 					Debug.LogWarning($"cell at {stepCommand.toCoord} was damp.");
+
+                    UnitCommandTimeline.I.StartSequence(unit, dampStepSequence, stepCommand.toCoord, currTimeStep);
+                    //TimeStepSequence newDampStepSeq = GameObject.Instantiate(
+                    //    dampStepSequence,
+                    //    //true,
+                    //    OffsetToWorld(stepCommand.toCoord),
+                    //    Quaternion.identity,
+                    //    UnitCommandTimeline.I.transform
+                    //    ).GetComponent<TimeStepSequence>();
 				}
 			}
         }

@@ -19,7 +19,6 @@ public class BoardUI : MonoBehaviour
     [Header("DEBUG:")]
     public bool drawCellCoords;
 
-
     [Header("STATE:")]
     [SerializeField] private Mode mode;
     [SerializeField] private TurnPlaybackState playbackState;
@@ -1215,10 +1214,14 @@ public class BoardUI : MonoBehaviour
 		if (currCommand.Tick())
 		{
             currCommand.OnCompleteTick();
+            //Board.RespondToCommandCompleteTick(currCommand.unit, currCommand);
             currCommand.Execute();
             currCommandHistory.Push(currCommand);
             if (currCommand.StepsTimeForward())
+			{
                 currTimeStep++;
+                Board.currTimeStep++;
+			}
             currCommand = null;
 
 			if (!commandsToProcess.IsNullOrEmpty())
@@ -1231,6 +1234,7 @@ public class BoardUI : MonoBehaviour
                 playbackState = TurnPlaybackState.PAUSED;
 
                 TurnV2 recordedTurn = new();
+
                 recordedTurn.instigator = currInstigator;
                 recordedTurn.commandHistory = currCommandHistory;
                 turnHistory.Push(recordedTurn);
@@ -1262,6 +1266,11 @@ public class BoardUI : MonoBehaviour
 		{
             currCommand.OnCompleteReverseTick();
             currCommand.Undo();
+            if (currCommand.StepsTimeForward())
+            {
+                currTimeStep--;
+                Board.currTimeStep--;
+            }
             currCommand = null;
 
 			if (!currCommandHistory.IsNullOrEmpty())

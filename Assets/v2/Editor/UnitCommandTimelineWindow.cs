@@ -9,7 +9,8 @@ public class UnitCommandTimelineWindow : EditorWindow
     public static void ShowWindow()
 	{
 		// Get existing open window or if none, make a new one:
-		UnitCommandTimelineWindow window = (UnitCommandTimelineWindow)EditorWindow.GetWindow(typeof(UnitCommandTimelineWindow));
+		UnitCommandTimelineWindow window = (UnitCommandTimelineWindow)EditorWindow
+			.GetWindow(typeof(UnitCommandTimelineWindow));
 		window.Show();
 	}
 
@@ -47,38 +48,40 @@ public class UnitCommandTimelineWindow : EditorWindow
 			return;
 		}
 
-		scrollPos = EditorGUILayout.BeginScrollView(scrollPos);//, GUILayout.Width(100), GUILayout.Height(100));
-		using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
+		if (timeline.sequences.IsNullOrEmpty())
 		{
-			for (int i = 0; i < timeline.length; i++)
-			{
-				GUILayout.Label(
-					i.ToString(), EditorStyles.helpBox, 
-					GUILayout.Height(timeline.itemHeight), GUILayout.Width(timeline.itemWidth)
-					);
-				//, GUILayout.ExpandHeight(true));
-				//GUILayout.Label(i.ToString(), EditorStyles.)
-				//GUILayout.Button(i.ToString());
-			}
+			GUILayout.Label("... no sequences in timeline.", EditorStyles.boldLabel);
+			return;
+		}
 
-			//using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-			//{
-			//	EditorGUILayout.BeginHorizontal();
-			//EditorGUILayout.EndHorizontal();
-			//}
+		scrollPos = EditorGUILayout.BeginScrollView(scrollPos);//, GUILayout.Width(100), GUILayout.Height(100));
+		for (int i = 0; i < timeline.sequences.Count; i++)
+		{
+			TimeStepSequence sequence = timeline.sequences[i];
+			float marginSize = EditorStyles.helpBox.margin.right;
+			//float marginSize = EditorStyles.helpBox.margin.right + EditorStyles.helpBox.margin.left;
+			using (new GUILayout.HorizontalScope(/*EditorStyles.helpBox*/))
+			{
+				GUILayout.Space((timeline.itemWidth + marginSize ) * sequence.timeCreated);
+				for (int j = 0; j < sequence.duration; j++)
+				{
+					GUILayout.Label(
+						j.ToString(), EditorStyles.helpBox,
+						GUILayout.Height(timeline.itemHeight), 
+						GUILayout.Width(timeline.itemWidth)
+						);
+					//, GUILayout.ExpandHeight(true));
+					//GUILayout.Label(i.ToString(), EditorStyles.)
+					//GUILayout.Button(i.ToString());
+				}
+
+				//using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+				//{
+				//	EditorGUILayout.BeginHorizontal();
+				//EditorGUILayout.EndHorizontal();
+				//}
+			}
 		}
 		EditorGUILayout.EndScrollView();
 	}
-
-	//// Start is called before the first frame update
-	//void Start()
-	//{
-
-	//}
-
-	//// Update is called once per frame
-	//void Update()
-	//{
-
-	//}
 }

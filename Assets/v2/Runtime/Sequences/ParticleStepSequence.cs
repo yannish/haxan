@@ -10,78 +10,19 @@ public enum StepMode
 	REWINDING
 }
 
-public class ParticleStepSequence : MonoBehaviour
-	, ISteppable
+public class ParticleStepSequence : TimeStepSequence
 {
-	public StepMode mode = StepMode.PAUSED;
-
 	public ParticleSystem pfx;
-	public int steps;
-	public int currStep;
 
-	public EditorButton stepForward = new EditorButton("StepForward", true);
-	public void StepForward()
-	{
-		if (mode == StepMode.REWINDING)
-			return;
-
-		if (currStep >= steps)
-			return;
-
-		pfx.Play();
-
-		currStep++;
-		currTargetTime = currStep * stepSize;
-
-		mode = StepMode.PLAYING;
-	}
-
-	public EditorButton stepBackward = new EditorButton("StepBackward", true);
-	public void StepBackward()
-	{
-		if (mode == StepMode.PLAYING)
-			return;
-
-		if (currStep <= 0)
-			return;
-
-		pfx.Play();
-
-		currStep--;
-		currTargetTime = currStep * stepSize;
-
-		mode = StepMode.REWINDING;
-	}
-
-	[ReadOnly] public float duration;
-	[ReadOnly] public float stepSize;
-	[ReadOnly] public float currTargetTime;
 	[ReadOnly] public float currPfxTime;
-	void Awake()
+
+	void OnEnable()
 	{
 		duration = pfx.main.duration;
 		stepSize = duration / steps;
 	}
 
-
-	void Update()
-	{
-		switch (mode)
-		{
-			case StepMode.PAUSED:
-				break;
-			case StepMode.PLAYING:
-				TickForward();
-				break;
-			case StepMode.REWINDING:
-				TickBackward();
-				break;
-			default:
-				break;
-		}
-	}
-
-	private void TickForward()
+	public override void TickForward()
 	{
 		currPfxTime = pfx.time;
 		float timeToTarget = currTargetTime - currPfxTime;
@@ -94,7 +35,7 @@ public class ParticleStepSequence : MonoBehaviour
 		}
 	}
 
-	private void TickBackward()
+	public override void TickBackward()
 	{
 		currPfxTime = pfx.time;
 		float timeToTarget = currTargetTime - currPfxTime;
@@ -108,30 +49,18 @@ public class ParticleStepSequence : MonoBehaviour
 		}
 	}
 
-
-
 	public void OnComplete()
 	{
 		
 	}
 
-	public void OnBeginBackwardStep()
+	public override void OnBeginBackwardStep()
 	{
-		
+		pfx.Play();
 	}
 
-	public void OnBeginForwardStep()
+	public override void OnBeginForwardStep()
 	{
-		
-	}
-
-	public void Tick(float timeScale = 1)
-	{
-		
-	}
-
-	public void OnPlay()
-	{
-		
+		pfx.Play();
 	}
 }

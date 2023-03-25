@@ -19,7 +19,7 @@ public class CellPainterWindow : EditorWindow
 	{
 		// Check if EditorTool is currently active and disable it when window is closed
 		// CellPainterTool requires this window to be open as long as it's active
-		if (ToolManager.activeToolType == typeof(CellPainterTool))
+		if (ToolManager.activeToolType == typeof(CellPainterTool_OLD))
 		{
 			// Try to activate previously used tool
 			ToolManager.RestorePreviousPersistentTool();
