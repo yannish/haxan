@@ -249,7 +249,6 @@ public class PooledCellVisuals : PooledMonoBehaviour
     [Header("THREAT:")]
     public Color threatColor;
 
-
 	protected override void Awake()
 	{
 		currInteractionSize = hoveredHexRingSize;
@@ -373,7 +372,6 @@ public class PooledCellVisuals : PooledMonoBehaviour
 
         currSmoothTime = smoothTime;
     }
-
 
 	[ReadOnly] public float currSmoothTime = -1f;
 	void SmoothChange()

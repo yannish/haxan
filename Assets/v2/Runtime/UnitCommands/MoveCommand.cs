@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class StepCommandV2 : UnitCommand
+public class MoveCommand : UnitCommand
 {
     public Vector2Int toCoord;
     public Vector2Int fromCoord;
@@ -15,7 +15,7 @@ public class StepCommandV2 : UnitCommand
 
 	public const string kDampStepPath = "Prefabs/Sequences/DampStepSequence";
  
-	public StepCommandV2(Unit unit, Vector2Int fromCoord, Vector2Int toCoord, float duration)
+	public MoveCommand(Unit unit, Vector2Int fromCoord, Vector2Int toCoord, float duration)
 	{
         this.unit = unit;
         this.toCoord = toCoord;
@@ -28,25 +28,25 @@ public class StepCommandV2 : UnitCommand
 
 	public override void OnBeginTick()
 	{
-		Board.OnUnitExitedCell(unit, fromCoord);
-		Board.RespondToCommandBeginTick(unit, this);
+		//Board.OnUnitExitedCell(unit, fromCoord);
+		//Board.RespondToCommandBeginTick(unit, this);
 	}
 
 	public override void OnBeginReverseTick()
 	{
-		Board.OnUnitExitedCell(unit, toCoord);
+		//Board.OnUnitExitedCell(unit, toCoord);
 	}
 
 	public override void OnCompleteTick()
 	{
-		Board.OnUnitEnteredCell(unit, toCoord);
-		Board.RespondToCommandCompleteTick(unit, this);
-		UnitCommandTimeline.I.RespondToCommandBeginTick(unit, this);
+		//Board.OnUnitEnteredCell(unit, toCoord);
+		//Board.RespondToCommandCompleteTick(unit, this);
+		//UnitCommandTimeline.I.RespondToCommandBeginTick(unit, this);
 	}
 
 	public override void OnCompleteReverseTick()
 	{
-		Board.OnUnitEnteredCell(unit, fromCoord);
+		//Board.OnUnitEnteredCell(unit, fromCoord);
 	}
 
 	public override void Execute()

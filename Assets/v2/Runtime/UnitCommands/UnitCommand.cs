@@ -41,8 +41,6 @@ public class UnitCommand
 	public virtual bool CheckComplete(float scale = 1f) => Mathf.Sign(scale) > 0f ? currProgress >= 1f : currProgress <= 0f;
 
 	public virtual bool StepsTimeForward() => true;
-
-
 }
 
 //public class UnitCommandBase<T> where T : Unit

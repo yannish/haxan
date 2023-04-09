@@ -108,15 +108,19 @@ public class BoardUI : MonoBehaviour
 			case Mode.Neutral:
                 HandleNeutralMode();
                 break;
+
 			case Mode.UnitSelected:
                 HandleUnitSelectedMode();
                 break;
+
 			case Mode.AbilitySelected:
                 HandleAbilitySelectedMode();
                 break;
+
 			case Mode.ProcessingCommands:
                 HandleCommandProcessing();
                 break;
+
 			default:
 				break;
 		}
@@ -156,10 +160,10 @@ public class BoardUI : MonoBehaviour
     Vector2Int prevValidMoveCoord;
     [ReadOnly] public bool hoveredValidMove;
     [ReadOnly] public AbilityButton[] abilityButtons;
-    [ReadOnly] public AbilityV2 hoveredAbility;
+    [ReadOnly] public Ability hoveredAbility;
     GameObject abilityDisplay;
     GameObject unitDisplay;
-    AbilityV2 selectedAbility;
+    Ability selectedAbility;
     AbilityButton selectedAbillityButton;
     List<Vector2Int> validAbilityCoords;
     List<GameObject> validMoveMarkers;
@@ -388,11 +392,16 @@ public class BoardUI : MonoBehaviour
                     hoveredCellPos = mousePos;
                     DestroyPathGizmos(selectedUnit);
 
-                    selectedUnit.MovementAbility.GetAffectedCells(
+                    var previewedPath = selectedUnit.MovementAbility.GetAffectedCells(
                         selectedUnit.OffsetPos, 
                         hoveredCellPos, 
                         selectedUnit
                         );
+
+                    foreach(var item in selectedUnit.Items)
+					{
+                        item.ShowPathReaction(selectedUnit.OffsetPos, previewedPath);
+					}
                 }
             }
 
@@ -656,9 +665,9 @@ public class BoardUI : MonoBehaviour
             validMoveCoords = unit.MovementAbility.GetValidCoords(unit.OffsetPos, unit);
         }
 
-        //Debug.LogWarning($"Showing {validMoveCoords.Count} moves.");
+		Debug.LogWarning($"Showing {validMoveCoords.Count} moves.");
 
-        foreach (var coord in validMoveCoords)
+		foreach (var coord in validMoveCoords)
         {
             if (coordToPathableCellLookup.TryGetValue(coord, out var pathMarker))
             {
@@ -667,7 +676,10 @@ public class BoardUI : MonoBehaviour
             }
             else
             {
-                var newPathMarker = pathValidMarker.GetAndPlay(Board.OffsetToWorld(coord), Quaternion.identity);
+                var newPathMarker = pathValidMarker.GetAndPlay(
+                    Board.OffsetToWorld(coord), 
+                    Quaternion.identity
+                    );
                 newPathMarker.Play();
                 //newPathMarker.Play((int)CellStateV2.PATHHINTED);
                 newPathMarker.OnReturnedToPool += () =>
@@ -711,6 +723,11 @@ public class BoardUI : MonoBehaviour
         if(unit.MovementAbility != null)
 		{
             unit.MovementAbility.HidePreview();
+		}
+
+        foreach(var item in unit.Items)
+		{
+            item.HidePathReaction();
 		}
 
         //string pathName = $"Path{unit.GetInstanceID()}";
@@ -944,23 +961,7 @@ public class BoardUI : MonoBehaviour
         mousePosLastFrame = mousePos;
     }
 
-    void StartProcessingCommands(Queue<UnitCommand> commands)
-	{
-        currInstigator = selectedUnit;
-        DeselectUnit();
-
-        commandsToProcess = commands;
-        currCommand = commandsToProcess.Dequeue();
-        currCommand.OnBeginTick();
-        currCommandHistory = new Stack<UnitCommand>();
-
-        mode = Mode.ProcessingCommands;
-        playbackState = TurnPlaybackState.PLAYING;
-
-        Debug.Log("STARTED PROCESSING COMMANDS");
-    }
-
-    internal void OnPointerEnteredAbilityButton(AbilityV2 ability, AbilityButton button)
+    internal void OnPointerEnteredAbilityButton(Ability ability, AbilityButton button)
     {
         isPointerInUI = true;
 
@@ -972,7 +973,7 @@ public class BoardUI : MonoBehaviour
         HoverAbility(ability);
     }
 
-    internal void OnPointerExitedAbilityButton(AbilityV2 ability, AbilityButton button)
+    internal void OnPointerExitedAbilityButton(Ability ability, AbilityButton button)
     {
         isPointerInUI = false;
 
@@ -985,7 +986,7 @@ public class BoardUI : MonoBehaviour
 			ShowValidMoves(selectedUnit);
 	}
 
-    internal void OnPointerClickedAbilityButton(AbilityV2 ability, AbilityButton button)
+    internal void OnPointerClickedAbilityButton(Ability ability, AbilityButton button)
     {
         switch (mode)
         {
@@ -1029,7 +1030,7 @@ public class BoardUI : MonoBehaviour
         abilityDisplay.SetActive(false);
     }
 
-    void HoverAbility(AbilityV2 ability)
+    void HoverAbility(Ability ability)
     {
         //HideValidMoves();
 
@@ -1071,7 +1072,7 @@ public class BoardUI : MonoBehaviour
         }
     }
 
-    void HoverValidAbilityMove(AbilityV2 ability, Vector2Int hoveredCoord)
+    void HoverValidAbilityMove(Ability ability, Vector2Int hoveredCoord)
     {
         Debug.LogWarning("hovered a valid ability move");
 
@@ -1141,17 +1142,7 @@ public class BoardUI : MonoBehaviour
   //      }
     }
 
-    void HighlightValidAbilityCells(List<Vector2Int> coords)
-	{
-
-	}
-
-    void UnhighlightValidAbilityCells()
-	{
-
-	}
-
-	void SelectAbility(AbilityV2 ability, AbilityButton button)
+	void SelectAbility(Ability ability, AbilityButton button)
 	{
         //Debug.LogWarning("SELECTED ABILITY:");
 
@@ -1177,19 +1168,59 @@ public class BoardUI : MonoBehaviour
     //[Header("TURNS:")]
     Unit currInstigator;
     UnitCommand currCommand;
+    UnitCommandStep currCommandStep;
     Queue<UnitCommand> commandsToProcess;
+    Queue<UnitCommandStep> commandStepsToProcess;
     public Stack<UnitCommand> currCommandHistory;
+    public Stack<UnitCommandStep> currCommandStepHistory;
     public Stack<TurnV2> turnHistory;
 
-	private void HandleCommandProcessing()
+    void StartProcessingCommands(Queue<UnitCommand> commands)
+    {
+        currInstigator = selectedUnit;
+        DeselectUnit();
+
+        commandsToProcess = commands;
+		//currCommand = commandsToProcess.Dequeue();
+        currCommandStep = new UnitCommandStep(currInstigator, commandsToProcess.Dequeue());
+
+        currCommandStep.instigatingCommand.OnBeginTick();
+        //currCommand.OnBeginTick();
+
+        //Board.RespondToCommandBeginTick(currInstigator, currCommand);
+
+        currCommandHistory = new Stack<UnitCommand>();
+        currCommandStepHistory = new Stack<UnitCommandStep>();
+
+        mode = Mode.ProcessingCommands;
+        playbackState = TurnPlaybackState.PLAYING;
+
+        Debug.Log("STARTED PROCESSING COMMANDS");
+    }
+
+    void StartProcessingCommandSteps()
+	{
+        currInstigator = selectedUnit;
+        DeselectUnit();
+
+        //commandStepsToProcess = commandSteps;
+	}
+
+    bool ProcessCommandConsequences(ref UnitCommandStep commandStep)
+	{
+        return true;
+	}
+
+    private void HandleCommandProcessing()
     {
 		switch (playbackState)
 		{
 			case TurnPlaybackState.PAUSED:
 				break;
+
 			case TurnPlaybackState.PLAYING:
                 HandleTurnForward();
-                if (currCommand == null)
+                if (currCommandStep == null)
 				{
                     Debug.LogWarning("DONE WITH TURN, BACK TO FLOW");
                     playbackState = TurnPlaybackState.PAUSED;
@@ -1198,9 +1229,11 @@ public class BoardUI : MonoBehaviour
 					currInstigator = null;
 				}
 				break;
+
 			case TurnPlaybackState.REWINDING:
                 HandleTurnBackward();
                 break;
+
 			default:
 				break;
 		}
@@ -1208,26 +1241,38 @@ public class BoardUI : MonoBehaviour
 
     private void HandleTurnForward()
     {
-        if (currCommand == null)
+        if (currCommandStep == null)
             return;
 
-		if (currCommand.Tick())
+		if (currCommandStep.Tick())
 		{
-            currCommand.OnCompleteTick();
-            //Board.RespondToCommandCompleteTick(currCommand.unit, currCommand);
-            currCommand.Execute();
-            currCommandHistory.Push(currCommand);
-            if (currCommand.StepsTimeForward())
-			{
-                currTimeStep++;
-                Board.currTimeStep++;
-			}
-            currCommand = null;
+            currCommandStep.OnCompleteTick();
+			currCommandStep.Execute();
+            currCommandStepHistory.Push(currCommandStep);
+
+            //Board.RespondToCommandCompleteTick(currInstigator, currCommand);
+
+            currTimeStep++;
+            Board.currTimeStep++;
+
+   //         if (currCommand.StepsTimeForward())
+			//{
+   //             currTimeStep++;
+   //             Board.currTimeStep++;
+			//}
+
+            //TODO: 
+            //... check that the next "intended" command step is valid, not
+            //... disrupted by the new board state
+
+            currCommandStep = null;
 
 			if (!commandsToProcess.IsNullOrEmpty())
 			{
-                currCommand = commandsToProcess.Dequeue();
-                currCommand.OnBeginTick();
+                currCommandStep = new UnitCommandStep(currInstigator, commandsToProcess.Dequeue());
+                currCommandStep.OnBeginTick();
+                //currCommand = commandsToProcess.Dequeue();
+                //currCommand.OnBeginTick();
 			}
 			else
 			{
@@ -1236,11 +1281,13 @@ public class BoardUI : MonoBehaviour
                 TurnV2 recordedTurn = new();
 
                 recordedTurn.instigator = currInstigator;
-                recordedTurn.commandHistory = currCommandHistory;
+                recordedTurn.commandStepHistory = currCommandStepHistory;
+                //recordedTurn.commandHistory = currCommandHistory;
                 turnHistory.Push(recordedTurn);
 
-				currCommandHistory = null;
-			}
+				currCommandStepHistory = null;
+				//currCommandHistory = null;
+            }
 		}
     }
 
@@ -1253,35 +1300,35 @@ public class BoardUI : MonoBehaviour
         playbackState = TurnPlaybackState.REWINDING;
 
         TurnV2 turnToUndo = turnHistory.Pop();
-        currCommandHistory = turnToUndo.commandHistory;
-        currCommand = currCommandHistory.Pop();
+        currCommandStepHistory = turnToUndo.commandStepHistory;
+        currCommandStep = currCommandStepHistory.Pop();
     }
 
     private void HandleTurnBackward()
 	{
-        if (currCommand == null)
+        if (currCommandStep == null)
             return;
 
-		if (currCommand.Tick(-1f))
+		if (currCommandStep.Tick(-1f))
 		{
-            currCommand.OnCompleteReverseTick();
-            currCommand.Undo();
-            if (currCommand.StepsTimeForward())
-            {
-                currTimeStep--;
-                Board.currTimeStep--;
-            }
-            currCommand = null;
+            currCommandStep.OnCompleteReverseTick();
+            currCommandStep.Undo();
+            currTimeStep--;
+            Board.currTimeStep--;
+            //if (currCommand.StepsTimeForward())
+            //{
+            //}
+            currCommandStep = null;
 
-			if (!currCommandHistory.IsNullOrEmpty())
+			if (!currCommandStepHistory.IsNullOrEmpty())
 			{
-                currCommand = currCommandHistory.Pop();
-                currCommand.OnBeginReverseTick();
+                currCommandStep = currCommandStepHistory.Pop();
+                currCommandStep.OnBeginReverseTick();
 			}
             else
 			{
                 playbackState = TurnPlaybackState.PAUSED;
-                currCommandHistory = null;
+                currCommandStepHistory = null;
 			}
 		}
 	}

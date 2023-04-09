@@ -15,48 +15,48 @@ Shader "UI/colorDither"
         //Tags { "RenderType"="Opaque" }
         LOD 100
 
-        Pass
-        {
-            ColorMask 0
+        //Pass
+        //{
+        //    ColorMask 0
 
-            Stencil
-            {
-                Ref 1
-                Comp Always
-                ZFail Replace
-            }
+        //    Stencil
+        //    {
+        //        Ref 1
+        //        Comp Always
+        //        ZFail Replace
+        //    }
 
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
+        //    CGPROGRAM
+        //    #pragma vertex vert
+        //    #pragma fragment frag
 
-            #include "UnityCG.cginc"
+        //    #include "UnityCG.cginc"
 
-            struct appdata
-            {
-                float4 vertex : POSITION;
-            };
+        //    struct appdata
+        //    {
+        //        float4 vertex : POSITION;
+        //    };
 
-            struct v2f
-            {
-                float4 vertex : SV_POSITION;
-            };
+        //    struct v2f
+        //    {
+        //        float4 vertex : SV_POSITION;
+        //    };
 
-            //float4 _Color;
+        //    //float4 _Color;
 
-            v2f vert (appdata v)
-            {
-                v2f o;
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                return o;
-            }
+        //    v2f vert (appdata v)
+        //    {
+        //        v2f o;
+        //        o.vertex = UnityObjectToClipPos(v.vertex);
+        //        return o;
+        //    }
 
-            half4 frag (v2f i) : SV_Target
-            {
-                return (1,1,1,1);
-            }
-            ENDCG
-        }
+        //    half4 frag (v2f i) : SV_Target
+        //    {
+        //        return (1,1,1,1);
+        //    }
+        //    ENDCG
+        //}
 
         Pass
         {
@@ -93,77 +93,77 @@ Shader "UI/colorDither"
             ENDCG
         }
 
-        Pass
-        {
-            ZTest Always
+        //Pass
+        //{
+        //    ZTest Always
 
-            Stencil
-            {
-                Ref 1
-                Comp Equal
-                ZFail Replace
-                ///Pass Keep
-            }
+        //    Stencil
+        //    {
+        //        Ref 1
+        //        Comp Equal
+        //        ZFail Replace
+        //        ///Pass Keep
+        //    }
 
-            CGPROGRAM
-            #pragma vertex vert
-            #pragma fragment frag
+        //    CGPROGRAM
+        //    #pragma vertex vert
+        //    #pragma fragment frag
 
-            #include "UnityCG.cginc"
+        //    #include "UnityCG.cginc"
 
-            struct appdata
-            {
-                float4 vertex : POSITION;
-            };
+        //    struct appdata
+        //    {
+        //        float4 vertex : POSITION;
+        //    };
 
-            struct v2f
-            {
-                float4 screenPos : TEXCOORD0;
-                float4 vertex : SV_POSITION;
-            };
-
-
-            float _Dither;
-            float4 _DitherColor;
-
-            static const float4x4 bigDitherTable = float4x4
-            (
-                -4.0, 0.0, -3.0, 1.0,
-                2.0, -2.0, 3.0, -1.0,
-                -3.0, 1.0, -4.0, 0.0,
-                3.0, -1.0, 2.0, -2.0
-            );
+        //    struct v2f
+        //    {
+        //        float4 screenPos : TEXCOORD0;
+        //        float4 vertex : SV_POSITION;
+        //    };
 
 
-            v2f vert(appdata v)
-            {
-                v2f o;
-                
-                o.vertex = UnityObjectToClipPos(v.vertex);
-                o.screenPos = ComputeScreenPos(o.vertex);
+        //    float _Dither;
+        //    float4 _DitherColor;
 
-                return o;
-            }
+        //    static const float4x4 bigDitherTable = float4x4
+        //    (
+        //        -4.0, 0.0, -3.0, 1.0,
+        //        2.0, -2.0, 3.0, -1.0,
+        //        -3.0, 1.0, -4.0, 0.0,
+        //        3.0, -1.0, 2.0, -2.0
+        //    );
 
 
-            fixed4 frag(v2f i) : SV_Target
-            {
-                float aspect = _ScreenParams.x / _ScreenParams.y;
-                float2 texCoord = i.screenPos.xy / i.screenPos.w;
+        //    v2f vert(appdata v)
+        //    {
+        //        v2f o;
+        //        
+        //        o.vertex = UnityObjectToClipPos(v.vertex);
+        //        o.screenPos = ComputeScreenPos(o.vertex);
 
-                uint2 screenPixel = uint2(texCoord.x * _ScreenParams.x, texCoord.y * _ScreenParams.y);
+        //        return o;
+        //    }
 
-                float xMask = screenPixel.x % 2;
-                float yMask = (screenPixel.y) % 2;
 
-                float lookup = bigDitherTable[screenPixel.y % 4][screenPixel.x % 4] * 0.25f;
-                clip(lookup - _Dither);
+        //    fixed4 frag(v2f i) : SV_Target
+        //    {
+        //        float aspect = _ScreenParams.x / _ScreenParams.y;
+        //        float2 texCoord = i.screenPos.xy / i.screenPos.w;
 
-                //return 0;
-                return _DitherColor;
-            }
+        //        uint2 screenPixel = uint2(texCoord.x * _ScreenParams.x, texCoord.y * _ScreenParams.y);
 
-            ENDCG
-        }
+        //        float xMask = screenPixel.x % 2;
+        //        float yMask = (screenPixel.y) % 2;
+
+        //        float lookup = bigDitherTable[screenPixel.y % 4][screenPixel.x % 4] * 0.25f;
+        //        clip(lookup - _Dither);
+
+        //        //return 0;
+        //        return _DitherColor;
+        //    }
+
+        //    ENDCG
+        //}
     }
 }

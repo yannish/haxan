@@ -8,7 +8,7 @@ public class GridProbeV2 : Unit
 	GameObject hoverPrefab;
 	private void Awake()
 	{
-		hoverPrefab = (GameObject)Resources.Load("Prefabs/HoveredCell");
+		hoverPrefab = (GameObject)Resources.Load("Prefabs/BoardUI/HoveredCell");
 	}
 
 

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PuffAbility : Ability
+public class PuffAbility : Ability_OLD
 {
 	public PooledMonoBehaviour pooledPuffPfx;
 	public FloatReference turnDuration;

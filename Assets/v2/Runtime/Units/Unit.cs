@@ -31,8 +31,8 @@ public class Unit : MonoBehaviour
     public UnitPreset preset;
 
     [Header("ABILITIES:")]
-    public AbilityV2 MovementAbility;
-    public List<AbilityV2> Abilities = new List<AbilityV2>();
+    public Ability MovementAbility;
+    public List<Ability> Abilities = new List<Ability>();
 
     [Header("INVENTORY:")]
     public List<Item> Items = new List<Item>();

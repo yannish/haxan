@@ -250,7 +250,7 @@ public class Board
         Debug.Assert(ui != null, "There is no BoardUI in the scene. Please create one.");
         ui.Init();
 
-        dampStepSequence = Resources.Load(StepCommandV2.kDampStepPath) as GameObject;
+        dampStepSequence = Resources.Load(MoveCommand.kDampStepPath) as GameObject;
         currTimeStep = 0;
     }
 
@@ -286,6 +286,29 @@ public class Board
             return foundCell;
 
         return null;
+	}
+
+    public static List<Unit> GetNeighbouringUnits(Vector2Int coord)
+	{
+        List<Unit> foundUnits = new List<Unit>();
+
+        Vector2Int?[] neighbouringCoords = coord.GetNeighbouringCoords();
+        foreach(var neighbouringCoord in neighbouringCoords)
+		{
+            if (neighbouringCoord == null)
+                continue;
+
+            if (!TryGetCellAtPos(neighbouringCoord.Value, out var foundCell))
+                continue;
+
+            Unit foundUnit = Board.GetUnitAtPos(neighbouringCoord.Value);
+            if (foundUnit == null)
+                continue;
+
+            foundUnits.Add(foundUnit);
+        }
+
+        return foundUnits;
 	}
 
     // Output positions are in offset coordinates
@@ -532,10 +555,10 @@ public class Board
         //    return;
 
         Debug.LogWarning("responding to command tick complete");
-        if (command is StepCommandV2)
+        if (command is MoveCommand)
         {
             //... ^^ run splashes, we're touching down in the "to" coord here.
-            StepCommandV2 stepCommand = command as StepCommandV2;
+            MoveCommand stepCommand = command as MoveCommand;
 			if (TryGetCellAtPos(stepCommand.toCoord, out var foundCell))
 			{
 				if ((foundCell.surfaceFlags & CellSurfaceFlags.DAMP) == CellSurfaceFlags.DAMP)
@@ -573,7 +596,7 @@ public static class BoardExtensions
         //CellV2_NEW[] neighbs = new CellV2_NEW[6];
         Vector2Int?[] neighbours = new Vector2Int?[6];
 
-        Debug.LogWarning("checking neighbs at: " + coord.ToString());
+        //Debug.LogWarning("checking neighbs at: " + coord.ToString());
 
         int parity = coord.x & 1;
         for (int i = 0; i < 6; i++)
@@ -604,7 +627,7 @@ public static class BoardExtensions
 				continue;
 			}
 
-            Debug.LogWarning("... neighb to the: " + ((HexDirectionFT)i).ToString() + " " + neighbour.ToString());
+            //Debug.LogWarning("... neighb to the: " + ((HexDirectionFT)i).ToString() + " " + neighbour.ToString());
 
             neighbours[i] = neighbour;
 		}

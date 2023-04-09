@@ -3,20 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface ISteppable
-{
-	void OnPlay();
-	void OnComplete();
-	int Duration();
+//public interface ISteppable
+//{
+//	void OnPlay();
+//	void OnComplete();
+//	int Duration();
 
-	void Tick(float timeScale = 1f);
+//	void Tick(float timeScale = 1f);
 
-	void StepForward();
-	void StepBackward();
+//	void StepForward();
+//	void StepBackward();
 
-	void TickForward();
-	void TickBackward();
-}
+//	void TickForward();
+//	void TickBackward();
+//}
 
 public class TimeStepSequence : MonoBehaviour
 {

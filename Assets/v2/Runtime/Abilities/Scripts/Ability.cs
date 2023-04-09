@@ -18,7 +18,7 @@ public enum StepPhaseV2
     ATTACK
 }
 
-public class AbilityV2 : ScriptableObject
+public class Ability : ScriptableObject
 {
     [Header("CONFIG:")]
     public Sprite icon;
@@ -45,4 +45,7 @@ public class AbilityV2 : ScriptableObject
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
 
     public virtual Queue<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommand>();
+
+    public virtual Queue<UnitCommandStep> FetchCommandStepChain(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommandStep>();
+
 }

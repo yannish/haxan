@@ -35,7 +35,7 @@ public class BoardUIEditor : Editor
 			if (GUILayout.Button("UNDO"))
                 boardUI.Undo();
 
-			DrawCommandHistory();
+			//DrawCommandHistory();
 		}
 
         DrawDefaultInspector();

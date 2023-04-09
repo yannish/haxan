@@ -13,14 +13,14 @@ public class AbilityFlowController : FlowController
 
 	Action previewValidMoveAction;
 
-	public Ability _ability;
+	public Ability_OLD _ability;
 
-	public Ability ability
+	public Ability_OLD ability
 	{
 		get
 		{
 			if (_ability == null)
-				_ability = GetComponent<Ability>();
+				_ability = GetComponent<Ability_OLD>();
 			return _ability;
 		}
 	}

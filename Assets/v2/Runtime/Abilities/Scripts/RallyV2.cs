@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AbilitiesV2/Rally", fileName = "Rally")]
-public class RallyV2 : AbilityV2
+public class RallyV2 : Ability
 {
 	public int range;
 	public override List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit)

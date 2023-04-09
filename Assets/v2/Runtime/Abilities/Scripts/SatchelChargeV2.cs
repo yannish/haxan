@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AbilitiesV2/SatchelChargeV2", fileName = "SatchelChargeV2")]
-public class SatchelChargeV2 : AbilityV2
+public class SatchelChargeV2 : Ability
 {
 	public int range;
 

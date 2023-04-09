@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class GroundMoveAbility : Ability
+public class GroundMoveAbility : Ability_OLD
 {
 	public FloatReference stepDuration;
 	public FloatReference turnDuration;

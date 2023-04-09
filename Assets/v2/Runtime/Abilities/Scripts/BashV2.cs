@@ -5,13 +5,21 @@ using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "AbilitiesV2/Bash", fileName = "Bash")]
-public class BashV2 : AbilityV2
+public class BashV2 : Ability
 {
 	public int range= 1;
 
+	
+	[Header("TIMING:")]
+	public float stepDuration;
+	public float turnDuration;
+
+	[Header("VISUALS:")]
+	public PooledMonoBehaviour impactParticle;
 	public PooledMonoBehaviour pushableMarker;
 	public PooledMonoBehaviour unpushableMarker;
 
+	//List<GameObject> pathQuads;
 
 	public override void ShowValidMoves(Vector2Int origin, Unit unit)
 	{
@@ -25,7 +33,6 @@ public class BashV2 : AbilityV2
 
 	PooledMonoBehaviour pushableMarkerInstance;
 	PooledMonoBehaviour unpushableMarkerInstance;
-
 	public override void ShowPreview(Vector2Int target, Unit unit)
 	{
 		Vector3 originWorldPos = Board.OffsetToWorld(unit.OffsetPos);
@@ -121,5 +128,12 @@ public class BashV2 : AbilityV2
 		}
 
 		return newMarker;
+	}
+
+	public override Queue<UnitCommand> FetchCommandChain(Vector2Int targetCoorrd, Unit unit)
+	{
+
+
+		return null;
 	}
 }

@@ -63,11 +63,30 @@ public class PoolTester : MonoBehaviour
 	public EditorButton releaseAbilityMarkers = new EditorButton("ReleaseAbilityMarkers", true);
 	public void ReleaseAbilityMarkers()
 	{
-		foreach(var marker in allAbilityMarkers)
+		foreach (var marker in allAbilityMarkers)
 		{
 			marker.Unmark();
 		}
 
 		allAbilityMarkers.Clear();
+	}
+
+	public PooledIndicator pooledIndicator;
+	public EditorButton indicatorBtn = new EditorButton("Indicator", true);
+	public void Indicator()
+	{
+		var indicatorInstance = pooledIndicator.GetAndPlay(
+			transform.position + spot,
+			normal
+			);
+
+		spot += Vector3.right * bump;
+	}
+
+	public EditorButton instantiateThing = new EditorButton("Instantiate", true);
+	public void Instantiate()
+	{
+		var indicatorInstance = Instantiate(pooledIndicator);
+		Debug.LogWarning("new instance: " + indicatorInstance.gameObject);
 	}
 }

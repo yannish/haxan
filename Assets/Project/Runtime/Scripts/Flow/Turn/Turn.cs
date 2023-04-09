@@ -18,7 +18,7 @@ public class Turn //: ScriptableObject
 
     [ReadOnly] public CellObject instigator;
 
-    [ReadOnly] public Ability ability;
+    [ReadOnly] public Ability_OLD ability;
 
     public Queue<CellObjectCommand> commands = new();
 
@@ -53,6 +53,6 @@ public class Turn //: ScriptableObject
 public class RecordedTurn
 {
 	[ReadOnly] public CellObject owner;
-	[ReadOnly] public Ability ability;
+	[ReadOnly] public Ability_OLD ability;
 	[ReadOnly] public Stack<CellObjectCommand> commandHistory = new Stack<CellObjectCommand>();
 }

@@ -21,7 +21,7 @@ public class CellObject : MonoBehaviour
 	[ReadOnly] public HexDirection facing;
 
 	[Header("ABILITIES:")]
-	public List<Ability> abilities;
+	public List<Ability_OLD> abilities;
 
 	public List<AbilityScrObj> abilityScrObjs = new List<AbilityScrObj>();
 

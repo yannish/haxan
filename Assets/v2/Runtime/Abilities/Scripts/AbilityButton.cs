@@ -11,7 +11,7 @@ public class AbilityButton : MonoBehaviour
 	, IPointerClickHandler
 {
 	BoardUI ui;
-	AbilityV2 ability;
+	Ability ability;
 
 	public Image icon;
 	public Image background;
@@ -21,7 +21,7 @@ public class AbilityButton : MonoBehaviour
 	public Color selectedColor;
 	public Color hoveredColor;
 
-	public void Init(BoardUI ui, AbilityV2 ability)
+	public void Init(BoardUI ui, Ability ability)
 	{
 		this.ui = ui;
 		this.ability = ability;

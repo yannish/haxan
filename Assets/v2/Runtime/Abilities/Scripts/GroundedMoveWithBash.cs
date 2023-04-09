@@ -1,12 +1,9 @@
 using BOG;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
-
-[CreateAssetMenu(menuName = "AbilitiesV2/GroundedMove", fileName = "GroundedMove")]
-public class GroundedMoveV2 : Ability
+public class GroundedMoveWithBash : Ability
 {
 	[Header("TIMING:")]
 	public float stepDuration;
@@ -16,8 +13,7 @@ public class GroundedMoveV2 : Ability
 	public GameObject pathQuadPrefab;
 	List<GameObject> pathQuads;
 
-
-    public override List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit)
+	public override List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit)
 	{
 		List<Vector2Int> coordsInRange = Board.GetNavigableTiles(unit).ToList();
 		return coordsInRange;
@@ -26,8 +22,6 @@ public class GroundedMoveV2 : Ability
 	public override List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int destination, Unit unit)
 	{
 		Vector2Int[] path = Board.FindPath(origin, destination);
-
-		Debug.LogWarning("Path length: " + path.Length);
 
 		for (int i = 0; i < path.Length; i++)
 		{
@@ -45,42 +39,90 @@ public class GroundedMoveV2 : Ability
 			pathQuads.Add(pathQuad);
 		}
 
-		//string pathName = $"Path{unit.GetInstanceID()}";
-		//for (int i = 0; i < path.Length; i++)
-		//{
-		//	Vector2Int from = (i == 0) ? unit.OffsetPos : path[i - 1];
-		//	Vector2Int to = path[i];
-		//	GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab);
-		//	pathQuad.name = pathName;
-		//	pathQuad.transform.position = Board.OffsetToWorld(from);
-		//	// Rotate the path by locating its index in the neighbor
-		//	// look-up table
-		//	float degrees = 0f;
-		//	{
-		//		int parity = from.x & 1;
-		//		Vector2Int delta = to - from;
-		//		int j;
-		//		for (j = 0; j < 6; j++)
-		//		{
-		//			if (Board.neighborLut[parity, j] == delta)
-		//				break;
-		//		}
-		//		degrees = (1 + j) * 60f;
-		//	}
-		//	pathQuad.transform.rotation = Quaternion.Euler(0, degrees, 0);
-		//}
-
 		return path.ToList();
 	}
 
 	public override void HidePreview()
 	{
-		foreach(var quad in pathQuads)
+		foreach (var quad in pathQuads)
 		{
 			Destroy(quad.gameObject);
 		}
 
 		pathQuads.Clear();
+	}
+
+	public override Queue<UnitCommandStep> FetchCommandStepChain(Vector2Int targetCoord, Unit unit)
+	{
+		if (targetCoord == unit.OffsetPos)
+			return null;
+
+		Cell originCell = Board.TryGetCellAtPos(targetCoord);
+		if (originCell == null)
+			return null;
+
+		Unit foundUnit = Board.GetUnitAtPos(targetCoord);
+		if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
+			return null;
+
+		Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
+		if (path.Length == 0)
+			return null;
+
+
+		Queue<UnitCommandStep> commandSteps = new Queue<UnitCommandStep>();
+
+		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+		if (unit.Facing != toFirstCellDir)
+		{
+			TurnCommandV2 newTurnCommand = new TurnCommandV2(
+				unit,
+				unit.Facing,
+				toFirstCellDir,
+				turnDuration
+				);
+
+			var turnCommandStep = new UnitCommandStep(unit, newTurnCommand);
+
+			commandSteps.Enqueue(turnCommandStep);
+
+			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+			Debog.logGameflow(firstTurnLog);
+		}
+
+		HexDirectionFT lastFacingDir = toFirstCellDir;
+		for (int i = 0; i < path.Length; i++)
+		{
+			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
+			Vector2Int toCell = path[i];
+			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
+			if (lastFacingDir != toNextCellDir)
+			{
+				TurnCommandV2 newTurnCommand = new TurnCommandV2(
+					unit,
+					lastFacingDir,
+					toNextCellDir,
+					turnDuration
+					);
+
+				var turnCommandStep = new UnitCommandStep(unit, newTurnCommand);
+
+				commandSteps.Enqueue(turnCommandStep);
+				lastFacingDir = toNextCellDir;
+
+				string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
+				Debog.logGameflow(firstTurnLog);
+			}
+
+			var newStepCommand = new MoveCommand(unit, fromCell, toCell, stepDuration);
+			var moveCommandStep = new UnitCommandStep(unit, newStepCommand);
+			commandSteps.Enqueue(moveCommandStep);
+
+			string nextLog = $"from: {fromCell} to {toCell}";
+			Debog.logGameflow(nextLog);
+		}
+
+		return commandSteps;
 	}
 
 	public override Queue<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit)
@@ -101,11 +143,12 @@ public class GroundedMoveV2 : Ability
 		if (path.Length == 0)
 			return null;
 
+
 		Queue<UnitCommand> commands = new Queue<UnitCommand>();
 
 		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
 
-		if(unit.Facing != toFirstCellDir)
+		if (unit.Facing != toFirstCellDir)
 		{
 			TurnCommandV2 newTurnCommand = new TurnCommandV2(
 				unit,
@@ -126,7 +169,7 @@ public class GroundedMoveV2 : Ability
 			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
 			Vector2Int toCell = path[i];
 			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
-			if(lastFacingDir != toNextCellDir)
+			if (lastFacingDir != toNextCellDir)
 			{
 				TurnCommandV2 newTurnCommand = new TurnCommandV2(
 					unit,

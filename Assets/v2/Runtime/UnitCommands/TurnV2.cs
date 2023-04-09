@@ -8,11 +8,13 @@ public class TurnV2
 {
     [ReadOnly] public Unit instigator;
 
-    [ReadOnly] public AbilityV2 ability;
+    [ReadOnly] public Ability ability;
 
     public Queue<UnitCommand> commands = new();
 
     public Stack<UnitCommand> commandHistory = new();
+
+    public Stack<UnitCommandStep> commandStepHistory = new();
     
     public Stack<UnitCommand> undoneCommands = new();
 }

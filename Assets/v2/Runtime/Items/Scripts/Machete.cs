@@ -9,11 +9,11 @@ public class Machete : Item
 
     public override UnitCommand RespondToCommand(Unit unit, UnitCommand command)
     {
-        if (command is StepCommandV2)
+        if (command is MoveCommand)
         {
-            StepCommandV2 stepCommand = command as StepCommandV2;
+            MoveCommand stepCommand = command as MoveCommand;
 
-			///... get all neighbouring coords of from & to:
+			//... get all neighbouring coords of from & to:
 
 			//MacheteSlashCommand slashCommand = new MacheteSlashCommand(unit, stepCommand)
         }

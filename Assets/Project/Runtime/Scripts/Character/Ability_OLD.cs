@@ -17,7 +17,7 @@ public enum StepPhase
 }
 
 [RequireComponent(typeof(AbilityFlowController))]
-public abstract class Ability : MonoBehaviour
+public abstract class Ability_OLD : MonoBehaviour
 {
 	[Header("CONFIG:")]
 	public Sprite icon;

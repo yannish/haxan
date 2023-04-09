@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GroundMoveWithBounceAbility : Ability
+public class GroundMoveWithBounceAbility : Ability_OLD
 {
 	public FloatReference stepDuration;
 	public FloatReference turnDuration;
