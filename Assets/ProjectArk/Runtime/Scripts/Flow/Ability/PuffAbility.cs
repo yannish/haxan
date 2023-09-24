@@ -31,7 +31,7 @@ public class PuffAbility : Ability_OLD
 
 		if(cellObj.facing != puffDir)
 		{
-			TurnCommand newTurnCommand = new TurnCommand(
+			TurnCommand_OLD newTurnCommand = new TurnCommand_OLD(
 				cellObj,
 				cellObj.facing,
 				puffDir,

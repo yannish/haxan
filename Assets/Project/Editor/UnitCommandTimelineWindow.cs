@@ -15,7 +15,6 @@ public class UnitCommandTimelineWindow : EditorWindow
 	}
 
 	UnitCommandTimeline timeline;
-
 	private void OnEnable()
 	{
 		//Debug.LogWarning("ENABLED WINDOW");

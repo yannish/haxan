@@ -4,16 +4,30 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine.UI;
 using System;
+using UnityEngine.EventSystems;
 
-public class BoardUI : MonoBehaviour
+public partial class BoardUI : MonoBehaviour
+    , IPointerEnterHandler
+    , IPointerExitHandler
 {
+    [ReadOnly] public bool againstBoardUI;
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        againstBoardUI = true;
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        againstBoardUI = false;
+    }
+
     enum Mode
     {
         Neutral,
         UnitSelected,
         AbilitySelected,
         ItemSelected,
-        UseSelected,
+        ItemUseSelected,
         ReadySelected,
         ProcessingCommands
     }
@@ -24,9 +38,7 @@ public class BoardUI : MonoBehaviour
     [Header("STATE:")]
     [SerializeField] private Mode mode;
     [SerializeField] private TurnPlaybackState playbackState;
-
-
-	[SerializeField] private int currTimeStep;
+	//[SerializeField] private int currTimeStep;
 
     Vector2Int mousePos;
     Vector2Int mousePosLastFrame;
@@ -41,7 +53,7 @@ public class BoardUI : MonoBehaviour
     
     GameObject gizmos;
     Vector2Int hoveredCellPos; // In offset coordinates
-    bool isPointerInUI;
+    [ReadOnly] public bool isPointerInUI;
 
     Controls input;
    
@@ -60,7 +72,7 @@ public class BoardUI : MonoBehaviour
     [ReadOnly] public Unit currHoveredUnit;
     [ReadOnly] public Unit selectedUnit;
     [ReadOnly] public Unit lastSelectedUnit;
-    //[ReadOnly] public Unit ;
+
     bool hoveredWaypointLastFrame;
     List<Vector2Int> validMoveCoords;
 
@@ -71,23 +83,32 @@ public class BoardUI : MonoBehaviour
 
     Dictionary<Vector2Int, PooledMonoBehaviour> coordToPreviewLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
     Vector2Int hoveredValidAbilityCoord;
+
     bool hoveredValidMoveLastFrame;
 
     Vector2Int currValidMoveCoord;
     Vector2Int prevValidMoveCoord;
     [ReadOnly] public bool hoveredValidMove;
     [ReadOnly] public AbilityButton[] abilityButtons;
-	[ReadOnly] public ItemSlot[] itemButtons;
 	[ReadOnly] public Ability hoveredAbility;
+    [ReadOnly] public Ability selectedAbility;
+
     GameObject abilityDisplay;
     GameObject itemDisplay;
     GameObject unitDisplay;
-    [ReadOnly] public Ability selectedAbility;
     AbilityButton selectedAbillityButton;
-    Item selectedItem;
-    ItemSlot selectedItemButton;
+
     List<Vector2Int> validCoords;
     List<GameObject> validMoveMarkers;
+
+
+    [Header("ITEMS:")]
+    public ItemSlot[] itemButtons;
+    [ReadOnly] public ItemUseButton hoveredItemUseButton;
+    Item selectedItem;
+    ItemSlot selectedItemButton;
+    ItemUseButton selectedItemUseButton;
+    ItemUseConfig selectedItemUse;
 
 
     [Header("PATHING:")]
@@ -146,8 +167,8 @@ public class BoardUI : MonoBehaviour
         Pool.GetPool(abilityValidMarker);
 
         currCommandHistory = new Stack<UnitCommand>();
-        commandsToProcess = new Queue<UnitCommand>();
-        turnHistory = new Stack<TurnV2>();
+        commandsQueueToProcess = new Queue<UnitCommand>();
+        turnHistory = new Stack<Turn>();
         //Application.targetFrameRate = 60;
 
         input = new Controls();
@@ -178,7 +199,8 @@ public class BoardUI : MonoBehaviour
                 HandleItemSelectedMode();
                 break;
 
-            case Mode.UseSelected:
+            case Mode.ItemUseSelected:
+                HandleItemUseSelectedMode();
                 break;
 
 			case Mode.AbilitySelected:
@@ -195,17 +217,6 @@ public class BoardUI : MonoBehaviour
 
         mousePosLastFrame = mousePos;
     }
-
-    Vector2Int MouseToOffsetPos()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, Vector3.zero);
-        plane.Raycast(ray, out float dist);
-        Vector3 worldPos = ray.GetPoint(dist);
-        Vector2Int offset = Board.WorldToOffset(worldPos);
-        return offset;
-    }
-
 
     //... NEUTRAL:
     void HandleNeutralMode()
@@ -341,8 +352,6 @@ public class BoardUI : MonoBehaviour
 
     List<Vector2Int> currPath;
 
-    public int lookupOffset;
-
 
     //... UNIT:
     void HandleUnitSelectedMode()
@@ -430,7 +439,7 @@ public class BoardUI : MonoBehaviour
                         selectedUnit
                         );
 
-                    foreach(var item in selectedUnit.Items)
+                    foreach(var item in selectedUnit.inventory)
 					{
                         //item.ShowPathReaction(selectedUnit.OffsetPos, previewedPath);
 					}
@@ -453,7 +462,9 @@ public class BoardUI : MonoBehaviour
         if (hoveredWaypoint && !isPointerInUI && Input.GetMouseButtonUp(0))
         {
             Debug.Log("CLICKED A VALID MOVE)");
+
             var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain(mouseUpPos, selectedUnit);
+            //var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain_OLD(mouseUpPos, selectedUnit);
             StartProcessingCommands(fetchedCommands);
 
             mousePosLastFrame = mousePos;
@@ -480,7 +491,6 @@ public class BoardUI : MonoBehaviour
                     {
                         DeselectUnit();
                         HoverUnitFromNeutral(unit);
-
                     }
                 }
                 else if (unit == null)
@@ -640,10 +650,8 @@ public class BoardUI : MonoBehaviour
         Debug.LogWarning("... selected unit: " + selectedUnit.OffsetPos);
 
         ShowUnitPortrait(unit);
-
-        //ShowAbilities(unit);
-
         ShowInventory(unit);
+        //ShowAbilities(unit);
 
         if (selectedUnit is PlayerUnit && selectedUnit.MovementAbility != null)
 		{
@@ -777,7 +785,7 @@ public class BoardUI : MonoBehaviour
             unit.MovementAbility.HidePreview();
 		}
 
-        foreach(var item in unit.Items)
+        foreach(var item in unit.inventory)
 		{
             //item.HidePathReaction();
 		}
@@ -954,6 +962,7 @@ public class BoardUI : MonoBehaviour
             {
                 DeselectAbility();
                 var fetchedCommands = selectedAbility.FetchCommandChain(currValidMoveCoord, selectedUnit);
+                //var fetchedCommands = selectedAbility.FetchCommandChain_OLD(currValidMoveCoord, selectedUnit);
                 StartProcessingCommands(fetchedCommands);
                 return;
             }
@@ -1190,7 +1199,7 @@ public class BoardUI : MonoBehaviour
                 break;
 
             case Mode.UnitSelected:
-                SelectItem(item, itemButton);
+                SelectItem(itemButton);
                 itemButton.Select();
                 break;
 
@@ -1198,7 +1207,7 @@ public class BoardUI : MonoBehaviour
                 break;
 
             case Mode.ItemSelected:
-                if (item == selectedItem)
+                if (itemButton.item == selectedItem)
                 {
                     DeselectItem();
                     //DeselectAbility();
@@ -1207,7 +1216,7 @@ public class BoardUI : MonoBehaviour
                 {
                     DeselectItem();
                     DeselectAbility();
-                    SelectItem(item, itemButton);
+                    SelectItem(itemButton);
                 }
                 break;
 
@@ -1216,51 +1225,99 @@ public class BoardUI : MonoBehaviour
         }
     }
 
-    internal void OnPointerEnterItemUseButton(Item item, ItemUseButton itemUseButton)
+    internal void OnPointerEnterItemUseButton(ItemUseButton button)
     {
-        //isPointerInUI = true;
+		//isPointerInUI = true;
 
-        if(
-            !itemUseButton.use.IsReadyUse
-            && item.requiresReadying
-            && !item.isReadied
+		if (
+            !button.use.IsReadyUse
+            && button.item.requiresReadying
+            && !button.item.isReadied
             )
 		{
             //... item needs readying for this use, do some visual feedback here
             return;
 		}
 
-        if (mode != Mode.UnitSelected)
+        if (mode == Mode.UnitSelected)
+		{
+            HideValidMoves();
+            HoverItemUse(button);
             return;
-
-        HideValidMoves();
-
-        HoverItemUse(item, itemUseButton.use);
+		}
+        else if(mode == Mode.ItemUseSelected)
+		{
+            UnhoverItemUse();
+            HoverItemUse(button);
+		}
     }
 
-	internal void OnPointerExitItemUseButton(Item item, ItemUseButton itemUseButton)
+	internal void OnPointerExitItemUseButton(ItemUseButton itemUseButton)
     {
         //isPointerInUI = false;
 
-        if (mode != Mode.UnitSelected)
+        if (mode == Mode.UnitSelected)
+		{
+            UnhoverItemUse();
+
+            if (selectedUnit != null)
+                ShowValidMoves(selectedUnit);
+
             return;
-
-        UnhoverItemUse();
-
-        if (selectedUnit != null)
-            ShowValidMoves(selectedUnit);
+		}
+        else if(mode == Mode.ItemUseSelected)
+		{
+            //UnhoverItemUse();
+            //HoverItemUse(itemUseButton);
+		}
     }
 
-    internal void OnPointerClickItemUseButton(Item item, ItemUseButton itemUseButton)
+    internal void OnPointerClickItemUseButton(ItemUseButton itemUseButton)
     {
+        switch (mode)
+        {
+            case Mode.Neutral:
+                break;
 
+            case Mode.UnitSelected:
+                SelectItemUse(itemUseButton);
+                //itemButton.Select();
+                break;
+
+            case Mode.AbilitySelected:
+                break;
+
+            case Mode.ItemUseSelected:
+                if (itemUseButton == selectedItemUseButton)
+                {
+                    DeselectItemUse();
+                    //DeselectItem();
+                    //DeselectAbility();
+                }
+                else
+                {
+                    DeselectItemUse();
+                    //DeselectItem();
+                    SelectItemUse(itemUseButton);
+                    //DeselectAbility();
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
-    private void HoverItemUse(Item item, ItemUseConfig use)
-	{
-        validCoords = use.GetValidCoords(
+    private void HoverItemUse(ItemUseButton button)
+    {
+        button.Hover();
+
+        hoveredItemUseButton = button;
+
+        validCoords = button.use.GetValidCoords(
             Board.WorldToOffset(selectedUnit.transform.position),
-            selectedUnit
+            selectedUnit,
+            hoveredItemUseButton.item
             );
 
         if (validCoords.IsNullOrEmpty())
@@ -1291,6 +1348,17 @@ public class BoardUI : MonoBehaviour
 
     private void UnhoverItemUse()
 	{
+        if(hoveredItemUseButton != null)
+		{
+            hoveredItemUseButton.Unhover();
+            hoveredItemUseButton.use.HidePreview(
+                currValidMoveCoord,
+                selectedUnit,
+                hoveredItemUseButton.item
+                );
+            hoveredItemUseButton = null;
+		}
+
         foreach (var kvp in abilityValidLookup)
         {
             var abilityMarker = kvp.Value;
@@ -1300,7 +1368,7 @@ public class BoardUI : MonoBehaviour
 
     void HandleItemSelectedMode()
     {
-        Vector2Int mousePos = MouseToOffsetPos();
+        //Vector2Int mousePos = MouseToOffsetPos();
         bool mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
 
         if (mousePos == selectedUnit.OffsetPos && Input.GetMouseButtonDown(0))
@@ -1411,10 +1479,156 @@ public class BoardUI : MonoBehaviour
         mousePosLastFrame = mousePos;
     }
 
-    private void SelectItem(Item item, ItemSlot itemButton)
+    void HandleItemUseSelectedMode()
+	{
+        if (mousePos == selectedUnit.OffsetPos && Input.GetMouseButtonDown(0))
+        {
+            DeselectItemUse();
+            SelectUnit(selectedUnit);
+			return;
+        }
+
+        hoveredValidMove = false;
+        if (!validCoords.IsNullOrEmpty())
+		{
+            foreach (var coord in validCoords)
+            {
+                if (coord == mousePos)
+                {
+                    hoveredValidMove = true;
+                    break;
+                }
+            }
+		}
+
+        if (hoveredValidMove)
+        {
+            if (prevValidMoveCoord != mousePos)
+            {
+				selectedItemUseButton.use.HidePreview(
+                    currValidMoveCoord,
+                    selectedUnit,
+                    selectedItemUseButton.item
+                    );
+				UnhoverValidItemMove();
+            }
+
+            currValidMoveCoord = mousePos;
+
+            if (prevValidMoveCoord != currValidMoveCoord || !hoveredValidMoveLastFrame)
+            {
+                Debug.LogWarning("hovering valid move at : " + currValidMoveCoord.ToString());
+                selectedItemUseButton.use.ShowPreview(
+                    currValidMoveCoord, 
+                    selectedUnit, 
+                    selectedItemUseButton.item
+                    );
+				HoverValidItemUseMove(selectedItemUseButton, currValidMoveCoord);
+            }
+        }
+        else
+        {
+            if (hoveredValidMoveLastFrame)
+                selectedItemUseButton.use.HidePreview(
+                    currValidMoveCoord, 
+                    selectedUnit,
+                    selectedItemUseButton.item
+                    );
+            UnhoverValidItemUseMove();
+        }
+
+        if (!isPointerInUI && Input.GetMouseButtonDown(0))
+            mouseDownPos = MouseToOffsetPos();
+
+        if (!isPointerInUI && Input.GetMouseButtonUp(0))
+            mouseUpPos = MouseToOffsetPos();
+
+        //... you've clicked a valid coord:
+        if (!validCoords.IsNullOrEmpty())
+        {
+            foreach (var coord in validCoords)
+            {
+                if (coord == mouseUpPos)
+                {
+                    DeselectItemUse();
+                    //var fetchedCommands = selectedItem.FetchCommandStepChain(currValidMoveCoord, selectedUnit);
+                    //StartProcessingCommands(fetchedCommands);
+                    return;
+                }
+            }
+        }
+
+        if (
+           !hoveredValidMove
+           && !isPointerInUI
+           && Input.GetMouseButtonUp(0)
+           )
+        {
+            if (mouseUpPos == mouseDownPos)
+            {
+                // ^ The mouse was pressed and released on the same tile
+                var unit = Board.GetUnitAtPos(mouseUpPos);
+                if (unit)
+                {
+                    if (unit != selectedUnit)
+                    {
+                        // ^ A unit was clicked, and it is not already selected
+                        DeselectItemUse();
+                        DeselectUnit();
+                        SelectUnit(unit);
+                    }
+                    else
+                    {
+                        DeselectUnit();
+                        // ^^ maybe weird, sometimes you'd be using ability on selected unit
+                        //... guess that's caught above if it's a valid move.
+                    }
+                }
+                else if (unit == null)
+                {
+                    // ^ A cell without a unit on it was clicked
+                    DeselectItemUse();
+                    DeselectUnit();
+                }
+            }
+        }
+
+        hoveredValidMoveLastFrame = hoveredValidMove;
+        prevValidMoveCoord = currValidMoveCoord;
+
+        mousePosLastFrame = mousePos;
+    }
+
+    private void SelectItemUse(ItemUseButton useButton)
+	{
+        mode = Mode.ItemUseSelected;
+        //selectedItemUse = useButton.use;
+        selectedItemUseButton = useButton;
+        selectedItemUseButton.Select();
+	}
+
+    private void DeselectItemUse()
+	{
+        //      if(selectedItemUse != null)
+        //{
+        //          selectedItemUse.HidePreview();
+        //}
+
+        //UnhoverItemUse();
+        //SelectUnit(selectedUnit);
+
+        mode = Mode.UnitSelected;
+		if (selectedItemUseButton)
+		{
+            selectedItemUseButton.Deselect();
+            selectedItemButton = null;
+        }
+	}
+
+    private void SelectItem(ItemSlot itemButton)
     {
         mode = Mode.ItemSelected;
-        selectedItem = item;
+        selectedItem = itemButton.item;
         selectedItemButton = itemButton;
         selectedItemButton.Select();
     }
@@ -1425,7 +1639,7 @@ public class BoardUI : MonoBehaviour
 		{
             //selectedItem.config.HidePreview();
 		}
-        UnhoverItemUse();
+        //UnhoverItemUse();
         //UnhoverItem();
         SelectUnit(selectedUnit);
         selectedAbillityButton.Deselect();
@@ -1436,17 +1650,20 @@ public class BoardUI : MonoBehaviour
     {
         itemDisplay.SetActive(true);
 
-		for (int i = 0, j = 0; i < unit.Items.Count && j < 4; i++, j++)
+		for (int i = 0, j = 0; i < unit.inventory.Count && j < 4; i++, j++)
 		{
             itemButtons[i].gameObject.SetActive(true);
-			itemButtons[i].Init(this, unit.Items[i]);
+			itemButtons[i].Init(this, unit.inventory[i]);
 		}
 	}
 
     void HideInventory()
 	{
         foreach (var itemButton in itemButtons)
+		{
+            itemButton.Hide();   
             itemButton.gameObject.SetActive(false);
+		}
 	}
 
     private void HoverItem(Item item)
@@ -1503,96 +1720,105 @@ public class BoardUI : MonoBehaviour
         }
     }
 
+    void HoverValidItemUseMove(ItemUseButton itemButton, Vector2Int hoveredCoord)
+	{
+        //Debug.LogWarning("hovered a valid item use move");
+        var cellMarker = GetCellMarker(hoveredCoord);
+        cellMarker.Hover();
+        cellMarker.Clickable();
+    }
+
+    void UnhoverValidItemUseMove()
+	{
+        if (coordToCellMarkerLookup.TryGetValue(currValidMoveCoord, out var foundCellMarker))
+        {
+            foundCellMarker.Unhover();
+            foundCellMarker.Unclickable();
+        }
+    }
+
+
+    //... INPUT:
+    Vector2Int MouseToOffsetPos()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Plane plane = new Plane(Vector3.up, Vector3.zero);
+        plane.Raycast(ray, out float dist);
+        Vector3 worldPos = ray.GetPoint(dist);
+        Vector2Int offset = Board.WorldToOffset(worldPos);
+        return offset;
+    }
+
 
     //... TURNS:
     //[Header("TURNS:")]
-    Unit currInstigator;
-    UnitCommand currCommand;
-    UnitCommandStep currCommandStep;
-    Queue<UnitCommand> commandsToProcess;
-    Queue<UnitCommandStep> commandStepsToProcess;
-    public Stack<UnitCommand> currCommandHistory;
-    public Stack<UnitCommandStep> currCommandStepHistory;
-    public Stack<TurnV2> turnHistory;
 
-    void StartProcessingCommands(Queue<UnitCommand> commands)
-    {
-        currInstigator = selectedUnit;
-        DeselectUnit();
 
-        commandsToProcess = commands;
-		//currCommand = commandsToProcess.Dequeue();
-        currCommandStep = new UnitCommandStep(currInstigator, commandsToProcess.Dequeue());
+    //... NEW TURN PROCESSING:
 
-        currCommandStep.instigatingCommand.OnBeginTick();
-        //currCommand.OnBeginTick();
 
-        //Board.RespondToCommandBeginTick(currInstigator, currCommand);
 
-        currCommandHistory = new Stack<UnitCommand>();
-        currCommandStepHistory = new Stack<UnitCommandStep>();
+    #region TIMEBLOCK CONTROLS:
+    float GetTimeBlockDuration()
+	{
+        float endTime = -1f;
 
-        mode = Mode.ProcessingCommands;
-        playbackState = TurnPlaybackState.PLAYING;
+        if ((currTimeBlock.instigatingCommand.startTime + currTimeBlock.instigatingCommand.duration) > endTime)
+            endTime = currTimeBlock.instigatingCommand.startTime + currTimeBlock.instigatingCommand.duration;
 
-        Debug.Log("STARTED PROCESSING COMMANDS");
+        foreach(var command in currTimeBlock.commands)
+		{
+            if ((command.startTime + command.duration) > endTime)
+                endTime = command.startTime + command.duration;
+        }
+
+        foreach (var command in currTimeBlock.boardReactions)
+        {
+            if ((command.startTime + command.duration) > endTime)
+                endTime = command.startTime + command.duration;
+        }
+
+        return endTime;
+	}
+   	#endregion
+
+
+    
+    
+    void ProcessCommand(UnitCommand command, float currTime, float prevTime, float timeScale)
+	{
+        float endTime = command.startTime + command.duration;
+
+        if(currTime >= command.startTime && prevTime < command.startTime)
+		{
+            command.OnBeginTick();
+		}
+
+        if(currTime >= command.startTime && currTime < endTime)
+		{
+            command.Tick_OLD();
+		}
+
+        if(currTime >= endTime && prevTime < endTime)
+		{
+            command.OnCompleteTick();
+		}
     }
 
-    void StartProcessingCommandSteps()
-	{
-        currInstigator = selectedUnit;
-        DeselectUnit();
-
-        //commandStepsToProcess = commandSteps;
-	}
-
-    bool ProcessCommandConsequences(ref UnitCommandStep commandStep)
-	{
-        return true;
-	}
-
-    private void HandleCommandProcessing()
-    {
-		switch (playbackState)
-		{
-			case TurnPlaybackState.PAUSED:
-				break;
-
-			case TurnPlaybackState.PLAYING:
-                HandleTurnForward();
-                if (currCommandStep == null)
-				{
-                    Debug.LogWarning("DONE WITH TURN, BACK TO FLOW");
-                    playbackState = TurnPlaybackState.PAUSED;
-					//mode = Mode.UnitSelected;
-					SelectUnit(lastSelectedUnit);
-					currInstigator = null;
-				}
-				break;
-
-			case TurnPlaybackState.REWINDING:
-                HandleTurnBackward();
-                break;
-
-			default:
-				break;
-		}
-	}
-
-    private void HandleTurnForward()
+    private void HandleTurnForward_OLD()
     {
         if (currCommandStep == null)
             return;
 
 		if (currCommandStep.Tick())
 		{
-            currCommandStep.OnCompleteTick();
+            currCommandStep.CompleteTick();
 			currCommandStep.Execute();
             currCommandStepHistory.Push(currCommandStep);
 
             //Board.RespondToCommandCompleteTick(currInstigator, currCommand);
 
-            currTimeStep++;
+            //currTimeStep++;
             Board.currTimeStep++;
 
    //         if (currCommand.StepsTimeForward())
@@ -1607,10 +1833,10 @@ public class BoardUI : MonoBehaviour
 
             currCommandStep = null;
 
-			if (!commandsToProcess.IsNullOrEmpty())
+			if (!commandsQueueToProcess.IsNullOrEmpty())
 			{
-                currCommandStep = new UnitCommandStep(currInstigator, commandsToProcess.Dequeue());
-                currCommandStep.OnBeginTick();
+                currCommandStep = new UnitCommandStep(currInstigator, commandsQueueToProcess.Dequeue());
+                currCommandStep.BeginTick();
                 //currCommand = commandsToProcess.Dequeue();
                 //currCommand.OnBeginTick();
 			}
@@ -1618,7 +1844,7 @@ public class BoardUI : MonoBehaviour
 			{
                 playbackState = TurnPlaybackState.PAUSED;
 
-                TurnV2 recordedTurn = new();
+                Turn recordedTurn = new();
 
                 recordedTurn.instigator = currInstigator;
                 recordedTurn.commandStepHistory = currCommandStepHistory;
@@ -1639,7 +1865,7 @@ public class BoardUI : MonoBehaviour
         mode = Mode.ProcessingCommands;
         playbackState = TurnPlaybackState.REWINDING;
 
-        TurnV2 turnToUndo = turnHistory.Pop();
+        Turn turnToUndo = turnHistory.Pop();
         currCommandStepHistory = turnToUndo.commandStepHistory;
         currCommandStep = currCommandStepHistory.Pop();
     }
@@ -1651,10 +1877,10 @@ public class BoardUI : MonoBehaviour
 
 		if (currCommandStep.Tick(-1f))
 		{
-            currCommandStep.OnCompleteReverseTick();
+            currCommandStep.CompleteReverseTick();
             currCommandStep.Undo();
-            currTimeStep--;
-            Board.currTimeStep--;
+			//currTimeStep--;
+			Board.currTimeStep--;
             //if (currCommand.StepsTimeForward())
             //{
             //}
@@ -1663,7 +1889,7 @@ public class BoardUI : MonoBehaviour
 			if (!currCommandStepHistory.IsNullOrEmpty())
 			{
                 currCommandStep = currCommandStepHistory.Pop();
-                currCommandStep.OnBeginReverseTick();
+                currCommandStep.BeginReverseTick();
 			}
             else
 			{
@@ -1680,4 +1906,5 @@ public class BoardUI : MonoBehaviour
             //foreach()
 		}
 	}
+
 }

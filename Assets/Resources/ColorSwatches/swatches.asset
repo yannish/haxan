@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f04a55a41b8bd57439b7e3426fb45f19, type: 3}
+  m_Name: swatches
+  m_EditorClassIdentifier: 
+  probe:
+    UseConstant: 1
+    ConstantColor: {r: 1, g: 0.83246005, b: 0, a: 0.6313726}
+    ColorVariable: {fileID: 0}
+  trigger:
+    UseConstant: 1
+    ConstantColor: {r: 0, g: 0, b: 0, a: 1}
+    ColorVariable: {fileID: 0}
+  collisionProbe:
+    UseConstant: 1
+    ConstantColor: {r: 0, g: 0, b: 0, a: 1}
+    ColorVariable: {fileID: 0}
+  bone:
+    UseConstant: 1
+    ConstantColor: {r: 1, g: 0.62402993, b: 0, a: 0.68235296}
+    ColorVariable: {fileID: 0}

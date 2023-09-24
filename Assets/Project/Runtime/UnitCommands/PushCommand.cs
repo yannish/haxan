@@ -35,9 +35,9 @@ public class PushCommand : UnitCommand
 		unit.MoveTo(fromCoord);
 	}
 
-	public override bool Tick(float timeScale = 1f)
+	public override bool Tick_OLD(float timeScale = 1f)
 	{
-		base.Tick(timeScale);
+		base.Tick_OLD(timeScale);
 		unit.SetVisualPos(Vector3.Lerp(startPos, endPos, currProgress));
 		return CheckComplete(timeScale);
 	}

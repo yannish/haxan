@@ -8,22 +8,18 @@ public class Unit : MonoBehaviour
 {
     public static Action<Unit> OnUnitChanged;
 
-
-    [Header("ABILITIES:")]
+    //[Header("ABILITIES:")]
     public Ability MovementAbility;
     public List<Ability> Abilities = new List<Ability>();
-
-
-    [Header("INVENTORY:")]
-    //public List<ItemConfig> ItemConfigs = new List<ItemConfig>();
+    //[Header("INVENTORY:")]
     public List<Item> startingInventory = new List<Item>();
-    public List<Item> Items = new List<Item>();
+    public List<Item> inventory = new List<Item>();
 
 
     [Header("STATE:")]
 	public HexDirectionFT Facing;
     [ReadOnly] public int currMove = -1;
-
+    [ReadOnly] public int currReactions = -1;
 
     public void DecrementMove()
 	{

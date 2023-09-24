@@ -68,11 +68,11 @@ public class AbilityFlowController : FlowController
 
 		switch (abilityScrObj.type)
 		{
-			case AbilityType.MOVEMENT:
+			case AbilityType_OLD.MOVEMENT:
 				peekValidMovesAction = CellActions.EffectCells<CellPeekPathCommand>(validMoves);
 				break;
 
-			case AbilityType.TARGET:
+			case AbilityType_OLD.TARGET:
 				peekValidMovesAction = CellActions.EffectCells<CellClickableCommand>(validMoves);
 				break;
 		}
@@ -174,7 +174,7 @@ public class AbilityFlowController : FlowController
 			)
 		{
 			AbilityFlowController peekedAbilityFlow = e.element.flowController as AbilityFlowController;
-			if(peekedAbilityFlow.abilityScrObj.type == AbilityType.TARGET)
+			if(peekedAbilityFlow.abilityScrObj.type == AbilityType_OLD.TARGET)
 			{
 				peekedMoves = peekedAbilityFlow.abilityScrObj.GetValidMoves(characterFlow.character.currCell, characterFlow);
 				if (!peekedMoves.IsNullOrEmpty())

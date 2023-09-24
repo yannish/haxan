@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum AbilityType
+public enum AbilityType_OLD
 {
 	MOVEMENT,
 	TARGET
 }
 
-public enum StepPhase
+public enum StepPhase_OLD
 {
 	UTILITY,
 	MOVE,
@@ -24,9 +24,9 @@ public abstract class Ability_OLD : MonoBehaviour
 
 	public string abilityName;
 
-	public StepPhase phase;
+	public StepPhase_OLD phase;
 
-	public AbilityType type;
+	public AbilityType_OLD type;
 
 
 	public virtual List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow) => null;

@@ -6,7 +6,6 @@ using UnityEngine;
 /// This will wrap up the action (command) of an instigating unit, & then track the consequences 
 /// of that action.
 /// </summary>
-/// 
 public class UnitCommandStep
 {
     public Unit instigator;
@@ -25,34 +24,39 @@ public class UnitCommandStep
     /// <returns></returns>
     public bool Tick(float timeScale = 1f)
 	{
-        var result = instigatingCommand.Tick(timeScale);
+        var result = instigatingCommand.Tick_OLD(timeScale);
         foreach(var command in consequences)
-            command.Tick();
+            command.Tick_OLD();
+
+        //... timing of these consequences isn't linked to the instigating command, 
+        //... but they had better be wrapped up smoothly by the time the instigating command 
+        //... is finishing.
+
         return result;
 	}
 
-    public virtual void OnBeginTick() 
+    public virtual void BeginTick() 
     {
         instigatingCommand.OnBeginTick();
         foreach(var command in consequences)
             command.OnBeginTick();
     }
 
-    public virtual void OnCompleteTick() 
+    public virtual void CompleteTick() 
     {
         instigatingCommand.OnCompleteTick();
         foreach (var command in consequences)
             command.OnCompleteTick();
     }
 
-    public virtual void OnBeginReverseTick() 
+    public virtual void BeginReverseTick() 
     {
         instigatingCommand.OnBeginReverseTick();
         foreach (var command in consequences)
             command.OnBeginReverseTick();
     }
 
-    public virtual void OnCompleteReverseTick() 
+    public virtual void CompleteReverseTick() 
     {
         instigatingCommand.OnCompleteReverseTick();
         foreach (var command in consequences)
@@ -72,4 +76,10 @@ public class UnitCommandStep
         foreach (var command in consequences)
             command.Undo();
     }
+
+    public virtual void PropagateConsequences()
+	{
+        //foreach(var command in consequences)
+
+	}
 }

@@ -9,11 +9,20 @@ public enum HolsteredStyle
     HIP
 }
 
-public enum HandlingStyle
+public enum EquippedStyle
 {
     HAND,
     HEAVY,
     BACK
+}
+
+public enum BoneType
+{
+    RIGHTHAND,
+    LEFTHAND,
+    HIPS,
+    BACKHOLSTER,
+    HIPHOLSTER,
 }
 
 public class ItemConfig : ScriptableObject
@@ -29,9 +38,6 @@ public class ItemConfig : ScriptableObject
 
     public List<ItemUseConfig> uses = new List<ItemUseConfig>();
 
-	//public List<>
-
-	//public List<Ability> abilities = new List<Ability>();
 
 	//.... UI:
 	internal void ShowPreview(Vector2Int target, Unit unit) { }
@@ -60,6 +66,5 @@ public class ItemConfig : ScriptableObject
 
 	public virtual void OnUnequip() { }
 
-	//... 
 }
 

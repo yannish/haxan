@@ -7,12 +7,12 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class ItemSlot : MonoBehaviour
-    , IPointerEnterHandler
-    , IPointerExitHandler
-    , IPointerClickHandler
+	, IPointerEnterHandler
+	, IPointerExitHandler
+	, IPointerClickHandler
 {
 	BoardUI ui;
-	Item item;
+	public Item item;
 	ItemConfig itemConfig;
 
 	public Image icon;
@@ -67,7 +67,7 @@ public class ItemSlot : MonoBehaviour
 		currSpacing = closedSpacing;
 
 		UpdateLayoutGroup();
-		
+
 		//cachedPadding = useLayoutGroup.padding.left;
 		//cachedSpacing = useLayoutGroup.spacing;c
 	}
@@ -92,17 +92,19 @@ public class ItemSlot : MonoBehaviour
 		//}
 
 		useButtons = GetComponentsInChildren<ItemUseButton>();
-		foreach(var button in useButtons)
+		foreach (var button in useButtons)
 		{
 			button.gameObject.SetActive(false);
 		}
 
-		for (int i = 0; i < item.uses.Count && i < useButtons.Length; i++)
+		for (int i = 0; i < item.allUses.Count && i < useButtons.Length; i++)
 		{
 			ItemUseButton button = useButtons[i];
 			button.gameObject.SetActive(true);
 
-			ItemUseConfig itemUse = item.uses[i];
+			Debug.LogWarning("slotting: " + i);
+
+			ItemUseConfig itemUse = item.allUses[i];
 			button.Init(ui, item, itemUse);
 
 			itemUse.UpdateButton(button, item);
@@ -140,7 +142,7 @@ public class ItemSlot : MonoBehaviour
 		currTargetPadding = 0f;
 		currTargetSpacing = 0f;
 
-		UpdateVisual();
+		UpdateVisualTargets();
 
 		if (debugInput)
 			Debug.LogWarning("pointer entered:" + item.name, this.gameObject);
@@ -154,7 +156,7 @@ public class ItemSlot : MonoBehaviour
 		currTargetPadding = closedPadding;
 		currTargetSpacing = closedSpacing;
 
-		UpdateVisual();
+		UpdateVisualTargets();
 
 		if (debugInput)
 			Debug.LogWarning("pointer exited:" + item.name, this.gameObject);
@@ -163,27 +165,33 @@ public class ItemSlot : MonoBehaviour
 	public void Select()
 	{
 		selected = true;
-		UpdateVisual();
+		UpdateVisualTargets();
 	}
 
 	public void Deselect()
 	{
 		selected = false;
-		UpdateVisual();
+		UpdateVisualTargets();
 	}
 
 	public void Hide()
 	{
 		selected = false;
 		hovered = false;
-		UpdateVisual();
+		foreach(var button in useButtons)
+		{
+			button.Hide();
+		}
+		//UpdateVisualTargets();
+		//UpdateLayoutGroup();
 	}
 
 	public float tweenTime;
 	public float tweenTimer;
 	Sequence seq;
 
-	void UpdateVisual()
+
+	void UpdateVisualTargets()
 	{
 		if (!animateLayoutGroup)
 			return;
@@ -203,7 +211,10 @@ public class ItemSlot : MonoBehaviour
 		}
 
 		background.color = deselectedColor;
+	}
 
+	void TweenToVisualTargets()
+	{
 		seq.Kill();
 		seq = DOTween.Sequence();
 		seq.SetAutoKill();
@@ -211,10 +222,15 @@ public class ItemSlot : MonoBehaviour
 		tweenTimer = 0f;
 		seq
 			.Append(DOTween.To(() => tweenTimer, t => tweenTimer = t, tweenTime, tweenTime))
-			.OnUpdate(() => Tween());
+			.OnUpdate(() =>
+			{
+				TickVisuals();
+				UpdateLayoutGroup();
+			});
 	}
 
-	void Tween()
+
+	void TickVisuals()
 	{
 		currPadding = Mathf.SmoothDamp(
 			currPadding,
@@ -233,8 +249,6 @@ public class ItemSlot : MonoBehaviour
 			spacingMaxSpeed,
 			Time.deltaTime
 			);
-
-		UpdateLayoutGroup();
 	}
 
 	void UpdateLayoutGroup()

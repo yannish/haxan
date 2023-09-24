@@ -20,7 +20,7 @@ public abstract class CharacterFlowController : CellObjFlowController
 
 	[ReadOnly] public QuickStateMachine fsm;
 
-	public Turn inputTurn;
+	public Turn_OLD inputTurn;
 
 	public Queue<CellObjectCommand> inputCommands;
 	

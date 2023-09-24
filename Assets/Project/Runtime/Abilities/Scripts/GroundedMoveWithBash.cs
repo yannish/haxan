@@ -75,7 +75,7 @@ public class GroundedMoveWithBash : Ability
 		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
 		if (unit.Facing != toFirstCellDir)
 		{
-			TurnCommandV2 newTurnCommand = new TurnCommandV2(
+			TurnCommand newTurnCommand = new TurnCommand(
 				unit,
 				unit.Facing,
 				toFirstCellDir,
@@ -98,7 +98,7 @@ public class GroundedMoveWithBash : Ability
 			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
 			if (lastFacingDir != toNextCellDir)
 			{
-				TurnCommandV2 newTurnCommand = new TurnCommandV2(
+				TurnCommand newTurnCommand = new TurnCommand(
 					unit,
 					lastFacingDir,
 					toNextCellDir,
@@ -125,7 +125,7 @@ public class GroundedMoveWithBash : Ability
 		return commandSteps;
 	}
 
-	public override Queue<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit)
+	public override Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoord, Unit unit)
 	{
 		//... might not really need these checks...
 		if (targetCoord == unit.OffsetPos)
@@ -150,7 +150,7 @@ public class GroundedMoveWithBash : Ability
 
 		if (unit.Facing != toFirstCellDir)
 		{
-			TurnCommandV2 newTurnCommand = new TurnCommandV2(
+			TurnCommand newTurnCommand = new TurnCommand(
 				unit,
 				unit.Facing,
 				toFirstCellDir,
@@ -171,7 +171,7 @@ public class GroundedMoveWithBash : Ability
 			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
 			if (lastFacingDir != toNextCellDir)
 			{
-				TurnCommandV2 newTurnCommand = new TurnCommandV2(
+				TurnCommand newTurnCommand = new TurnCommand(
 					unit,
 					lastFacingDir,
 					toNextCellDir,

@@ -64,7 +64,7 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
 
 		if (cellObj.facing != toFirstCellDir)
 		{
-			TurnCommand newTurnCommand = new TurnCommand(
+			TurnCommand_OLD newTurnCommand = new TurnCommand_OLD(
 				characterFlow.character,
 				cellObj.facing,
 				toFirstCellDir,
@@ -91,7 +91,7 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
 			HexDirection toNextCellDir = fromCell.To(toCell);
 			if (lastFacingDirection != toNextCellDir)
 			{
-				TurnCommand newTurnCommand = new TurnCommand(
+				TurnCommand_OLD newTurnCommand = new TurnCommand_OLD(
 					characterFlow.character,
 					lastFacingDirection,
 					toNextCellDir,

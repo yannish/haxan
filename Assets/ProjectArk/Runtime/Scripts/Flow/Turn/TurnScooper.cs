@@ -7,7 +7,7 @@ public class TurnScooper : MonoBehaviour
     public TurnCreator creator;
 
     //[ExposedScriptableObject]
-    public Turn inputTurn;
+    public Turn_OLD inputTurn;
 
     // Start is called before the first frame update
     void Start()

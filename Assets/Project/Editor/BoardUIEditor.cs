@@ -21,22 +21,27 @@ public class BoardUIEditor : Editor
         if (boardUI == null)
             return;
 
-        EditorGUILayout.LabelField("CELL MARKER LOOKUP:", EditorStyles.boldLabel);
-        showLookup = EditorGUILayout.Foldout(showLookup, "show");
-        if (showLookup)
-        {
-            DrawCellMarkerLookup();
-        }
-
-        EditorGUILayout.LabelField("COMMAND HISTORY: ", EditorStyles.boldLabel);
-        showCommands = EditorGUILayout.Foldout(showCommands, "show");
-		if (showCommands)
+        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
 		{
-			if (GUILayout.Button("UNDO"))
-                boardUI.Undo();
-
-			//DrawCommandHistory();
+            EditorGUILayout.LabelField("CELL MARKER LOOKUP:", EditorStyles.boldLabel);
+            showLookup = EditorGUILayout.Foldout(showLookup, "show", true);
+            if (showLookup)
+            {
+                DrawCellMarkerLookup();
+            }
 		}
+
+        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+        {
+            EditorGUILayout.LabelField("COMMAND HISTORY: ", EditorStyles.boldLabel);
+            showCommands = EditorGUILayout.Foldout(showCommands, "show", true);
+		    if (showCommands)
+		    {
+			    if (GUILayout.Button("UNDO"))
+                    boardUI.Undo();
+			    //DrawCommandHistory();
+		    }
+        }
 
         DrawDefaultInspector();
 	}

@@ -12,15 +12,18 @@ public class ScrubClip
     public AnimationClip clip;
     public AnimationClipPlayable clipPlayable;
     
-    public float scrubTime;
+    public double scrubTime;
     public float inputWeight;
     public float speed;
+
+    public int index;
 
     public ScrubClip(PlayableGraph graph, AnimationClip clip)
 	{
         this.clip = clip;
         this.speed = 1f;
         this.clipPlayable = AnimationClipPlayable.Create(graph, clip);
+        this.clipPlayable.Pause();
 	}
 }
 
@@ -46,8 +49,6 @@ public class ClipPlayer : MonoBehaviour
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = null;
 
-        //animator = this.gameObject.AddComponent<Animator>();
-
         graph = PlayableGraph.Create();
 
         var playableOutput = AnimationPlayableOutput.Create(graph, "Animation", animator);
@@ -64,16 +65,16 @@ public class ClipPlayer : MonoBehaviour
 
             scrubClips.Add(new ScrubClip(graph, clip));
 
-            //clipPlayables[i] = AnimationClipPlayable.Create(graph, clip);
+			//clipPlayables[i] = AnimationClipPlayable.Create(graph, clip);
 
-            //var clipPlayable = AnimationClipPlayable.Create(graph, clip);
+			//var clipPlayable = AnimationClipPlayable.Create(graph, clip);
 
-            //graph.Connect(clipPlayables[i], 0, mixerPlayable, i);
+			//graph.Connect(clipPlayables[i], 0, mixerPlayable, i);
 
-            //mixerPlayable.SetInputWeight(i, 1f);
+			//mixerPlayable.SetInputWeight(i, 1f);
 
-            //clipPlayable.Play();
-        }
+			//clipPlayable.Play();
+		}
 
         graph.Play();
 
@@ -82,8 +83,22 @@ public class ClipPlayer : MonoBehaviour
         //mixerPlayable.SetInputWeight(0, 1f);
 	}
 
+	public ScrubClip RegisterClip(AnimationClip clip)
+	{
+		var newScrubClip = new ScrubClip(graph, clip);
+        return newScrubClip;
+	}
+
+    public void SetClip(ScrubClip scrubClip)
+	{
+
+	}
+
+	[ReadOnly] public int currClip;
     public void SetClip(int clipIndex)
 	{
+        currClip = clipIndex;
+
 		for (int i = 0; i < clips.Count; i++)
 		{
             mixerPlayable.SetInputWeight(i, 0f);
@@ -103,6 +118,18 @@ public class ClipPlayer : MonoBehaviour
         //      }
 
     }
+
+    public void Scrub(int clipIndex, double normalizedClipTime)
+	{
+        //Debug.LogWarning("SCRUB: " + clipTime);
+
+        if (currClip != clipIndex)
+            SetClip(clipIndex);
+
+        var scrubClip = scrubClips[clipIndex];
+        scrubClip.scrubTime = normalizedClipTime * scrubClip.clip.length;
+        scrubClip.clipPlayable.SetTime(scrubClip.scrubTime);
+	}
 
 	private void OnDisable()
 	{

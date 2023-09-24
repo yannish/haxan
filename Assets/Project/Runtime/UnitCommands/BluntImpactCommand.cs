@@ -40,9 +40,9 @@ public class BluntImpactCommand : UnitCommand
 		
 	}
 
-	public override bool Tick(float timeScale = 1)
+	public override bool Tick_OLD(float timeScale = 1)
 	{
-		base.Tick(timeScale);
+		base.Tick_OLD(timeScale);
 		return CheckComplete(timeScale);
 	}
 }

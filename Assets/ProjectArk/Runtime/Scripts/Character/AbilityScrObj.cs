@@ -8,9 +8,9 @@ public class AbilityScrObj : ScriptableObject
     [Header("CONFIG:")]
     public Sprite icon;
 
-    public StepPhase phase;
+    public StepPhase_OLD phase;
 
-    public AbilityType type;
+    public AbilityType_OLD type;
 
 
     public virtual List<Cell_OLD> GetValidMoves(Cell_OLD cell, CharacterFlowController flow) => null;
