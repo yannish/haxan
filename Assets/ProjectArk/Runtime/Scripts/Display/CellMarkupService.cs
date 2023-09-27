@@ -5,17 +5,12 @@ using UnityEngine;
 
 public class CellMarkupService : Service<CellMarkupService>
 {
-	//[Header("MARKERS:")]
-
-
 	[Header("MOVE:")]
 	public PooledMonoBehaviour moveMarker;
 	public PooledMonoBehaviour jointMarker;
 	public PooledMonoBehaviour arrowMarker;
-
 	public PooledMonoBehaviour dashMarker;
 	//[ReadOnly] public List<GameObject> placedMoveMarkers = new List<GameObject>();
-
 	//[ReadOnly] public List<GameObject> placedJointMarkers = new List<GameObject>();
 
 	public Action MarkDashPath(Cell_OLD startingCell, List<Cell_OLD> pathCells)

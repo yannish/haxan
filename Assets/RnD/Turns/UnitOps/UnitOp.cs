@@ -17,9 +17,11 @@ public interface IOperable
 	public void DrawInspectorContext();
 }
 
+[Serializable]
 public struct UnitOp
-{ 
-
+{
+	public Vector2Int startPos;
+	public Vector2Int endPos;
 }
 
 [Serializable]
@@ -56,11 +58,13 @@ public struct UnitBash: IOperable
 [Serializable]
 public struct UnitMove : IOperable
 {
+	public Unit mover;
 	public Vector2Int startPos;
 	public Vector2Int endPos;
 
-	public UnitMove(Vector2Int startPos, Vector2Int endPos)
+	public UnitMove(Unit mover, Vector2Int startPos, Vector2Int endPos)
 	{
+		this.mover = mover;
 		this.startPos = startPos;
 		this.endPos = endPos;
 	}
@@ -71,6 +75,7 @@ public struct UnitMove : IOperable
 		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
 		{
 			EditorGUILayout.LabelField("MOVE:", EditorStyles.boldLabel);
+			EditorGUILayout.ObjectField(mover, typeof(Unit), true);
 			EditorGUILayout.Vector2IntField("startPos: ", startPos);
 			//EditorGUILayout.Vector2IntField("startPos: ", startPos, GUILayout.Width(20f));
 			EditorGUILayout.Vector2IntField("endPos: ", endPos);

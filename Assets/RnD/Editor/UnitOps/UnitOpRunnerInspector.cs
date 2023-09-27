@@ -7,14 +7,9 @@ using static UnityEditor.EditorGUILayout;
 [CustomEditor(typeof(UnitOpRunner))]
 public class UnitOpRunnerInspector : Editor
 {
-	private void OnEnable()
-	{
-	}
+	private void OnEnable() { }
 
-	private void OnDisable()
-	{
-		
-	}
+	private void OnDisable() { }
 
 	UnitOpRunner opRunner;
 
@@ -24,21 +19,21 @@ public class UnitOpRunnerInspector : Editor
 
 		DrawDefaultInspector();
 
-		if (Application.isPlaying)
-		{
-			using (new VerticalScope(EditorStyles.helpBox))
-			{
-				//for (int i = 0; i < 2; i++)
-				for (int i = 0; i < UnitOpRunner.MAX_OPS; i++)
-				{
-					if(opRunner.allOps[i] == null)
-					{
-						EditorGUILayout.LabelField("NULL OP!");
-						continue;
-					}
+		if (!Application.isPlaying)
+			return;
 
-					opRunner.allOps[i].DrawInspectorContext();
+		using (new VerticalScope(EditorStyles.helpBox))
+		{
+			//for (int i = 0; i < 2; i++)
+			for (int i = 0; i < UnitOpRunner.MAX_OPS; i++)
+			{
+				if(opRunner.allOps[i] == null)
+				{
+					//EditorGUILayout.LabelField("NULL OP!");
+					continue;
 				}
+
+				opRunner.allOps[i].DrawInspectorContext();
 			}
 		}
 	}

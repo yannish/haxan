@@ -8,11 +8,14 @@ public class Unit : MonoBehaviour
 {
     public static Action<Unit> OnUnitChanged;
 
-    //[Header("ABILITIES:")]
+    public UnitState unitState;
+
     public Ability MovementAbility;
+    
     public List<Ability> Abilities = new List<Ability>();
-    //[Header("INVENTORY:")]
+    
     public List<Item> startingInventory = new List<Item>();
+    
     public List<Item> inventory = new List<Item>();
 
 
@@ -21,7 +24,33 @@ public class Unit : MonoBehaviour
     [ReadOnly] public int currMove = -1;
     [ReadOnly] public int currReactions = -1;
 
-    public void DecrementMove()
+
+	private void OnEnable()
+	{
+        GameSystems.activeUnits.Add(this);
+        SaveManager.OnBoardStateSaveStart += OnSaveStart;
+	}
+
+	private void OnDisable()
+	{
+        if (GameSystems.I == null)
+            return;
+
+        GameSystems.activeUnits.Remove(this);
+        SaveManager.OnBoardStateSaveStart -= OnSaveStart;
+    }
+
+	private void OnSaveStart(BoardState boardState)
+	{
+        unitState.name = this.name;
+        unitState.id = this.gameObject.GetInstanceID();
+        unitState.offsetPos = this.OffsetPos;
+        unitState.facing = this.Facing;
+        //unitState.rot = this.transform.rotation;
+        boardState.unitStates.Add(unitState);
+	}
+
+	public void DecrementMove()
 	{
         currMove--;
         OnUnitChanged?.Invoke(this);
@@ -43,8 +72,7 @@ public class Unit : MonoBehaviour
 
     // Position in offset coordinate space
     [ReadOnly, System.NonSerialized] public Vector2Int OffsetPos;
-    //[HideInInspector, System.NonSerialized]
-
+    public int parity;
 
     public virtual void Start()
     {
@@ -56,7 +84,6 @@ public class Unit : MonoBehaviour
         this.SetFacing(Facing);
 	}
 
-    public int parity;
     void OnDrawGizmos()
     {
         if (transform.hasChanged)
@@ -69,6 +96,13 @@ public class Unit : MonoBehaviour
 
 public static class UnitExtensions
 {
+    public static void SetState(this Unit unit, UnitState state)
+	{
+        unit.unitState = state;
+        unit.MoveTo(state.offsetPos);
+        unit.SetFacing(state.facing);
+	}
+
     public static void SetVisualPos(this Unit unit, Vector3 newPos, bool inLocalSpace = false)
 	{
         if (unit.pivot == null)
@@ -80,11 +114,6 @@ public static class UnitExtensions
             unit.pivot.position = newPos;
 	}
 
-    public static void SetFacing(this Transform pivot, HexDirectionFT dir)
-	{
-        var newFacingDir = dir.ToVector();
-        pivot.rotation = Quaternion.LookRotation(newFacingDir);
-    }
 
     public static void MoveTo(this Unit unit, Vector2Int coord)
 	{
@@ -92,6 +121,17 @@ public static class UnitExtensions
         unit.OffsetPos = coord;
 	}
 
+    public static void SetFacing(this Transform pivot, HexDirectionFT dir)
+	{
+        var newFacingDir = dir.ToVector();
+        pivot.rotation = Quaternion.LookRotation(newFacingDir);
+    }
+
+    /// <summary>
+    /// Set the unit's cardinal facing direction.
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="dir"></param>
     public static void SetFacing(this Unit unit, HexDirectionFT dir)
     {
         if (unit.pivot == null)
@@ -105,6 +145,11 @@ public static class UnitExtensions
         unit.Facing = dir;
     }
 
+    /// <summary>
+    /// Directly set the unit's pivot rotation.
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <param name="dir"></param>
     public static void SetDirectFacing(this Unit unit, Vector3 dir)
     {
         if (unit.pivot == null)
