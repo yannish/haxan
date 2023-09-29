@@ -46,7 +46,7 @@ public class CharacterUnit : Unit
 
 		inventory.Clear();
 
-		Debug.LogWarning("Unit facing: " + Facing.ToString());
+		//Debug.LogWarning("Unit facing: " + Facing.ToString());
 
 		foreach(var item in startingInventory)
 		{

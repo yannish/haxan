@@ -20,6 +20,8 @@ public class UnitEditor : Editor
 	private void OnSceneGUI()
 	{
 		Unit unit = target as Unit;
+		if (unit == null)
+			return;
 
 		Vector2Int unitCoord = Board.WorldToOffset(unit.transform.position);
 

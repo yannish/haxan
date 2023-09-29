@@ -8,7 +8,7 @@ public class Unit : MonoBehaviour
 {
     public static Action<Unit> OnUnitChanged;
 
-    public UnitState unitState;
+    public UnitState state;
 
     public Ability MovementAbility;
     
@@ -27,28 +27,31 @@ public class Unit : MonoBehaviour
 
 	private void OnEnable()
 	{
-        GameSystems.activeUnits.Add(this);
-        SaveManager.OnBoardStateSaveStart += OnSaveStart;
+        Debug.LogWarning($"UNIT ENABLED: {this.gameObject.name}");
+
+        //if (GameContext.I == null)
+        //    return;
+
+        GameVariables.activeUnits.Add(this);
 	}
 
 	private void OnDisable()
 	{
-        if (GameSystems.I == null)
-            return;
+        //if (GameContext.I == null)
+        //    return;
 
-        GameSystems.activeUnits.Remove(this);
-        SaveManager.OnBoardStateSaveStart -= OnSaveStart;
+        GameVariables.activeUnits.Remove(this);
     }
 
-	private void OnSaveStart(BoardState boardState)
-	{
-        unitState.name = this.name;
-        unitState.id = this.gameObject.GetInstanceID();
-        unitState.offsetPos = this.OffsetPos;
-        unitState.facing = this.Facing;
-        //unitState.rot = this.transform.rotation;
-        boardState.unitStates.Add(unitState);
-	}
+	//public void OnSaveStart()
+	//{
+ //       state.name = this.name;
+ //       state.id = this.gameObject.GetInstanceID();
+ //       state.offsetPos = this.OffsetPos;
+ //       state.facing = this.Facing;
+ //       //unitState.rot = this.transform.rotation;
+ //       GameContext.board.state.unitStates.Add(state);
+	//}
 
 	public void DecrementMove()
 	{
@@ -98,7 +101,7 @@ public static class UnitExtensions
 {
     public static void SetState(this Unit unit, UnitState state)
 	{
-        unit.unitState = state;
+        unit.state = state;
         unit.MoveTo(state.offsetPos);
         unit.SetFacing(state.facing);
 	}

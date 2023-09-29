@@ -2,11 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "CellObjectPreset", menuName = "Units/UnitPreset")]
+[CreateAssetMenu(fileName = "UnitPreset", menuName = "Units/UnitPreset")]
 public class UnitPreset : ScriptableObject
 {
     [Header("CONFIG:")]
     public Sprite icon;
+
+    public GameObject prefab;
 
     public bool isPassable;
 
