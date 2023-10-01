@@ -10,7 +10,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4846485477163800296, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: m_Name
-      value: PlayerUnit
+      value: Javier
       objectReference: {fileID: 0}
     - target: {fileID: 4846485477163800303, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: m_RootOrder
@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4846485477163800303, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 4846485477163800303, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: m_LocalPosition.y
@@ -55,6 +55,14 @@ PrefabInstance:
     - target: {fileID: 4846485477163800303, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4846485477433418464, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a0d19412433705644b6fe10db339ced6, type: 2}
+    - target: {fileID: 8774887126539967731, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
+      propertyPath: templatePath
+      value: Prefabs/Units/Javier
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -12,10 +12,11 @@ public class BoardState
 [System.Serializable]
 public struct UnitState
 {
-    public string name;
-    public int id;
+    public string templatePath;
+    public UnitType type;
     public Vector2Int offsetPos;
     public HexDirectionFT facing;
+    //public int id;
     //public Vector3 pos;
     //public Quaternion rot;
 }

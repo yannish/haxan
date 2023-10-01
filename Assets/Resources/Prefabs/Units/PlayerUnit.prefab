@@ -433,12 +433,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0bd66a72df583c54e8fe71914b43a335, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  templatePath: Prefabs/Units/PlayerUnit
+  type: 0
+  state:
+    name: 
+    type: 0
+    offsetPos: {x: 0, y: 0}
+    facing: 0
   MovementAbility: {fileID: 11400000, guid: 1c4187c2417397e488121112187db191, type: 2}
   Abilities: []
   startingInventory: []
-  Items: []
+  inventory: []
   Facing: 0
   currMove: -1
+  currReactions: -1
   groundedMovementRange: 0
   preset: {fileID: 11400000, guid: 73055d742ffbf55488b6cbff85e4b529, type: 2}
   pivot: {fileID: 1721545541782618465}

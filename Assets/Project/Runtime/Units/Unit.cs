@@ -8,6 +8,10 @@ public class Unit : MonoBehaviour
 {
     public static Action<Unit> OnUnitChanged;
 
+    [ReadOnly] public string templatePath = "";
+
+    public UnitType type;
+
     public UnitState state;
 
     public Ability MovementAbility;
@@ -85,6 +89,11 @@ public class Unit : MonoBehaviour
 	private void OnValidate()
 	{
         this.SetFacing(Facing);
+	}
+
+    private void Reset()
+	{
+        Debug.LogWarning($"RESETTING UNIT: {this.name}");
 	}
 
     void OnDrawGizmos()

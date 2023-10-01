@@ -211,13 +211,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de1b94ac8f564431927feb22f6a8ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Facing: 1
-  currMove: -1
-  groundedMovementRange: 0
-  preset: {fileID: 11400000, guid: f492f1b3ca6b63b4391af731575033ad, type: 2}
+  templatePath: Prefabs/Props/Prop_Crate
+  type: 0
+  state:
+    name: 
+    type: 0
+    offsetPos: {x: 0, y: 0}
+    facing: 0
   MovementAbility: {fileID: 0}
   Abilities: []
-  Items: []
+  startingInventory: []
+  inventory: []
+  Facing: 1
+  currMove: -1
+  currReactions: -1
+  groundedMovementRange: 0
+  preset: {fileID: 11400000, guid: f492f1b3ca6b63b4391af731575033ad, type: 2}
   pivot: {fileID: 2334631619947025239}
   parity: 0
 --- !u!1 &2334631619370384122

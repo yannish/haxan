@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ResourceManager : MonoBehaviour
 {
-	public Dictionary<UnitType, UnitReference> typeToUnitReference = new Dictionary<UnitType, UnitReference>();
+	public Dictionary<UnitType, UnitDefinition> typeToUnitReference = new Dictionary<UnitType, UnitDefinition>();
 
 	void OnAwake()
 	{
@@ -14,7 +14,7 @@ public class ResourceManager : MonoBehaviour
 
     void AssembleResources()
 	{
-		var allUnitArchetypes = Resources.LoadAll<UnitReference>("UnitArchetypes").ToList();
+		var allUnitArchetypes = Resources.LoadAll<UnitDefinition>("UnitArchetypes").ToList();
 		allUnitArchetypes.ToDictionary(r => r.type, r => r);
 	}
 }

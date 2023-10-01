@@ -56,10 +56,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4846485477433418464, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6f7265efe54515b4291c86375308697e, type: 2}
     - target: {fileID: 8774887126539967731, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: preset
       value: 
       objectReference: {fileID: 11400000, guid: b0c23d78f3a7fdc4ea529c95579eb716, type: 2}
+    - target: {fileID: 8774887126539967731, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
+      propertyPath: templatePath
+      value: Prefabs/Units/Esteban
+      objectReference: {fileID: 0}
     - target: {fileID: 8774887126539967731, guid: 8d50d2e0093624c29a53b1a25b70b87a, type: 3}
       propertyPath: Abilities.Array.size
       value: 2

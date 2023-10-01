@@ -25,16 +25,20 @@ public class SaveManager : MonoBehaviour
 
 	private void SaveBoardState()
 	{
-		GameVariables.board.unitStates.Clear();
+		BoardState newBoardState = new BoardState();
 		foreach (var unit in GameVariables.activeUnits.Items)
 		{
-			GameVariables.board.SaveUnit(unit);
+			var cachedUnitState = unit.CacheState();
+			newBoardState.unitStates.Add(cachedUnitState);
 		}
+
+		GameVariables.board.state = newBoardState;
 
 		string inventoryData = JsonUtility.ToJson(boardState);
 		string filePath = Application.persistentDataPath + boardStatePathName;
 		Debug.Log(filePath);
 		System.IO.File.WriteAllText(filePath, inventoryData);
+
 		Debug.LogWarning("Saved board state.");
 	}
 
@@ -45,22 +49,24 @@ public class SaveManager : MonoBehaviour
 
 		boardState = JsonUtility.FromJson<BoardState>(boardStateData);
 		Debug.Log("Loaded board state.");
-		Debug.Log("Loaded board state.");
 
-		//GameContext.board.state = boardState;
+		//GameVariables.board = boardState;
 	}
 }
 
 public static class SaveActions
 {
-	public static void SaveUnit(this BoardStateVariable boardStateVariable, Unit unit)
+	public static UnitState CacheState(this Unit unit)
 	{
 		var newUnitState = new UnitState();
-		newUnitState.name = unit.name;
-		newUnitState.id = unit.gameObject.GetInstanceID();
+
+		newUnitState.templatePath = unit.templatePath;
+		newUnitState.type = unit.type;
 		newUnitState.offsetPos = unit.OffsetPos;
 		newUnitState.facing = unit.Facing;
-		unit.state = newUnitState;
-		boardStateVariable.unitStates.Add(newUnitState);
+		//unit.state = newUnitState;
+
+		return newUnitState;
+		//boardStateVariable.unitStates.Add(newUnitState);
 	}
 }
