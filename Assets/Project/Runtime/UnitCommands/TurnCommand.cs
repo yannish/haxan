@@ -50,6 +50,7 @@ public class TurnCommand : UnitCommand
 		{
             //EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("TURN", EditorStyles.boldLabel);
+            EditorGUILayout.ObjectField(unit, typeof(Unit), true);
             EditorGUILayout.LabelField($"from: {fromDir}", GUILayout.Width(120f));
             EditorGUILayout.LabelField($"to: {toDir}", GUILayout.Width(120f));
             //EditorGUILayout.EndHorizontal();

@@ -225,4 +225,80 @@ public class GroundedMove : Ability
 
 		return commands;
 	}
+
+	public override List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit)
+	{
+		if (targetCoord == unit.OffsetPos)
+		{
+			Debug.LogWarning("move target is same as unit's current position...?", unit.gameObject);
+			return null;
+		}
+
+		float turnDuration = 1f;
+		float stepDuration = 1f;
+
+		Cell originCell = Board.TryGetCellAtPos(targetCoord);
+		if (originCell == null)
+			return null;
+
+		Unit foundUnit = Board.GetUnitAtPos(targetCoord);
+		if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
+			return null;
+
+		Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
+		if (path.Length == 0)
+			return null;
+
+		List<UnitOp> ops = new List<UnitOp>();
+
+		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+
+		if (unit.Facing != toFirstCellDir)
+		{
+			TurnOp newTurnOp = new TurnOp(
+				unit : unit,
+				fromDir : unit.Facing,
+				toDir : toFirstCellDir,
+				duration : turnDuration
+				);
+
+			ops.Add(newTurnOp);
+
+			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+			Debog.logGameflow(firstTurnLog);
+		}
+
+		HexDirectionFT lastFacingDir = toFirstCellDir;
+		for (int i = 0; i < path.Length; i++)
+		{
+			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
+			Vector2Int toCell = path[i];
+			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
+			if (lastFacingDir != toNextCellDir)
+			{
+				TurnOp newTurnOp = new TurnOp(
+					unit: unit,
+					fromDir: lastFacingDir,
+					toDir: toNextCellDir,
+					duration: turnDuration
+					); ;
+
+				ops.Add(newTurnOp);
+				lastFacingDir = toNextCellDir;
+
+				string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
+				Debog.logGameflow(firstTurnLog);
+			}
+
+			var newStepCommand = new GroundMoveOp(unit, fromCell, toCell, stepDuration);
+			//var newStepCommand = new MoveCommand(unit, fromCell, toCell, stepDuration);
+			ops.Add(newStepCommand);
+			//commands.Add(newStepCommand);
+
+			string nextLog = $"from: {fromCell} to {toCell}";
+			Debog.logGameflow(nextLog);
+		}
+
+		return ops;
+	}
 }

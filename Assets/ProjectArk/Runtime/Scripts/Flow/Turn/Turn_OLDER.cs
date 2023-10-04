@@ -12,7 +12,7 @@ public class DummyTurn : InlineScriptableObject
 }
 
 [Serializable]
-public class Turn_OLD //: ScriptableObject
+public class Turn_OLDER //: ScriptableObject
 {
 	public float numba;
 

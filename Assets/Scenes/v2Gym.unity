@@ -259,6 +259,508 @@ MonoBehaviour:
   itemButtons: []
   hoveredItemUseButton: {fileID: 0}
   pathValidMarker: {fileID: 2003857084417268403, guid: 9865dfd6db68bfc47ad6fab49c41f5e5, type: 3}
+  turns:
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  - instigator: {fileID: 0}
+    index: 0
+    totalSteps: 0
+  turnSteps:
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
+  - index: 0
+    totalOps: 0
   logTurnDebug: 1
   currTime: 0
   currTimeScale: 0
@@ -5267,6 +5769,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CellMarker
       objectReference: {fileID: 0}
+    - target: {fileID: 942997024419733209, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 942997024419733214, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -5410,6 +5916,10 @@ PrefabInstance:
     - target: {fileID: 1672413957465144267, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
       propertyPath: m_Name
       value: GridProbe
+      objectReference: {fileID: 0}
+    - target: {fileID: 1672413957465144267, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1672413957590543916, guid: 3b19ce9497066d8489c43079453ecbd3, type: 3}
       propertyPath: m_LocalRotation.w
@@ -6946,6 +7456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4080590e85d2c4d4d99028b872fda464, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  dummyUnit: {fileID: 0}
 --- !u!4 &2044594057
 Transform:
   m_ObjectHideFlags: 0

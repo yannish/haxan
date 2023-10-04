@@ -436,7 +436,7 @@ MonoBehaviour:
   templatePath: Prefabs/Units/PlayerUnit
   type: 0
   state:
-    name: 
+    templatePath: 
     type: 0
     offsetPos: {x: 0, y: 0}
     facing: 0

@@ -13,15 +13,13 @@ public partial class BoardUI
 
     public Stack<UnitCommand> currCommandHistory;
     public Stack<UnitCommandStep> currCommandStepHistory;
-    public Stack<Turn> turnHistory;
+    public Stack<Turn_OLD> turnHistory;
 
     [Header("TURN PROCESSING:")]
     public bool logTurnDebug;
     
     public float currTime = 0f;
     float prevTime = 0f;
-
-    public float currTimeScale = 0f;
 
     [ReadOnly] public int commandIndex = -1;
 
@@ -50,22 +48,7 @@ public partial class BoardUI
     //    }
     //}
 
-    void ProcessReactions()
-    {
-        //var reactions = new List<UnitCommand>();
 
-        
-    }
-
-    void ProcessImpacts()
-    {
-
-    }
-
-    void ProcessMovement()
-    {
-
-    }
 
     void StartProcessingCommands(List<UnitCommand> commands)
     {
@@ -123,7 +106,7 @@ public partial class BoardUI
         - these actions are bound by what instigated them, so together they form a block.
      */
 
-    private void HandleCommandProcessing()
+    private void HandleCommandProcessing_OLD()
     {
         switch (playbackState)
         {
@@ -131,7 +114,7 @@ public partial class BoardUI
                 break;
 
             case TurnPlaybackState.PLAYING:
-                HandleTurnForward();
+                HandleTurnForward_OLD();
                 if (currTimeBlock == null)
                 {
                     Debug.LogWarning("DONE WITH TURN, BACK TO FLOW");
@@ -150,7 +133,7 @@ public partial class BoardUI
         }
     }
 
-    private void HandleTurnForward()
+    private void HandleTurnForward_OLD()
     {
         //... this was... to see if anything was still "busy" while the block was running?
         //... don't think this works. 

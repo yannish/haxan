@@ -10,4 +10,5 @@ public class BoardStateVariable : ScriptableObject
 
 	//[SerializeField]
 	public BoardState state;
+	public BoardHistory history;
 }

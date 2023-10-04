@@ -41,7 +41,7 @@ public class ViewPrefabAssetScope : IDisposable
 
 public class AssetHandler
 {
-    [MenuItem("Haxan/Update Unit asset paths")]
+    [MenuItem("Haxan/Update Unit asset paths %&u")]
 	public static void UpdateUnitAssetPaths()
 	{
 		string[] guids = AssetDatabase.FindAssets("t:prefab", new[] { "Assets/Resources" });

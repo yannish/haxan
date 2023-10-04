@@ -11,29 +11,7 @@ public enum GameFlowState
 	PAUSED
 }
 
-public static class GameVariables
-{
-	private const string activeUnitsPath = "RuntimeSets/ActiveUnits";
-	public static UnitRuntimeSet activeUnits { get; private set; }
 
-	private const string boardStatePath = "GameFlow/BoardState";
-	public static BoardStateVariable board { get; private set; }
-
-	public static Dictionary<UnitType, UnitDefinition> typeToUnitReference 
-		= new Dictionary<UnitType, UnitDefinition>();
-
-	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-	static void LoadRuntimeResources()
-	{
-		Debug.LogWarning("LOADED RUNTIME VARIABLES");
-
-		activeUnits = Resources.Load(activeUnitsPath, typeof(UnitRuntimeSet)) as UnitRuntimeSet;
-		board = Resources.Load(boardStatePath, typeof(BoardStateVariable)) as BoardStateVariable;
-
-		var allUnitArchetypes = Resources.LoadAll<UnitDefinition>("UnitArchetypes").ToList();
-		allUnitArchetypes.ToDictionary(r => r.type, r => r);
-	}
-}
 
 public class GameContext : MonoBehaviour
 {

@@ -11,7 +11,7 @@ public class TurnCreator : MonoBehaviour
     public CellDeflectionProfile deflectProfile;
 
 	[ExposedScriptableObject]
-	public Turn_OLD createdTurn;
+	public Turn_OLDER createdTurn;
 
     public CellObject owner;
 
@@ -41,14 +41,14 @@ public class TurnCreator : MonoBehaviour
 		if (Input.GetKeyDown(KeyCode.T))
 		{
             Debug.LogWarning("PRESSED T");
-            Turn_OLD newTurn = new Turn_OLD();
+            Turn_OLDER newTurn = new Turn_OLDER();
             newTurn.numba = UnityEngine.Random.Range(0f, 1f);
             createdTurn = newTurn;
             createdTurnThisFrame = true;
 		}
     }
 
-	public bool TryGetTurn(ref Turn_OLD newTurn)
+	public bool TryGetTurn(ref Turn_OLDER newTurn)
 	{
         if (createdTurnThisFrame)
             Debug.LogWarning("tryin to fetch a turn on the frame it was made");

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -8,6 +9,9 @@ public class BoardUIEditor : Editor
 {
     bool showCommands;
     bool showLookup;
+    bool showTurns;
+    bool showTurnSteps;
+    bool showUnitOps;
 
     BoardUI boardUI;
 
@@ -21,51 +25,79 @@ public class BoardUIEditor : Editor
         if (boardUI == null)
             return;
 
-        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-		{
-            EditorGUILayout.LabelField("CELL MARKER LOOKUP:", EditorStyles.boldLabel);
-            showLookup = EditorGUILayout.Foldout(showLookup, "show", true);
-            if (showLookup)
-            {
-                DrawCellMarkerLookup();
-            }
-		}
+        DrawUnitOps();
 
-        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-        {
-            EditorGUILayout.LabelField("COMMAND HISTORY: ", EditorStyles.boldLabel);
-            showCommands = EditorGUILayout.Foldout(showCommands, "show", true);
-		    if (showCommands)
-		    {
-			    if (GUILayout.Button("UNDO"))
-                    boardUI.Undo();
-			    //DrawCommandHistory();
-		    }
-        }
+        DrawCellMarkerLookup();
+
+        DrawCommandHistory();
+        
+        EditorGUILayout.Space(20);
 
         DrawDefaultInspector();
 	}
 
-    void DrawCellMarkerLookup()
+	private void DrawUnitOps()
 	{
-        foreach(var kvp in boardUI.coordToCellMarkerLookup)
-		{
-            var coord = kvp.Key;
-            var marker = kvp.Value;
+        if (!Application.isPlaying)
+            return;
 
-            using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
-			{
-                EditorGUILayout.LabelField(coord.ToString(), EditorStyles.boldLabel);
-                EditorGUILayout.ObjectField(marker, typeof(PooledCellVisuals), true);
-			}
-		}
+        EditorGUILayout.LabelField("UNIT OPS:", EditorStyles.boldLabel);
+        showUnitOps = EditorGUILayout.Foldout(showUnitOps, "show", true);
+        if (!showUnitOps)
+            return;
+
+        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+        {
+            for (int i = 0; i < boardUI.currOp; i++)
+	        {
+                if (boardUI.allOps[i] == null)
+                    continue;
+                boardUI.allOps[i].DrawInspectorContent();
+	        }
+        }
+    }
+    
+	void DrawCellMarkerLookup()
+	{
+        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+        {
+            EditorGUILayout.LabelField("CELL MARKER LOOKUP:", EditorStyles.boldLabel);
+            showLookup = EditorGUILayout.Foldout(showLookup, "show", true);
+            if (!showLookup)
+                return;
+
+            foreach (var kvp in boardUI.coordToCellMarkerLookup)
+            {
+                var coord = kvp.Key;
+                var marker = kvp.Value;
+
+                using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
+                {
+                    EditorGUILayout.LabelField(coord.ToString(), EditorStyles.boldLabel);
+                    EditorGUILayout.ObjectField(marker, typeof(PooledCellVisuals), true);
+                }
+            }
+        }
 	}
 
     void DrawCommandHistory()
 	{
         GUI.enabled = false;
 
-		if (!boardUI.turnHistory.IsNullOrEmpty())
+        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+        {
+            EditorGUILayout.LabelField("COMMAND HISTORY: ", EditorStyles.boldLabel);
+            showCommands = EditorGUILayout.Foldout(showCommands, "show", true);
+            if (showCommands)
+            {
+                if (GUILayout.Button("UNDO"))
+                    boardUI.Undo();
+                //DrawCommandHistory();
+            }
+        }
+
+
+        if (!boardUI.turnHistory.IsNullOrEmpty())
 		{
             foreach (var turn in boardUI.turnHistory)
             {

@@ -51,6 +51,7 @@ public class Ability : ScriptableObject
 
 	public virtual List<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit) => new List<UnitCommand>();
 
+    public virtual List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
     
 
 	public Queue<UnitCommandStep> GetSteps(Vector2Int targetCoord, Unit unit)

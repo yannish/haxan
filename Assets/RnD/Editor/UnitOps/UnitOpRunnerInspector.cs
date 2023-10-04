@@ -22,8 +22,35 @@ public class UnitOpRunnerInspector : Editor
 		if (!Application.isPlaying)
 			return;
 
+
+		using (new HorizontalScope())
+		{
+			if (GUILayout.Button("CLEAR"))
+			{
+				opRunner.ClearOps();
+			}
+			if (GUILayout.Button("SET"))
+			{
+				opRunner.SetOps();
+			}
+		}
+
+		using (new HorizontalScope())
+		{
+			if (GUILayout.Button("SAVE"))
+			{
+				opRunner.SaveToJSON();
+			}
+			if (GUILayout.Button("LOAD"))
+			{
+				opRunner.LoadFromJSON();
+			}
+		}
+
 		using (new VerticalScope(EditorStyles.helpBox))
 		{
+			EditorGUILayout.LabelField("OPS:", EditorStyles.boldLabel);
+
 			//for (int i = 0; i < 2; i++)
 			for (int i = 0; i < UnitOpRunner.MAX_OPS; i++)
 			{
@@ -33,7 +60,7 @@ public class UnitOpRunnerInspector : Editor
 					continue;
 				}
 
-				opRunner.allOps[i].DrawInspectorContext();
+				opRunner.allOps[i].DrawInspectorContent();
 			}
 		}
 	}

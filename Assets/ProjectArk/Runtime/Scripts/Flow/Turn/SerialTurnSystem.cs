@@ -42,7 +42,7 @@ public class SerialTurnSystem : MonoBehaviour
 
 	public Stack<CellObjectCommand> currCommandHistory = new Stack<CellObjectCommand>();
 
-	public Turn_OLD currTurn;
+	public Turn_OLDER currTurn;
 
 
 	//... FORWARD BACKWARD PROCESSING:
@@ -54,9 +54,9 @@ public class SerialTurnSystem : MonoBehaviour
 
 
 	//... HISTORY:
-	public Stack<Turn_OLD> turnHistory = new Stack<Turn_OLD>();
+	public Stack<Turn_OLDER> turnHistory = new Stack<Turn_OLDER>();
 
-	public Stack<Turn_OLD> undoneTurns = new Stack<Turn_OLD>();
+	public Stack<Turn_OLDER> undoneTurns = new Stack<Turn_OLDER>();
 	
 	public Stack<CellObjectCommand> commandUndoHistory = new Stack<CellObjectCommand>();
 
@@ -209,7 +209,7 @@ public class SerialTurnSystem : MonoBehaviour
 				//isProcessing = false;
 				currPlaybackState = TurnPlaybackState.PAUSED;
 
-				Turn_OLD recordedTurn = new();
+				Turn_OLDER recordedTurn = new();
 				recordedTurn.instigator = currInstigator;
 				recordedTurn.commandHistory = currCommandHistory;
 				turnHistory.Push(recordedTurn);
@@ -277,7 +277,7 @@ public class SerialTurnSystem : MonoBehaviour
 			return;
 		}
 
-		Turn_OLD turnToUndo = turnHistory.Pop();
+		Turn_OLDER turnToUndo = turnHistory.Pop();
 		currCommandHistory = turnToUndo.commandHistory;
 		currCommand = currCommandHistory.Pop();
 
@@ -311,7 +311,7 @@ public class SerialTurnSystem : MonoBehaviour
 			return;
 		}
 
-		Turn_OLD turnToRedo = undoneTurns.Pop();
+		Turn_OLDER turnToRedo = undoneTurns.Pop();
 		while(turnToRedo.undoneCommands.Count > 0)
 		{
 			CellObjectCommand commandToRedo = turnToRedo.undoneCommands.Pop();

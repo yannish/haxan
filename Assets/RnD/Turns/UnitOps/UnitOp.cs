@@ -8,89 +8,47 @@ using UnityEditor;
 #endif
 
 
-public interface IOperable
+public interface IUnitOperable
 {
-	public void Execute();
+	public void Execute(Unit unit);
 
-	public void Undo();
+	public void Undo(Unit unit);
 
-	public void DrawInspectorContext();
+	public void Tick(Unit unit, float t);
+
+	public void DrawInspectorContent();
 }
+
+/// <summary>
+/// Ops must have targets, which are in the scene.
+/// How to get a handle on these in a way that will survive serialization?
+/// Have a big rebuildable runtime sets with all your units, and store
+/// indices into those lists...?
+/// </summary>
+/// 
+
+//... Does every Op affect one & only one unit?
+//... Probably. 
 
 [Serializable]
-public struct UnitOp
+public abstract class UnitOp
 {
-	public Vector2Int startPos;
-	public Vector2Int endPos;
+	public UnitOp(Unit unit)
+	{
+		this.unit = unit;
+		this.unitIndex = unit.toIndex();
+	}
+
+	public Unit unit;
+	public int unitIndex;
+
+	public float startTime;
+	public float duration;
+
+	public abstract void Execute(Unit unit);
+	public abstract void Undo(Unit unit);
+	public abstract void Tick(Unit unit, float t);
+
+	public virtual void DrawInspectorContent() { }
 }
 
-[Serializable]
-public struct UnitBash: IOperable
-{
-	public Unit target;
-	public Unit hitter;
-
-#if UNITY_EDITOR
-	public void DrawInspectorContext()
-	{
-		using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
-		{
-			EditorGUILayout.LabelField("BASH", EditorStyles.boldLabel);
-			EditorGUILayout.ObjectField($"target:", target, typeof(Unit), true);
-			//EditorGUILayout.ObjectField($"target:", target, typeof(Unit), true, GUILayout.Width(120f));
-			EditorGUILayout.ObjectField($"hitter:", hitter, typeof(Unit), true);
-			//EditorGUILayout.ObjectField($"hitter:", hitter, typeof(Unit), true, GUILayout.Width(120f));
-		}
-	}
-#endif
-
-	public void Execute()
-	{
-
-	}
-
-	public void Undo()
-	{
-
-	}
-}
-
-[Serializable]
-public struct UnitMove : IOperable
-{
-	public Unit mover;
-	public Vector2Int startPos;
-	public Vector2Int endPos;
-
-	public UnitMove(Unit mover, Vector2Int startPos, Vector2Int endPos)
-	{
-		this.mover = mover;
-		this.startPos = startPos;
-		this.endPos = endPos;
-	}
-
-#if UNITY_EDITOR
-	public void DrawInspectorContext()
-	{
-		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-		{
-			EditorGUILayout.LabelField("MOVE:", EditorStyles.boldLabel);
-			EditorGUILayout.ObjectField(mover, typeof(Unit), true);
-			EditorGUILayout.Vector2IntField("startPos: ", startPos);
-			//EditorGUILayout.Vector2IntField("startPos: ", startPos, GUILayout.Width(20f));
-			EditorGUILayout.Vector2IntField("endPos: ", endPos);
-			//EditorGUILayout.Vector2IntField("endPos: ", endPos, GUILayout.Width(20f));
-		}
-	}
-#endif
-
-	public void Execute()
-	{
-		
-	}
-
-	public void Undo()
-	{
-		
-	}
-}

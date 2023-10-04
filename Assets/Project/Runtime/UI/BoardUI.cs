@@ -168,7 +168,7 @@ public partial class BoardUI : MonoBehaviour
 
         currCommandHistory = new Stack<UnitCommand>();
         commandsQueueToProcess = new Queue<UnitCommand>();
-        turnHistory = new Stack<Turn>();
+        turnHistory = new Stack<Turn_OLD>();
         //Application.targetFrameRate = 60;
 
         input = new Controls();
@@ -463,9 +463,12 @@ public partial class BoardUI : MonoBehaviour
         {
             Debug.Log("CLICKED A VALID MOVE)");
 
-            var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain(mouseUpPos, selectedUnit);
+            var fetchUnitOps = selectedUnit.MovementAbility.FetchUnitOps(mouseUpPos, selectedUnit);
+            //var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain(mouseUpPos, selectedUnit);
             //var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain_OLD(mouseUpPos, selectedUnit);
-            StartProcessingCommands(fetchedCommands);
+
+            StartProcessingTurn(fetchUnitOps);
+            //StartProcessingCommands(fetchedCommands);
 
             mousePosLastFrame = mousePos;
             hoveredWaypointLastFrame = hoveredWaypoint;
@@ -1805,7 +1808,7 @@ public partial class BoardUI : MonoBehaviour
 		}
     }
 
-    private void HandleTurnForward_OLD()
+    private void HandleTurnForward_OLDER()
     {
         if (currCommandStep == null)
             return;
@@ -1844,7 +1847,7 @@ public partial class BoardUI : MonoBehaviour
 			{
                 playbackState = TurnPlaybackState.PAUSED;
 
-                Turn recordedTurn = new();
+                Turn_OLD recordedTurn = new();
 
                 recordedTurn.instigator = currInstigator;
                 recordedTurn.commandStepHistory = currCommandStepHistory;
@@ -1865,7 +1868,7 @@ public partial class BoardUI : MonoBehaviour
         mode = Mode.ProcessingCommands;
         playbackState = TurnPlaybackState.REWINDING;
 
-        Turn turnToUndo = turnHistory.Pop();
+        Turn_OLD turnToUndo = turnHistory.Pop();
         currCommandStepHistory = turnToUndo.commandStepHistory;
         currCommandStep = currCommandStepHistory.Pop();
     }
