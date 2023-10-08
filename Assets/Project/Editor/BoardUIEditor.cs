@@ -41,14 +41,14 @@ public class BoardUIEditor : Editor
         if (!Application.isPlaying)
             return;
 
-        EditorGUILayout.LabelField("UNIT OPS:", EditorStyles.boldLabel);
-        showUnitOps = EditorGUILayout.Foldout(showUnitOps, "show", true);
-        if (!showUnitOps)
-            return;
-
         using (new GUILayout.VerticalScope(EditorStyles.helpBox))
         {
-            for (int i = 0; i < boardUI.currOp; i++)
+            EditorGUILayout.LabelField("UNIT OPS:", EditorStyles.boldLabel);
+            showUnitOps = EditorGUILayout.Foldout(showUnitOps, "show", true);
+            if (!showUnitOps)
+                return;
+
+            for (int i = 0; i < boardUI.totalOps; i++)
 	        {
                 if (boardUI.allOps[i] == null)
                     continue;

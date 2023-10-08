@@ -24,7 +24,7 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
 	{
 		Action peekControl;
 
-		var path = Pathfinder.GetPath(flow.character.currCell, targetCell);
+		var path = Pathfinder_OLD.GetPath(flow.character.currCell, targetCell);
 		if (path.IsNullOrEmpty())
 			return null;
 
@@ -43,7 +43,7 @@ public class GroundMoveAbilityScrObj : AbilityScrObj
 		if (targetCell == cellObj.currCell || !targetCell.IsPassable || targetCell.IsBound())
 			return null;
 
-		var pathToCell = Pathfinder.GetPath(cellObj.currCell, targetCell);
+		var pathToCell = Pathfinder_OLD.GetPath(cellObj.currCell, targetCell);
 		if (pathToCell == null)
 			return null;
 

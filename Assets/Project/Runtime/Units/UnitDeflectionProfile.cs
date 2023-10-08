@@ -13,7 +13,7 @@ public class UnitDeflectionFacet
 [CreateAssetMenu(fileName = "UnitDeflectionProfile", menuName = "Units/UnitDeflectionProfile")]
 public class UnitDeflectionProfile : ScriptableObject
 {
-    public List<DeflectionFacet> deflectionFacets = new List<DeflectionFacet>();
+    public List<UnitDeflectionFacet> deflectionFacets = new List<UnitDeflectionFacet>();
 
 
 }

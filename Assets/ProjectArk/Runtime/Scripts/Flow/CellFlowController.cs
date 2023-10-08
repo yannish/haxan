@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class CellFlowController : FlowController
 {
-	[ReadOnly] public PooledCellVisuals visuals;
+	//[ReadOnly] public PooledCellVisuals visuals;
     [ReadOnly] public QuickStateMachine fsm;
     [ReadOnly] public Cell_OLD cell;
 
@@ -15,7 +15,7 @@ public class CellFlowController : FlowController
 
 	protected override void Awake()
 	{
-		visuals = GetComponentInChildren<PooledCellVisuals>();
+		//visuals = GetComponentInChildren<PooledCellVisuals>();
         fsm = GetComponentInChildren<QuickStateMachine>();
 		cell = GetComponent<Cell_OLD>();
     }

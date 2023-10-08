@@ -83,76 +83,7 @@ public class GroundedMove : Ability
 		pathQuads.Clear();
 	}
 
-	public override Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoord, Unit unit)
-	{
-		//... might not really need these checks...
-		if (targetCoord == unit.OffsetPos)
-			return null;
-
-		Cell originCell = Board.TryGetCellAtPos(targetCoord);
-		if (originCell == null)
-			return null;
-
-		Unit foundUnit = Board.GetUnitAtPos(targetCoord);
-		if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
-			return null;
-
-		Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
-		if (path.Length == 0)
-			return null;
-
-		Queue<UnitCommand> commands = new Queue<UnitCommand>();
-
-		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
-
-		if(unit.Facing != toFirstCellDir)
-		{
-			TurnCommand newTurnCommand = new TurnCommand(
-				unit,
-				unit.Facing,
-				toFirstCellDir,
-				turnDuration
-				);
-
-			commands.Enqueue(newTurnCommand);
-
-			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
-			Debog.logGameflow(firstTurnLog);
-		}
-
-		HexDirectionFT lastFacingDir = toFirstCellDir;
-		for (int i = 0; i < path.Length; i++)
-		{
-			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
-			Vector2Int toCell = path[i];
-			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
-			if(lastFacingDir != toNextCellDir)
-			{
-				TurnCommand newTurnCommand = new TurnCommand(
-					unit,
-					lastFacingDir,
-					toNextCellDir,
-					turnDuration
-					);
-
-				commands.Enqueue(newTurnCommand);
-				lastFacingDir = toNextCellDir;
-
-				string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
-				Debog.logGameflow(firstTurnLog);
-			}
-
-			var newStepCommand = new MoveCommand(unit, fromCell, toCell, stepDuration);
-			commands.Enqueue(newStepCommand);
-
-			string nextLog = $"from: {fromCell} to {toCell}";
-			Debog.logGameflow(nextLog);
-		}
-
-		return commands;
-	}
-
-	public override List<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit)
+	public override List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit)
 	{
 		if (targetCoord == unit.OffsetPos)
 		{
@@ -175,83 +106,12 @@ public class GroundedMove : Ability
 		if (path.Length == 0)
 			return null;
 
-		List<UnitCommand> commands = new List<UnitCommand>();
+		List<IUnitOperable> ops = new List<IUnitOperable>();
+		//List<UnitOp> ops = new List<UnitOp>();
 
 		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
 
-		if (unit.Facing != toFirstCellDir)
-		{
-			TurnCommand newTurnCommand = new TurnCommand(
-				unit,
-				unit.Facing,
-				toFirstCellDir,
-				turnDuration
-				);
-
-			commands.Add(newTurnCommand);
-
-			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
-			Debog.logGameflow(firstTurnLog);
-		}
-
-		HexDirectionFT lastFacingDir = toFirstCellDir;
-		for (int i = 0; i < path.Length; i++)
-		{
-			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
-			Vector2Int toCell = path[i];
-			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
-			if (lastFacingDir != toNextCellDir)
-			{
-				TurnCommand newTurnCommand = new TurnCommand(
-					unit,
-					lastFacingDir,
-					toNextCellDir,
-					turnDuration
-					);
-
-				commands.Add(newTurnCommand);
-				lastFacingDir = toNextCellDir;
-
-				string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
-				Debog.logGameflow(firstTurnLog);
-			}
-
-			var newStepCommand = new MoveCommand(unit, fromCell, toCell, stepDuration);
-			commands.Add(newStepCommand);
-
-			string nextLog = $"from: {fromCell} to {toCell}";
-			Debog.logGameflow(nextLog);
-		}
-
-		return commands;
-	}
-
-	public override List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit)
-	{
-		if (targetCoord == unit.OffsetPos)
-		{
-			Debug.LogWarning("move target is same as unit's current position...?", unit.gameObject);
-			return null;
-		}
-
-		float turnDuration = 1f;
-		float stepDuration = 1f;
-
-		Cell originCell = Board.TryGetCellAtPos(targetCoord);
-		if (originCell == null)
-			return null;
-
-		Unit foundUnit = Board.GetUnitAtPos(targetCoord);
-		if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
-			return null;
-
-		Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
-		if (path.Length == 0)
-			return null;
-
-		List<UnitOp> ops = new List<UnitOp>();
-
-		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+		float totalDuration = 0f;
 
 		if (unit.Facing != toFirstCellDir)
 		{
@@ -259,10 +119,13 @@ public class GroundedMove : Ability
 				unit : unit,
 				fromDir : unit.Facing,
 				toDir : toFirstCellDir,
+				startTime : 0f,
 				duration : turnDuration
 				);
 
 			ops.Add(newTurnOp);
+
+			totalDuration += turnDuration;
 
 			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
 			Debog.logGameflow(firstTurnLog);
@@ -280,19 +143,30 @@ public class GroundedMove : Ability
 					unit: unit,
 					fromDir: lastFacingDir,
 					toDir: toNextCellDir,
+					startTime: totalDuration,
 					duration: turnDuration
-					); ;
+					);
 
 				ops.Add(newTurnOp);
+				totalDuration += turnDuration;
 				lastFacingDir = toNextCellDir;
 
 				string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
 				Debog.logGameflow(firstTurnLog);
 			}
 
-			var newStepCommand = new GroundMoveOp(unit, fromCell, toCell, stepDuration);
+			GroundMoveOp newStepOp = new GroundMoveOp(
+				unit, 
+				fromCell, 
+				toCell, 
+				totalDuration,
+				stepDuration
+				);
+
+			ops.Add(newStepOp);
+			totalDuration += stepDuration;
+
 			//var newStepCommand = new MoveCommand(unit, fromCell, toCell, stepDuration);
-			ops.Add(newStepCommand);
 			//commands.Add(newStepCommand);
 
 			string nextLog = $"from: {fromCell} to {toCell}";
@@ -301,4 +175,147 @@ public class GroundedMove : Ability
 
 		return ops;
 	}
+
+	//public override Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoord, Unit unit)
+	//{
+	//	//... might not really need these checks...
+	//	if (targetCoord == unit.OffsetPos)
+	//		return null;
+
+	//	Cell originCell = Board.TryGetCellAtPos(targetCoord);
+	//	if (originCell == null)
+	//		return null;
+
+	//	Unit foundUnit = Board.GetUnitAtPos(targetCoord);
+	//	if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
+	//		return null;
+
+	//	Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
+	//	if (path.Length == 0)
+	//		return null;
+
+	//	Queue<UnitCommand> commands = new Queue<UnitCommand>();
+
+	//	HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+
+	//	if(unit.Facing != toFirstCellDir)
+	//	{
+	//		TurnCommand newTurnCommand = new TurnCommand(
+	//			unit,
+	//			unit.Facing,
+	//			toFirstCellDir,
+	//			turnDuration
+	//			);
+
+	//		commands.Enqueue(newTurnCommand);
+
+	//		string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+	//		Debog.logGameflow(firstTurnLog);
+	//	}
+
+	//	HexDirectionFT lastFacingDir = toFirstCellDir;
+	//	for (int i = 0; i < path.Length; i++)
+	//	{
+	//		Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
+	//		Vector2Int toCell = path[i];
+	//		HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
+	//		if(lastFacingDir != toNextCellDir)
+	//		{
+	//			TurnCommand newTurnCommand = new TurnCommand(
+	//				unit,
+	//				lastFacingDir,
+	//				toNextCellDir,
+	//				turnDuration
+	//				);
+
+	//			commands.Enqueue(newTurnCommand);
+	//			lastFacingDir = toNextCellDir;
+
+	//			string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
+	//			Debog.logGameflow(firstTurnLog);
+	//		}
+
+	//		var newStepCommand = new MoveCommand(unit, fromCell, toCell, stepDuration);
+	//		commands.Enqueue(newStepCommand);
+
+	//		string nextLog = $"from: {fromCell} to {toCell}";
+	//		Debog.logGameflow(nextLog);
+	//	}
+
+	//	return commands;
+	//}
+
+	//public override List<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit)
+	//{
+	//	if (targetCoord == unit.OffsetPos)
+	//	{
+	//		Debug.LogWarning("move target is same as unit's current position...?", unit.gameObject);
+	//		return null;
+	//	}
+
+	//	float turnDuration = 1f;
+	//	float stepDuration = 1f;
+
+	//	Cell originCell = Board.TryGetCellAtPos(targetCoord);
+	//	if (originCell == null)
+	//		return null;
+
+	//	Unit foundUnit = Board.GetUnitAtPos(targetCoord);
+	//	if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
+	//		return null;
+
+	//	Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
+	//	if (path.Length == 0)
+	//		return null;
+
+	//	List<UnitCommand> commands = new List<UnitCommand>();
+
+	//	HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+
+	//	if (unit.Facing != toFirstCellDir)
+	//	{
+	//		TurnCommand newTurnCommand = new TurnCommand(
+	//			unit,
+	//			unit.Facing,
+	//			toFirstCellDir,
+	//			turnDuration
+	//			);
+
+	//		commands.Add(newTurnCommand);
+
+	//		string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+	//		Debog.logGameflow(firstTurnLog);
+	//	}
+
+	//	HexDirectionFT lastFacingDir = toFirstCellDir;
+	//	for (int i = 0; i < path.Length; i++)
+	//	{
+	//		Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
+	//		Vector2Int toCell = path[i];
+	//		HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
+	//		if (lastFacingDir != toNextCellDir)
+	//		{
+	//			TurnCommand newTurnCommand = new TurnCommand(
+	//				unit,
+	//				lastFacingDir,
+	//				toNextCellDir,
+	//				turnDuration
+	//				);
+
+	//			commands.Add(newTurnCommand);
+	//			lastFacingDir = toNextCellDir;
+
+	//			string firstTurnLog = $"doing turn from : {lastFacingDir} to {toFirstCellDir}";
+	//			Debog.logGameflow(firstTurnLog);
+	//		}
+
+	//		var newStepCommand = new MoveCommand(unit, fromCell, toCell, stepDuration);
+	//		commands.Add(newStepCommand);
+
+	//		string nextLog = $"from: {fromCell} to {toCell}";
+	//		Debog.logGameflow(nextLog);
+	//	}
+
+	//	return commands;
+	//}
 }

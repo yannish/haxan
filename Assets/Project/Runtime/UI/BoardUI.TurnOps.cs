@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum TurnPlaybackState
+{
+    PAUSED,
+    PLAYING,
+    REWINDING
+}
+
+
 /// <summary>
 /// A turn is a set of TurnSteps, played out in series.
 /// </summary>
@@ -11,8 +19,8 @@ public struct Turn
 {
     public Unit instigator; //... have to find a way to serialize & then recreate this on the fly.
 
-    public int index;
-    public int totalSteps;
+    public int stepIndex;
+    public int stepCount;
 }
 
 
@@ -25,8 +33,9 @@ public struct TurnStep
 {
     public float startTime;
     public float duration;
-    public int index;
-    public int totalOps;
+
+    public int opIndex;
+    public int opCount;
 }
 
 
@@ -39,32 +48,43 @@ public partial class BoardUI : MonoBehaviour
 
     public Turn[] turns = new Turn[MAX_TURNS];
     public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
-    public UnitOp[] allOps = new UnitOp[MAX_OPS];
-    public UnitOp[] currInstigatingOps = new UnitOp[MAX_OPS];
 
-    [ReadOnly] public int currTurn;
-    [ReadOnly] public int currTurnStep;
-    [ReadOnly] public int currOp;
+    public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
+    public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
+
+    [ReadOnly] public int turnCount;
+    [ReadOnly] public int turnStepCount;
+
+    [ReadOnly] public int totalOps;
     [ReadOnly] public int totalInstigatingOps;
 
-    //... PLAYBACK:
+    [Header("PLAYBACK:")]
+    [ReadOnly] public TurnPlaybackState playbackState;
+    //... 
     [ReadOnly] public int currPlaybackStep;
-    [ReadOnly] public float currPlaybackTime;
+    [ReadOnly] public int currPlaybackTurn;
+
+    [ReadOnly] public float currNormalizedTime; //... reset to 0 as each TimeStep is processed.
+    [ReadOnly] public float currPlaybackTime;   //... total running-time for the Turn
+    [ReadOnly] public float prevPlaybackTime;
     [ReadOnly] public float currTimeScale = 1f;
 
 
-    void StartProcessingTurn(List<UnitOp> instigatingOps)
+    //... 
+
+    void StartProcessingTurn(List<IUnitOperable> instigatingOps)
     {
         if (logTurnDebug)
             Debug.LogWarning("Starting to process unit ops.");
 
+        currInstigator = selectedUnit;
         DeselectUnit();
 
         mode = Mode.ProcessingCommands;
         playbackState = TurnPlaybackState.PLAYING;
-        currPlaybackStep = 0;
 
-        currInstigator = selectedUnit;
+        //currNormalizedTime = 0f;
+        currTimeScale = 1f;
 
         totalInstigatingOps = instigatingOps.Count;
 		for (int i = 0; i < instigatingOps.Count; i++)
@@ -75,32 +95,35 @@ public partial class BoardUI : MonoBehaviour
         ProcessReactions();
     }
 
-
+    /// <summary>
+    /// for now this is just taking in the instigating ops
+    /// ... & putting them directly into turnSteps.
+    /// ... but really this is where you'd build more complex result from input action.
+    /// </summary>
     void ProcessReactions()
     {
-        // ... for now this is just taking in the instigating ops
-        // ... & putting them directly into turnSteps.
-
-		for (int i = 0; i < totalInstigatingOps; i++)
+        int opIndex = totalOps;
+		for (int i = totalOps; i < opIndex + totalInstigatingOps; i++)
 		{
-            allOps[currOp] = currInstigatingOps[i];
-            currOp++;
+            allOps[i] = currInstigatingOps[i];
+            totalOps++;
 
             TurnStep newTurnStep = new TurnStep()
             {
-                index = currOp,
-                totalOps = 1
+                opIndex = i,
+                opCount = 1
             };
-            turnSteps[currTurnStep] = newTurnStep;
-            currTurnStep++;
+
+            turnSteps[turnStepCount] = newTurnStep;
+            turnStepCount++;
 		}
 
         Turn newTurn = new Turn()
         {
             instigator = currInstigator,
-            totalSteps = totalInstigatingOps
+            stepCount = totalInstigatingOps
         };
-        turns[currTurn] = newTurn;
+        turns[turnCount] = newTurn;
     }
 
 	void HandleCommandProcessing()
@@ -123,29 +146,69 @@ public partial class BoardUI : MonoBehaviour
 		}
 	}
 
+    //Turn currTurn;
+    //int currTurnIndex;
+
+    TurnStep currTurnStep;
+    int currTurnStepIndex;
+
     public void HandleTurnForward()
 	{
-		currPlaybackTime += Time.deltaTime * currTimeScale;
-
-        int opIndex = turnSteps[currTurnStep].index;
-        int numOpsToTick = turnSteps[currTurnStep].totalOps;
-		for (int i = 0; i < numOpsToTick; i++)
+        Turn currTurn = turns[currPlaybackTurn];
+		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
 		{
-            UnitOp op = allOps[i];
-            Unit affectedUnit = GameVariables.FetchUnitByIndex(op.unitIndex);
-            op.Tick(affectedUnit, currPlaybackTime);
+            TurnStep currTurnStep = turnSteps[i];
+			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
+			{
+                bool allOpsFullyTicked = true;
+
+                IUnitOperable op = allOps[j];
+                if (currPlaybackTime < op.data.startTime)
+                    continue;
+
+                Unit affectedUnit = op.data.unitIndex.ToUnit();
+
+                //... BEGIN TICK:
+                if (currPlaybackTime >= op.data.startTime && prevPlaybackTime < op.data.startTime)
+				{
+                //... OnBeginTick();    
+				}
+
+                //.. TICK:
+                if(currPlaybackTime >= op.data.startTime && currPlaybackTime < op.data.endTime)
+				{
+                    allOpsFullyTicked = false;
+                    var normalizedTime = Mathf.Clamp01(currPlaybackTime - op.data.startTime) / op.data.duration;
+                    op.Tick(affectedUnit, normalizedTime);
+				}
+
+                //... COMPLETE TICK();
+                if (currPlaybackTime > op.data.endTime && prevPlaybackTime < op.data.endTime)
+				{
+                    op.Execute(affectedUnit);
+				}
+
+                //... if we're at the final op of the final step:
+                if(
+                    allOpsFullyTicked
+                    && i == (currTurn.stepIndex + currTurn.stepCount - 1)
+                    && j == (currTurnStep.opIndex + currTurnStep.opCount - 1)
+                    )
+				{
+                    Debug.Log("Played through all turnSteps.");
+
+                    playbackState = TurnPlaybackState.PAUSED;
+                    SelectUnit(lastSelectedUnit);
+                    currInstigator = null;
+                    currPlaybackTurn++;
+                }
+			}
 		}
 
-		if (currPlaybackStep >= turns[currTurn].totalSteps)
-		{
-            Debug.Log("Played through all turnSteps.");
-            playbackState = TurnPlaybackState.PAUSED;
-            SelectUnit(lastSelectedUnit);
-            currInstigator = null;
-		}
-	}
+        prevPlaybackTime = currPlaybackTime;
+        currPlaybackTime += Time.deltaTime * currTimeScale;
+    }
 
-    
     void ProcessImpacts()
     {
 

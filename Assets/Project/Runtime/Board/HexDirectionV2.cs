@@ -3,8 +3,116 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum HexDirection
+{
+	NE, E, SE, SW, W, NW
+}
+
+public enum HexDirectionFT
+{
+	N, NE, SE, S, SW, NW
+}
+
+public enum HexOcclusion
+{
+	NONE,
+	EXCLUSIVE,
+	INCLUSIVE
+}
+
 public static class HexDirectionV2
 {
+	public static Dictionary<HexDirection, float> HexPTAngleLookup = new Dictionary<HexDirection, float>()
+	{
+		{HexDirection.NE, 30f },
+		{HexDirection.E, 90f },
+		{HexDirection.SE, 150f },
+		{HexDirection.SW, 210f },
+		{HexDirection.W, 270f },
+		{HexDirection.NW, 330f }
+	};
+
+	public static Dictionary<HexDirectionFT, float> HexFTAngleLookup = new Dictionary<HexDirectionFT, float>()
+	{
+		{HexDirectionFT.N, 0f },
+		{HexDirectionFT.NE, 60f },
+		{HexDirectionFT.SE, 120f },
+		{HexDirectionFT.S, 180f },
+		{HexDirectionFT.SW, 240f },
+		{HexDirectionFT.NW, 300f }
+	};
+
+	public static float ToAngle(this HexDirection direction) => HexPTAngleLookup[direction];
+
+	public static float ToAngle(this HexDirectionFT direction) => HexFTAngleLookup[direction];
+
+	public static Vector3 ToVector(this HexDirection direction) => Quaternion.AngleAxis(HexPTAngleLookup[direction], Vector3.up) * Vector3.forward;
+
+	public static Vector3 ToVector(this HexDirectionFT dir) => Quaternion.AngleAxis(HexFTAngleLookup[dir], Vector3.up) * Vector3.forward;
+
+	private static Vector3[] _VectorHexDirections;
+
+	public static Vector3[] VectorHexDirections
+	{
+		get
+		{
+			if (_VectorHexDirections.IsNullOrEmpty())
+			{
+				Vector3[] directions = new Vector3[6];
+				int i = 0;
+				foreach (HexDirection dir in HexPTAngleLookup.Keys)
+				{
+					var angle = HexPTAngleLookup[dir];
+					var rot = Quaternion.AngleAxis(angle, Vector3.up);
+					directions[i] = rot * Vector3.forward;
+					i++;
+				}
+				_VectorHexDirections = directions;
+			}
+			return _VectorHexDirections;
+		}
+	}
+
+	public static HexDirection Opposite(this HexDirection direction)
+	{
+		return (int)direction < 3 ? (direction + 3) : (direction - 3);
+	}
+
+	public static HexDirectionFT Opposite(this HexDirectionFT direction)
+	{
+		return (int)direction < 3 ? (direction + 3) : (direction - 3);
+	}
+
+	public static HexDirection Rotate(this HexDirection direction, int steps)
+	{
+		return (HexDirection)(((int)direction + steps) % 6);
+	}
+
+	public static HexDirectionFT Rotate(this HexDirectionFT direction, int steps)
+	{
+		return (HexDirectionFT)(((int)direction + steps) % 6);
+	}
+
+	public static HexDirection Previous(this HexDirection direction)
+	{
+		return direction == HexDirection.NE ? HexDirection.NW : (direction - 1);
+	}
+
+	public static HexDirectionFT Previous(this HexDirectionFT direction)
+	{
+		return direction == HexDirectionFT.N ? HexDirectionFT.NW : (direction - 1);
+	}
+
+	public static HexDirection Next(this HexDirection direction)
+	{
+		return direction == HexDirection.NW ? HexDirection.NE : (direction + 1);
+	}
+
+	public static HexDirectionFT Next(this HexDirectionFT direction)
+	{
+		return direction == HexDirectionFT.NW ? HexDirectionFT.N : (direction + 1);
+	}
+
 	public static List<Vector2Int> GetSwingPath(
 		this Vector2Int originCoord,
 		Vector2Int startCoord,

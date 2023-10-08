@@ -2,10 +2,13 @@ using UnityEngine;
 using Unity.Mathematics;
 using System.Collections.Generic;
 using System;
+using BOG;
 
 [SelectionBase]
 public class Unit : MonoBehaviour
 {
+    public bool logDebug;
+
     public static Action<Unit> OnUnitChanged;
 
     [ReadOnly] public string templatePath = "";
@@ -78,7 +81,9 @@ public class Unit : MonoBehaviour
     public Transform pivot;
 
     // Position in offset coordinate space
-    [ReadOnly, System.NonSerialized] public Vector2Int OffsetPos;
+    //[ReadOnly, System.NonSerialized]
+    public Vector2Int OffsetPos; //TODO: why did i set this non-serialized
+    //.. was it breaking? i want it to be drawn.
     public int parity;
 
     public virtual void Start()
@@ -131,6 +136,8 @@ public static class UnitExtensions
 	{
         unit.transform.position = Board.OffsetToWorld(coord);
         unit.OffsetPos = coord;
+        if (unit.logDebug)
+            Debog.logGameflow($"moved unit to : {coord.x},{coord.y}");
 	}
 
     public static void SetFacing(this Transform pivot, HexDirectionFT dir)

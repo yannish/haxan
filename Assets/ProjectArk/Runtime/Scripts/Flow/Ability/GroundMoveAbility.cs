@@ -55,7 +55,7 @@ public class GroundMoveAbility : Ability_OLD
 
 	public override void Peek(Cell_OLD targetCell, CharacterFlowController flow)
 	{
-		var path = Pathfinder.GetPath(flow.character.currCell, targetCell);
+		var path = Pathfinder_OLD.GetPath(flow.character.currCell, targetCell);
 		if (path.IsNullOrEmpty())
 			return;
 
@@ -81,7 +81,7 @@ public class GroundMoveAbility : Ability_OLD
 		if (targetCell == cellObj.currCell || !targetCell.IsPassable || targetCell.IsBound())
 			return null;
 
-		var pathToCell = Pathfinder.GetPath(cellObj.currCell, targetCell);
+		var pathToCell = Pathfinder_OLD.GetPath(cellObj.currCell, targetCell);
 		if (pathToCell == null)
 			return null;
 

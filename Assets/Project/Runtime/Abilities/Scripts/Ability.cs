@@ -45,13 +45,14 @@ public class Ability : ScriptableObject
 
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
 
-    public virtual Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommand>();
+    public virtual List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<IUnitOperable>();
 
-    public virtual Queue<UnitCommandStep> FetchCommandStepChain(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommandStep>();
+    //public virtual Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommand>();
 
-	public virtual List<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit) => new List<UnitCommand>();
+    //public virtual Queue<UnitCommandStep> FetchCommandStepChain(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommandStep>();
 
-    public virtual List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
+	//public virtual List<UnitCommand> FetchCommandChain(Vector2Int targetCoord, Unit unit) => new List<UnitCommand>();
+
     
 
 	public Queue<UnitCommandStep> GetSteps(Vector2Int targetCoord, Unit unit)

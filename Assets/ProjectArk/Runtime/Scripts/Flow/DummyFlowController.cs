@@ -88,7 +88,7 @@ public class DummyFlowController : CellObjFlowController
 			return false;
 
 		Cell_OLD hoveredCell = (e.element.flowController as CellFlowController).cell;
-		var pathedCells = Pathfinder.GetPath(dummyCube.currCell, hoveredCell);
+		var pathedCells = Pathfinder_OLD.GetPath(dummyCube.currCell, hoveredCell);
 
 		if (pathedCells.IsNullOrEmpty())
 			return false;

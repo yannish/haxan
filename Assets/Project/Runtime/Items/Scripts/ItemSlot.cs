@@ -79,7 +79,7 @@ public class ItemSlot : MonoBehaviour
 		this.icon.sprite = item.icon;
 		this.itemName.SetText(item.name.ToUpper());
 
-		Debug.LogWarning("setting text: " + item.name.ToUpper());
+		//Debug.LogWarning("setting text: " + item.name.ToUpper());
 
 		//if (item.config.requiresReadying)
 		//{
@@ -102,7 +102,7 @@ public class ItemSlot : MonoBehaviour
 			ItemUseButton button = useButtons[i];
 			button.gameObject.SetActive(true);
 
-			Debug.LogWarning("slotting: " + i);
+			//Debug.LogWarning("slotting: " + i);
 
 			ItemUseConfig itemUse = item.allUses[i];
 			button.Init(ui, item, itemUse);

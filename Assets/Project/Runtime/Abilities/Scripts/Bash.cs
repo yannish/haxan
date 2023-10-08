@@ -116,9 +116,4 @@ public class Bash : Ability
 
 		return newMarker;
 	}
-
-	public override Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoorrd, Unit unit)
-	{
-		return null;
-	}
 }

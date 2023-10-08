@@ -25,19 +25,7 @@ public static class FSM
 	public const string unpeekPath = "unpeekPath";
 }
 
-public enum CellState
-{
-	hover,
-	select,
-	clickable,
-	clickableHint,
-	pathShown,
-	pathHint,
-	threat
-}
-
 public static class FSMExtension { }
-
 
 public enum FlowState
 {

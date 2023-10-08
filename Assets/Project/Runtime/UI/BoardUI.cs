@@ -37,7 +37,6 @@ public partial class BoardUI : MonoBehaviour
 
     [Header("STATE:")]
     [SerializeField] private Mode mode;
-    [SerializeField] private TurnPlaybackState playbackState;
 	//[SerializeField] private int currTimeStep;
 
     Vector2Int mousePos;
@@ -74,7 +73,7 @@ public partial class BoardUI : MonoBehaviour
     [ReadOnly] public Unit lastSelectedUnit;
 
     bool hoveredWaypointLastFrame;
-    List<Vector2Int> validMoveCoords;
+    List<Vector2Int> validMoveCoords = new List<Vector2Int>();
 
 
     [Header("ABILITIES:")]
@@ -964,10 +963,10 @@ public partial class BoardUI : MonoBehaviour
             if (coord == mouseUpPos)
             {
                 DeselectAbility();
-                var fetchedCommands = selectedAbility.FetchCommandChain(currValidMoveCoord, selectedUnit);
-                //var fetchedCommands = selectedAbility.FetchCommandChain_OLD(currValidMoveCoord, selectedUnit);
-                StartProcessingCommands(fetchedCommands);
-                return;
+				//var fetchedCommands = selectedAbility.FetchCommandChain(currValidMoveCoord, selectedUnit);
+				//var fetchedCommands = selectedAbility.FetchCommandChain_OLD(currValidMoveCoord, selectedUnit);
+				//StartProcessingCommands(fetchedCommands);
+				return;
             }
         }
 

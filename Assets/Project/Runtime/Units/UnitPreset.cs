@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum KnockResistance
+{
+    LIGHT,
+    HEAVY,
+    IMMOVABLE
+}
+
 [CreateAssetMenu(fileName = "UnitPreset", menuName = "Units/UnitPreset")]
 public class UnitPreset : ScriptableObject
 {

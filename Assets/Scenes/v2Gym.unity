@@ -244,7 +244,6 @@ MonoBehaviour:
   againstBoardUI: 0
   drawCellCoords: 0
   mode: 0
-  playbackState: 0
   isPointerInUI: 0
   hoverCellMarker: {fileID: 7442397779138924845, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
   unitButtons: []
@@ -261,509 +260,719 @@ MonoBehaviour:
   pathValidMarker: {fileID: 2003857084417268403, guid: 9865dfd6db68bfc47ad6fab49c41f5e5, type: 3}
   turns:
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   - instigator: {fileID: 0}
-    index: 0
-    totalSteps: 0
+    stepIndex: 0
+    stepCount: 0
   turnSteps:
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
-  - index: 0
-    totalOps: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  - startTime: 0
+    duration: 0
+    opIndex: 0
+    opCount: 0
+  turnCount: 0
+  turnStepCount: 0
+  totalOps: 0
+  totalInstigatingOps: 0
+  playbackState: 0
+  currPlaybackStep: 0
+  currPlaybackTurn: 0
+  currNormalizedTime: 0
+  currPlaybackTime: 0
+  prevPlaybackTime: 0
+  currTimeScale: 0
   logTurnDebug: 1
   currTime: 0
-  currTimeScale: 0
   commandIndex: -1
 --- !u!1 &7511420
 GameObject:
@@ -7113,6 +7322,18 @@ PrefabInstance:
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4090183459112654283, guid: 3db4ba459bc22cd4c8a8026e0ba7a03c, type: 3}
+      propertyPath: logDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4090183459112654283, guid: 3db4ba459bc22cd4c8a8026e0ba7a03c, type: 3}
+      propertyPath: OffsetPos.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4090183459112654283, guid: 3db4ba459bc22cd4c8a8026e0ba7a03c, type: 3}
+      propertyPath: OffsetPos.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4090183459112654283, guid: 3db4ba459bc22cd4c8a8026e0ba7a03c, type: 3}
       propertyPath: Items.Array.data[0]
       value: 
       objectReference: {fileID: 0}
@@ -7456,7 +7677,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4080590e85d2c4d4d99028b872fda464, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dummyUnit: {fileID: 0}
+  quickOpData:
+    unitIndex: 0
+    startTime: 0
+    duration: 0
+  jsonOps: []
+  opTypes: []
+  jsonBlob: 
 --- !u!4 &2044594057
 Transform:
   m_ObjectHideFlags: 0

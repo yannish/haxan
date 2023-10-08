@@ -1,6 +1,8 @@
 {
   "dependencies": {
+    "com.darrentsung.dtcompiletimetracker": "https://github.com/DarrenTsung/DTCompileTimeTracker.git",
     "com.drydock.toolbelt": "https://github.com/yannish/drytools.git",
+    "com.needle.compilation-visualizer": "https://github.com/needle-tools/compilation-visualizer.git",
     "com.unity.ai.navigation": "1.1.1",
     "com.unity.collab-proxy": "1.17.7",
     "com.unity.ide.rider": "3.0.16",
