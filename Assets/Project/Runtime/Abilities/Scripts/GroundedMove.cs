@@ -91,9 +91,6 @@ public class GroundedMove : Ability
 			return null;
 		}
 
-		float turnDuration = 1f;
-		float stepDuration = 1f;
-
 		Cell originCell = Board.TryGetCellAtPos(targetCoord);
 		if (originCell == null)
 			return null;
@@ -107,7 +104,6 @@ public class GroundedMove : Ability
 			return null;
 
 		List<IUnitOperable> ops = new List<IUnitOperable>();
-		//List<UnitOp> ops = new List<UnitOp>();
 
 		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
 

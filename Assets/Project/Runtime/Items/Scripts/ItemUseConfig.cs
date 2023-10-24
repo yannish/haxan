@@ -8,7 +8,6 @@ public class ItemUseConfig : ScriptableObject
 {
     public Sprite icon;
 
-
 	public virtual void ShowPreview(Vector2Int origin, Unit unit, Item item) { }
 
 	public virtual void HidePreview(Vector2Int origin, Unit unit, Item item) { }
@@ -16,7 +15,6 @@ public class ItemUseConfig : ScriptableObject
     public virtual List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit, Item item) => null;
 
 	public virtual Queue<UnitCommandStep> FetchCommandStepChain(Vector2Int targetCoord, Unit unit) => null;
-
 
 
 	public virtual bool IsReadyUse => false;

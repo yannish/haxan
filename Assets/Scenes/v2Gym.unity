@@ -132,10 +132,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1070205}
+  - component: {fileID: 1070206}
   - component: {fileID: 1070204}
   - component: {fileID: 1070203}
   - component: {fileID: 1070202}
-  - component: {fileID: 1070206}
   m_Layer: 5
   m_Name: BoardUI
   m_TagString: Untagged
@@ -241,23 +241,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92706310b13d94af4a56ea22480a97db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  againstBoardUI: 0
-  drawCellCoords: 0
   mode: 0
   isPointerInUI: 0
+  againstBoardUI: 0
   hoverCellMarker: {fileID: 7442397779138924845, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
+  abilityValidMarker: {fileID: 2003857084417268403, guid: 50892034a6429bd438ecfa597a2c1fec, type: 3}
+  pathValidMarker: {fileID: 2003857084417268403, guid: 9865dfd6db68bfc47ad6fab49c41f5e5, type: 3}
   unitButtons: []
   currHoveredUnit: {fileID: 0}
   selectedUnit: {fileID: 0}
   lastSelectedUnit: {fileID: 0}
-  abilityValidMarker: {fileID: 2003857084417268403, guid: 50892034a6429bd438ecfa597a2c1fec, type: 3}
   hoveredValidMove: 0
   abilityButtons: []
   hoveredAbility: {fileID: 0}
   selectedAbility: {fileID: 0}
   itemButtons: []
   hoveredItemUseButton: {fileID: 0}
-  pathValidMarker: {fileID: 2003857084417268403, guid: 9865dfd6db68bfc47ad6fab49c41f5e5, type: 3}
   turns:
   - instigator: {fileID: 0}
     stepIndex: 0
@@ -962,7 +961,7 @@ MonoBehaviour:
     opCount: 0
   turnCount: 0
   turnStepCount: 0
-  totalOps: 0
+  totalCreatedOps: 0
   totalInstigatingOps: 0
   playbackState: 0
   currPlaybackStep: 0

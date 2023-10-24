@@ -47,6 +47,14 @@ public class Ability : ScriptableObject
 
     public virtual List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<IUnitOperable>();
 
+    public virtual OpInterruptType TryInterruptOp(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
+
+	public virtual bool TryReact(IUnitOperable intigatingOp, out List<IUnitOperable> reaction)
+	{
+		reaction = null;
+		return false;
+	}
+
     //public virtual Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommand>();
 
     //public virtual Queue<UnitCommandStep> FetchCommandStepChain(Vector2Int targetCoord, Unit unit) => new Queue<UnitCommandStep>();

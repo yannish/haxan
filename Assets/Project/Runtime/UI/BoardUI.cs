@@ -10,17 +10,6 @@ public partial class BoardUI : MonoBehaviour
     , IPointerEnterHandler
     , IPointerExitHandler
 {
-    [ReadOnly] public bool againstBoardUI;
-    public void OnPointerEnter(PointerEventData eventData)
-    {
-        againstBoardUI = true;
-    }
-
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        againstBoardUI = false;
-    }
-
     enum Mode
     {
         Neutral,
@@ -32,12 +21,11 @@ public partial class BoardUI : MonoBehaviour
         ProcessingCommands
     }
 
-    [Header("DEBUG:")]
-    public bool drawCellCoords;
-
-    [Header("STATE:")]
-    [SerializeField] private Mode mode;
-	//[SerializeField] private int currTimeStep;
+	[SerializeField, ReadOnly] private Mode mode;
+    [ReadOnly] public bool isPointerInUI;
+    [ReadOnly] public bool againstBoardUI;
+    public void OnPointerEnter(PointerEventData eventData) => againstBoardUI = true;
+    public void OnPointerExit(PointerEventData eventData) => againstBoardUI = false;
 
     Vector2Int mousePos;
     Vector2Int mousePosLastFrame;
@@ -52,14 +40,16 @@ public partial class BoardUI : MonoBehaviour
     
     GameObject gizmos;
     Vector2Int hoveredCellPos; // In offset coordinates
-    [ReadOnly] public bool isPointerInUI;
-
     Controls input;
    
 
-    [Header("HOVER CELLS:")]
+    [Header("MARKERS:")]
     public PooledCellVisuals hoverCellMarker;
-    public Dictionary<Vector2Int, PooledCellVisuals> coordToCellMarkerLookup = new Dictionary<Vector2Int, PooledCellVisuals>();
+    public PooledMonoBehaviour abilityValidMarker;
+    public PooledMonoBehaviour pathValidMarker;
+
+    public Dictionary<Vector2Int, PooledCellVisuals> coordToCellMarkerLookup = 
+        new Dictionary<Vector2Int, PooledCellVisuals>();
     Cell currHoveredEmptyCell;
 
 
@@ -77,10 +67,10 @@ public partial class BoardUI : MonoBehaviour
 
 
     [Header("ABILITIES:")]
-    Dictionary<Vector2Int, PooledMonoBehaviour> abilityValidLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
-    public PooledMonoBehaviour abilityValidMarker;
-
-    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPreviewLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
+    Dictionary<Vector2Int, PooledMonoBehaviour> abilityValidLookup = 
+        new Dictionary<Vector2Int, PooledMonoBehaviour>();
+    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPreviewLookup = 
+        new Dictionary<Vector2Int, PooledMonoBehaviour>();
     Vector2Int hoveredValidAbilityCoord;
 
     bool hoveredValidMoveLastFrame;
@@ -111,8 +101,8 @@ public partial class BoardUI : MonoBehaviour
 
 
     [Header("PATHING:")]
-    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPathableCellLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
-    public PooledMonoBehaviour pathValidMarker;
+    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPathableCellLookup = 
+        new Dictionary<Vector2Int, PooledMonoBehaviour>();
 
 
 
@@ -1898,14 +1888,6 @@ public partial class BoardUI : MonoBehaviour
                 playbackState = TurnPlaybackState.PAUSED;
                 currCommandStepHistory = null;
 			}
-		}
-	}
-
-	private void OnDrawGizmos()
-	{
-		if (drawCellCoords)
-		{
-            //foreach()
 		}
 	}
 

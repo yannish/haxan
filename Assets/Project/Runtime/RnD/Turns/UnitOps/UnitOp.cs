@@ -10,7 +10,7 @@ using UnityEditor;
 /*	Do unitOps need to worry about startTime / duration / etc, all details around playback.
  *	If they don't, something does. Another array of somethings. OpDatas.
  *	
- *	Let's say yet for now.
+ *	Let's say yes for now.
  */
 
 [Serializable]

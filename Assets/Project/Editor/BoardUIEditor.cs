@@ -25,15 +25,11 @@ public class BoardUIEditor : Editor
         if (boardUI == null)
             return;
 
-        DrawUnitOps();
-
-        DrawCellMarkerLookup();
-
-        DrawCommandHistory();
-        
-        EditorGUILayout.Space(20);
-
+        //DrawCellMarkerLookup();
+        //DrawCommandHistory();
         DrawDefaultInspector();
+        EditorGUILayout.Space(20);
+        DrawUnitOps();
 	}
 
 	private void DrawUnitOps()
@@ -43,17 +39,47 @@ public class BoardUIEditor : Editor
 
         using (new GUILayout.VerticalScope(EditorStyles.helpBox))
         {
-            EditorGUILayout.LabelField("UNIT OPS:", EditorStyles.boldLabel);
-            showUnitOps = EditorGUILayout.Foldout(showUnitOps, "show", true);
+            using (new GUILayout.HorizontalScope())
+            {
+                EditorGUILayout.LabelField("TURNS:", EditorStyles.boldLabel);
+				GUILayout.FlexibleSpace();
+				if (GUILayout.Button("SHOW"))
+                {
+                    showUnitOps = !showUnitOps;
+                    Debug.LogWarning($"Toggled show unit ops: {showUnitOps}");
+                }
+            };
+   
             if (!showUnitOps)
                 return;
 
-            for (int i = 0; i < boardUI.totalOps; i++)
-	        {
-                if (boardUI.allOps[i] == null)
-                    continue;
-                boardUI.allOps[i].DrawInspectorContent();
-	        }
+			for (int j = 0; j < boardUI.turnCount; j++)
+			{
+                Turn turn = boardUI.turns[j];
+
+                using(new GUILayout.VerticalScope(EditorStyles.helpBox))
+				{
+					EditorGUILayout.LabelField($"... AT INDEX: {j}", EditorStyles.boldLabel);
+					for (int k = turn.stepIndex; k < turn.stepIndex + turn.stepCount; k++)
+                    {
+                        TurnStep turnStep = boardUI.turnSteps[k];
+                        for (int i = turnStep.opIndex; i < turnStep.opIndex + turnStep.opCount; i++)
+                        {
+                            IUnitOperable op = boardUI.allOps[i];
+                            if (op == null)
+                                continue;
+                            op.DrawInspectorContent();
+                        }
+                    }
+                }
+			}
+
+         //   for (int i = 0; i < boardUI.totalOps; i++)
+	        //{
+         //       if (boardUI.allOps[i] == null)
+         //           continue;
+         //       boardUI.allOps[i].DrawInspectorContent();
+	        //}
         }
     }
     
@@ -80,42 +106,42 @@ public class BoardUIEditor : Editor
         }
 	}
 
-    void DrawCommandHistory()
-	{
-        GUI.enabled = false;
+ //   void DrawCommandHistory()
+	//{
+ //       GUI.enabled = false;
 
-        using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-        {
-            EditorGUILayout.LabelField("COMMAND HISTORY: ", EditorStyles.boldLabel);
-            showCommands = EditorGUILayout.Foldout(showCommands, "show", true);
-            if (showCommands)
-            {
-                if (GUILayout.Button("UNDO"))
-                    boardUI.Undo();
-                //DrawCommandHistory();
-            }
-        }
+ //       using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+ //       {
+ //           EditorGUILayout.LabelField("COMMAND HISTORY: ", EditorStyles.boldLabel);
+ //           showCommands = EditorGUILayout.Foldout(showCommands, "show", true);
+ //           if (showCommands)
+ //           {
+ //               if (GUILayout.Button("UNDO"))
+ //                   boardUI.Undo();
+ //               //DrawCommandHistory();
+ //           }
+ //       }
 
 
-        if (!boardUI.turnHistory.IsNullOrEmpty())
-		{
-            foreach (var turn in boardUI.turnHistory)
-            {
-                //EditorGUILayout.BeginHorizontal();
-                EditorGUILayout.ObjectField("instigator: ", turn.instigator, typeof(Unit), true);
-                EditorGUI.indentLevel++;
-                foreach(var command in turn.commandHistory)
-				{
-                    command.DrawInspectorContent();
-                    EditorGUILayout.Space(5);
-				}
-                EditorGUI.indentLevel--;
-            }
-        }
-        else
-        {
-            EditorGUILayout.LabelField("... no turns to display!");
-        }
-        GUI.enabled = true;
-	}
+ //       if (!boardUI.turnHistory.IsNullOrEmpty())
+	//	{
+ //           foreach (var turn in boardUI.turnHistory)
+ //           {
+ //               //EditorGUILayout.BeginHorizontal();
+ //               EditorGUILayout.ObjectField("instigator: ", turn.instigator, typeof(Unit), true);
+ //               EditorGUI.indentLevel++;
+ //               foreach(var command in turn.commandHistory)
+	//			{
+ //                   command.DrawInspectorContent();
+ //                   EditorGUILayout.Space(5);
+	//			}
+ //               EditorGUI.indentLevel--;
+ //           }
+ //       }
+ //       else
+ //       {
+ //           EditorGUILayout.LabelField("... no turns to display!");
+ //       }
+ //       GUI.enabled = true;
+	//}
 }

@@ -21,6 +21,9 @@ public struct Turn
 
     public int stepIndex;
     public int stepCount;
+
+    //.. mark this when you build the turn. then, all steps / op start times are relative...?
+    public float startTime; 
 }
 
 
@@ -50,12 +53,13 @@ public partial class BoardUI : MonoBehaviour
     public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
 
     public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
-    public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
+    public List<IUnitOperable> currInstigatingOps;
+    //public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
 
     [ReadOnly] public int turnCount;
-    [ReadOnly] public int turnStepCount;
+    [ReadOnly] public int totalCreatedTurnSteps;
 
-    [ReadOnly] public int totalOps;
+    [ReadOnly] public int totalCreatedOps;
     [ReadOnly] public int totalInstigatingOps;
 
     [Header("PLAYBACK:")]
@@ -65,13 +69,13 @@ public partial class BoardUI : MonoBehaviour
     [ReadOnly] public int currPlaybackTurn;
 
     [ReadOnly] public float currNormalizedTime; //... reset to 0 as each TimeStep is processed.
+    [ReadOnly] public float lastTurnStartTime;
     [ReadOnly] public float currPlaybackTime;   //... total running-time for the Turn
     [ReadOnly] public float prevPlaybackTime;
     [ReadOnly] public float currTimeScale = 1f;
 
 
     //... 
-
     void StartProcessingTurn(List<IUnitOperable> instigatingOps)
     {
         if (logTurnDebug)
@@ -86,11 +90,13 @@ public partial class BoardUI : MonoBehaviour
         //currNormalizedTime = 0f;
         currTimeScale = 1f;
 
-        totalInstigatingOps = instigatingOps.Count;
-		for (int i = 0; i < instigatingOps.Count; i++)
-		{
-            currInstigatingOps[i] = instigatingOps[i];
-		}
+        this.currInstigatingOps = instigatingOps;
+
+  //      totalInstigatingOps = instigatingOps.Count;
+		//for (int i = 0; i < instigatingOps.Count; i++)
+		//{
+  //          currInstigatingOps[i] = instigatingOps[i];
+		//}
 
         ProcessReactions();
     }
@@ -102,28 +108,146 @@ public partial class BoardUI : MonoBehaviour
     /// </summary>
     void ProcessReactions()
     {
-        int opIndex = totalOps;
-		for (int i = totalOps; i < opIndex + totalInstigatingOps; i++)
+		//... this would have to catch implicit interruptions, like causing death :
+        List<IUnitOperable> CheckForInterrupt(List<IUnitOperable> inputOps)
 		{
-            allOps[i] = currInstigatingOps[i];
-            totalOps++;
+            List<IUnitOperable> filteredOps = new List<IUnitOperable>();
+            foreach(var op in inputOps)
+			{
+                foreach(var unit in GameVariables.activeUnits.Items)
+				{
+                    foreach(var ability in unit.Abilities)
+					{
+                        var interruption = ability.TryInterruptOp(currInstigator, op);
+                        if (interruption == OpInterruptType.RETALIATE)
+                        {
+                            filteredOps.Add(op);
+                            return filteredOps;
+                        }
 
-            TurnStep newTurnStep = new TurnStep()
-            {
-                opIndex = i,
-                opCount = 1
-            };
+                        if (interruption == OpInterruptType.INTERDICT)
+                            return filteredOps;
+                    }
+				}
+                
+				//... if we get here, the op was uninterrupted:
+                filteredOps.Add(op);
+			}
 
-            turnSteps[turnStepCount] = newTurnStep;
-            turnStepCount++;
+            return filteredOps;
 		}
 
-        Turn newTurn = new Turn()
-        {
-            instigator = currInstigator,
-            stepCount = totalInstigatingOps
-        };
-        turns[turnCount] = newTurn;
+        var interruptCheckedOps = CheckForInterrupt(currInstigatingOps);
+
+
+		List<IUnitOperable> ProcessOpForReactions(IUnitOperable op)
+		{
+			//... every instigating op will create a list, containing either itself + reactions, or simply itself:
+			List<IUnitOperable> turnStepOps = new List<IUnitOperable>();
+
+			//... currently only garnering ONE batch of reactions per op...
+			//... otherwise they'd need more processing.
+			bool foundReaction = false;
+			foreach(var unit in GameVariables.activeUnits.Items)
+			{
+				if (foundReaction)
+					break;
+
+				foreach (var ability in unit.Abilities)
+				{
+					if (foundReaction)
+						break;
+
+					if (ability.TryReact(op, out var reactions))
+					{
+						reactions.AddRange(reactions);
+						foundReaction = true;
+						continue;
+					}
+				}
+			}
+
+			if (!foundReaction)
+				turnStepOps.Add(op);
+
+			return turnStepOps;
+		}
+
+		List<List<IUnitOperable>> allGeneratedOps = new List<List<IUnitOperable>>();
+		for (int i = 0; i < interruptCheckedOps.Count; i++)
+		{
+			var generatedOps = ProcessOpForReactions(interruptCheckedOps[i]);
+			allGeneratedOps.Add(generatedOps);
+		}
+
+		int indexToCreateStepsAt = totalCreatedTurnSteps;
+		int numOpsCreatedThisTurn = 0; //... we track this for an index into the array of all Ops
+		int numStepsCreatedThisTurn = 0; 
+
+		//... now write back all the List of generated ops over to the arrays:
+		for (int i = 0; i < allGeneratedOps.Count; i++)
+		{
+			//... each list of ops converts to a new TurnStep:
+			List<IUnitOperable> generatedOps = allGeneratedOps[i];
+			TurnStep newTurnStep = new TurnStep()
+			{
+				opIndex = totalCreatedOps,
+				opCount = generatedOps.Count
+			};
+
+			int numOpsCreatedThisStep = 0;
+			for (int j = 0; j < generatedOps.Count; j++)
+			{
+				allOps[totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
+				numOpsCreatedThisStep++;
+				numOpsCreatedThisTurn++;
+			}
+
+			totalCreatedOps += numOpsCreatedThisTurn;
+
+			turnSteps[totalCreatedTurnSteps] = newTurnStep;
+			
+			numStepsCreatedThisTurn++;
+			totalCreatedTurnSteps++;
+		}
+
+		Turn newTurn = new Turn()
+		{
+			instigator = currInstigator,
+			stepIndex = indexToCreateStepsAt,
+			stepCount = numStepsCreatedThisTurn,
+			startTime = currPlaybackTime
+		};
+
+		turns[turnCount] = newTurn;
+		turnCount++;
+
+		//      //int opIndex = totalCreatedOps;
+		//for (int i = 0; i < totalInstigatingOps; i++)
+		//      {
+		//          //.. we just add this op to the list of all ops:
+		//          allOps[totalCreatedOps + i] = currInstigatingOps[i];
+		//          TurnStep newTurnStep = new TurnStep()
+		//          {
+		//              opIndex = i + totalCreatedOps,
+		//              opCount = 1
+		//          };
+
+		//          totalCreatedOps++;
+
+		//          turnSteps[turnStepCount] = newTurnStep;
+		//          turnStepCount++;
+		//}
+
+		//      Turn newTurn = new Turn()
+		//      {
+		//          instigator = currInstigator,
+		//          stepCount = totalInstigatingOps,
+		//          //startTime = 
+		//      };
+
+		//turns[turnCount] = newTurn;
+  //      turnCount++;
     }
 
 	void HandleCommandProcessing()
@@ -155,57 +279,94 @@ public partial class BoardUI : MonoBehaviour
     public void HandleTurnForward()
 	{
         Turn currTurn = turns[currPlaybackTurn];
+		/*. every tick, we run through every TURN STEP
+		 * ... even ones that are out of range
+		 * ... so we're always getting to those "end" indices after running a full loop
+		 *.... and so on final run through the loop, allOpsFullyTicked is reset, but never flipped false 
+		 *.... for that out-of-range op
+		 *.... 
+		 *.... why is this currently working for the FIRST turn though...
+		*/
+
+		bool allOpsFullyTicked = true;
+
+		//... looping through all turnSteps:
 		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
 		{
-            TurnStep currTurnStep = turnSteps[i];
+			TurnStep currTurnStep = turnSteps[i];
+
+			//NOTE: why is it turn & move playing together in same frame & failing...
+
+			//... looping through all ops in that step:
 			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
 			{
-                bool allOpsFullyTicked = true;
+				IUnitOperable op = allOps[j];
+				OpData opData = op.data;
 
-                IUnitOperable op = allOps[j];
-                if (currPlaybackTime < op.data.startTime)
-                    continue;
+				float effectiveStartTime = opData.startTime + currTurn.startTime;
+				float effectiveEndTime = opData.endTime + currTurn.startTime;
+
+				if (prevPlaybackTime < effectiveEndTime)
+					allOpsFullyTicked = false;
+
+				if (currPlaybackTime < effectiveStartTime)
+				//if (currPlaybackTime < op.data.startTime)
+					continue;
 
                 Unit affectedUnit = op.data.unitIndex.ToUnit();
 
+				// TODO: offet opDataStartTime by the startTime of the turn you're looking at.
+
                 //... BEGIN TICK:
-                if (currPlaybackTime >= op.data.startTime && prevPlaybackTime < op.data.startTime)
+                if (currPlaybackTime >= effectiveStartTime && prevPlaybackTime < effectiveStartTime)
 				{
                 //... OnBeginTick();    
 				}
 
-                //.. TICK:
-                if(currPlaybackTime >= op.data.startTime && currPlaybackTime < op.data.endTime)
+				Debug.Log(
+					$"ticking op: {j}, " +
+					$"playbackTime: {currPlaybackTime}, " +
+					$"startTime: {effectiveStartTime}" +
+					$"endTime: {effectiveEndTime}"
+					);
+
+				//.. TICK:
+				if (currPlaybackTime >= effectiveStartTime && currPlaybackTime < effectiveEndTime)
 				{
-                    allOpsFullyTicked = false;
-                    var normalizedTime = Mathf.Clamp01(currPlaybackTime - op.data.startTime) / op.data.duration;
+					Debug.LogWarning($"op {j} still running.");
+                    //allOpsFullyTicked = false;
+                    var normalizedTime = Mathf.Clamp01((currPlaybackTime - effectiveStartTime) / op.data.duration);
                     op.Tick(affectedUnit, normalizedTime);
 				}
 
-                //... COMPLETE TICK();
-                if (currPlaybackTime > op.data.endTime && prevPlaybackTime < op.data.endTime)
+				bool opCompletedThisFrame = currPlaybackTime > effectiveEndTime && prevPlaybackTime < effectiveEndTime;
+				//... COMPLETE TICK();
+				if (opCompletedThisFrame)
 				{
                     op.Execute(affectedUnit);
 				}
 
-                //... if we're at the final op of the final step:
-                if(
-                    allOpsFullyTicked
-                    && i == (currTurn.stepIndex + currTurn.stepCount - 1)
-                    && j == (currTurnStep.opIndex + currTurnStep.opCount - 1)
-                    )
-				{
-                    Debug.Log("Played through all turnSteps.");
 
-                    playbackState = TurnPlaybackState.PAUSED;
-                    SelectUnit(lastSelectedUnit);
-                    currInstigator = null;
-                    currPlaybackTurn++;
-                }
 			}
 		}
 
-        prevPlaybackTime = currPlaybackTime;
+		//... if we're at the final op of the final step:
+		if (
+			//opCompletedThisFrame
+			allOpsFullyTicked
+			//&& i == (currTurn.stepIndex + currTurn.stepCount - 1)
+			//&& j == (currTurnStep.opIndex + currTurnStep.opCount - 1)
+			)
+		{
+			Debug.Log("Played through all turnSteps.");
+
+			playbackState = TurnPlaybackState.PAUSED;
+			SelectUnit(lastSelectedUnit);
+			currInstigator = null;
+			currPlaybackTurn++;
+		}
+
+		prevPlaybackTime = currPlaybackTime;
         currPlaybackTime += Time.deltaTime * currTimeScale;
     }
 

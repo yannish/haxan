@@ -13,6 +13,13 @@ using UnityEngine.UI;
  * 3. inject the clips you need from the gear to the player.
 */
 
+public enum OpInterruptType
+{
+	PASS,		//... no response
+	RETALIATE,	//... respond after allowing op to execute
+	INTERDICT	//... respond to prevent op from executing
+}
+
 [SerializeField]
 public class MaterialCache
 {
@@ -68,6 +75,7 @@ public class Item : MonoBehaviour
 
 	public virtual UnitCommand RespondToCommand(Unit unit, UnitCommand command) => null;
 
+	public virtual OpInterruptType TryInterruptOp(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
 
 	public List<MaterialCache> materialCaches = new List<MaterialCache>();
 	public Dictionary<Renderer, Material> rendToMatLookup;
