@@ -79,7 +79,7 @@ public class Ability : ScriptableObject
         if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
             return null;
 
-        Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
+        Vector2Int[] path = Board.FindPath_NEW(unit.OffsetPos, targetCoord);
         if (path.Length == 0)
             return null;
 

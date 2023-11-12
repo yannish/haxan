@@ -115,6 +115,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1672413957465144265}
   - component: {fileID: 1672413957465144264}
+  - component: {fileID: 6941017948135528674}
   m_Layer: 0
   m_Name: GridProbe
   m_TagString: Untagged
@@ -150,28 +151,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb38be103405ef44dab2f6ad182dea24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  templatePath: Prefabs/GridProbe
-  type: 0
-  state:
-    templatePath: 
-    type: 0
-    offsetPos: {x: 0, y: 0}
-    facing: 0
-  MovementAbility: {fileID: 0}
-  Abilities: []
-  startingInventory: []
-  inventory: []
-  Facing: 0
-  currMove: -1
-  currReactions: -1
-  groundedMovementRange: 0
-  preset: {fileID: 0}
-  pivot: {fileID: 1672413957590543916}
-  parity: 0
   radius: 0
   min: 0
   direction: 0
   cellGrabOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &6941017948135528674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1672413957465144267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4611b8b7199a0848b092b1d86da9873, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Pivot: {fileID: 1672413957590543916}
+  Facing: 0
 --- !u!1 &1672413957590543919
 GameObject:
   m_ObjectHideFlags: 0

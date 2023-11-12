@@ -2,8 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
-public class GridProbeV2 : Unit
+public class GridProbeV2 : MonoBehaviour
 {
 	GameObject hoverPrefab;
 	private void Awake()
@@ -19,6 +20,15 @@ public class GridProbeV2 : Unit
 	//[ReadOnly] public 
 	List<GameObject> grabMarkers = new List<GameObject>();
 
+	[Header("PATHING:")]
+	public Transform pathingDummy;
+
+	public EditorButton grabValidBtn = new EditorButton("GrabValidNeighbours", true);
+	public void GrabValidNeighbours()
+	{
+		Debug.LogWarning("GRABBING VALID NEIHGBOURS");	
+		GrabCellsAt(this.transform.position.ToOffset().GetValidNeighbouringCoords());
+	}
 
 	public EditorButton grabRadiusBtn = new EditorButton("GrabRadius", true);
 	public void GrabRadius()
@@ -99,5 +109,39 @@ public class GridProbeV2 : Unit
 		}
 
 		grabMarkers.Clear();
+	}
+
+
+	private void Start()
+	{
+		if(pathingDummy != null)
+		{
+			currDummyOffsetPos = pathingDummy.position.ToOffset();
+			prevDummyOffsetPos = currDummyOffsetPos;
+		}
+	}
+
+	public Vector2Int currDummyOffsetPos;
+	public Vector2Int prevDummyOffsetPos;
+	public void Update()
+	{
+		if (pathingDummy == null)
+			return;
+
+		prevDummyOffsetPos = currDummyOffsetPos;
+		currDummyOffsetPos = pathingDummy.position.ToOffset();
+		if (currDummyOffsetPos == prevDummyOffsetPos)
+			return;
+
+		var newPath = Board.FindPath_NEW(this.transform.position.ToOffset(), currDummyOffsetPos);
+		if (newPath.IsNullOrEmpty())
+		{
+			Debug.LogWarning("NO PATH:");
+			return;
+		}
+
+		Debug.LogWarning($"Path length: {newPath.Count()}");
+		ReleaseGrabbedCells();
+		GrabCellsAt(newPath.ToList());
 	}
 }

@@ -32,6 +32,7 @@ public class Cell : MonoBehaviour
         }
 
 		Vector2Int offsetCoord = Board.WorldToOffset(transform.position);
+
         //... TODO: can't have this call into editor code here... make a proper drawer.
 		transform.position.DrawString($"{offsetCoord.x}, {offsetCoord.y}", Color.green, -40f);
 	}

@@ -51,9 +51,9 @@ public partial class BoardUI : MonoBehaviour
 
     public Turn[] turns = new Turn[MAX_TURNS];
     public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
-
     public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
     public List<IUnitOperable> currInstigatingOps;
+
     //public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
 
     [ReadOnly] public int turnCount;
@@ -73,6 +73,9 @@ public partial class BoardUI : MonoBehaviour
     [ReadOnly] public float currPlaybackTime;   //... total running-time for the Turn
     [ReadOnly] public float prevPlaybackTime;
     [ReadOnly] public float currTimeScale = 1f;
+
+	[Header("DUMMY:")]
+	public int numDummyOps;
 
 
     //... 

@@ -46,7 +46,6 @@ public static class Pathfinder_OLD
 				path.Add(destination);
 
 				var backNode = previousNode[inspectedNode];
-
 				while (backNode != source && backNode != null)
 				{
 					path.Add(backNode);
@@ -73,7 +72,6 @@ public static class Pathfinder_OLD
 
 				if (exploredCells.Contains(neighbour) || nodesToCheck.Contains(neighbour))
 					continue;
-
 
 				nodesToCheck.Enqueue(neighbour);
 

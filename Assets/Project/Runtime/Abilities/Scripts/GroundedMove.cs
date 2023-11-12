@@ -25,7 +25,7 @@ public class GroundedMove : Ability
 
 	public override List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int destination, Unit unit)
 	{
-		Vector2Int[] path = Board.FindPath(origin, destination);
+		Vector2Int[] path = Board.FindPath_NEW(origin, destination);
 
 		//Debug.LogWarning("Path length: " + path.Length);
 
@@ -99,7 +99,7 @@ public class GroundedMove : Ability
 		if (foundUnit != null && foundUnit.preset != null && !foundUnit.preset.isPassable)
 			return null;
 
-		Vector2Int[] path = Board.FindPath(unit.OffsetPos, targetCoord);
+		Vector2Int[] path = Board.FindPath_NEW(unit.OffsetPos, targetCoord);
 		if (path.Length == 0)
 			return null;
 

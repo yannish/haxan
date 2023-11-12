@@ -22,7 +22,7 @@ public class GroundedMoveWithBash : Ability
 
 	public override List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int destination, Unit unit)
 	{
-		Vector2Int[] path = Board.FindPath(origin, destination);
+		Vector2Int[] path = Board.FindPath_NEW(origin, destination);
 
 		for (int i = 0; i < path.Length; i++)
 		{

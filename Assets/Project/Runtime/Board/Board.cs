@@ -2,6 +2,70 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
 using System;
+using System.Linq;
+
+public static class BoardMetrics
+{
+	public static Vector2Int ToOffset(this Vector3 worldPos)
+	{
+		float3 cartesian = new float3(worldPos.x, worldPos.z, 1f);
+		float2 axialFrac = math.mul(Board.CartesianToAxial, cartesian).xy;
+		Vector2Int axial = new Vector2Int(Mathf.RoundToInt(axialFrac.x), Mathf.RoundToInt(axialFrac.y));
+		return AxialToOffset(axial);
+	}
+
+	public static Vector2Int ToAxial(this Vector2Int offset)
+	{
+		return new Vector2Int(
+			offset.x,
+			offset.y - (offset.x - (offset.x & 1)) / 2
+		);
+	}
+
+	public static Vector3 ToWorld(this Vector2Int offsetPos)
+	{
+		Vector2Int axial = offsetPos.ToAxial();
+		float2 cartesian = math.mul(
+			Board.AxialToCartesian,
+			new float3(axial.x, axial.y, 1f)
+		).xy;
+		return new Vector3(cartesian.x, 0f, cartesian.y);
+	}
+
+	public static readonly float3x3 CartesianToAxial = math.mul(
+		new float3x3(
+			2f / (3f * Cell.OuterRadius), 0f, 0f,
+			-1f / (3f * Cell.OuterRadius), Mathf.Sqrt(3f) / (3f * Cell.OuterRadius), 0f,
+			0f, 0f, 1f
+		),
+			new float3x3(
+				1f, 0f, -Cell.OuterRadius,
+				0f, 1f, -Cell.InnerRadius,
+				0f, 0f, 1f
+			)
+		);
+
+	public static readonly float3x3 AxialToCartesian = math.mul(
+		new float3x3(
+			1f, 0f, Cell.OuterRadius,
+			0f, 1f, Cell.InnerRadius,
+			0f, 0f, 1f
+		),
+		new float3x3(
+			1.5f * Cell.OuterRadius, 0f, 0f,
+			Cell.InnerRadius, Cell.InnerRadius * 2f, 0f,
+			0f, 0f, 1f
+		)
+	);
+
+	public static Vector2Int AxialToOffset(Vector2Int axial)
+	{
+		return new Vector2Int(
+			axial.x,
+			axial.y + (axial.x - (axial.x & 1)) / 2
+		);
+	}
+}
 
 //[InitializeOnLoad]
 public class Board
@@ -416,6 +480,91 @@ public class Board
         return result.ToArray();
     }
 
+
+	//private static List<Vector2Int> foundPath = new List<Vector2Int>();
+	private static List<Cell> exploredCells = new List<Cell>();
+	
+	private static Dictionary<Cell, float> shortestDistToSource = new Dictionary<Cell, float>();
+	
+	private static Dictionary<Cell, Cell> prevNodeLookup = new Dictionary<Cell, Cell>();
+
+	public static Vector2Int[] FindPath_NEW(Vector2Int from, Vector2Int to, List<Vector2Int> restrictedCoords = null)
+	{
+		if (!TryGetCellAtPos(from, out Cell fromCell) || !TryGetCellAtPos(to, out Cell toCell))
+			return null;
+
+		Queue<Cell> nodesToCheck = new Queue<Cell>();
+		nodesToCheck.Enqueue(fromCell);
+
+		exploredCells.Clear();
+		//foundPath.Clear();
+		shortestDistToSource.Clear();
+		prevNodeLookup.Clear();
+
+		foreach(var kvp in indexToCellLookup)
+		{
+			shortestDistToSource.Add(kvp.Value, Mathf.Infinity);
+			prevNodeLookup.Add(kvp.Value, null);
+		}
+
+		shortestDistToSource[fromCell] = 0f;
+
+		while(nodesToCheck.Count > 0)
+		{
+			var inspectedNode = nodesToCheck.Dequeue();
+			exploredCells.Add(inspectedNode);
+
+			if(inspectedNode == toCell)
+			{
+				var path = new List<Cell>();
+				path.Add(toCell);
+				
+				var backNode = prevNodeLookup[inspectedNode];
+				while(backNode != fromCell && backNode != null)
+				{
+					path.Add(backNode);
+					backNode = prevNodeLookup[backNode];
+				}
+
+				path.Reverse();
+				return path.Select(t => WorldToOffset(t.transform.position)).ToArray();
+			}
+
+			var validNeighbours = inspectedNode.transform.position.ToOffset().GetValidNeighbouringCells();
+
+			foreach (var neighbour in validNeighbours)
+			{
+				//if (
+				//	!restrictedCoords.IsNullOrEmpty() 
+				//	&& restrictedCoords.Contains(neighbour.transform.position.ToOffset())
+				//	)
+				//	continue;
+
+				if (exploredCells.Contains(neighbour) || nodesToCheck.Contains(neighbour))
+					continue;
+
+				nodesToCheck.Enqueue(neighbour);
+
+				var tentativeDist = shortestDistToSource[inspectedNode];
+				tentativeDist += inspectedNode.transform.position.To(neighbour.transform.position).magnitude;
+
+				if(
+					shortestDistToSource.ContainsKey(neighbour) 
+					&& tentativeDist < shortestDistToSource[neighbour]
+					)
+				{
+					var inspectedNodeToNeighbourDist = inspectedNode.transform.position.To(neighbour.transform.position).magnitude;
+					shortestDistToSource[neighbour] = shortestDistToSource[inspectedNode] + inspectedNodeToNeighbourDist;
+					prevNodeLookup[neighbour] = inspectedNode;
+				}
+
+				prevNodeLookup[neighbour] = inspectedNode;
+			}
+		}
+
+		return null;
+	}
+
     // Inputs and outputs are in offset coordinates
     public static Vector2Int[] FindPath(Vector2Int src, Vector2Int dst)
     {
@@ -687,9 +836,53 @@ public static class BoardExtensions
             //neighbours.Add(neighbour);
         }
 
-
         return neighbs;
     }
+
+	public static List<Vector2Int> GetValidNeighbouringCoords(this Vector2Int coord)
+	{
+		var neighbours = coord.GetNeighbouringCoords();
+		var validNeighbours = new List<Vector2Int>();
+		foreach(var neighbour in neighbours)
+		{
+			if (neighbour == null)
+				continue;
+
+			if (neighbour.TryGetUnitAtCoord(out var foundUnit))
+			{
+				if (!foundUnit.preset.isPassable)
+					continue;
+			}
+
+			validNeighbours.Add((Vector2Int)neighbour);
+		}
+
+		return validNeighbours;
+	}
+
+	public static List<Cell> GetValidNeighbouringCells(this Vector2Int coord)
+	{
+		var neighbours = coord.GetNeighbouringCoords();
+		var validNeighbours = new List<Cell>();
+		foreach (var neighbour in neighbours)
+		{
+			if (neighbour == null)
+				continue;
+
+			if (Board.TryGetCellAtPos(neighbour.Value, out Cell foundCell))
+			{
+				if(neighbour.TryGetUnitAtCoord(out var foundUnit))
+				{
+					if (!foundUnit.preset.isPassable)
+						continue;
+				}
+
+				validNeighbours.Add(foundCell);
+			}
+		}
+
+		return validNeighbours;
+	}
 
     public static HexDirectionFT ToNeighbour(this Vector2Int from, Vector2Int to)
 	{
@@ -815,6 +1008,19 @@ public static class BoardExtensions
 
         return false;
     }
+
+	public static bool TryGetUnitAtCoord(this Vector2Int? coord, out Unit foundUnit)
+	{
+		if (coord == null)
+		{
+			foundUnit = null;
+			return false;
+		}
+
+		Vector2Int nonNullableCoord = (Vector2Int)coord; 
+
+		return nonNullableCoord.TryGetUnitAtCoord(out foundUnit);
+	}
 
     public static bool TryGetUnitAtCoord(this Vector2Int coord, out Unit foundUnit)
 	{
