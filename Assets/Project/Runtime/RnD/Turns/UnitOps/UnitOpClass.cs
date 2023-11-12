@@ -78,9 +78,9 @@ public interface IUnitOperable
 //... Probably. 
 
 [Serializable]
-public abstract class UnitOp
+public abstract class UnitOpClass
 {
-	public UnitOp(Unit unit)
+	public UnitOpClass(Unit unit)
 	{
 		this.unit = unit;
 		this.unitIndex = unit.ToIndex();

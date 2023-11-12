@@ -12,7 +12,15 @@ public class BoardState
 [System.Serializable]
 public class BoardHistory
 {
-    public List<GroundMoveOp> ops = new List<GroundMoveOp>();
+	public const int MAX_OPS = 100;
+	public const int MAX_INSTIGATING_OPS = 100;
+	public const int MAX_TURNS = 100;
+	public const int MAX_TURN_STEPS = 100;
+
+	public Turn[] turns = new Turn[MAX_TURNS];
+	public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
+	public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
+
 }
 
 

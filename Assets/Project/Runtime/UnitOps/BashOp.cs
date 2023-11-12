@@ -8,7 +8,7 @@ using UnityEditor;
 #endif
 
 [Serializable]
-public class BashOp : UnitOp
+public class BashOp : UnitOpClass
 {
 	public Unit hitter;
 	public Unit target;
