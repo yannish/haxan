@@ -83,6 +83,72 @@ public class GroundedMove : Ability
 		pathQuads.Clear();
 	}
 
+	public override List<UnitOp> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit)
+	{
+		if (targetCoord == unit.OffsetPos)
+			return null;
+
+		Cell originCell = Board.TryGetCellAtPos(targetCoord);
+		if (originCell == null)
+			return null;
+
+		Unit foundUnit = Board.GetUnitAtPos(targetCoord);
+		if (foundUnit != null && foundUnit.preset && !foundUnit.preset.isPassable)
+			return null;
+
+		Vector2Int[] path = Board.FindPath_NEW(unit.OffsetPos, targetCoord);
+		if (path.Length == 0)
+			return null;
+
+		List<UnitOp> ops = new List<UnitOp>();
+
+		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+
+		float totalDuration = 0f;
+
+		if(unit.Facing != toFirstCellDir)
+		{
+			UnitOp newTurnOp = UnitOp.TurnOp(
+				unit: unit,
+				fromDir: unit.Facing,
+				toDir: toFirstCellDir,
+				startTime: 0f,
+				duration: turnDuration
+				);
+
+			ops.Add(newTurnOp);
+			totalDuration += turnDuration;
+			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+			Debog.logGameflow(firstTurnLog);
+		}
+
+		HexDirectionFT lastFacingDir = toFirstCellDir;
+		for (int i = 0; i < path.Length; i++)
+		{
+			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
+			Vector2Int toCell = path[i];
+			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
+			if(lastFacingDir != toNextCellDir)
+			{
+				UnitOp newTurnOp = UnitOp.TurnOp(
+				unit: unit,
+				fromDir: lastFacingDir,
+				toDir: toNextCellDir,
+				startTime: 0f,
+				duration: turnDuration
+				);
+
+				ops.Add(newTurnOp);
+				totalDuration += turnDuration;
+				lastFacingDir = toFirstCellDir;
+				string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+				Debog.logGameflow(firstTurnLog);
+			}
+		}
+
+		return ops;
+	}
+
 	public override List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit)
 	{
 		if (targetCoord == unit.OffsetPos)

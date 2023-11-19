@@ -45,11 +45,21 @@ public class Ability : ScriptableObject
 
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
 
-    public virtual List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<IUnitOperable>();
+    public virtual List<UnitOp> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
 
-    public virtual OpInterruptType TryInterruptOp(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
+	public virtual List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<IUnitOperable>();
+
+	public virtual OpInterruptType TryInterruptOp(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
+
+	public virtual OpInterruptType TryInterruptOp_NEW(Unit unit, UnitOp op) => OpInterruptType.PASS;
 
 	public virtual bool TryReact(IUnitOperable intigatingOp, out List<IUnitOperable> reaction)
+	{
+		reaction = null;
+		return false;
+	}
+
+	public virtual bool TryReact(UnitOp instigatingOp, out List<UnitOp> reaction)
 	{
 		reaction = null;
 		return false;

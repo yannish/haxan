@@ -32,7 +32,7 @@ public class SaveManager : MonoBehaviour
 			newBoardState.unitStates.Add(cachedUnitState);
 		}
 
-		GameVariables.board.state = newBoardState;
+		GameVariables.state.state = newBoardState;
 
 		string inventoryData = JsonUtility.ToJson(boardState);
 		string filePath = Application.persistentDataPath + boardStatePathName;

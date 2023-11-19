@@ -16,8 +16,8 @@ public class GroundMoveOp : IUnitOperable
 	public Vector3 startPos;
 	public Vector3 endPos;
 
-	public OpData _data;
-	public OpData data => _data;
+	public OpPlaybackData _data;
+	public OpPlaybackData data => _data;
 
 	public void DrawInspectorContent()
 	{
@@ -47,7 +47,7 @@ public class GroundMoveOp : IUnitOperable
 		startPos = Board.OffsetToWorld(fromCoord);
 		endPos = Board.OffsetToWorld(toCoord);
 
-		this._data = new OpData(mover, startTime, duration);
+		this._data = new OpPlaybackData(mover, startTime, duration);
 	}
 
 	public void Execute(Unit unit)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UnitOpRunner : MonoBehaviour
 {
-	public OpData quickOpData;
+	public OpPlaybackData quickOpData;
 
 	public const int MAX_OPS = 10;
 

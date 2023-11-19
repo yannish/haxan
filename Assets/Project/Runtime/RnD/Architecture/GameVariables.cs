@@ -9,7 +9,9 @@ public static class GameVariables
 	public static UnitRuntimeSet activeUnits { get; private set; }
 
 	private const string boardStatePath = "GameFlow/BoardState";
-	public static BoardStateVariable board { get; private set; }
+	public static BoardStateVariable state { get; private set; }
+
+	public static BoardHistory history => state.history;
 
 	public static Unit ToUnit(this int index) => activeUnits.Items[index];
 
@@ -32,7 +34,7 @@ public static class GameVariables
 		Debug.LogWarning("LOADED RUNTIME VARIABLES");
 
 		activeUnits = Resources.Load(activeUnitsPath, typeof(UnitRuntimeSet)) as UnitRuntimeSet;
-		board = Resources.Load(boardStatePath, typeof(BoardStateVariable)) as BoardStateVariable;
+		state = Resources.Load(boardStatePath, typeof(BoardStateVariable)) as BoardStateVariable;
 
 		var allUnitArchetypes = Resources.LoadAll<UnitDefinition>("UnitArchetypes").ToList();
 		allUnitArchetypes.ToDictionary(r => r.type, r => r);

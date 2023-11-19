@@ -6,9 +6,9 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BoardState", menuName = "Haxan/BoardState")]
 public class BoardStateVariable : ScriptableObject
 {
-    //public List<UnitState> unitStates = new List<UnitState>();
-
-	//[SerializeField]
+	//... states of all units:
 	public BoardState state;
+
+	//... how they got there:
 	public BoardHistory history;
 }

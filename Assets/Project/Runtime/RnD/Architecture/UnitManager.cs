@@ -30,9 +30,9 @@ public class UnitManager : MonoBehaviour
 
 	private void OnLoadComplete()
 	{
-		Debug.LogWarning("... loading new units from save: " + GameVariables.board.state.unitStates.Count);
+		Debug.LogWarning("... loading new units from save: " + GameVariables.state.state.unitStates.Count);
 
-		foreach (var unitState in GameVariables.board.state.unitStates)
+		foreach (var unitState in GameVariables.state.state.unitStates)
 		{
 			var unitPrefab = Resources.Load(unitState.templatePath) as GameObject;
 			var unitInstance = Instantiate(unitPrefab).GetComponent<Unit>();

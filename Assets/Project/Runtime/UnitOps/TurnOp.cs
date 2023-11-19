@@ -14,8 +14,8 @@ public class TurnOp : IUnitOperable
 	private Vector3 currFacing;
 	private Vector3 endFacing;
 
-	public OpData _data;
-	public OpData data => _data;
+	public OpPlaybackData _data;
+	public OpPlaybackData data => _data;
 
 	public void DrawInspectorContent()
 	{
@@ -45,7 +45,7 @@ public class TurnOp : IUnitOperable
 		this.currFacing = fromDir.ToVector();
 		this.endFacing = toDir.ToVector();
 
-		this._data = new OpData(unit, startTime, duration);
+		this._data = new OpPlaybackData(unit, startTime, duration);
 	}
 
 	public void Execute(Unit unit) => unit.SetFacing(toDir);

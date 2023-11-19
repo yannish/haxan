@@ -51,12 +51,14 @@ public partial class BoardUI : MonoBehaviour
 
     public Turn[] turns = new Turn[MAX_TURNS];
     public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
+	public UnitOp[] allOps_NEW = new UnitOp[MAX_OPS];
     public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
+    public List<UnitOp> currInstigatingOps_NEW;
     public List<IUnitOperable> currInstigatingOps;
 
-    //public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
+	//public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
 
-    [ReadOnly] public int turnCount;
+	[ReadOnly] public int turnCount;
     [ReadOnly] public int totalCreatedTurnSteps;
 
     [ReadOnly] public int totalCreatedOps;
@@ -78,31 +80,58 @@ public partial class BoardUI : MonoBehaviour
 	public int numDummyOps;
 
 
+	void StartProcessingTurn_NEW(List<UnitOp> instigatingOps)
+	{
+		if (logTurnDebug)
+			Debug.LogWarning("Starting to process unit ops.");
+
+		currInstigator = selectedUnit;
+		DeselectUnit();
+
+		mode = Mode.ProcessingCommands;
+		playbackState = TurnPlaybackState.PLAYING;
+
+		//currNormalizedTime = 0f;
+		currTimeScale = 1f;
+
+		this.currInstigatingOps_NEW = instigatingOps;
+
+		//      totalInstigatingOps = instigatingOps.Count;
+		//for (int i = 0; i < instigatingOps.Count; i++)
+		//{
+		//          currInstigatingOps[i] = instigatingOps[i];
+		//}
+
+		ProcessReactions_NEW();
+	}
+
     //... 
     void StartProcessingTurn(List<IUnitOperable> instigatingOps)
     {
         if (logTurnDebug)
             Debug.LogWarning("Starting to process unit ops.");
 
-        currInstigator = selectedUnit;
         DeselectUnit();
 
+        currInstigator = selectedUnit;
         mode = Mode.ProcessingCommands;
         playbackState = TurnPlaybackState.PLAYING;
 
-        //currNormalizedTime = 0f;
         currTimeScale = 1f;
 
         this.currInstigatingOps = instigatingOps;
 
+		ProcessReactions();
+    
+		//currNormalizedTime = 0f;
   //      totalInstigatingOps = instigatingOps.Count;
 		//for (int i = 0; i < instigatingOps.Count; i++)
 		//{
   //          currInstigatingOps[i] = instigatingOps[i];
 		//}
-
-        ProcessReactions();
     }
+
+
 
     /// <summary>
     /// for now this is just taking in the instigating ops
@@ -261,7 +290,8 @@ public partial class BoardUI : MonoBehaviour
 				break;
 
 			case TurnPlaybackState.PLAYING:
-                HandleTurnForward();
+                //HandleTurnForward_NEW();
+				HandleTurnForward();
 				break;
 
 			case TurnPlaybackState.REWINDING:
@@ -304,7 +334,7 @@ public partial class BoardUI : MonoBehaviour
 			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
 			{
 				IUnitOperable op = allOps[j];
-				OpData opData = op.data;
+				OpPlaybackData opData = op.data;
 
 				float effectiveStartTime = opData.startTime + currTurn.startTime;
 				float effectiveEndTime = opData.endTime + currTurn.startTime;
@@ -348,8 +378,6 @@ public partial class BoardUI : MonoBehaviour
 				{
                     op.Execute(affectedUnit);
 				}
-
-
 			}
 		}
 

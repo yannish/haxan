@@ -452,11 +452,13 @@ public partial class BoardUI : MonoBehaviour
         {
             Debug.Log("CLICKED A VALID MOVE)");
 
-            var fetchUnitOps = selectedUnit.MovementAbility.FetchUnitOps(mouseUpPos, selectedUnit);
-            //var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain(mouseUpPos, selectedUnit);
-            //var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain_OLD(mouseUpPos, selectedUnit);
+            //var fetchUnitOps = selectedUnit.MovementAbility.FetchUnitOps_NEW(mouseUpPos, selectedUnit);
+			var fetchUnitOps = selectedUnit.MovementAbility.FetchUnitOps(mouseUpPos, selectedUnit);
+			//var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain(mouseUpPos, selectedUnit);
+			//var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain_OLD(mouseUpPos, selectedUnit);
 
-            StartProcessingTurn(fetchUnitOps);
+			StartProcessingTurn(fetchUnitOps);
+			//StartProcessingTurn_NEW(fetchUnitOps);
             //StartProcessingCommands(fetchedCommands);
 
             mousePosLastFrame = mousePos;
@@ -1774,7 +1776,114 @@ public partial class BoardUI : MonoBehaviour
 	}
    	#endregion
 
+	void ProcessReactions_NEW()
+	{
+		//... this would have to catch implicit interruptions, like causing death :
+		List<UnitOp> CheckForInterrupt(List<UnitOp> inputOps)
+		{
+			List<UnitOp> filteredOps = new List<UnitOp>();
+			foreach (var op in inputOps)
+			{
+				foreach (var unit in GameVariables.activeUnits.Items)
+				{
+					foreach (var ability in unit.Abilities)
+					{
+						var interruption = ability.TryInterruptOp_NEW(currInstigator, op);
+						if (interruption == OpInterruptType.RETALIATE)
+						{
+							filteredOps.Add(op);
+							return filteredOps;
+						}
 
+						if (interruption == OpInterruptType.INTERDICT)
+							return filteredOps;
+					}
+				}
+
+				//... if we get here, the op was uninterrupted:
+				filteredOps.Add(op);
+			}
+
+			return filteredOps;
+		}
+
+		var interruptFilteredOps = CheckForInterrupt(currInstigatingOps_NEW);
+
+		List<UnitOp> ProcessOpForReactions(UnitOp op)
+		{
+			List<UnitOp> turnStepOps = new List<UnitOp>();
+			bool foundReaction = false;
+			foreach(var unit in GameVariables.activeUnits.Items)
+			{
+				if (foundReaction)
+					break;
+
+				foreach(var ability in unit.Abilities)
+				{
+					if (foundReaction)
+						break;
+
+					if(ability.TryReact(op, out var reactions))
+					{
+						reactions.AddRange(reactions);
+						foundReaction = true;
+						continue;
+					}
+				}
+			}
+
+			if (!foundReaction)
+				turnStepOps.Add(op);
+
+			return turnStepOps;
+		}
+
+		List<List<UnitOp>> allGeneratedOps = new List<List<UnitOp>>();
+		for (int i = 0; i < interruptFilteredOps.Count; i++)
+		{
+			var generatedOps = ProcessOpForReactions(interruptFilteredOps[i]);
+			allGeneratedOps.Add(generatedOps);
+		}
+
+		int indexToCreateStepsAt = totalCreatedTurnSteps;
+		int numOpsCreatedThisTurn = 0;
+		int numStepsCreatedThisTurn = 0;
+
+		for (int i = 0; i < allGeneratedOps.Count; i++)
+		{
+			List<UnitOp> generatedOps = allGeneratedOps[i];
+			TurnStep newTurnStep = new TurnStep()
+			{
+				opIndex = totalCreatedOps,
+				opCount = generatedOps.Count
+			};
+
+			int numOpsCreatedThisStep = 0;
+			for (int j = 0; j < generatedOps.Count; j++)
+			{
+				allOps_NEW[totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
+				numOpsCreatedThisStep++;
+				numOpsCreatedThisTurn++;
+			}
+
+			totalCreatedOps += numOpsCreatedThisTurn;
+			turnSteps[totalCreatedTurnSteps] = newTurnStep;
+			
+			numStepsCreatedThisTurn++;
+			totalCreatedTurnSteps++;
+		}
+
+		Turn newTurn = new Turn()
+		{
+			instigator = currInstigator,
+			stepIndex = indexToCreateStepsAt,
+			stepCount = numStepsCreatedThisTurn,
+			startTime = currPlaybackTime
+		};
+
+		turns[turnCount] = newTurn;
+		turnCount++;
+	}
     
     
     void ProcessCommand(UnitCommand command, float currTime, float prevTime, float timeScale)
@@ -1889,6 +1998,72 @@ public partial class BoardUI : MonoBehaviour
                 currCommandStepHistory = null;
 			}
 		}
+	}
+
+	private void HandleTurnForward_NEW()
+	{
+		Turn currTurn = turns[currPlaybackTurn];
+
+		bool allOpsFullyTicked = true;
+
+		//... looping through all ops in that step:
+		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
+		{
+			TurnStep currTurnStep = turnSteps[i];
+
+			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
+			{
+				UnitOp op = allOps_NEW[j];
+				OpPlaybackData playbackData = op.playbackData;
+
+				float effStartTime = playbackData.startTime + currTurn.startTime;
+				float effEndTime = playbackData.endTime + currTurn.startTime;
+
+				if (prevPlaybackTime < effEndTime)
+					allOpsFullyTicked = false;
+
+				if (currPlaybackTime < effStartTime)
+					continue;
+
+				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
+
+				if(currPlaybackTime >= effStartTime && prevPlaybackTime < effStartTime)
+				{
+					//... onBeginTick
+				}
+
+				Debug.Log(
+					$"ticking op: {j}, " +
+					$"playbackTime: {currPlaybackTime}, " +
+					$"startTime: {effStartTime}" +
+					$"endTime: {effEndTime}"
+					);
+
+				if(currPlaybackTime >= effStartTime && currPlaybackTime < effEndTime)
+				{
+					Debug.LogWarning($"op {j} still running.");
+					var normalizedTime = Mathf.Clamp01((currPlaybackTime - effStartTime) / playbackData.duration);
+					op.Tick(affectedUnit, normalizedTime);
+				}
+
+				bool opCompletedThisFrame = currPlaybackTime > effEndTime && prevPlaybackTime < effEndTime;
+				if (opCompletedThisFrame)
+					op.Execute(affectedUnit);
+			}
+		}
+
+		if(allOpsFullyTicked)
+		{
+			Debug.Log("Played through all turnSteps.");
+
+			playbackState = TurnPlaybackState.PAUSED;
+			SelectUnit(lastSelectedUnit);
+			currInstigator = null;
+			currPlaybackTurn++;
+		}
+
+		prevPlaybackTime = currPlaybackTime;
+		currPlaybackTime += Time.deltaTime * currTimeScale;
 	}
 
 }

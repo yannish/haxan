@@ -14,14 +14,14 @@ using UnityEditor;
  */
 
 [Serializable]
-public struct OpData
+public struct OpPlaybackData
 {
 	public int unitIndex;
 	public float startTime;
 	public float duration;
 	public float endTime { get => startTime + duration; }
 
-	public OpData(Unit unit, float startTime, float duration)
+	public OpPlaybackData(Unit unit, float startTime, float duration)
 	{
 		this.unitIndex = unit.ToIndex();
 		this.startTime = startTime;
@@ -31,7 +31,7 @@ public struct OpData
 
 public static class OpDataExtensions
 {
-	public static void DrawOpData(this OpData data)
+	public static void DrawOpData(this OpPlaybackData data)
 	{
 #if UNITY_EDITOR
 		EditorGUILayout.ObjectField($"UNIT INDEX: {data.unitIndex}", data.unitIndex.ToUnit(), typeof(Unit), true);
@@ -46,7 +46,7 @@ public static class OpDataExtensions
 
 public interface IUnitOperable
 {
-	public OpData data { get; }
+	public OpPlaybackData data { get; }
 
 	//public void OnBeginTick(Unit unit);
 
