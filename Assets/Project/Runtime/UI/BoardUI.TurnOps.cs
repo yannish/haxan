@@ -23,7 +23,10 @@ public struct Turn
     public int stepCount;
 
     //.. mark this when you build the turn. then, all steps / op start times are relative...?
-    public float startTime; 
+    public float startTime;
+	public float endTime;
+
+	public float duration => endTime - startTime;
 }
 
 
@@ -49,20 +52,21 @@ public partial class BoardUI : MonoBehaviour
     public const int MAX_TURNS = 100;
     public const int MAX_TURN_STEPS = 100;
 
-    public Turn[] turns = new Turn[MAX_TURNS];
-    public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
+	//public Turn[] turns = new Turn[MAX_TURNS];
+	//public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
+	//public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
+
+	//[ReadOnly] public int turnCount;
+	//[ReadOnly] public int totalCreatedTurnSteps;
+	//[ReadOnly] public int totalCreatedOps;
+
 	public UnitOp[] allOps_NEW = new UnitOp[MAX_OPS];
-    public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
     public List<UnitOp> currInstigatingOps_NEW;
     public List<IUnitOperable> currInstigatingOps;
 
 	//public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
 
-	[ReadOnly] public int turnCount;
-    [ReadOnly] public int totalCreatedTurnSteps;
-
-    [ReadOnly] public int totalCreatedOps;
-    [ReadOnly] public int totalInstigatingOps;
+    //[ReadOnly] public int totalInstigatingOps;
 
     [Header("PLAYBACK:")]
     [ReadOnly] public TurnPlaybackState playbackState;
@@ -111,9 +115,9 @@ public partial class BoardUI : MonoBehaviour
         if (logTurnDebug)
             Debug.LogWarning("Starting to process unit ops.");
 
+        currInstigator = selectedUnit;
         DeselectUnit();
 
-        currInstigator = selectedUnit;
         mode = Mode.ProcessingCommands;
         playbackState = TurnPlaybackState.PLAYING;
 
@@ -140,13 +144,15 @@ public partial class BoardUI : MonoBehaviour
     /// </summary>
     void ProcessReactions()
     {
+		float turnEndTime = 0f;
+
 		//... this would have to catch implicit interruptions, like causing death :
         List<IUnitOperable> CheckForInterrupt(List<IUnitOperable> inputOps)
 		{
             List<IUnitOperable> filteredOps = new List<IUnitOperable>();
             foreach(var op in inputOps)
 			{
-                foreach(var unit in GameVariables.activeUnits.Items)
+                foreach(var unit in Haxan.activeUnits.Items)
 				{
                     foreach(var ability in unit.Abilities)
 					{
@@ -180,7 +186,7 @@ public partial class BoardUI : MonoBehaviour
 			//... currently only garnering ONE batch of reactions per op...
 			//... otherwise they'd need more processing.
 			bool foundReaction = false;
-			foreach(var unit in GameVariables.activeUnits.Items)
+			foreach(var unit in Haxan.activeUnits.Items)
 			{
 				if (foundReaction)
 					break;
@@ -212,7 +218,7 @@ public partial class BoardUI : MonoBehaviour
 			allGeneratedOps.Add(generatedOps);
 		}
 
-		int indexToCreateStepsAt = totalCreatedTurnSteps;
+		int indexToCreateStepsAt = Haxan.history.totalCreatedTurnSteps;
 		int numOpsCreatedThisTurn = 0; //... we track this for an index into the array of all Ops
 		int numStepsCreatedThisTurn = 0; 
 
@@ -223,24 +229,28 @@ public partial class BoardUI : MonoBehaviour
 			List<IUnitOperable> generatedOps = allGeneratedOps[i];
 			TurnStep newTurnStep = new TurnStep()
 			{
-				opIndex = totalCreatedOps,
+				opIndex = Haxan.history.totalCreatedOps,
 				opCount = generatedOps.Count
 			};
 
 			int numOpsCreatedThisStep = 0;
 			for (int j = 0; j < generatedOps.Count; j++)
 			{
-				allOps[totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
+				Haxan.history.allOps[Haxan.history.totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
 				numOpsCreatedThisStep++;
 				numOpsCreatedThisTurn++;
+				var realEndTime = generatedOps[j].data.endTime + currPlaybackTime;
+				if (realEndTime > turnEndTime)
+					turnEndTime = generatedOps[j].data.endTime + currPlaybackTime;
 			}
 
-			totalCreatedOps += numOpsCreatedThisTurn;
-
-			turnSteps[totalCreatedTurnSteps] = newTurnStep;
+			Haxan.history.totalCreatedOps += numOpsCreatedThisTurn;
+			Haxan.history.turnSteps[Haxan.history.totalCreatedTurnSteps] = newTurnStep;
 			
 			numStepsCreatedThisTurn++;
-			totalCreatedTurnSteps++;
+			Haxan.history.totalCreatedTurnSteps++;
+
+			//if()
 		}
 
 		Turn newTurn = new Turn()
@@ -248,11 +258,12 @@ public partial class BoardUI : MonoBehaviour
 			instigator = currInstigator,
 			stepIndex = indexToCreateStepsAt,
 			stepCount = numStepsCreatedThisTurn,
-			startTime = currPlaybackTime
+			startTime = currPlaybackTime,
+			endTime = turnEndTime
 		};
 
-		turns[turnCount] = newTurn;
-		turnCount++;
+		Haxan.history.turns[Haxan.history.turnCount] = newTurn;
+		Haxan.history.turnCount++;
 
 		//      //int opIndex = totalCreatedOps;
 		//for (int i = 0; i < totalInstigatingOps; i++)
@@ -311,7 +322,7 @@ public partial class BoardUI : MonoBehaviour
 
     public void HandleTurnForward()
 	{
-        Turn currTurn = turns[currPlaybackTurn];
+        Turn currTurn = Haxan.history.turns[currPlaybackTurn];
 		/*. every tick, we run through every TURN STEP
 		 * ... even ones that are out of range
 		 * ... so we're always getting to those "end" indices after running a full loop
@@ -326,14 +337,14 @@ public partial class BoardUI : MonoBehaviour
 		//... looping through all turnSteps:
 		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
 		{
-			TurnStep currTurnStep = turnSteps[i];
+			TurnStep currTurnStep = Haxan.history.turnSteps[i];
 
 			//NOTE: why is it turn & move playing together in same frame & failing...
 
 			//... looping through all ops in that step:
 			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
 			{
-				IUnitOperable op = allOps[j];
+				IUnitOperable op = Haxan.history.allOps[j];
 				OpPlaybackData opData = op.data;
 
 				float effectiveStartTime = opData.startTime + currTurn.startTime;

@@ -12,7 +12,6 @@ public static class TurnHistory
 public class BoardState
 {
     public List<UnitState> unitStates = new List<UnitState>();
-	public BoardHistory history;
 }
 
 [System.Serializable]
@@ -23,13 +22,17 @@ public class BoardHistory
 	public const int MAX_TURNS = 100;
 	public const int MAX_TURN_STEPS = 100;
 
-	public int turnCount = 0;
-	public int turnStepCount = 0;
-	public int opCount = 0;
+	[ReadOnly] public int turnCount = 0;
+	[ReadOnly] public int totalCreatedTurnSteps = 0;
+	[ReadOnly] public int totalCreatedOps = 0;
+	//public int turnStepCount;
+
+
 
 	public Turn[] turns = new Turn[MAX_TURNS];
 	public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
-	public UnitOp[] allOps = new UnitOp[MAX_OPS];
+	public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
+	public UnitOp[] allOps_NEW = new UnitOp[MAX_OPS];
 }
 
 [System.Serializable]

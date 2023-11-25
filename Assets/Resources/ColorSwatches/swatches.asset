@@ -18,7 +18,7 @@ MonoBehaviour:
     ColorVariable: {fileID: 0}
   trigger:
     UseConstant: 1
-    ConstantColor: {r: 0, g: 0, b: 0, a: 1}
+    ConstantColor: {r: 0, g: 1, b: 0.21875882, a: 1}
     ColorVariable: {fileID: 0}
   collisionProbe:
     UseConstant: 1

@@ -26,13 +26,13 @@ public class SaveManager : MonoBehaviour
 	private void SaveBoardState()
 	{
 		BoardState newBoardState = new BoardState();
-		foreach (var unit in GameVariables.activeUnits.Items)
+		foreach (var unit in Haxan.activeUnits.Items)
 		{
 			var cachedUnitState = unit.CacheState();
 			newBoardState.unitStates.Add(cachedUnitState);
 		}
 
-		GameVariables.state.state = newBoardState;
+		Haxan.state.state = newBoardState;
 
 		string inventoryData = JsonUtility.ToJson(boardState);
 		string filePath = Application.persistentDataPath + boardStatePathName;

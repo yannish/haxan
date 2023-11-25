@@ -53,25 +53,27 @@ public class BoardUIEditor : Editor
             if (!showUnitOps)
                 return;
 
-			for (int j = 0; j < boardUI.turnCount; j++)
+			for (int j = 0; j < Haxan.history.turnCount; j++)
 			{
-                Turn turn = boardUI.turns[j];
+                Turn turn = Haxan.history.turns[j];
 
                 using(new GUILayout.VerticalScope(EditorStyles.helpBox))
 				{
 					EditorGUILayout.LabelField($"... AT INDEX: {j}", EditorStyles.boldLabel);
 					for (int k = turn.stepIndex; k < turn.stepIndex + turn.stepCount; k++)
                     {
-                        TurnStep turnStep = boardUI.turnSteps[k];
+                        TurnStep turnStep = Haxan.history.turnSteps[k];
                         for (int i = turnStep.opIndex; i < turnStep.opIndex + turnStep.opCount; i++)
                         {
-                            IUnitOperable op = boardUI.allOps[i];
+                            IUnitOperable op = Haxan.history.allOps[i];
                             if (op == null)
                                 continue;
                             op.DrawInspectorContent();
                         }
                     }
                 }
+
+				GUILayout.Space(20);
 			}
 
          //   for (int i = 0; i < boardUI.totalOps; i++)

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public static class GameVariables
+public static class Haxan
 {
 	private const string activeUnitsPath = "RuntimeSets/ActiveUnits";
 	public static UnitRuntimeSet activeUnits { get; private set; }
@@ -35,6 +35,10 @@ public static class GameVariables
 
 		activeUnits = Resources.Load(activeUnitsPath, typeof(UnitRuntimeSet)) as UnitRuntimeSet;
 		state = Resources.Load(boardStatePath, typeof(BoardStateVariable)) as BoardStateVariable;
+
+		state.history.turnCount = 0;
+		state.history.totalCreatedTurnSteps = 0;
+		state.history.totalCreatedOps = 0;
 
 		var allUnitArchetypes = Resources.LoadAll<UnitDefinition>("UnitArchetypes").ToList();
 		allUnitArchetypes.ToDictionary(r => r.type, r => r);

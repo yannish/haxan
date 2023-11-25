@@ -1735,7 +1735,14 @@ public partial class BoardUI : MonoBehaviour
     //... INPUT:
     Vector2Int MouseToOffsetPos()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		if (Camera.main.orthographicSize == 0f)
+			return new Vector2Int(-10000, -10000);
+
+		var mousePos = Input.mousePosition;
+		if (mousePos.x < 0 || mousePos.x >= Screen.width || mousePos.y < 0 || mousePos.y >= Screen.height)
+			return new Vector2Int(-10000, -10000);
+
+		Ray ray = Camera.main.ScreenPointToRay(mousePos);
         Plane plane = new Plane(Vector3.up, Vector3.zero);
         plane.Raycast(ray, out float dist);
         Vector3 worldPos = ray.GetPoint(dist);
@@ -1743,13 +1750,11 @@ public partial class BoardUI : MonoBehaviour
         return offset;
     }
 
-
     //... TURNS:
     //[Header("TURNS:")]
 
 
     //... NEW TURN PROCESSING:
-
 
 
     #region TIMEBLOCK CONTROLS:
@@ -1784,7 +1789,7 @@ public partial class BoardUI : MonoBehaviour
 			List<UnitOp> filteredOps = new List<UnitOp>();
 			foreach (var op in inputOps)
 			{
-				foreach (var unit in GameVariables.activeUnits.Items)
+				foreach (var unit in Haxan.activeUnits.Items)
 				{
 					foreach (var ability in unit.Abilities)
 					{
@@ -1813,7 +1818,7 @@ public partial class BoardUI : MonoBehaviour
 		{
 			List<UnitOp> turnStepOps = new List<UnitOp>();
 			bool foundReaction = false;
-			foreach(var unit in GameVariables.activeUnits.Items)
+			foreach(var unit in Haxan.activeUnits.Items)
 			{
 				if (foundReaction)
 					break;
@@ -1845,7 +1850,7 @@ public partial class BoardUI : MonoBehaviour
 			allGeneratedOps.Add(generatedOps);
 		}
 
-		int indexToCreateStepsAt = totalCreatedTurnSteps;
+		int indexToCreateStepsAt = Haxan.history.totalCreatedTurnSteps;
 		int numOpsCreatedThisTurn = 0;
 		int numStepsCreatedThisTurn = 0;
 
@@ -1854,23 +1859,23 @@ public partial class BoardUI : MonoBehaviour
 			List<UnitOp> generatedOps = allGeneratedOps[i];
 			TurnStep newTurnStep = new TurnStep()
 			{
-				opIndex = totalCreatedOps,
+				opIndex = Haxan.history.totalCreatedOps,
 				opCount = generatedOps.Count
 			};
 
 			int numOpsCreatedThisStep = 0;
 			for (int j = 0; j < generatedOps.Count; j++)
 			{
-				allOps_NEW[totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
+				allOps_NEW[Haxan.history.totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
 				numOpsCreatedThisStep++;
 				numOpsCreatedThisTurn++;
 			}
 
-			totalCreatedOps += numOpsCreatedThisTurn;
-			turnSteps[totalCreatedTurnSteps] = newTurnStep;
+			Haxan.history.totalCreatedOps += numOpsCreatedThisTurn;
+			Haxan.history.turnSteps[Haxan.history.totalCreatedTurnSteps] = newTurnStep;
 			
 			numStepsCreatedThisTurn++;
-			totalCreatedTurnSteps++;
+			Haxan.history.totalCreatedTurnSteps++;
 		}
 
 		Turn newTurn = new Turn()
@@ -1881,8 +1886,8 @@ public partial class BoardUI : MonoBehaviour
 			startTime = currPlaybackTime
 		};
 
-		turns[turnCount] = newTurn;
-		turnCount++;
+		Haxan.history.turns[Haxan.history.turnCount] = newTurn;
+		Haxan.history.turnCount++;
 	}
     
     
@@ -2002,14 +2007,14 @@ public partial class BoardUI : MonoBehaviour
 
 	private void HandleTurnForward_NEW()
 	{
-		Turn currTurn = turns[currPlaybackTurn];
+		Turn currTurn = Haxan.history.turns[currPlaybackTurn];
 
 		bool allOpsFullyTicked = true;
 
 		//... looping through all ops in that step:
 		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
 		{
-			TurnStep currTurnStep = turnSteps[i];
+			TurnStep currTurnStep = Haxan.history.turnSteps[i];
 
 			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
 			{

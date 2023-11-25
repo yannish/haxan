@@ -65,6 +65,11 @@ public static class BoardMetrics
 			axial.y + (axial.x - (axial.x & 1)) / 2
 		);
 	}
+
+	public static string ToCoordString(this Vector2Int coord)
+	{
+		return new string($"({coord.x},{coord.y})");
+	}
 }
 
 //[InitializeOnLoad]

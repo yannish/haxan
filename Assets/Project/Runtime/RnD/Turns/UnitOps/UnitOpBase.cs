@@ -34,11 +34,21 @@ public static class OpDataExtensions
 	public static void DrawOpData(this OpPlaybackData data)
 	{
 #if UNITY_EDITOR
-		EditorGUILayout.ObjectField($"UNIT INDEX: {data.unitIndex}", data.unitIndex.ToUnit(), typeof(Unit), true);
+		//var foundUnit = data.unitIndex.ToUnit();
+		//if (foundUnit != null)
+		//	EditorGUILayout.ObjectField(
+		//		$"UNIT INDEX: {data.unitIndex}",
+		//		data.unitIndex.ToUnit(),
+		//		typeof(Unit),
+		//		true
+		//		);
+		//else
+		//	EditorGUILayout.LabelField($"... can't find unit at {data.unitIndex}");
 		using (new GUILayout.HorizontalScope())
 		{
-			EditorGUILayout.LabelField($"start time: {data.startTime}", GUILayout.MaxWidth(80f));
-			EditorGUILayout.LabelField($"duration: {data.duration}", GUILayout.MaxWidth(80f));
+			EditorGUILayout.LabelField($"START TIME : {data.startTime}", GUILayout.MaxWidth(180f));
+			EditorGUILayout.LabelField($"DURATION : {data.duration}", GUILayout.MaxWidth(180f));
+			EditorGUILayout.LabelField($"END TIME : {data.endTime}", GUILayout.MaxWidth(180f));
 		}
 #endif
 	}
@@ -78,9 +88,9 @@ public interface IUnitOperable
 //... Probably. 
 
 [Serializable]
-public abstract class UnitOpClass
+public abstract class UnitOpBase
 {
-	public UnitOpClass(Unit unit)
+	public UnitOpBase(Unit unit)
 	{
 		this.unit = unit;
 		this.unitIndex = unit.ToIndex();

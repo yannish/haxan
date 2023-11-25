@@ -39,7 +39,7 @@ public class Unit : MonoBehaviour
         //if (GameContext.I == null)
         //    return;
 
-        GameVariables.activeUnits.Add(this);
+        Haxan.activeUnits.Add(this);
 	}
 
 	private void OnDisable()
@@ -47,7 +47,7 @@ public class Unit : MonoBehaviour
         //if (GameContext.I == null)
         //    return;
 
-        GameVariables.activeUnits.Remove(this);
+        Haxan.activeUnits.Remove(this);
     }
 
 	//public void OnSaveStart()

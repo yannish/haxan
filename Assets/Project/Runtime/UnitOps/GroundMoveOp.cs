@@ -24,9 +24,14 @@ public class GroundMoveOp : IUnitOperable
 #if UNITY_EDITOR
 		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
 		{
-			EditorGUILayout.LabelField("MOVE:", EditorStyles.boldLabel);
-			EditorGUILayout.Vector2IntField("fromCoord: ", fromCoord);
-			EditorGUILayout.Vector2IntField("toCoord: ", toCoord);
+			EditorGUILayout.LabelField(
+				$"MOVE FROM: {fromCoord.ToCoordString()} => {toCoord.ToCoordString()}",
+				EditorStyles.boldLabel
+				);
+
+			//EditorGUILayout.LabelField("MOVE:", EditorStyles.boldLabel);
+			//EditorGUILayout.Vector2IntField("fromCoord: ", fromCoord);
+			//EditorGUILayout.Vector2IntField("toCoord: ", toCoord);
 			
 			data.DrawOpData();
 		}

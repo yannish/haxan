@@ -21,18 +21,18 @@ public class UnitManager : MonoBehaviour
 	{
 		Debug.LogWarning("Clearing board units.");
 
-		for (int i = GameVariables.activeUnits.Items.Count - 1; i >= 0; i--)
+		for (int i = Haxan.activeUnits.Items.Count - 1; i >= 0; i--)
 		{
-			var unit = GameVariables.activeUnits.Items[i];
+			var unit = Haxan.activeUnits.Items[i];
 			Destroy(unit.gameObject);
 		}
 	}
 
 	private void OnLoadComplete()
 	{
-		Debug.LogWarning("... loading new units from save: " + GameVariables.state.state.unitStates.Count);
+		Debug.LogWarning("... loading new units from save: " + Haxan.state.state.unitStates.Count);
 
-		foreach (var unitState in GameVariables.state.state.unitStates)
+		foreach (var unitState in Haxan.state.state.unitStates)
 		{
 			var unitPrefab = Resources.Load(unitState.templatePath) as GameObject;
 			var unitInstance = Instantiate(unitPrefab).GetComponent<Unit>();

@@ -22,10 +22,15 @@ public class TurnOp : IUnitOperable
 #if UNITY_EDITOR
 		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
 		{
-			EditorGUILayout.LabelField("TURN", EditorStyles.boldLabel, GUILayout.MaxWidth(100f));
-			EditorGUILayout.ObjectField(_data.unitIndex.ToUnit(), typeof(Unit), true);
-			EditorGUILayout.LabelField($"from: {fromDir}", GUILayout.Width(120f));
-			EditorGUILayout.LabelField($"to: {toDir}", GUILayout.Width(120f));
+			EditorGUILayout.LabelField(
+				$"TURN FROM: {fromDir} => {toDir}",
+				EditorStyles.boldLabel
+				);
+
+			//EditorGUILayout.LabelField("TURN", EditorStyles.boldLabel, GUILayout.MaxWidth(100f));
+			//EditorGUILayout.ObjectField(_data.unitIndex.ToUnit(), typeof(Unit), true);
+			//EditorGUILayout.LabelField($"from: {fromDir}", GUILayout.Width(120f));
+			//EditorGUILayout.LabelField($"to: {toDir}", GUILayout.Width(120f));
 			//
 			_data.DrawOpData();
 		}

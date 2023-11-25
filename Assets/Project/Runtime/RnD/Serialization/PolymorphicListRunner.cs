@@ -30,16 +30,16 @@ public class Wight : Ghol
 [Serializable]
 public class MythGameState
 {
-    [SerializeReference]
-    public List<Ghol> ghols = new List<Ghol>();
+	[SerializeReference]
+	public List<Ghol> ghols = new List<Ghol>();
 }
 
 public class PolymorphicListRunner : MonoBehaviour
 {
-    //[SerializeReference]
-    //public List<Ghol> ghols = new List<Ghol>();
+	//[SerializeReference]
+	//public List<Ghol> ghols = new List<Ghol>();
 
-    [Multiline(10)]
+	[Multiline(10)]
     public string jsonBlorb;
 
     public MythGameState gameState;
