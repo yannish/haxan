@@ -28,11 +28,9 @@ public class Ability : ScriptableObject
 
     public AbilityType type;
 
-
     //public virtual void ShowValidMoves(Vector2Int origin, Unit unit) { }
 
     //public virtual void HideValidMoves() { }
-
 
     public virtual void ShowPreview(Vector2Int target, Unit unit) { }
 
@@ -45,21 +43,25 @@ public class Ability : ScriptableObject
 
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
 
-    public virtual List<UnitOp> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
+    public virtual List<UnitOp_STRUCT> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit) => new List<UnitOp_STRUCT>();
 
-	public virtual List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<IUnitOperable>();
+	public virtual List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
 
-	public virtual OpInterruptType TryInterruptOp(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
+	//public virtual List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
 
-	public virtual OpInterruptType TryInterruptOp_NEW(Unit unit, UnitOp op) => OpInterruptType.PASS;
+	public virtual OpInterruptType TryInterruptOp_OLD(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
 
-	public virtual bool TryReact(IUnitOperable intigatingOp, out List<IUnitOperable> reaction)
+	public virtual OpInterruptType TryInterrupOp(Unit unit, UnitOp op) => OpInterruptType.PASS;
+
+	public virtual OpInterruptType TryInterruptOp_NEW(Unit unit, UnitOp_STRUCT op) => OpInterruptType.PASS;
+
+	public virtual bool TryReact(UnitOp intigatingOp, out List<UnitOp> reaction)
 	{
 		reaction = null;
 		return false;
 	}
 
-	public virtual bool TryReact(UnitOp instigatingOp, out List<UnitOp> reaction)
+	public virtual bool TryReact(UnitOp_STRUCT instigatingOp, out List<UnitOp_STRUCT> reaction)
 	{
 		reaction = null;
 		return false;

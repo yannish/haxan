@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial struct UnitOp
+public partial struct UnitOp_STRUCT
 {
-	public UnitOp GroundMoveOp(
+	public UnitOp_STRUCT GroundMoveOp(
 		Unit mover,
 		Vector2Int fromCoord,
 		Vector2Int toCoord,
@@ -12,7 +12,7 @@ public partial struct UnitOp
 		float duration
 		)
 	{
-		UnitOp newOp = new UnitOp();
+		UnitOp_STRUCT newOp = new UnitOp_STRUCT();
 
 		newOp.opType = UnitOpType.GROUND_MOVE;
 

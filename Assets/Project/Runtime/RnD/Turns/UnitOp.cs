@@ -9,7 +9,7 @@ public enum UnitOpType
 }
 
 
-public partial struct UnitOp
+public partial struct UnitOp_STRUCT
 {
 	public UnitOpType opType;
 

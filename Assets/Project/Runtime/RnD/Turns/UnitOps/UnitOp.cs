@@ -31,7 +31,7 @@ public struct OpPlaybackData
 
 public static class OpDataExtensions
 {
-	public static void DrawOpData(this OpPlaybackData data)
+	public static void DrawPlaybackData(this OpPlaybackData data)
 	{
 #if UNITY_EDITOR
 		//var foundUnit = data.unitIndex.ToUnit();
@@ -88,9 +88,9 @@ public interface IUnitOperable
 //... Probably. 
 
 [Serializable]
-public abstract class UnitOpBase
+public abstract class UnitOp
 {
-	public UnitOpBase(Unit unit)
+	public UnitOp(Unit unit)
 	{
 		this.unit = unit;
 		this.unitIndex = unit.ToIndex();
@@ -98,6 +98,8 @@ public abstract class UnitOpBase
 
 	public Unit unit;
 	public int unitIndex;
+
+	public OpPlaybackData playbackData;
 
 	public float startTime;
 	public float duration;

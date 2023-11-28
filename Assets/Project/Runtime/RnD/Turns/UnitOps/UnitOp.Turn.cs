@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial struct UnitOp
+public partial struct UnitOp_STRUCT
 {
-	public static UnitOp TurnOp(
+	public static UnitOp_STRUCT TurnOp(
 		Unit unit,
 		HexDirectionFT fromDir,
 		HexDirectionFT toDir,
@@ -12,7 +12,7 @@ public partial struct UnitOp
 		float duration
 		)
 	{
-		UnitOp newOp = new UnitOp();
+		UnitOp_STRUCT newOp = new UnitOp_STRUCT();
 
 		newOp.opType = UnitOpType.TURN;
 

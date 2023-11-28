@@ -6,7 +6,8 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-public class TurnOp : IUnitOperable
+public class TurnOp : UnitOp
+	//: IUnitOperable
 {
 	public HexDirectionFT fromDir;
 	public HexDirectionFT toDir;
@@ -14,16 +15,16 @@ public class TurnOp : IUnitOperable
 	private Vector3 currFacing;
 	private Vector3 endFacing;
 
-	public OpPlaybackData _data;
-	public OpPlaybackData data => _data;
+	//public OpPlaybackData _data;
+	//public OpPlaybackData data => _data;
 
-	public void DrawInspectorContent()
+	public override void DrawInspectorContent()
 	{
 #if UNITY_EDITOR
-		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-		{
+		//using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+		//{
 			EditorGUILayout.LabelField(
-				$"TURN FROM: {fromDir} => {toDir}",
+				$"TURN : {fromDir} => {toDir}",
 				EditorStyles.boldLabel
 				);
 
@@ -32,32 +33,32 @@ public class TurnOp : IUnitOperable
 			//EditorGUILayout.LabelField($"from: {fromDir}", GUILayout.Width(120f));
 			//EditorGUILayout.LabelField($"to: {toDir}", GUILayout.Width(120f));
 			//
-			_data.DrawOpData();
-		}
+			playbackData.DrawPlaybackData();
+		//}
 #endif
 	}
 
 	public TurnOp(
-		Unit unit, 
+		Unit unit,
 		HexDirectionFT fromDir, 
 		HexDirectionFT toDir, 
 		float startTime,
 		float duration
-		)
+		) : base(unit)
 	{
 		this.fromDir = fromDir;
 		this.toDir = toDir;
 		this.currFacing = fromDir.ToVector();
 		this.endFacing = toDir.ToVector();
 
-		this._data = new OpPlaybackData(unit, startTime, duration);
+		this.playbackData = new OpPlaybackData(unit, startTime, duration);
 	}
 
-	public void Execute(Unit unit) => unit.SetFacing(toDir);
+	public override void Execute(Unit unit) => unit.SetFacing(toDir);
 
-	public void Undo(Unit unit) => unit.SetFacing(fromDir);
+	public override void Undo(Unit unit) => unit.SetFacing(fromDir);
 
-	public void Tick(Unit unit, float t)
+	public override void Tick(Unit unit, float t)
 	{
 		Debug.LogWarning($"Ticking turn: {t}");
 		unit.SetDirectFacing(Vector3.Slerp(currFacing, endFacing, t));

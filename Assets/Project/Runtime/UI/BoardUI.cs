@@ -1784,9 +1784,9 @@ public partial class BoardUI : MonoBehaviour
 	void ProcessReactions_NEW()
 	{
 		//... this would have to catch implicit interruptions, like causing death :
-		List<UnitOp> CheckForInterrupt(List<UnitOp> inputOps)
+		List<UnitOp_STRUCT> CheckForInterrupt(List<UnitOp_STRUCT> inputOps)
 		{
-			List<UnitOp> filteredOps = new List<UnitOp>();
+			List<UnitOp_STRUCT> filteredOps = new List<UnitOp_STRUCT>();
 			foreach (var op in inputOps)
 			{
 				foreach (var unit in Haxan.activeUnits.Items)
@@ -1814,9 +1814,9 @@ public partial class BoardUI : MonoBehaviour
 
 		var interruptFilteredOps = CheckForInterrupt(currInstigatingOps_NEW);
 
-		List<UnitOp> ProcessOpForReactions(UnitOp op)
+		List<UnitOp_STRUCT> ProcessOpForReactions(UnitOp_STRUCT op)
 		{
-			List<UnitOp> turnStepOps = new List<UnitOp>();
+			List<UnitOp_STRUCT> turnStepOps = new List<UnitOp_STRUCT>();
 			bool foundReaction = false;
 			foreach(var unit in Haxan.activeUnits.Items)
 			{
@@ -1843,7 +1843,7 @@ public partial class BoardUI : MonoBehaviour
 			return turnStepOps;
 		}
 
-		List<List<UnitOp>> allGeneratedOps = new List<List<UnitOp>>();
+		List<List<UnitOp_STRUCT>> allGeneratedOps = new List<List<UnitOp_STRUCT>>();
 		for (int i = 0; i < interruptFilteredOps.Count; i++)
 		{
 			var generatedOps = ProcessOpForReactions(interruptFilteredOps[i]);
@@ -1856,7 +1856,7 @@ public partial class BoardUI : MonoBehaviour
 
 		for (int i = 0; i < allGeneratedOps.Count; i++)
 		{
-			List<UnitOp> generatedOps = allGeneratedOps[i];
+			List<UnitOp_STRUCT> generatedOps = allGeneratedOps[i];
 			TurnStep newTurnStep = new TurnStep()
 			{
 				opIndex = Haxan.history.totalCreatedOps,
@@ -2018,7 +2018,7 @@ public partial class BoardUI : MonoBehaviour
 
 			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
 			{
-				UnitOp op = allOps_NEW[j];
+				UnitOp_STRUCT op = allOps_NEW[j];
 				OpPlaybackData playbackData = op.playbackData;
 
 				float effStartTime = playbackData.startTime + currTurn.startTime;

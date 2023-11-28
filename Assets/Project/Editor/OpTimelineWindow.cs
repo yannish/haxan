@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class OpTimelineWindow : EditorWindow
 {
+	int selectedTurnIndex = -1;
+	Vector2 scrollPos;
+	Vector2 debugScrollPos;
+	private const int debugTurnCount = 20;
+	public float currSliderValue;
+	public float currFloatSliderValue;
+	
+
 	[MenuItem("Haxan/Timeline")]
 	public static void ShowWindow()
 	{
@@ -17,30 +25,53 @@ public class OpTimelineWindow : EditorWindow
 		Debug.LogWarning("AWAKE ON OP TIMELINE");
 	}
 
-	//BoardUI boardUI;
-	//Texture backgroundTexture;
-	//Texture opTexture;
-	private void OnEnable()
+	private void OnEnable() => EditorApplication.playModeStateChanged += HandlePlaymodeChange;
+
+	private void OnDisable() => EditorApplication.playModeStateChanged -= HandlePlaymodeChange;
+
+	private void HandlePlaymodeChange(PlayModeStateChange obj)
 	{
-		//boardUI = FindObjectOfType<BoardUI>();
-		//opTexture = Texture;
+		switch (obj)
+		{
+			case PlayModeStateChange.EnteredEditMode:
+				break;
+			case PlayModeStateChange.ExitingEditMode:
+				break;
+			case PlayModeStateChange.EnteredPlayMode:
+				selectedTurnIndex = -1;
+				EditorApplication.update -= RepaintWindow;
+				EditorApplication.update += RepaintWindow;
+				break;
+			case PlayModeStateChange.ExitingPlayMode:
+				EditorApplication.update -= RepaintWindow;
+				break;
+			default:
+				break;
+		}
 	}
 
+	private void RepaintWindow()
+	{
+		//Debug.LogWarning("Repainting op timeline");
+		Repaint();
+	}
+
+	GUIContent playIcon;
+	GUIContent ffIcon;
 	private void OnFocus()
 	{
-		//if (boardUI == null)
-		//	boardUI = FindObjectOfType<BoardUI>();
+		playIcon = EditorGUIUtility.IconContent("PlayButton On");
+		ffIcon = EditorGUIUtility.IconContent("d_StepButton On");
 	}
 
-	int selectedTurnIndex = -1;
-	//private const int numTurns = 5;
-	Vector2 scrollPos;
 	private void OnGUI()
 	{
 		if (!Application.isPlaying)
 		{
+			//debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos);
 			//EditorGUILayout.LabelField("Not drawing history outside of playmode, yet...");
 			DrawDebugPicker();
+			//EditorGUILayout.EndScrollView();
 			return;
 		}
 
@@ -50,32 +81,17 @@ public class OpTimelineWindow : EditorWindow
 			return;
 		}
 
-		var e = Event.current;
+		TickInputs();
 
-		if(e.type == EventType.KeyDown && e.keyCode == KeyCode.DownArrow)
-		{
-			Debug.LogWarning("DOWN:");
-			if(selectedTurnIndex < Haxan.history.turnCount)
-			{
-				selectedTurnIndex++;
-				Repaint();
-				return;
-			}
-		}
-
-		if (e.type == EventType.KeyDown && e.keyCode == KeyCode.UpArrow)
-		{
-			Debug.LogWarning("UP:");
-			if (selectedTurnIndex > 0)
-			{
-				selectedTurnIndex--;
-				Repaint();
-				return;
-			}
-		}
+		EditorGUILayout.BeginHorizontal();
+		DrawRuntimeControls();
+		//DrawDebugSelectedTurn();
+		DrawSelectedTurn();
+		EditorGUILayout.EndHorizontal();
+		
+		return;
 
 		var viewWidth = EditorGUIUtility.currentViewWidth;
-
 		EditorGUILayout.BeginHorizontal();
 		{
 			using(new EditorGUILayout.VerticalScope("box", GUILayout.MaxWidth(200f), GUILayout.ExpandHeight(true)))
@@ -133,7 +149,7 @@ public class OpTimelineWindow : EditorWindow
 								TurnStep turnStep = Haxan.history.turnSteps[i];
 								for (int j = turnStep.opIndex; j < turnStep.opIndex + turnStep.opCount; j++)
 								{
-									IUnitOperable op = Haxan.history.allOps[j];
+									UnitOp op = Haxan.history.allOps[j];
 									if (op == null)
 										continue;
 									op.DrawInspectorContent();
@@ -149,42 +165,292 @@ public class OpTimelineWindow : EditorWindow
 		EditorGUILayout.EndHorizontal();
 	}
 
-	//[Header()]
-	private const int debugTurnCount = 5;
-	public float currSliderValue;
-	public float currFloatSliderValue;
+	private void TickInputs()
+	{
+		var e = Event.current;
+		if (e.type == EventType.KeyDown && e.keyCode == KeyCode.DownArrow)
+		{
+			Debug.LogWarning("DOWN:");
+			if (selectedTurnIndex < Haxan.history.turnCount)
+			{
+				selectedTurnIndex++;
+				Repaint();
+				return;
+			}
+		}
+
+		if (e.type == EventType.KeyDown && e.keyCode == KeyCode.UpArrow)
+		{
+			Debug.LogWarning("UP:");
+			if (selectedTurnIndex > 0)
+			{
+				selectedTurnIndex--;
+				Repaint();
+				return;
+			}
+		}
+	}
+
+	private void DrawRuntimeControls()
+	{
+		float buttonWidth = 24f;
+		float nameWidth = 80f;
+		float extraPadding = 40f;
+
+
+		//EditorGUILayout.BeginHorizontal();
+		using (new EditorGUILayout.VerticalScope(
+			"box",
+			GUILayout.Width(200f + extraPadding),
+			GUILayout.ExpandHeight(true)
+			))
+		{
+			if (Haxan.state.history.turnCount == 0)
+			{
+				EditorGUILayout.LabelField(
+					"No turns in history.", 
+					EditorStyles.boldLabel
+					//, 
+					//GUILayout.ExpandWidth(true)
+					);
+				//EditorGUILayout.EndHorizontal();
+				return;
+			}
+
+			debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos);
+			for (int i = 0; i < Haxan.state.history.turnCount; i++)
+			{
+				using (new EditorGUILayout.HorizontalScope())
+				{
+					if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
+					{
+						Debug.LogWarning("HIT PLAY ON TURN : " + i);
+					}
+
+					if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
+					{
+						Debug.LogWarning("HIT PLAY ON TURN : " + i);
+					}
+
+					if (GUILayout.Button("TURN NAME", GUILayout.Width(nameWidth)))
+					{
+						Debug.LogWarning($"Displaying turn {i}");
+						selectedTurnIndex = i;
+					}
+
+					Rect rect = GUILayoutUtility.GetRect(
+						200 - buttonWidth * 2f - nameWidth,
+						EditorGUIUtility.singleLineHeight
+						);
+					float bump = 2f;
+					rect.yMin += bump;
+					rect.yMin += 1f;
+					rect.yMax += bump;
+					EditorGUI.DrawRect(rect, ColorPicker.Swatches.collisionProbe);
+
+					Rect overRect = rect;
+					var width = overRect.width;
+					overRect.width = width * currSliderValue;
+					EditorGUI.DrawRect(overRect, ColorPicker.Swatches.trigger);
+
+					float markerWidth = 2f;
+					float markerHeightBump = 2f;
+					Rect markerRect = rect;
+
+					markerRect.xMin = overRect.xMax - markerWidth;
+					markerRect.xMax = overRect.xMax - markerWidth;
+					markerRect.height += markerHeightBump;
+				}
+			}
+			EditorGUILayout.EndScrollView();
+			//using (new EditorGUILayout.ScrollViewScope())
+			//{
+
+			//}
+		}
+		//EditorGUILayout.EndHorizontal();
+
+		//using (new EditorGUILayout.VerticalScope("box", GUILayout.MaxWidth(200f), GUILayout.ExpandHeight(true)))
+		//{
+		//	if(Haxan.state.history.turnCount == 0)
+		//	{
+		//		EditorGUILayout.LabelField("No turns in history.", EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
+		//		return;
+		//	}
+
+		//	for (int i = 0; i < Haxan.state.history.turnCount; i++)
+		//	{
+		//		using (new EditorGUILayout.HorizontalScope())
+		//		{
+		//			if (GUILayout.Button(playIcon, GUILayout.MaxWidth(24)))// GUILayout.Width(24)))
+		//			{
+		//				Debug.LogWarning("HIT PLAY ON TURN : " + i);
+		//			}
+
+		//			if (GUILayout.Button(ffIcon, GUILayout.MaxWidth(24)))// GUILayout.Width(24)))
+		//			{
+		//				Debug.LogWarning("SNAP TO TURN : " + i);
+		//			}
+
+		//			if (GUILayout.Button($"TURN {i}", GUILayout.MaxWidth(80)))
+		//			{
+		//				Rect buttonRect = EditorGUILayout.GetControlRect();
+		//				Debug.LogWarning($"Displaying turn {i}");
+		//				selectedTurnIndex = i;
+		//			}
+
+		//			Rect rect = EditorGUILayout.GetControlRect();
+		//			rect.width = rect.width - 24 - 24 - 80;
+		//			EditorGUI.DrawRect(rect, ColorPicker.Swatches.collisionProbe);
+
+		//			Rect overRect = rect;
+		//			var width = overRect.width;
+		//			overRect.width = width * currSliderValue;
+		//			EditorGUI.DrawRect(overRect, ColorPicker.Swatches.trigger);
+
+		//			float markerWidth = 2f;
+		//			float markerHeightBump = 2f;
+		//			Rect markerRect = rect;
+
+		//			markerRect.xMin = overRect.xMax - markerWidth;
+		//			markerRect.xMax = overRect.xMax - markerWidth;
+		//			markerRect.height += markerHeightBump;
+		//			EditorGUI.DrawRect(markerRect, Color.white);
+		//		}
+		//	}
+		//}
+	}
+
+	private void DrawDebugSelectedTurn()
+	{
+		using (new EditorGUILayout.VerticalScope("box", GUILayout.ExpandHeight(true)))
+		{
+			EditorGUILayout.LabelField("NEXT SECTION:");
+		}
+	}
+
+	private void DrawSelectedTurn()
+	{
+		if(selectedTurnIndex < 0)
+		{
+			using (new EditorGUILayout.VerticalScope("box", GUILayout.ExpandHeight(true)))
+			{
+				EditorGUILayout.LabelField("Select a turn to show its data.", EditorStyles.boldLabel);
+			}
+			return;
+		}
+
+		EditorGUILayout.BeginVertical("box", GUILayout.ExpandHeight(true));
+		{
+			scrollPos = EditorGUILayout.BeginScrollView(scrollPos);
+			{
+				if (selectedTurnIndex < 0)
+				{
+					EditorGUILayout.LabelField("Select a turn to display its data.");
+				}
+				else
+				{
+					EditorGUILayout.LabelField($"SHOWING TURN: {selectedTurnIndex}");
+
+					Turn turn = Haxan.history.turns[selectedTurnIndex];
+					if (turn.instigator != null)
+						EditorGUILayout.ObjectField(turn.instigator, typeof(Unit), true);
+					else
+						EditorGUILayout.LabelField("... instigator was null tho");
+
+					EditorGUILayout.LabelField($"START TIME: {turn.startTime}");
+					EditorGUILayout.LabelField($"END TIME: {turn.endTime}");
+					EditorGUILayout.LabelField($"DURATION: {turn.duration}");
+
+					GUILayout.Space(20);
+					for (int i = turn.stepIndex; i < turn.stepIndex + turn.stepCount; i++)
+					{
+						using (new EditorGUILayout.VerticalScope(EditorStyles.helpBox))
+						{
+							TurnStep turnStep = Haxan.history.turnSteps[i];
+							for (int j = turnStep.opIndex; j < turnStep.opIndex + turnStep.opCount; j++)
+							{
+								UnitOp op = Haxan.history.allOps[j];
+								if (op == null)
+									continue;
+								op.DrawInspectorContent();
+							}
+						}
+					}
+				}
+			}
+			EditorGUILayout.EndScrollView();
+		}
+		EditorGUILayout.EndVertical();
+	}
+
 	private void DrawDebugPicker()
 	{
 		GUIContent playIcon = EditorGUIUtility.IconContent("PlayButton On");
 		GUIContent ffIcon = EditorGUIUtility.IconContent("d_StepButton On");
 
+		float buttonWidth = 24f;
+		float nameWidth = 80f;
+		float extraPadding = 40f;
+
+		EditorGUI.BeginChangeCheck();
 		currSliderValue = EditorGUILayout.Slider(currSliderValue, 0f, 1f);
+		bool changed = EditorGUI.EndChangeCheck();
+
 
 		EditorGUILayout.BeginHorizontal();
-		using (new EditorGUILayout.VerticalScope("box", GUILayout.MaxWidth(200f), GUILayout.ExpandHeight(true)))
+		using (new EditorGUILayout.VerticalScope(
+			"box",
+			GUILayout.Width(200f + extraPadding),
+			//GUILayout.MaxWidth(200f + extraPadding),
+			GUILayout.ExpandHeight(true)
+			//,
+			//GUILayout.ExpandWidth(false)
+			))
 		{
-			//GUILayout
+			debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos);
 			for (int i = 0; i < debugTurnCount; i++)
 			{
 				using (new EditorGUILayout.HorizontalScope())
 				{
-					if (GUILayout.Button(playIcon, GUILayout.Width(24)))
+					if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
 					{
 						Debug.LogWarning("HIT PLAY ON TURN : " + i);
 					}
 
-					if (GUILayout.Button(ffIcon, GUILayout.Width(24)))
+					if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
 					{
 						Debug.LogWarning("HIT PLAY ON TURN : " + i);
 					}
 
-					//EditorStyles.
-					if (GUILayout.Button("TURN NAME"))
+					if (GUILayout.Button("TURN NAME", GUILayout.Width(nameWidth)))
 					{
 
 					}
 
-					Rect rect = EditorGUILayout.GetControlRect();
+					//Rect lastRect = GUILayoutUtility.GetLastRect();
+					//Rect rect = lastRect;
+					//float drawn = buttonWidth * 2f + nameWidth;
+					//rect.width = 200 - drawn;
+					//rect.xMin += drawn;
+
+					Rect rect = GUILayoutUtility.GetRect(
+						//GUIContent.none, 
+						200 - buttonWidth * 2f - nameWidth,
+						EditorGUIUtility.singleLineHeight
+						//,
+						//GUILayout.ExpandWidth(true)
+						);
+					float bump = 2f;
+					rect.yMin += bump;
+					rect.yMin += 1f;
+					rect.yMax += bump;// + 1f;
+
+					//Rect rect = GUILayoutUtility.GetLastRect();
+					//Rect rect = EditorGUILayout.GetControlRect();
+
+					//rect.width *= currSliderValue;
+					//rect.width = rect.width - 24 - 24 - 80;
 					EditorGUI.DrawRect(rect, ColorPicker.Swatches.collisionProbe);
 
 					Rect overRect = rect;
@@ -196,13 +462,13 @@ public class OpTimelineWindow : EditorWindow
 					float markerHeightBump = 2f;
 					Rect markerRect = rect;
 					//markerRect.width = markerWidth;
+
 					markerRect.xMin = overRect.xMax - markerWidth;
 					markerRect.xMax = overRect.xMax - markerWidth;
 					markerRect.height += markerHeightBump;
-					EditorGUI.DrawRect(markerRect, Color.white);
+					//EditorGUI.DrawRect(markerRect, Color.white);
 
 					//overRect.xMin += overRect.width;
-
 					//GUILayout.Box(
 					//	EditorGUIUtility.whiteTexture
 					//	//GUILayout.ExpandHeight(true), 
@@ -210,27 +476,17 @@ public class OpTimelineWindow : EditorWindow
 					//	);
 				}
 			}
+			EditorGUILayout.EndScrollView();
+		}
 
-
-			//using (new EditorGUILayout.HorizontalScope())
-
-			//DrawTurnControls();
-			//using (new EditorGUILayout.HorizontalScope(GUILayout.MaxWidth(150f), GUILayout.ExpandHeight(true)))
-			//{
-			//}
-
-			//using (new EditorGUILayout.HorizontalScope(GUILayout.MaxWidth(50f), GUILayout.ExpandHeight(true)))
-			//{
-			//}
+		using (new EditorGUILayout.VerticalScope("box", GUILayout.ExpandHeight(true)))
+		{
+			EditorGUILayout.LabelField("NEXT SECTION:");
 		}
 		EditorGUILayout.EndHorizontal();
-		//EditorGUILayout.BeginHorizontal();
-		//using (new EditorGUILayout.VerticalScope("box", GUILayout.MaxWidth(200f), GUILayout.ExpandHeight(true)))
-		//{
-			//currSliderValue = EditorGUILayout.IntSlider(currSliderValue, 0, debugTurnCount);
-			//currFloatSliderValue = GUILayout.VerticalSlider(currFloatSliderValue, 0f, debugTurnCount);
-		//}
-		//EditorGUILayout.EndHorizontal();
+
+		EditorGUILayout.BeginHorizontal();
+		EditorGUILayout.EndHorizontal();
 	}
 
 	private void DrawTurnControls()

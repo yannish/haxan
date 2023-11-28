@@ -8,7 +8,8 @@ using UnityEditor;
 #endif
 
 [Serializable]
-public class GroundMoveOp : IUnitOperable
+public class GroundMoveOp : UnitOp
+	//: IUnitOperable
 {
 	public Vector2Int fromCoord;
 	public Vector2Int toCoord;
@@ -16,16 +17,16 @@ public class GroundMoveOp : IUnitOperable
 	public Vector3 startPos;
 	public Vector3 endPos;
 
-	public OpPlaybackData _data;
-	public OpPlaybackData data => _data;
+	//public OpPlaybackData _data;
+	//public OpPlaybackData data => _data;
 
-	public void DrawInspectorContent()
+	public override void DrawInspectorContent()
 	{
 #if UNITY_EDITOR
-		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
-		{
+		//using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+		//{
 			EditorGUILayout.LabelField(
-				$"MOVE FROM: {fromCoord.ToCoordString()} => {toCoord.ToCoordString()}",
+				$"MOVE : {fromCoord.ToCoordString()} => {toCoord.ToCoordString()}",
 				EditorStyles.boldLabel
 				);
 
@@ -33,18 +34,18 @@ public class GroundMoveOp : IUnitOperable
 			//EditorGUILayout.Vector2IntField("fromCoord: ", fromCoord);
 			//EditorGUILayout.Vector2IntField("toCoord: ", toCoord);
 			
-			data.DrawOpData();
-		}
+			playbackData.DrawPlaybackData();
+		//}
 #endif
 	}
 
 	public GroundMoveOp(
-		Unit mover, 
+		Unit unit, 
 		Vector2Int fromCoord, 
 		Vector2Int toCoord,
 		float startTime,
 		float duration
-		)
+		) : base(unit)
 	{
 		this.fromCoord = fromCoord;
 		this.toCoord = toCoord;
@@ -52,24 +53,24 @@ public class GroundMoveOp : IUnitOperable
 		startPos = Board.OffsetToWorld(fromCoord);
 		endPos = Board.OffsetToWorld(toCoord);
 
-		this._data = new OpPlaybackData(mover, startTime, duration);
+		this.playbackData = new OpPlaybackData(unit, startTime, duration);
 	}
 
-	public void Execute(Unit unit)
+	public override void Execute(Unit unit)
 	{
 		unit.DecrementMove();
 		unit.SetVisualPos(Vector3.zero, true);
 		unit.MoveTo(toCoord);
 	}
 
-	public void Undo(Unit unit)
+	public override void Undo(Unit unit)
 	{
 		unit.IncrementMove();
 		unit.SetVisualPos(Vector3.zero, true);
 		unit.MoveTo(fromCoord);
 	}
 
-	public void Tick(Unit unit, float t)
+	public override void Tick(Unit unit, float t)
 	{
 		Debug.LogWarning($"Ticking ground move: {t}");
 		unit.SetVisualPos(Vector3.Lerp(startPos, endPos, t));

@@ -75,7 +75,7 @@ public class Item : MonoBehaviour
 
 	public virtual UnitCommand RespondToCommand(Unit unit, UnitCommand command) => null;
 
-	public virtual OpInterruptType TryInterruptOp(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
+	public virtual OpInterruptType TryInterruptOp(Unit unit, UnitOp op) => OpInterruptType.PASS;
 
 	public List<MaterialCache> materialCaches = new List<MaterialCache>();
 	public Dictionary<Renderer, Material> rendToMatLookup;

@@ -83,7 +83,7 @@ public class GroundedMove : Ability
 		pathQuads.Clear();
 	}
 
-	public override List<UnitOp> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit)
+	public override List<UnitOp_STRUCT> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit)
 	{
 		if (targetCoord == unit.OffsetPos)
 			return null;
@@ -100,7 +100,7 @@ public class GroundedMove : Ability
 		if (path.Length == 0)
 			return null;
 
-		List<UnitOp> ops = new List<UnitOp>();
+		List<UnitOp_STRUCT> ops = new List<UnitOp_STRUCT>();
 
 		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
 
@@ -108,7 +108,7 @@ public class GroundedMove : Ability
 
 		if(unit.Facing != toFirstCellDir)
 		{
-			UnitOp newTurnOp = UnitOp.TurnOp(
+			UnitOp_STRUCT newTurnOp = UnitOp_STRUCT.TurnOp(
 				unit: unit,
 				fromDir: unit.Facing,
 				toDir: toFirstCellDir,
@@ -130,7 +130,7 @@ public class GroundedMove : Ability
 			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
 			if(lastFacingDir != toNextCellDir)
 			{
-				UnitOp newTurnOp = UnitOp.TurnOp(
+				UnitOp_STRUCT newTurnOp = UnitOp_STRUCT.TurnOp(
 				unit: unit,
 				fromDir: lastFacingDir,
 				toDir: toNextCellDir,
@@ -149,7 +149,7 @@ public class GroundedMove : Ability
 		return ops;
 	}
 
-	public override List<IUnitOperable> FetchUnitOps(Vector2Int targetCoord, Unit unit)
+	public override List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit)
 	{
 		if (targetCoord == unit.OffsetPos)
 		{
@@ -169,7 +169,7 @@ public class GroundedMove : Ability
 		if (path.Length == 0)
 			return null;
 
-		List<IUnitOperable> ops = new List<IUnitOperable>();
+		List<UnitOp> ops = new List<UnitOp>();
 
 		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
 

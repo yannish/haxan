@@ -65,7 +65,7 @@ public class BoardUIEditor : Editor
                         TurnStep turnStep = Haxan.history.turnSteps[k];
                         for (int i = turnStep.opIndex; i < turnStep.opIndex + turnStep.opCount; i++)
                         {
-                            IUnitOperable op = Haxan.history.allOps[i];
+                            UnitOp op = Haxan.history.allOps[i];
                             if (op == null)
                                 continue;
                             op.DrawInspectorContent();
