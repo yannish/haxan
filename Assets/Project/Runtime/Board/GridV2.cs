@@ -1,3 +1,4 @@
+using BOG;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -79,5 +80,14 @@ public class GridV2 : MonoBehaviour
             // across the whole game's startup, not once per Grid.
             Board.Build();
         }
-    }
+
+		Debog.logCombat("COMBAT");
+		Debog.logInput("INPUT");
+		Debog.logAnimation("ANIMATION");
+		Debog.logCamera("CAMERA");
+		Debog.logEditor("EdITOR");
+		Debog.logFighter("FIGHTER");
+		Debog.logGameflow("GAMEFLOW");
+		Debog.logGrid("GRID");
+	}
 }

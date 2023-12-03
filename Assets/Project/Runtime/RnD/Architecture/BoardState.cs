@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "BoardState", menuName = "Haxan/BoardState")]
-public class BoardStateVariable : ScriptableObject
+public class BoardState : ScriptableObject
 {
 	//... states of all units:
-	public BoardState state;
+	public BoardLayout layout;
 
 	//... how they got there:
 	public BoardHistory history;

@@ -3,6 +3,7 @@ using UnityEngine;
 using Unity.Mathematics;
 using System;
 using System.Linq;
+using BOG;
 
 public static class BoardMetrics
 {
@@ -75,7 +76,9 @@ public static class BoardMetrics
 //[InitializeOnLoad]
 public class Board
 {
-    public static int currTimeStep = -1;
+	public bool logMouseDebug;
+
+	public static int currTimeStep = -1;
 
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void OnSceneLoad()
@@ -189,7 +192,7 @@ public class Board
     // Instead we're just keeping a 1D array of all units, and to find a unit at
     // a given position, we'll just loop over all of them. A better data
     // structure can be implemented if this ever becomes a perf bottleneck.
-    public static Unit[] Units;
+    //public static Unit[] Units;
 
     static List<GridV2> grids = new List<GridV2>();
 
@@ -312,8 +315,8 @@ public class Board
 
         OffsetPos = min;
 
-        Units = UnityEngine.Object.FindObjectsOfType<Unit>();
-        Debug.Log($"Built a {Cells.GetLength(0)}x{Cells.GetLength(1)} board with {Units.Length} units.");
+        //Units = UnityEngine.Object.FindObjectsOfType<Unit>();
+        Debug.Log($"Built a {Cells.GetLength(0)}x{Cells.GetLength(1)}");// board with {Units.Length} units.");
 
         var ui = BoardUI.FindObjectOfType<BoardUI>();
         Debug.Assert(ui != null, "There is no BoardUI in the scene. Please create one.");
@@ -323,15 +326,19 @@ public class Board
         currTimeStep = 0;
     }
 
-    
-    public static Unit GetUnitAtPos(Vector2Int pos)
+    public static Unit GetUnitAtPos(Vector2Int pos, bool logDebug = false)
     {
-        foreach (Unit unit in Board.Units)
+		Debog.logInput($"checking for unit at: ({pos.ToString()})");
+
+        foreach (Unit unit in Haxan.units)
         {
-            if (unit.OffsetPos == pos)
+			Debog.logInput($"checking {unit.name} at: {unit.OffsetPos.ToString()}");
+
+			if (unit.OffsetPos == pos)
             {
-                // ^ Unit exists at this position
-                return unit;
+				Debog.logInput($"... MATCHED {unit.name} at: {unit.OffsetPos.ToString()}");
+				// ^ Unit exists at this position
+				return unit;
             }
         }
         return null;
@@ -460,7 +467,7 @@ public class Board
 
 
                     bool cellIsImpassable = false;
-                    foreach (var otherUnit in Board.Units)
+                    foreach (var otherUnit in Haxan.units)
                     {
                         if (otherUnit.OffsetPos == neighbor)
                         {
@@ -615,7 +622,7 @@ public class Board
                 }
 
                 bool cellIsImpassable = false;
-                foreach(var unit in Board.Units)
+                foreach(var unit in Haxan.units)
 				{
                     if (unit.OffsetPos == neighbor)
                         if (unit.preset != null && !unit.preset.isPassable)
@@ -1000,7 +1007,7 @@ public static class BoardExtensions
 
     public static bool IsOccupied(this Vector2Int coord)
 	{
-        foreach (var unit in Board.Units)
+        foreach (var unit in Haxan.units)
         {
             if (unit.OffsetPos == coord)
                 return true;

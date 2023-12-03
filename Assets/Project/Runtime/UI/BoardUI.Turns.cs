@@ -276,7 +276,7 @@ public static class TimeblockActions
     /// <param name="timeBlock"></param>
     public static void ProcessInstigatorReactions(ref TimeBlock timeBlock)
 	{
-        foreach (var unit in Board.Units)
+        foreach (var unit in Haxan.units)
         {
             foreach (var item in unit.inventory)
             {

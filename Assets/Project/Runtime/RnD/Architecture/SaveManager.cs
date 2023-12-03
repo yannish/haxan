@@ -5,52 +5,74 @@ using UnityEngine;
 
 public class SaveManager : MonoBehaviour
 {
-	const string boardStatePathName = "/BoardState.json";
+	const string boardLayoutPathName = "/BoardLayout.json";
+	const string boardHistoryPathName = "/BoardHistory.json";
 
-	public BoardState boardState = new BoardState();
-
+	public BoardLayout boardState = new BoardLayout();
+	public BoardHistory history = new BoardHistory();
+	public CompressedBoardHistory compressedHistory = new CompressedBoardHistory();
 
 	private void OnEnable()
 	{
-		GameContext.OnSaveBoardState += SaveBoardState;
-		GameContext.OnLoadBoardStte += LoadBoardState;
+		GameContext.OnSaveBoardState += SaveBoardLayout;
+		GameContext.OnSaveBoardState += SaveBoardHistory;
+
+		GameContext.OnLoadBoardStte += LoadBoardLayout;
 	}
 
 	private void OnDisable()
 	{
-		GameContext.OnSaveBoardState -= SaveBoardState;
-		GameContext.OnLoadBoardStte -= LoadBoardState;
+		GameContext.OnSaveBoardState -= SaveBoardLayout;
+		GameContext.OnSaveBoardState -= SaveBoardHistory;
+
+		GameContext.OnLoadBoardStte -= LoadBoardLayout;
 	}
 
-
-	private void SaveBoardState()
+	private void SaveBoardLayout()
 	{
-		BoardState newBoardState = new BoardState();
+		BoardLayout newBoardState = new BoardLayout();
 		foreach (var unit in Haxan.activeUnits.Items)
 		{
 			var cachedUnitState = unit.CacheState();
 			newBoardState.unitStates.Add(cachedUnitState);
 		}
 
-		Haxan.state.state = newBoardState;
+		Haxan.state.layout = newBoardState;
+		string boardStateData = JsonUtility.ToJson(boardState);
+		string filePath = Application.persistentDataPath + boardLayoutPathName;
 
-		string inventoryData = JsonUtility.ToJson(boardState);
-		string filePath = Application.persistentDataPath + boardStatePathName;
-		Debug.Log(filePath);
-		System.IO.File.WriteAllText(filePath, inventoryData);
+		System.IO.File.WriteAllText(filePath, boardStateData);
 
-		Debug.LogWarning("Saved board state.");
+		Debug.LogWarning($"Saved board state: {filePath}");
 	}
 
-	public void LoadBoardState()
+	public void LoadBoardLayout()
 	{
-		string filePath = Application.persistentDataPath + boardStatePathName;
+		string filePath = Application.persistentDataPath + boardLayoutPathName;
 		string boardStateData = System.IO.File.ReadAllText(filePath);
 
-		boardState = JsonUtility.FromJson<BoardState>(boardStateData);
+		boardState = JsonUtility.FromJson<BoardLayout>(boardStateData);
 		Debug.Log("Loaded board state.");
 
 		//GameVariables.board = boardState;
+	}
+
+	private void SaveBoardHistory()
+	{
+		CompressedBoardHistory history = new CompressedBoardHistory(Haxan.history);
+		string historyData = JsonUtility.ToJson(history);
+		string filePath = Application.persistentDataPath + boardHistoryPathName;
+		System.IO.File.WriteAllText(filePath, historyData);
+		Debug.LogWarning($"Saved board history: {filePath}");
+
+	}
+
+	private void LoadBoardHistory()
+	{
+		string filePath = Application.persistentDataPath + boardHistoryPathName;
+		string boardHistoryData = System.IO.File.ReadAllText(filePath);
+		compressedHistory = JsonUtility.FromJson<CompressedBoardHistory>(boardHistoryData);
+		Debug.LogWarning($"Loaded board history: {filePath}");
 	}
 }
 

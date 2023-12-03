@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ public static class TurnHistory
 }
 
 [System.Serializable]
-public class BoardState
+public class BoardLayout
 {
     public List<UnitState> unitStates = new List<UnitState>();
 }
@@ -27,13 +28,44 @@ public class BoardHistory
 	[ReadOnly] public int totalCreatedOps = 0;
 	//public int turnStepCount;
 
-
-
 	public Turn[] turns = new Turn[MAX_TURNS];
 	public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
 	public UnitOp[] allOps = new UnitOp[MAX_OPS];
 	public IUnitOperable[] allOps_OLD = new IUnitOperable[MAX_OPS];
 	public UnitOp_STRUCT[] allOps_NEW = new UnitOp_STRUCT[MAX_OPS];
+}
+
+[Serializable]
+public class CompressedBoardHistory
+{
+	public CompressedBoardHistory()
+	{
+
+	}
+
+	public CompressedBoardHistory(BoardHistory history)
+	{
+		for (int i = 0; i < history.turnCount; i++)
+		{
+			turns.Add(history.turns[i]);
+		}
+
+		for (int i = 0; i < history.totalCreatedTurnSteps; i++)
+		{
+			turnSteps.Add(history.turnSteps[i]);
+		}
+
+		for (int i = 0; i < history.totalCreatedOps; i++)
+		{
+			ops.Add(history.allOps[i]);
+		}
+	}
+
+	public List<Turn> turns = new List<Turn>();
+	public List<TurnStep> turnSteps = new List<TurnStep>();
+
+	[SerializeReference]
+	public List<UnitOp> ops = new List<UnitOp>();
 }
 
 [System.Serializable]

@@ -10,6 +10,9 @@ public partial class BoardUI : MonoBehaviour
     , IPointerEnterHandler
     , IPointerExitHandler
 {
+	[Header("DEBUG:")]
+	public bool logMouseDebug;
+
     enum Mode
     {
         Neutral,
@@ -125,9 +128,9 @@ public partial class BoardUI : MonoBehaviour
             unitButton.gameObject.SetActive(false);
 
         int j = 0;
-        for (int i = 0; i < Board.Units.Length && j < unitButtons.Length; i++)
+        for (int i = 0; i < Haxan.units.Count && j < unitButtons.Length; i++)
         {
-            Unit unit = Board.Units[i];
+            Unit unit = Haxan.units[i];
             if (!(unit is PlayerUnit))
                 continue;
 
@@ -796,7 +799,7 @@ public partial class BoardUI : MonoBehaviour
 
     Unit GetUnitByGuid(int unitGuid)
     {
-        foreach (Unit unit in Board.Units)
+        foreach (Unit unit in Haxan.units)
         {
             if (unit.GetInstanceID() == unitGuid)
             {
@@ -1756,7 +1759,6 @@ public partial class BoardUI : MonoBehaviour
 
     //... NEW TURN PROCESSING:
 
-
     #region TIMEBLOCK CONTROLS:
     float GetTimeBlockDuration()
 	{
@@ -1781,116 +1783,6 @@ public partial class BoardUI : MonoBehaviour
 	}
    	#endregion
 
-	void ProcessReactions_NEW()
-	{
-		//... this would have to catch implicit interruptions, like causing death :
-		List<UnitOp_STRUCT> CheckForInterrupt(List<UnitOp_STRUCT> inputOps)
-		{
-			List<UnitOp_STRUCT> filteredOps = new List<UnitOp_STRUCT>();
-			foreach (var op in inputOps)
-			{
-				foreach (var unit in Haxan.activeUnits.Items)
-				{
-					foreach (var ability in unit.Abilities)
-					{
-						var interruption = ability.TryInterruptOp_NEW(currInstigator, op);
-						if (interruption == OpInterruptType.RETALIATE)
-						{
-							filteredOps.Add(op);
-							return filteredOps;
-						}
-
-						if (interruption == OpInterruptType.INTERDICT)
-							return filteredOps;
-					}
-				}
-
-				//... if we get here, the op was uninterrupted:
-				filteredOps.Add(op);
-			}
-
-			return filteredOps;
-		}
-
-		var interruptFilteredOps = CheckForInterrupt(currInstigatingOps_NEW);
-
-		List<UnitOp_STRUCT> ProcessOpForReactions(UnitOp_STRUCT op)
-		{
-			List<UnitOp_STRUCT> turnStepOps = new List<UnitOp_STRUCT>();
-			bool foundReaction = false;
-			foreach(var unit in Haxan.activeUnits.Items)
-			{
-				if (foundReaction)
-					break;
-
-				foreach(var ability in unit.Abilities)
-				{
-					if (foundReaction)
-						break;
-
-					if(ability.TryReact(op, out var reactions))
-					{
-						reactions.AddRange(reactions);
-						foundReaction = true;
-						continue;
-					}
-				}
-			}
-
-			if (!foundReaction)
-				turnStepOps.Add(op);
-
-			return turnStepOps;
-		}
-
-		List<List<UnitOp_STRUCT>> allGeneratedOps = new List<List<UnitOp_STRUCT>>();
-		for (int i = 0; i < interruptFilteredOps.Count; i++)
-		{
-			var generatedOps = ProcessOpForReactions(interruptFilteredOps[i]);
-			allGeneratedOps.Add(generatedOps);
-		}
-
-		int indexToCreateStepsAt = Haxan.history.totalCreatedTurnSteps;
-		int numOpsCreatedThisTurn = 0;
-		int numStepsCreatedThisTurn = 0;
-
-		for (int i = 0; i < allGeneratedOps.Count; i++)
-		{
-			List<UnitOp_STRUCT> generatedOps = allGeneratedOps[i];
-			TurnStep newTurnStep = new TurnStep()
-			{
-				opIndex = Haxan.history.totalCreatedOps,
-				opCount = generatedOps.Count
-			};
-
-			int numOpsCreatedThisStep = 0;
-			for (int j = 0; j < generatedOps.Count; j++)
-			{
-				allOps_NEW[Haxan.history.totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
-				numOpsCreatedThisStep++;
-				numOpsCreatedThisTurn++;
-			}
-
-			Haxan.history.totalCreatedOps += numOpsCreatedThisTurn;
-			Haxan.history.turnSteps[Haxan.history.totalCreatedTurnSteps] = newTurnStep;
-			
-			numStepsCreatedThisTurn++;
-			Haxan.history.totalCreatedTurnSteps++;
-		}
-
-		Turn newTurn = new Turn()
-		{
-			instigator = currInstigator,
-			stepIndex = indexToCreateStepsAt,
-			stepCount = numStepsCreatedThisTurn,
-			startTime = currPlaybackTime
-		};
-
-		Haxan.history.turns[Haxan.history.turnCount] = newTurn;
-		Haxan.history.turnCount++;
-	}
-    
-    
     void ProcessCommand(UnitCommand command, float currTime, float prevTime, float timeScale)
 	{
         float endTime = command.startTime + command.duration;
@@ -1908,58 +1800,6 @@ public partial class BoardUI : MonoBehaviour
         if(currTime >= endTime && prevTime < endTime)
 		{
             command.OnCompleteTick();
-		}
-    }
-
-    private void HandleTurnForward_OLDER()
-    {
-        if (currCommandStep == null)
-            return;
-
-		if (currCommandStep.Tick())
-		{
-            currCommandStep.CompleteTick();
-			currCommandStep.Execute();
-            currCommandStepHistory.Push(currCommandStep);
-
-            //Board.RespondToCommandCompleteTick(currInstigator, currCommand);
-
-            //currTimeStep++;
-            Board.currTimeStep++;
-
-   //         if (currCommand.StepsTimeForward())
-			//{
-   //             currTimeStep++;
-   //             Board.currTimeStep++;
-			//}
-
-            //TODO: 
-            //... check that the next "intended" command step is valid, not
-            //... disrupted by the new board state
-
-            currCommandStep = null;
-
-			if (!commandsQueueToProcess.IsNullOrEmpty())
-			{
-                currCommandStep = new UnitCommandStep(currInstigator, commandsQueueToProcess.Dequeue());
-                currCommandStep.BeginTick();
-                //currCommand = commandsToProcess.Dequeue();
-                //currCommand.OnBeginTick();
-			}
-			else
-			{
-                playbackState = TurnPlaybackState.PAUSED;
-
-                Turn_OLD recordedTurn = new();
-
-                recordedTurn.instigator = currInstigator;
-                recordedTurn.commandStepHistory = currCommandStepHistory;
-                //recordedTurn.commandHistory = currCommandHistory;
-                turnHistory.Push(recordedTurn);
-
-				currCommandStepHistory = null;
-				//currCommandHistory = null;
-            }
 		}
     }
 
@@ -2003,72 +1843,6 @@ public partial class BoardUI : MonoBehaviour
                 currCommandStepHistory = null;
 			}
 		}
-	}
-
-	private void HandleTurnForward_NEW()
-	{
-		Turn currTurn = Haxan.history.turns[currPlaybackTurn];
-
-		bool allOpsFullyTicked = true;
-
-		//... looping through all ops in that step:
-		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
-		{
-			TurnStep currTurnStep = Haxan.history.turnSteps[i];
-
-			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
-			{
-				UnitOp_STRUCT op = allOps_NEW[j];
-				OpPlaybackData playbackData = op.playbackData;
-
-				float effStartTime = playbackData.startTime + currTurn.startTime;
-				float effEndTime = playbackData.endTime + currTurn.startTime;
-
-				if (prevPlaybackTime < effEndTime)
-					allOpsFullyTicked = false;
-
-				if (currPlaybackTime < effStartTime)
-					continue;
-
-				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
-
-				if(currPlaybackTime >= effStartTime && prevPlaybackTime < effStartTime)
-				{
-					//... onBeginTick
-				}
-
-				Debug.Log(
-					$"ticking op: {j}, " +
-					$"playbackTime: {currPlaybackTime}, " +
-					$"startTime: {effStartTime}" +
-					$"endTime: {effEndTime}"
-					);
-
-				if(currPlaybackTime >= effStartTime && currPlaybackTime < effEndTime)
-				{
-					Debug.LogWarning($"op {j} still running.");
-					var normalizedTime = Mathf.Clamp01((currPlaybackTime - effStartTime) / playbackData.duration);
-					op.Tick(affectedUnit, normalizedTime);
-				}
-
-				bool opCompletedThisFrame = currPlaybackTime > effEndTime && prevPlaybackTime < effEndTime;
-				if (opCompletedThisFrame)
-					op.Execute(affectedUnit);
-			}
-		}
-
-		if(allOpsFullyTicked)
-		{
-			Debug.Log("Played through all turnSteps.");
-
-			playbackState = TurnPlaybackState.PAUSED;
-			SelectUnit(lastSelectedUnit);
-			currInstigator = null;
-			currPlaybackTurn++;
-		}
-
-		prevPlaybackTime = currPlaybackTime;
-		currPlaybackTime += Time.deltaTime * currTimeScale;
 	}
 
 }

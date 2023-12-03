@@ -25,7 +25,7 @@ public class GameContext : MonoBehaviour
 	public static Action<GameFlowState> OnGameStateChangeComplete;
 
 
-	public GameFlowState state;
+	public GameFlowState state = GameFlowState.RUNNING;
 
 	public EditorButton saveBtn = new EditorButton("SaveBoardState");
 	public EditorButton loadBtn = new EditorButton("LoadBoardState");

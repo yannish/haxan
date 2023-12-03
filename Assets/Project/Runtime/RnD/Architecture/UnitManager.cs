@@ -30,9 +30,9 @@ public class UnitManager : MonoBehaviour
 
 	private void OnLoadComplete()
 	{
-		Debug.LogWarning("... loading new units from save: " + Haxan.state.state.unitStates.Count);
+		Debug.LogWarning("... loading new units from save: " + Haxan.state.layout.unitStates.Count);
 
-		foreach (var unitState in Haxan.state.state.unitStates)
+		foreach (var unitState in Haxan.state.layout.unitStates)
 		{
 			var unitPrefab = Resources.Load(unitState.templatePath) as GameObject;
 			var unitInstance = Instantiate(unitPrefab).GetComponent<Unit>();

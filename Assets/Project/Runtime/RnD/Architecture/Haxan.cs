@@ -7,11 +7,15 @@ public static class Haxan
 {
 	private const string activeUnitsPath = "RuntimeSets/ActiveUnits";
 	public static UnitRuntimeSet activeUnits { get; private set; }
+	public static List<Unit> units => activeUnits.Items;
 
 	private const string boardStatePath = "GameFlow/BoardState";
-	public static BoardStateVariable state { get; private set; }
+
+	public static BoardState state { get; private set; }
 
 	public static BoardHistory history => state.history;
+
+	public static BoardLayout layout => state.layout;
 
 	public static Unit ToUnit(this int index) => activeUnits.Items[index];
 
@@ -34,7 +38,7 @@ public static class Haxan
 		Debug.LogWarning("LOADED RUNTIME VARIABLES");
 
 		activeUnits = Resources.Load(activeUnitsPath, typeof(UnitRuntimeSet)) as UnitRuntimeSet;
-		state = Resources.Load(boardStatePath, typeof(BoardStateVariable)) as BoardStateVariable;
+		state = Resources.Load(boardStatePath, typeof(BoardState)) as BoardState;
 
 		state.history.turnCount = 0;
 		state.history.totalCreatedTurnSteps = 0;
