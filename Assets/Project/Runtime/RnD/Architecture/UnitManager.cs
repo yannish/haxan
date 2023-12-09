@@ -8,13 +8,13 @@ public class UnitManager : MonoBehaviour
 	private void OnEnable()
 	{
 		GameContext.OnClearBoard += ClearBoard;
-		GameContext.OnLoadBoardStte += OnLoadComplete;
+		GameContext.OnLoadBoardState += OnLoadComplete;
 	}
 
 	private void OnDisable()
 	{
 		GameContext.OnClearBoard -= ClearBoard;
-		GameContext.OnLoadBoardStte -= OnLoadComplete;
+		GameContext.OnLoadBoardState -= OnLoadComplete;
 	}
 
 	private void ClearBoard()
