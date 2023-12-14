@@ -17,7 +17,8 @@ public class SaveManager : MonoBehaviour
 		GameContext.OnSaveBoardState += SaveBoardLayout;
 		GameContext.OnSaveBoardState += SaveBoardHistory;
 
-		GameContext.OnLoadBoardStte += LoadBoardLayout;
+		GameContext.OnLoadBoardState += LoadBoardLayout;
+		GameContext.OnLoadBoardState += LoadBoardHistory;
 	}
 
 	private void OnDisable()
@@ -25,7 +26,8 @@ public class SaveManager : MonoBehaviour
 		GameContext.OnSaveBoardState -= SaveBoardLayout;
 		GameContext.OnSaveBoardState -= SaveBoardHistory;
 
-		GameContext.OnLoadBoardStte -= LoadBoardLayout;
+		GameContext.OnLoadBoardState -= LoadBoardLayout;
+		GameContext.OnLoadBoardState -= LoadBoardHistory;
 	}
 
 	private void SaveBoardLayout()

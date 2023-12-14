@@ -19,7 +19,7 @@ public class GameContext : MonoBehaviour
 	public static Action OnBoardStateSaveComplete;
 
 	public static Action OnClearBoard;
-	public static Action OnLoadBoardStte;
+	public static Action OnLoadBoardState;
 
 	public static Action<GameFlowState> OnGameStateChangeStart;
 	public static Action<GameFlowState> OnGameStateChangeComplete;
@@ -99,7 +99,7 @@ public class GameContext : MonoBehaviour
 	void LoadBoardState()
 	{
 		OnClearBoard?.Invoke();
-		OnLoadBoardStte?.Invoke();
+		OnLoadBoardState?.Invoke();
 	}
 
 
