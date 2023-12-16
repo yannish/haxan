@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92706310b13d94af4a56ea22480a97db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logMouseDebug: 0
   mode: 0
   isPointerInUI: 0
   againstBoardUI: 0
@@ -1866,7 +1867,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7302969949306064761, guid: b576253ef9eb650458a271e571911478, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.39752865
+      value: 2.6024714
       objectReference: {fileID: 0}
     - target: {fileID: 7302969949306064761, guid: b576253ef9eb650458a271e571911478, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1874,7 +1875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7302969949306064761, guid: b576253ef9eb650458a271e571911478, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.3930221
+      value: 0.33902884
       objectReference: {fileID: 0}
     - target: {fileID: 7302969949306064761, guid: b576253ef9eb650458a271e571911478, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1910,7 +1911,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7302969949306064766, guid: b576253ef9eb650458a271e571911478, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

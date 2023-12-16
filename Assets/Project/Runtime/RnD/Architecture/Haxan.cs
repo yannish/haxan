@@ -10,12 +10,15 @@ public static class Haxan
 	public static List<Unit> units => activeUnits.Items;
 
 	private const string boardStatePath = "GameFlow/BoardState";
+	private const string boardStateVariablePath = "GameFlow/BoardStateVariable";
+
+	public static BoardStateVariable stateVariable { get; private set; }
 
 	public static BoardState state { get; private set; }
 
-	public static BoardHistory history => state.history;
+	public static BoardHistory history => stateVariable.state.history;
 
-	public static BoardLayout layout => state.layout;
+	public static BoardLayout layout => stateVariable.state.layout;
 
 	public static Unit ToUnit(this int index) => activeUnits.Items[index];
 
@@ -38,11 +41,14 @@ public static class Haxan
 		Debug.LogWarning("LOADED RUNTIME VARIABLES");
 
 		activeUnits = Resources.Load(activeUnitsPath, typeof(UnitRuntimeSet)) as UnitRuntimeSet;
-		state = Resources.Load(boardStatePath, typeof(BoardState)) as BoardState;
+		stateVariable = Resources.Load(boardStateVariablePath, typeof(BoardStateVariable)) as BoardStateVariable;
 
-		state.history.turnCount = 0;
-		state.history.totalCreatedTurnSteps = 0;
-		state.history.totalCreatedOps = 0;
+		Haxan.history.turnCount = 0;
+		Haxan.history.totalCreatedTurnSteps = 0;
+		Haxan.history.totalCreatedOps = 0;
+
+		//state.history.turnCount = 0;
+
 
 		var allUnitArchetypes = Resources.LoadAll<UnitDefinition>("UnitArchetypes").ToList();
 		allUnitArchetypes.ToDictionary(r => r.type, r => r);

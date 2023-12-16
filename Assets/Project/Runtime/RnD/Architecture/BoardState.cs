@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "BoardState", menuName = "Haxan/BoardState")]
-public class BoardState : ScriptableObject
+//[CreateAssetMenu(fileName = "BoardState", menuName = "Haxan/BoardState")]
+
+[Serializable]
+public class BoardState
 {
 	//... states of all units:
 	public BoardLayout layout;

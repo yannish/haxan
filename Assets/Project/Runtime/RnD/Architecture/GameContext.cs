@@ -12,6 +12,12 @@ public enum GameFlowState
 }
 
 
+/*
+ * GameContext should be what governs the flow.
+ * 
+ * 
+ */
+
 
 public class GameContext : MonoBehaviour
 {

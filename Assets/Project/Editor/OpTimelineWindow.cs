@@ -75,7 +75,7 @@ public class OpTimelineWindow : EditorWindow
 			return;
 		}
 
-		if (Haxan.state == null || Haxan.state.history == null)
+		if (Haxan.stateVariable == null || Haxan.stateVariable.state.history == null)
 		{
 			EditorGUILayout.LabelField("No history found...");
 			return;
@@ -205,7 +205,7 @@ public class OpTimelineWindow : EditorWindow
 			GUILayout.ExpandHeight(true)
 			))
 		{
-			if (Haxan.state.history.turnCount == 0)
+			if (Haxan.stateVariable.state.history.turnCount == 0)
 			{
 				EditorGUILayout.LabelField(
 					"No turns in history.", 
@@ -218,7 +218,7 @@ public class OpTimelineWindow : EditorWindow
 			}
 
 			debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos);
-			for (int i = 0; i < Haxan.state.history.turnCount; i++)
+			for (int i = 0; i < Haxan.stateVariable.state.history.turnCount; i++)
 			{
 				using (new EditorGUILayout.HorizontalScope())
 				{
