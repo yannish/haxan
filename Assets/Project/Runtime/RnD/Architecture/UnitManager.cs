@@ -7,14 +7,14 @@ public class UnitManager : MonoBehaviour
 {
 	private void OnEnable()
 	{
-		GameContext.OnClearBoard += ClearBoard;
-		GameContext.OnLoadBoardState += OnLoadComplete;
+		GameContext.OnLoadBoardStateBegin += ClearBoard;
+		GameContext.OnLoadBoardStateComplete += SetBoard;
 	}
 
 	private void OnDisable()
 	{
-		GameContext.OnClearBoard -= ClearBoard;
-		GameContext.OnLoadBoardState -= OnLoadComplete;
+		GameContext.OnLoadBoardStateBegin -= ClearBoard;
+		GameContext.OnLoadBoardStateComplete -= SetBoard;
 	}
 
 	private void ClearBoard()
@@ -28,7 +28,7 @@ public class UnitManager : MonoBehaviour
 		}
 	}
 
-	private void OnLoadComplete()
+	private void SetBoard()
 	{
 		Debug.LogWarning("... loading new units from save: " + Haxan.state.layout.unitStates.Count);
 

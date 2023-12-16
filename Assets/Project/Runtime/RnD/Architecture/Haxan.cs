@@ -14,7 +14,7 @@ public static class Haxan
 
 	public static BoardStateVariable stateVariable { get; private set; }
 
-	public static BoardState state { get; private set; }
+	public static BoardState state { get; set; }
 
 	public static BoardHistory history => stateVariable.state.history;
 

@@ -1,39 +1,24 @@
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
 [Serializable]
-public class DumbSaveableThing
+public class QuickBoardState
 {
-	public DumbNestableThingA thingA;
-	public DumbNestableThingB thingB;
+	public string stringA;
+	public BoardHistory history;
 }
 
-[Serializable]
-public class DumbNestableThingA
+public class SaveUI : MonoBehaviour
 {
-	public float quickFloat;
-	public string quickString;
-}
+	const string saveFolder = "/saves/";
+	const string debugSaveFolder = "/debugSaveFolder/";
 
-[Serializable]
-public class DumbNestableThingB
-{
-	public int quickInt;
-	public bool quickBool;
-}
-
-
-public class SaveTestRunner : MonoBehaviour
-{
-	const string saveFolder = "/testSaves/";
-
-	public string saveGameName;
+	public BoardState capturedBoardState;
 
 	public string[] existingSaves;
 	public List<string> existingSaveNames = new List<string>();
@@ -41,16 +26,66 @@ public class SaveTestRunner : MonoBehaviour
 	public GameObject saveFileButtonPrefab;
 	public GameObject deleteButtonPrefab;
 
-	public DumbSaveableThing thingToSave;
-	public DumbSaveableThing loadedThing;
+	[Header("DEBUG:")]
+	public string[] debugExistingFiles;
+	public string debugFileName;
+	public string debugFilePath;
+	public int debugFilePathIndex;
+	public BoardState debugBoardState;
+
+
+
+	public EditorButton debugLoadBtn = new EditorButton("DebugLoad");
+	public void DebugLoad()
+	{
+		if (!File.Exists(debugExistingFiles[0]))
+		{
+			Debug.LogWarning($"No file found at {debugExistingFiles[0]}.");
+			return;
+		}
+
+		Debug.LogWarning($"Loading from {debugExistingFiles[0]}.");
+
+		var boardStateData = System.IO.File.ReadAllText(debugExistingFiles[0]);
+		quickBoardStateB = JsonUtility.FromJson<QuickBoardState>(boardStateData);
+	}
+
+	public EditorButton debugSaveBtn = new EditorButton("DebugSave");
+	public void DebugSave()
+	{
+		if (!Directory.Exists(Application.persistentDataPath + debugSaveFolder))
+			Directory.CreateDirectory(Application.persistentDataPath + debugSaveFolder);
+
+		string boardStateString = JsonUtility.ToJson(quickBoardStateA);
+		string filePath = Application.persistentDataPath + debugSaveFolder + $"{debugFileName}.json";
+		System.IO.File.WriteAllText(filePath, boardStateString);
+		debugExistingFiles = Directory.GetFiles(Application.persistentDataPath + debugSaveFolder);
+	}
+
+	public EditorButton debugClearBtn = new EditorButton("DebugClear");
+	public void DebugClear()
+	{
+		debugExistingFiles = Directory.GetFiles(Application.persistentDataPath + debugSaveFolder);
+		foreach (var savePath in debugExistingFiles)
+		{
+			Debug.LogWarning($"deleting at {savePath}");
+			if (File.Exists(savePath))
+				File.Delete(savePath);
+		}
+		debugExistingFiles = null;
+	}
+
+	public QuickBoardState quickBoardStateA;
+	public QuickBoardState quickBoardStateB;
+
+
+
 
 
 	[Header("REFERENCES:")]
 	public Button saveButton;
 	public Button cancelButton;
 	public TMP_InputField inputField;
-
-
 
 	Canvas canvas;
 	public VerticalLayoutGroup loadButtonGroup;
@@ -61,39 +96,31 @@ public class SaveTestRunner : MonoBehaviour
 
 
 	//... BUTTONS:
-	public EditorButton saveBtn = new EditorButton("Save");
-	public void Save()
-	{
-		SaveInternal(saveGameName);
-		//existingSaves = Directory.GetFiles(Application.persistentDataPath + saveFolder);
-	}
+	//public EditorButton saveBtn = new EditorButton("Save");
+	//public void Save()
+	//{
+	//	SaveInternal(saveGameName);
+	//}
 
-	public EditorButton loadbBtn = new EditorButton("Load");
-	public void Load()
-	{
-		LoadInternal(Application.persistentDataPath + saveFolder + $"{saveGameName}.json");
-	}
+	//public EditorButton loadbBtn = new EditorButton("Load");
+	//public void Load()
+	//{
+	//	LoadInternal(Application.persistentDataPath + saveFolder + $"{saveGameName}.json");
+	//}
 
 	public EditorButton trimNamesBtn = new EditorButton("TrimNames");
 	public void TrimNames()
 	{
-		//LoadAll();
 		existingSaveNames.Clear();
-		foreach(var existingSave in existingSaves)
+		foreach (var existingSave in existingSaves)
 		{
 			var fileName = Path.GetFileName(existingSave);
 			existingSaveNames.Add(fileName);
-			//var trimmedName = existingSave;
-			//trimmedName = trimmedName.Replace(".json", "");
-			//trimmedName = trimmedName.Replace(Application.persistentDataPath + saveFolder, "");
 		}
 	}
 
 	public EditorButton clearBtn = new EditorButton("ClearLoadedThing");
-	public void ClearLoadedThing()
-	{
-		loadedThing = null;
-	}
+	public void ClearLoadedThing() => Haxan.state = null;
 
 	public EditorButton refreshSaveStrings = new EditorButton("RefreshSaveStrings");
 	void RefreshSaveStrings() => existingSaves = Directory.GetFiles(Application.persistentDataPath + saveFolder);
@@ -104,12 +131,9 @@ public class SaveTestRunner : MonoBehaviour
 		foreach (var savePath in existingSaves)
 		{
 			Debug.LogWarning($"deleting at {savePath}");
-			if(File.Exists(savePath))
+			if (File.Exists(savePath))
 				File.Delete(savePath);
 		}
-
-		//FileUtil.DeleteFileOrDirectory(save);
-			//Directory.Delete(save);
 	}
 
 
@@ -133,49 +157,19 @@ public class SaveTestRunner : MonoBehaviour
 	}
 
 
-
-	void SaveInternal(string fileName)
-	{
-		if (!Directory.Exists(Application.persistentDataPath + saveFolder))
-		{
-			Directory.CreateDirectory(Application.persistentDataPath + saveFolder);
-		}
-
-		string saveableThingData = JsonUtility.ToJson(thingToSave);
-		string filePath = Application.persistentDataPath + saveFolder + $"{fileName}.json";
-		System.IO.File.WriteAllText(filePath, saveableThingData);
-	}
-
-	void LoadInternal(string path)
-	{
-		if (!File.Exists(path))
-		{
-			Debug.LogWarning($"No file found at {path}.");
-			return;
-		}
-
-		var saveableThingData = System.IO.File.ReadAllText(path);
-		loadedThing = JsonUtility.FromJson<DumbSaveableThing>(saveableThingData);
-		//loadableThing = 
-	}
-
+	
 	void DeleteInternal(int index)
 	{
 		if (File.Exists(existingSaves[index]))
 			File.Delete(existingSaves[index]);
 	}
 
-
 	void ToggleWindow()
 	{
 		if (!isShowing)
-		{
 			ShowMenu();
-		}
 		else
-		{
 			HideMenu();
-		}
 	}
 
 	void ShowMenu()
@@ -198,11 +192,18 @@ public class SaveTestRunner : MonoBehaviour
 		Debug.LogWarning("REFRESHING BUTTONS.");
 
 		ClearButtons();
+		CheckForFolder();
 		RefreshSaveStrings();
 		TrimNames();
 		GenerateButtons();
 	}
-	
+
+	void CheckForFolder()
+	{
+		if (!Directory.Exists(Application.persistentDataPath + saveFolder))
+			Directory.CreateDirectory(Application.persistentDataPath + saveFolder);
+	}
+
 	void GenerateButtons()
 	{
 		for (int i = 0; i < existingSaves.Length; i++)
@@ -214,8 +215,6 @@ public class SaveTestRunner : MonoBehaviour
 
 	void ClearButtons()
 	{
-		//Debug.LogWarning($"CLEARING: {loadFileButtons.Count} , {deleteFileButtons.Count}");
-
 		foreach (var button in loadFileButtons)
 			Destroy(button.gameObject);
 		loadFileButtons.Clear();
@@ -223,9 +222,6 @@ public class SaveTestRunner : MonoBehaviour
 		foreach (var button in deleteFileButtons)
 			Destroy(button.gameObject);
 		deleteFileButtons.Clear();
-
-		//Debug.LogWarning($"... NOW: {loadFileButtons.Count} , {deleteFileButtons.Count}");
-
 	}
 
 	void CreateLoadButton(int index)
@@ -236,7 +232,7 @@ public class SaveTestRunner : MonoBehaviour
 
 		buttonText.SetText(existingSaveNames[index]);
 		loadFileButtons.Add(newLoadButton);
-		
+
 		newLoadButton.onClick.AddListener(() =>
 		{
 			OnLoadButtonClicked(index);
@@ -248,7 +244,7 @@ public class SaveTestRunner : MonoBehaviour
 	{
 		var newButtonObj = Instantiate(deleteButtonPrefab, deleteButtonGroup.transform);
 		var newButton = newButtonObj.GetComponentInChildren<Button>();
-		
+
 		deleteFileButtons.Add(newButton);
 
 		newButton.onClick.AddListener(() =>
@@ -270,6 +266,24 @@ public class SaveTestRunner : MonoBehaviour
 		LoadInternal(existingSaves[index]);
 	}
 
+	void LoadInternal(string path)
+	{
+		if (!File.Exists(path))
+		{
+			Debug.LogWarning($"No file found at {path}.");
+			return;
+		}
+
+		Debug.LogWarning($"Loading from {path}.");
+
+		var boardStateData = System.IO.File.ReadAllText(path);
+		Haxan.state = JsonUtility.FromJson<BoardState>(boardStateData);
+
+		GameContext.OnLoadBoardStateBegin?.Invoke();
+		GameContext.OnLoadBoardStateComplete?.Invoke();
+	}
+
+
 	void OnSaveButtonClicked()
 	{
 		if (inputField.text == "")
@@ -278,9 +292,9 @@ public class SaveTestRunner : MonoBehaviour
 			return;
 		}
 
-		foreach(var existingSaveName in existingSaveNames)
+		foreach (var existingSaveName in existingSaveNames)
 		{
-			if(existingSaveName == inputField.text)
+			if (existingSaveName == inputField.text)
 			{
 				Debug.LogWarning($"... already have a save game with name {existingSaveName}!");
 				return;
@@ -289,5 +303,28 @@ public class SaveTestRunner : MonoBehaviour
 
 		SaveInternal(inputField.text);
 		RefreshButtons();
+	}
+
+	void SaveInternal(string fileName)
+	{
+		if (!Directory.Exists(Application.persistentDataPath + saveFolder))
+			Directory.CreateDirectory(Application.persistentDataPath + saveFolder);
+
+		var capturedBoardLayout = new BoardLayout();
+		foreach(var unit in Haxan.activeUnits.Items)
+		{
+			var cachedUnitState = unit.CacheState();
+			capturedBoardLayout.unitStates.Add(cachedUnitState);
+		}
+
+		var capturedBoardHistory = Haxan.history;
+
+		capturedBoardState = new BoardState();
+		capturedBoardState.history = capturedBoardHistory;
+		capturedBoardState.layout = capturedBoardLayout;
+
+		string boardStateString = JsonUtility.ToJson(capturedBoardState);
+		string filePath = Application.persistentDataPath + saveFolder + $"{fileName}.json";
+		System.IO.File.WriteAllText(filePath, boardStateString);
 	}
 }
