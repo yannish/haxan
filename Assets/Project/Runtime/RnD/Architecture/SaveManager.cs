@@ -10,6 +10,7 @@ public class SaveManager : MonoBehaviour
 
 	public BoardLayout boardState = new BoardLayout();
 	public BoardHistory history = new BoardHistory();
+
 	public CompressedBoardHistory compressedHistory = new CompressedBoardHistory();
 
 	private void OnEnable()
@@ -17,8 +18,8 @@ public class SaveManager : MonoBehaviour
 		GameContext.OnSaveBoardState += SaveBoardLayout;
 		GameContext.OnSaveBoardState += SaveBoardHistory;
 
-		GameContext.OnLoadBoardState += LoadBoardLayout;
-		GameContext.OnLoadBoardState += LoadBoardHistory;
+		GameContext.OnLoadBoardStateComplete += LoadBoardLayout;
+		GameContext.OnLoadBoardStateComplete += LoadBoardHistory;
 	}
 
 	private void OnDisable()
@@ -26,20 +27,20 @@ public class SaveManager : MonoBehaviour
 		GameContext.OnSaveBoardState -= SaveBoardLayout;
 		GameContext.OnSaveBoardState -= SaveBoardHistory;
 
-		GameContext.OnLoadBoardState -= LoadBoardLayout;
-		GameContext.OnLoadBoardState -= LoadBoardHistory;
+		GameContext.OnLoadBoardStateComplete -= LoadBoardLayout;
+		GameContext.OnLoadBoardStateComplete -= LoadBoardHistory;
 	}
 
 	private void SaveBoardLayout()
 	{
-		BoardLayout newBoardState = new BoardLayout();
+		BoardLayout capturedBoardLayout = new BoardLayout();
 		foreach (var unit in Haxan.activeUnits.Items)
 		{
 			var cachedUnitState = unit.CacheState();
-			newBoardState.unitStates.Add(cachedUnitState);
+			capturedBoardLayout.unitStates.Add(cachedUnitState);
 		}
 
-		Haxan.state.layout = newBoardState;
+		Haxan.state.layout = capturedBoardLayout;
 		string boardStateData = JsonUtility.ToJson(boardState);
 		string filePath = Application.persistentDataPath + boardLayoutPathName;
 
