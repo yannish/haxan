@@ -42,8 +42,8 @@ public partial class BoardUI : MonoBehaviour
     Vector2Int[] waypointPositions; // In offset coordinates
     
     GameObject gizmos;
-    Vector2Int hoveredCellPos; // In offset coordinates
     Controls input;
+    Vector2Int hoveredCellPos; // In offset coordinates
    
 
     [Header("MARKERS:")]
@@ -104,8 +104,7 @@ public partial class BoardUI : MonoBehaviour
 
 
     [Header("PATHING:")]
-    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPathableCellLookup = 
-        new Dictionary<Vector2Int, PooledMonoBehaviour>();
+    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPathableCellLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
 
 
 
@@ -172,10 +171,8 @@ public partial class BoardUI : MonoBehaviour
         mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);
         mouseMoveAcrossCells = mousePos != mousePosLastFrame;
 
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            Debug.LogWarning("Q");
-        }
+		if (GameContext.state != GameFlowState.RUNNING)
+			return;
 
         switch (mode)
         {
@@ -209,6 +206,7 @@ public partial class BoardUI : MonoBehaviour
 
         mousePosLastFrame = mousePos;
     }
+
 
     //... NEUTRAL:
     void HandleNeutralMode()

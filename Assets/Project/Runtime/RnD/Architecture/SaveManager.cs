@@ -40,7 +40,7 @@ public class SaveManager : MonoBehaviour
 			capturedBoardLayout.unitStates.Add(cachedUnitState);
 		}
 
-		Haxan.state.layout = capturedBoardLayout;
+		//Haxan.state.layout = capturedBoardLayout;
 		string boardStateData = JsonUtility.ToJson(boardState);
 		string filePath = Application.persistentDataPath + boardLayoutPathName;
 

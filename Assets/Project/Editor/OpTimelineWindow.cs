@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -5,6 +6,9 @@ using UnityEngine;
 
 public class OpTimelineWindow : EditorWindow
 {
+	public static Action onScrubToTurnClicked;
+	public static Action onSmashCutToTurnClicked;
+
 	int selectedTurnIndex = -1;
 	Vector2 scrollPos;
 	Vector2 debugScrollPos;
@@ -35,16 +39,20 @@ public class OpTimelineWindow : EditorWindow
 		{
 			case PlayModeStateChange.EnteredEditMode:
 				break;
+
 			case PlayModeStateChange.ExitingEditMode:
 				break;
+
 			case PlayModeStateChange.EnteredPlayMode:
 				selectedTurnIndex = -1;
 				EditorApplication.update -= RepaintWindow;
 				EditorApplication.update += RepaintWindow;
 				break;
+
 			case PlayModeStateChange.ExitingPlayMode:
 				EditorApplication.update -= RepaintWindow;
 				break;
+
 			default:
 				break;
 		}

@@ -15,11 +15,12 @@ public class BoardHistory
 	[ReadOnly] public int turnCount = 0;
 	[ReadOnly] public int totalCreatedTurnSteps = 0;
 	[ReadOnly] public int totalCreatedOps = 0;
-	//public int turnStepCount;
 
 	public Turn[] turns = new Turn[MAX_TURNS];
 	public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
+	[SerializeReference]
 	public UnitOp[] allOps = new UnitOp[MAX_OPS];
+
 	public IUnitOperable[] allOps_OLD = new IUnitOperable[MAX_OPS];
 	public UnitOp_STRUCT[] allOps_NEW = new UnitOp_STRUCT[MAX_OPS];
 }

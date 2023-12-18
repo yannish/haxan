@@ -34,6 +34,7 @@ RectTransform:
   - {fileID: 2826828807040411256}
   - {fileID: 8045176492629213340}
   - {fileID: 8116324588065456141}
+  - {fileID: 5017240013998447306}
   - {fileID: 1698985671325819920}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -62,18 +63,5140 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd416c0bfb12c0f4f92143b0d7ea0c4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  saveGameName: 
+  capturedBoardState:
+    layout:
+      unitStates: []
+    history:
+      turnCount: 0
+      totalCreatedTurnSteps: 0
+      totalCreatedOps: 0
+      turns:
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      turnSteps:
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      allOps:
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
   existingSaves: []
   existingSaveNames: []
   saveFileButtonPrefab: {fileID: 733739670246601967, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
   deleteButtonPrefab: {fileID: 2601309965094934053, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
+  overwriteButtonPrefab: {fileID: 151533452925440401, guid: 0514fa64a93966449be5994d48322019, type: 3}
+  debugExistingFiles: []
+  debugFileName: 
+  debugFilePath: 
+  debugFilePathIndex: 0
+  debugBoardState:
+    layout:
+      unitStates: []
+    history:
+      turnCount: 0
+      totalCreatedTurnSteps: 0
+      totalCreatedOps: 0
+      turns:
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      turnSteps:
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      allOps:
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+  quickBoardStateA:
+    stringA: 
+    history:
+      turnCount: 0
+      totalCreatedTurnSteps: 0
+      totalCreatedOps: 0
+      turns:
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      turnSteps:
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      allOps:
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+  quickBoardStateB:
+    stringA: 
+    history:
+      turnCount: 0
+      totalCreatedTurnSteps: 0
+      totalCreatedOps: 0
+      turns:
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      - instigator: {fileID: 0}
+        stepIndex: 0
+        stepCount: 0
+        startTime: 0
+        endTime: 0
+      turnSteps:
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      - startTime: 0
+        duration: 0
+        opIndex: 0
+        opCount: 0
+      allOps:
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
+      - rid: -2
   saveButton: {fileID: 6242709151814875523}
   cancelButton: {fileID: 2357397677676452041}
   inputField: {fileID: 3071551178735557404}
   loadButtonGroup: {fileID: 7988633728795386483}
   deleteButtonGroup: {fileID: 7396259779763759799}
+  overwriteButtonGroup: {fileID: 7099932394091695914}
   loadFileButtons: []
   deleteFileButtons: []
+  overwriteFileButtons: []
+  capturedBoardHistory:
+    turnCount: 0
+    totalCreatedTurnSteps: 0
+    totalCreatedOps: 0
+    turns:
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    - instigator: {fileID: 0}
+      stepIndex: 0
+      stepCount: 0
+      startTime: 0
+      endTime: 0
+    turnSteps:
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    - startTime: 0
+      duration: 0
+      opIndex: 0
+      opCount: 0
+    allOps:
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+    - rid: -2
+  references:
+    version: 2
+    RefIds:
+    - rid: -2
+      type: {class: , ns: , asm: }
+--- !u!1 &181973540830891929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5017240013998447306}
+  - component: {fileID: 7099932394091695914}
+  m_Layer: 0
+  m_Name: overwriteButtonGroup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &5017240013998447306
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181973540830891929}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1993182158552979385}
+  - {fileID: 4048927250854435794}
+  - {fileID: 4306295929530637630}
+  - {fileID: 3535237796055344006}
+  m_Father: {fileID: 2654215548916001488}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 51.8, y: -203.16}
+  m_SizeDelta: {x: 27.175, y: 292.0278}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &7099932394091695914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181973540830891929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 0
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 0
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1369260324812274437
 GameObject:
   m_ObjectHideFlags: 0
@@ -457,7 +5580,7 @@ GameObject:
   - component: {fileID: 8116324588065456141}
   - component: {fileID: 7396259779763759799}
   m_Layer: 0
-  m_Name: trashGroup
+  m_Name: trashButtonGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1282,8 +6405,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 15.3413, y: -28.570805}
-  m_SizeDelta: {x: 616.8693, y: 292.0278}
+  m_AnchoredPosition: {x: 32, y: -28.570805}
+  m_SizeDelta: {x: 583.1423, y: 292.0278}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7988633728795386483
 MonoBehaviour:
@@ -1645,7 +6768,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2601309965094934053, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_Pivot.x
@@ -1661,7 +6784,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1669,7 +6792,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1709,11 +6832,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 14.81475
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1751,7 +6874,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 733739670246601967, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_Pivot.x
@@ -1767,7 +6890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1775,7 +6898,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1811,11 +6934,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -45
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1857,7 +6980,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2601309965094934053, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_Pivot.x
@@ -1873,7 +6996,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1881,7 +7004,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -1921,11 +7044,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 14.81475
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1963,7 +7086,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2601309965094934053, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_Pivot.x
@@ -1979,7 +7102,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.x
@@ -1987,7 +7110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2027,11 +7150,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 14.81475
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2069,7 +7192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2601309965094934053, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_Pivot.x
@@ -2085,7 +7208,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2093,7 +7216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -2133,11 +7256,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 14.81475
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -105
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7432342084307111775, guid: bf7c3ed972a8d6a48b736ad3111c47e9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2175,7 +7298,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 733739670246601967, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_Pivot.x
@@ -2191,7 +7314,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2199,7 +7322,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2235,11 +7358,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -15
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2263,6 +7386,108 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
   m_PrefabInstance: {fileID: 5958471036200166366}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &6525188495393349458
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5017240013998447306}
+    m_Modifications:
+    - target: {fileID: 151533452925440401, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Name
+      value: overwriteButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 29.6295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0514fa64a93966449be5994d48322019, type: 3}
+--- !u!224 &1993182158552979385 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+  m_PrefabInstance: {fileID: 6525188495393349458}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6557435037809175791
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2277,7 +7502,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 733739670246601967, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_Pivot.x
@@ -2293,7 +7518,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2301,7 +7526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2337,11 +7562,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -105
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2379,7 +7604,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 733739670246601967, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_Pivot.x
@@ -2395,7 +7620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2403,7 +7628,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2439,11 +7664,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 250
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -75
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2466,4 +7691,310 @@ PrefabInstance:
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6016888217472980953, guid: 2e6608e017b494a418c8496988b77b2e, type: 3}
   m_PrefabInstance: {fileID: 6602809642676983834}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8081890719800322925
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5017240013998447306}
+    m_Modifications:
+    - target: {fileID: 151533452925440401, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Name
+      value: overwriteButton (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 29.6295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0514fa64a93966449be5994d48322019, type: 3}
+--- !u!224 &3535237796055344006 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+  m_PrefabInstance: {fileID: 8081890719800322925}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8725646351515472697
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5017240013998447306}
+    m_Modifications:
+    - target: {fileID: 151533452925440401, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Name
+      value: overwriteButton (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 29.6295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0514fa64a93966449be5994d48322019, type: 3}
+--- !u!224 &4048927250854435794 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+  m_PrefabInstance: {fileID: 8725646351515472697}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &8855235291832833493
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 5017240013998447306}
+    m_Modifications:
+    - target: {fileID: 151533452925440401, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Name
+      value: overwriteButton (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 29.6295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 0514fa64a93966449be5994d48322019, type: 3}
+--- !u!224 &4306295929530637630 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 4694743958894446827, guid: 0514fa64a93966449be5994d48322019, type: 3}
+  m_PrefabInstance: {fileID: 8855235291832833493}
   m_PrefabAsset: {fileID: 0}

@@ -86,6 +86,25 @@ public partial class BoardUI : MonoBehaviour
 
 
 
+	void OnEnable()
+	{
+	}
+
+	void OnDisable()
+	{
+
+	}
+
+	void HandleScrubToTurn(int turnIndex)
+	{
+
+	}
+
+	void HandleSmashCutToTurn(int turnIndex)
+	{
+
+	}
+
     void StartProcessingTurn(List<UnitOp> instigatingOps)
     {
         if (logTurnDebug)
@@ -290,6 +309,11 @@ public partial class BoardUI : MonoBehaviour
 			default:
 				break;
 		}
+	}
+
+	public void HandleTurnScrub(int turnIndex)
+	{
+
 	}
 
     public void HandleTurnForward()

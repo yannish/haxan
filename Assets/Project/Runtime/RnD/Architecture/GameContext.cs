@@ -32,8 +32,7 @@ public class GameContext : MonoBehaviour
 	public static Action<GameFlowState> OnGameStateChangeStart;
 	public static Action<GameFlowState> OnGameStateChangeComplete;
 
-
-	public GameFlowState state = GameFlowState.RUNNING;
+	public static GameFlowState state = GameFlowState.RUNNING;
 
 	public EditorButton saveBtn = new EditorButton("SaveBoardState");
 	public EditorButton loadBtn = new EditorButton("LoadBoardState");
@@ -108,7 +107,6 @@ public class GameContext : MonoBehaviour
 		OnClearBoard?.Invoke();
 		OnLoadBoardStateComplete?.Invoke();
 	}
-
 
 	private void TickPausedState()
 	{

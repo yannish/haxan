@@ -12,9 +12,9 @@ public static class Haxan
 	private const string boardStatePath = "GameFlow/BoardState";
 	private const string boardStateVariablePath = "GameFlow/BoardStateVariable";
 
-	public static BoardStateVariable stateVariable { get; private set; }
+	public static BoardStateVariable stateVariable { get; set; }
 
-	public static BoardState state { get; set; }
+	public static BoardState state { get => stateVariable.state; set => stateVariable.state = value; }
 
 	public static BoardHistory history => stateVariable.state.history;
 
@@ -48,7 +48,6 @@ public static class Haxan
 		Haxan.history.totalCreatedOps = 0;
 
 		//state.history.turnCount = 0;
-
 
 		var allUnitArchetypes = Resources.LoadAll<UnitDefinition>("UnitArchetypes").ToList();
 		allUnitArchetypes.ToDictionary(r => r.type, r => r);

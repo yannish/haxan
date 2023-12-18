@@ -23,8 +23,12 @@ public class SaveUI : MonoBehaviour
 	public string[] existingSaves;
 	public List<string> existingSaveNames = new List<string>();
 
+
+	[Header("PREFABS:")]
 	public GameObject saveFileButtonPrefab;
 	public GameObject deleteButtonPrefab;
+	public GameObject overwriteButtonPrefab;
+
 
 	[Header("DEBUG:")]
 	public string[] debugExistingFiles;
@@ -90,8 +94,10 @@ public class SaveUI : MonoBehaviour
 	Canvas canvas;
 	public VerticalLayoutGroup loadButtonGroup;
 	public VerticalLayoutGroup deleteButtonGroup;
+	public VerticalLayoutGroup overwriteButtonGroup;
 	public List<Button> loadFileButtons = new List<Button>();
 	public List<Button> deleteFileButtons = new List<Button>();
+	public List<Button> overwriteFileButtons = new List<Button>();
 	bool isShowing;
 
 
@@ -120,7 +126,7 @@ public class SaveUI : MonoBehaviour
 	}
 
 	public EditorButton clearBtn = new EditorButton("ClearLoadedThing");
-	public void ClearLoadedThing() => Haxan.state = null;
+	public void ClearLoadedThing() => Haxan.stateVariable.state = null;
 
 	public EditorButton refreshSaveStrings = new EditorButton("RefreshSaveStrings");
 	void RefreshSaveStrings() => existingSaves = Directory.GetFiles(Application.persistentDataPath + saveFolder);
@@ -142,6 +148,7 @@ public class SaveUI : MonoBehaviour
 		canvas = GetComponentInParent<Canvas>();
 		loadFileButtons = loadButtonGroup.gameObject.GetComponentsInChildren<Button>().ToList();
 		deleteFileButtons = deleteButtonGroup.gameObject.GetComponentsInChildren<Button>().ToList();
+		overwriteFileButtons = overwriteButtonGroup.gameObject.GetComponentsInChildren<Button>().ToList();
 
 		HideMenu();
 
@@ -157,13 +164,6 @@ public class SaveUI : MonoBehaviour
 	}
 
 
-	
-	void DeleteInternal(int index)
-	{
-		if (File.Exists(existingSaves[index]))
-			File.Delete(existingSaves[index]);
-	}
-
 	void ToggleWindow()
 	{
 		if (!isShowing)
@@ -177,6 +177,8 @@ public class SaveUI : MonoBehaviour
 		isShowing = true;
 		canvas.enabled = true;
 
+		GameContext.state = GameFlowState.PAUSED;
+
 		RefreshButtons();
 	}
 
@@ -184,6 +186,9 @@ public class SaveUI : MonoBehaviour
 	{
 		isShowing = false;
 		canvas.enabled = false;
+
+		GameContext.state = GameFlowState.RUNNING;
+
 		ClearButtons();
 	}
 
@@ -210,6 +215,7 @@ public class SaveUI : MonoBehaviour
 		{
 			CreateLoadButton(i);
 			CreateDeleteButton(i);
+			CreateOverwriteButton(i);
 		}
 	}
 
@@ -222,6 +228,10 @@ public class SaveUI : MonoBehaviour
 		foreach (var button in deleteFileButtons)
 			Destroy(button.gameObject);
 		deleteFileButtons.Clear();
+
+		foreach (var button in overwriteFileButtons)
+			Destroy(button.gameObject);
+		overwriteFileButtons.Clear();
 	}
 
 	void CreateLoadButton(int index)
@@ -240,7 +250,7 @@ public class SaveUI : MonoBehaviour
 		});
 	}
 
-	void CreateDeleteButton(int i)
+	void CreateDeleteButton(int index)
 	{
 		var newButtonObj = Instantiate(deleteButtonPrefab, deleteButtonGroup.transform);
 		var newButton = newButtonObj.GetComponentInChildren<Button>();
@@ -249,15 +259,46 @@ public class SaveUI : MonoBehaviour
 
 		newButton.onClick.AddListener(() =>
 		{
-			OnDeleteButtonClicked(i);
+			OnDeleteButtonClicked(index);
 			RefreshButtons();
 		});
+	}
+
+	void CreateOverwriteButton(int index)
+	{
+		var newButtonObj = Instantiate(overwriteButtonPrefab, overwriteButtonGroup.transform);
+		var newButton = newButtonObj.GetComponentInChildren<Button>();
+
+		overwriteFileButtons.Add(newButton);
+
+		newButton.onClick.AddListener(() =>
+		{
+			OnOverwriteButtonClicked(index);
+			RefreshButtons();
+		});
+	}
+
+	void OnOverwriteButtonClicked(int index)
+	{
+		Debug.LogWarning($"CLICKED OVERWRITE: {existingSaveNames[index]}");
+		OverwriteInternal(index);
+	}
+
+	void OverwriteInternal(int index)
+	{
+		SaveInternal(existingSaveNames[index]);
 	}
 
 	void OnDeleteButtonClicked(int index)
 	{
 		Debug.LogWarning($"CLICKED BUTTON: {existingSaveNames[index]}");
 		DeleteInternal(index);
+	}
+
+	void DeleteInternal(int index)
+	{
+		if (File.Exists(existingSaves[index]))
+			File.Delete(existingSaves[index]);
 	}
 
 	void OnLoadButtonClicked(int index)
@@ -276,13 +317,13 @@ public class SaveUI : MonoBehaviour
 
 		Debug.LogWarning($"Loading from {path}.");
 
-		var boardStateData = System.IO.File.ReadAllText(path);
-		Haxan.state = JsonUtility.FromJson<BoardState>(boardStateData);
-
 		GameContext.OnLoadBoardStateBegin?.Invoke();
+
+		var boardStateData = System.IO.File.ReadAllText(path);
+		Haxan.stateVariable.state = JsonUtility.FromJson<BoardState>(boardStateData);
+
 		GameContext.OnLoadBoardStateComplete?.Invoke();
 	}
-
 
 	void OnSaveButtonClicked()
 	{
@@ -305,6 +346,7 @@ public class SaveUI : MonoBehaviour
 		RefreshButtons();
 	}
 
+	public BoardHistory capturedBoardHistory;
 	void SaveInternal(string fileName)
 	{
 		if (!Directory.Exists(Application.persistentDataPath + saveFolder))
@@ -317,11 +359,16 @@ public class SaveUI : MonoBehaviour
 			capturedBoardLayout.unitStates.Add(cachedUnitState);
 		}
 
-		var capturedBoardHistory = Haxan.history;
+		capturedBoardHistory = Haxan.history;
 
 		capturedBoardState = new BoardState();
 		capturedBoardState.history = capturedBoardHistory;
 		capturedBoardState.layout = capturedBoardLayout;
+
+		for (int i = 0; i < capturedBoardState.history.turnCount; i++)
+		{
+			Debug.LogWarning($"... {i}");
+		}
 
 		string boardStateString = JsonUtility.ToJson(capturedBoardState);
 		string filePath = Application.persistentDataPath + saveFolder + $"{fileName}.json";
