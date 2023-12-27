@@ -46,6 +46,7 @@ public static class Haxan
 		Haxan.history.turnCount = 0;
 		Haxan.history.totalCreatedTurnSteps = 0;
 		Haxan.history.totalCreatedOps = 0;
+		Haxan.history.currPlaybackTurn = 0;
 
 		//state.history.turnCount = 0;
 

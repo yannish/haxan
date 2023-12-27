@@ -61,11 +61,7 @@ public class OpTimelineWindow : EditorWindow
 		}
 	}
 
-	private void RepaintWindow()
-	{
-		//Debug.LogWarning("Repainting op timeline");
-		Repaint();
-	}
+	private void RepaintWindow() => Repaint();
 
 	private void OnFocus()
 	{
@@ -207,7 +203,6 @@ public class OpTimelineWindow : EditorWindow
 		float extraPadding = 40f;
 
 
-		//EditorGUILayout.BeginHorizontal();
 		using (new EditorGUILayout.VerticalScope(
 			"box",
 			GUILayout.Width(200f + extraPadding),
@@ -219,14 +214,32 @@ public class OpTimelineWindow : EditorWindow
 				EditorGUILayout.LabelField(
 					"No turns in history.", 
 					EditorStyles.boldLabel
-					//, 
-					//GUILayout.ExpandWidth(true)
 					);
-				//EditorGUILayout.EndHorizontal();
 				return;
 			}
 
 			debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos);
+			using (new EditorGUILayout.HorizontalScope())
+			{
+				if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
+				{
+					//Debug.LogWarning("HIT PLAY ON TURN : " + i);
+					GameContext.OnScrubToTurnClicked?.Invoke(-1);
+				}
+
+				if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
+				{
+					//Debug.LogWarning("HIT FF ON TURN : " + i);
+					GameContext.OnSmashToTurnClicked?.Invoke(-1);
+				}
+
+				if (GUILayout.Button("START", GUILayout.Width(nameWidth)))
+				{
+					//Debug.LogWarning($"Displaying turn {i}");
+					selectedTurnIndex = -1;
+				}
+			}
+
 			for (int i = 0; i < Haxan.stateVariable.state.history.turnCount; i++)
 			{
 				using (new EditorGUILayout.HorizontalScope())
@@ -253,6 +266,7 @@ public class OpTimelineWindow : EditorWindow
 						200 - buttonWidth * 2f - nameWidth,
 						EditorGUIUtility.singleLineHeight
 						);
+
 					float bump = 2f;
 					rect.yMin += bump;
 					rect.yMin += 1f;
@@ -274,62 +288,7 @@ public class OpTimelineWindow : EditorWindow
 				}
 			}
 			EditorGUILayout.EndScrollView();
-			//using (new EditorGUILayout.ScrollViewScope())
-			//{
-
-			//}
 		}
-		//EditorGUILayout.EndHorizontal();
-
-		//using (new EditorGUILayout.VerticalScope("box", GUILayout.MaxWidth(200f), GUILayout.ExpandHeight(true)))
-		//{
-		//	if(Haxan.state.history.turnCount == 0)
-		//	{
-		//		EditorGUILayout.LabelField("No turns in history.", EditorStyles.boldLabel, GUILayout.ExpandWidth(true));
-		//		return;
-		//	}
-
-		//	for (int i = 0; i < Haxan.state.history.turnCount; i++)
-		//	{
-		//		using (new EditorGUILayout.HorizontalScope())
-		//		{
-		//			if (GUILayout.Button(playIcon, GUILayout.MaxWidth(24)))// GUILayout.Width(24)))
-		//			{
-		//				Debug.LogWarning("HIT PLAY ON TURN : " + i);
-		//			}
-
-		//			if (GUILayout.Button(ffIcon, GUILayout.MaxWidth(24)))// GUILayout.Width(24)))
-		//			{
-		//				Debug.LogWarning("SNAP TO TURN : " + i);
-		//			}
-
-		//			if (GUILayout.Button($"TURN {i}", GUILayout.MaxWidth(80)))
-		//			{
-		//				Rect buttonRect = EditorGUILayout.GetControlRect();
-		//				Debug.LogWarning($"Displaying turn {i}");
-		//				selectedTurnIndex = i;
-		//			}
-
-		//			Rect rect = EditorGUILayout.GetControlRect();
-		//			rect.width = rect.width - 24 - 24 - 80;
-		//			EditorGUI.DrawRect(rect, ColorPicker.Swatches.collisionProbe);
-
-		//			Rect overRect = rect;
-		//			var width = overRect.width;
-		//			overRect.width = width * currSliderValue;
-		//			EditorGUI.DrawRect(overRect, ColorPicker.Swatches.trigger);
-
-		//			float markerWidth = 2f;
-		//			float markerHeightBump = 2f;
-		//			Rect markerRect = rect;
-
-		//			markerRect.xMin = overRect.xMax - markerWidth;
-		//			markerRect.xMax = overRect.xMax - markerWidth;
-		//			markerRect.height += markerHeightBump;
-		//			EditorGUI.DrawRect(markerRect, Color.white);
-		//		}
-		//	}
-		//}
 	}
 
 	private void DrawDebugSelectedTurn()
