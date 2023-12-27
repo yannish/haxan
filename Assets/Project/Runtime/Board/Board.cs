@@ -328,15 +328,15 @@ public class Board
 
     public static Unit GetUnitAtPos(Vector2Int pos, bool logDebug = false)
     {
-		Debog.logInput($"checking for unit at: ({pos.ToString()})");
+		//Debog.logInput($"checking for unit at: ({pos.ToString()})");
 
         foreach (Unit unit in Haxan.units)
         {
-			Debog.logInput($"checking {unit.name} at: {unit.OffsetPos.ToString()}");
+			//Debog.logInput($"checking {unit.name} at: {unit.OffsetPos.ToString()}");
 
 			if (unit.OffsetPos == pos)
             {
-				Debog.logInput($"... MATCHED {unit.name} at: {unit.OffsetPos.ToString()}");
+				//Debog.logInput($"... MATCHED {unit.name} at: {unit.OffsetPos.ToString()}");
 				// ^ Unit exists at this position
 				return unit;
             }

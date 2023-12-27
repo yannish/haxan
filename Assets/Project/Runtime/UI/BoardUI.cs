@@ -1813,34 +1813,4 @@ public partial class BoardUI : MonoBehaviour
         currCommandStepHistory = turnToUndo.commandStepHistory;
         currCommandStep = currCommandStepHistory.Pop();
     }
-
-    private void HandleTurnBackward()
-	{
-        if (currCommandStep == null)
-            return;
-
-		if (currCommandStep.Tick(-1f))
-		{
-            currCommandStep.CompleteReverseTick();
-            currCommandStep.Undo();
-			//currTimeStep--;
-			Board.currTimeStep--;
-            //if (currCommand.StepsTimeForward())
-            //{
-            //}
-            currCommandStep = null;
-
-			if (!currCommandStepHistory.IsNullOrEmpty())
-			{
-                currCommandStep = currCommandStepHistory.Pop();
-                currCommandStep.BeginReverseTick();
-			}
-            else
-			{
-                playbackState = TurnPlaybackState.PAUSED;
-                currCommandStepHistory = null;
-			}
-		}
-	}
-
 }

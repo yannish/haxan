@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class OpTimelineWindow : EditorWindow
 {
-	public static Action onScrubToTurnClicked;
-	public static Action onSmashCutToTurnClicked;
+	//public static Action onScrubToTurnClicked;
+	//public static Action onSmashCutToTurnClicked;
 
 	int selectedTurnIndex = -1;
 	Vector2 scrollPos;
@@ -15,7 +15,10 @@ public class OpTimelineWindow : EditorWindow
 	private const int debugTurnCount = 20;
 	public float currSliderValue;
 	public float currFloatSliderValue;
-	
+
+	GUIContent playIcon;
+	GUIContent ffIcon;
+
 
 	[MenuItem("Haxan/Timeline")]
 	public static void ShowWindow()
@@ -64,8 +67,6 @@ public class OpTimelineWindow : EditorWindow
 		Repaint();
 	}
 
-	GUIContent playIcon;
-	GUIContent ffIcon;
 	private void OnFocus()
 	{
 		playIcon = EditorGUIUtility.IconContent("PlayButton On");
@@ -232,17 +233,19 @@ public class OpTimelineWindow : EditorWindow
 				{
 					if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
 					{
-						Debug.LogWarning("HIT PLAY ON TURN : " + i);
+						//Debug.LogWarning("HIT PLAY ON TURN : " + i);
+						GameContext.OnScrubToTurnClicked?.Invoke(i);
 					}
 
 					if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
 					{
-						Debug.LogWarning("HIT PLAY ON TURN : " + i);
+						//Debug.LogWarning("HIT FF ON TURN : " + i);
+						GameContext.OnSmashToTurnClicked?.Invoke(i);
 					}
 
 					if (GUILayout.Button("TURN NAME", GUILayout.Width(nameWidth)))
 					{
-						Debug.LogWarning($"Displaying turn {i}");
+						//Debug.LogWarning($"Displaying turn {i}");
 						selectedTurnIndex = i;
 					}
 
@@ -428,7 +431,7 @@ public class OpTimelineWindow : EditorWindow
 
 					if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
 					{
-						Debug.LogWarning("HIT PLAY ON TURN : " + i);
+						Debug.LogWarning("HIT FF ON TURN : " + i);
 					}
 
 					if (GUILayout.Button("TURN NAME", GUILayout.Width(nameWidth)))
@@ -527,7 +530,7 @@ public class OpTimelineWindow : EditorWindow
 		selectedTurnIndex = GUILayout.SelectionGrid(selectedTurnIndex, buttonNames, 1);
 	}
 
-	void DrawSideBarContent()
+	private void DrawSideBarContent()
 	{
 		if (GUILayout.Button("CLEAR"))
 			selectedTurnIndex = -1;
@@ -541,7 +544,7 @@ public class OpTimelineWindow : EditorWindow
 		}
 	}
 
-	void DrawOpTimelines()
+	private void DrawOpTimelines()
 	{
 		//for (int i = 0; i < boardUI.numDummyOps; i++)
 		//{

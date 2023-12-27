@@ -21,25 +21,8 @@ public enum GameFlowState
 
 public class GameContext : MonoBehaviour
 {
-	public static Action OnSaveBoardState;
-	public static Action OnBoardStateSaveComplete;
-
-	public static Action OnClearBoard;
-
-	public static Action OnLoadBoardStateBegin;
-	public static Action OnLoadBoardStateComplete;
-
-	public static Action<GameFlowState> OnGameStateChangeStart;
-	public static Action<GameFlowState> OnGameStateChangeComplete;
-
-	public static GameFlowState state = GameFlowState.RUNNING;
-
-	public EditorButton saveBtn = new EditorButton("SaveBoardState");
-	public EditorButton loadBtn = new EditorButton("LoadBoardState");
-
-
 	[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-    static void Bootstrap()
+	static void Bootstrap()
 	{
 		Debug.LogWarning("BOOT STRAPPED GAME CONTEXT");
 
@@ -52,11 +35,10 @@ public class GameContext : MonoBehaviour
 		DontDestroyOnLoad(contextInstanceObj);
 	}
 
-
 	public static GameContext I;
 	private void Awake()
 	{
-		if(I != null)
+		if (I != null)
 		{
 			Destroy(this.gameObject);
 			return;
@@ -66,6 +48,24 @@ public class GameContext : MonoBehaviour
 		DontDestroyOnLoad(this.gameObject);
 	}
 
+	public static GameFlowState state = GameFlowState.RUNNING;
+
+	public static Action<int> OnScrubToTurnClicked;
+	public static Action<int> OnSmashToTurnClicked;
+
+	public static Action OnSaveBoardState;
+	public static Action OnBoardStateSaveComplete;
+
+	public static Action OnClearBoard;
+
+	public static Action OnLoadBoardStateBegin;
+	public static Action OnLoadBoardStateComplete;
+
+	public static Action<GameFlowState> OnGameStateChangeStart;
+	public static Action<GameFlowState> OnGameStateChangeComplete;
+
+
+	
 	void SetState(GameFlowState newState)
 	{
 		OnGameStateChangeStart?.Invoke(newState);
@@ -74,13 +74,13 @@ public class GameContext : MonoBehaviour
 		Debug.LogWarning($"Switch game flow to {newState}");
 	}
 
-	private void Update()
+	void Update()
 	{
-		if (Input.GetKeyDown(KeyCode.S))
-			SaveBoardState();
+		//if (Input.GetKeyDown(KeyCode.S))
+		//	SaveBoardState();
 
-		if (Input.GetKeyDown(KeyCode.L))
-			LoadBoardState();
+		//if (Input.GetKeyDown(KeyCode.L))
+		//	LoadBoardState();
 
 		switch (state)
 		{
@@ -97,23 +97,27 @@ public class GameContext : MonoBehaviour
 		}
 	}
 
-	void SaveBoardState()
+
+	//public EditorButton saveBtn = new EditorButton("SaveBoardState");
+	//public EditorButton loadBtn = new EditorButton("LoadBoardState");
+
+	//void SaveBoardState()
+	//{
+	//	OnSaveBoardState?.Invoke();
+	//}
+
+	//void LoadBoardState()
+	//{
+	//	OnClearBoard?.Invoke();
+	//	OnLoadBoardStateComplete?.Invoke();
+	//}
+
+	void TickPausedState()
 	{
-		OnSaveBoardState?.Invoke();
+
 	}
 
-	void LoadBoardState()
-	{
-		OnClearBoard?.Invoke();
-		OnLoadBoardStateComplete?.Invoke();
-	}
-
-	private void TickPausedState()
-	{
-
-	}
-
-	private void TickRunningState()
+	void TickRunningState()
 	{
 
 	}

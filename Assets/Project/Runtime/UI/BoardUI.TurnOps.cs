@@ -7,7 +7,8 @@ public enum TurnPlaybackState
 {
     PAUSED,
     PLAYING,
-    REWINDING
+    REWINDING,
+	FAST_FORWARDING
 }
 
 
@@ -73,7 +74,9 @@ public partial class BoardUI : MonoBehaviour
     [ReadOnly] public TurnPlaybackState playbackState;
     //... 
     [ReadOnly] public int currPlaybackStep;
-    [ReadOnly] public int currPlaybackTurn;
+    //[ReadOnly] public int currPlaybackTurn;
+
+	[ReadOnly] public int targetPlaybackTurn;
 
     [ReadOnly] public float currNormalizedTime; //... reset to 0 as each TimeStep is processed.
     [ReadOnly] public float lastTurnStartTime;
@@ -84,20 +87,29 @@ public partial class BoardUI : MonoBehaviour
 	[Header("DUMMY:")]
 	public int numDummyOps;
 
-
-
 	void OnEnable()
 	{
+		GameContext.OnScrubToTurnClicked += HandleScrubToTurn;
+		GameContext.OnSmashToTurnClicked += HandleSmashCutToTurn;
 	}
 
 	void OnDisable()
 	{
-
+		GameContext.OnScrubToTurnClicked -= HandleScrubToTurn;
+		GameContext.OnSmashToTurnClicked -= HandleSmashCutToTurn;
 	}
 
-	void HandleScrubToTurn(int turnIndex)
+	void HandleScrubToTurn(int newTargetTurn)
 	{
+		Debug.LogWarning($"Scrubbing to turn: {newTargetTurn}");
+		if (Haxan.history.currPlaybackTurn == newTargetTurn)
+			return;
 
+		mode = Mode.ProcessingCommands;
+		playbackState = newTargetTurn < Haxan.history.currPlaybackTurn 
+			? TurnPlaybackState.REWINDING 
+			: TurnPlaybackState.FAST_FORWARDING;
+		targetPlaybackTurn = newTargetTurn;
 	}
 
 	void HandleSmashCutToTurn(int turnIndex)
@@ -120,7 +132,7 @@ public partial class BoardUI : MonoBehaviour
 
         this.currInstigatingOps = instigatingOps;
 
-		ProcessReactions();
+		GenerateTurn();
     
 		//currNormalizedTime = 0f;
   //      totalInstigatingOps = instigatingOps.Count;
@@ -135,12 +147,13 @@ public partial class BoardUI : MonoBehaviour
     /// ... & putting them directly into turnSteps.
     /// ... but really this is where you'd build more complex result from input action.
     /// </summary>
-    void ProcessReactions()
+    void GenerateTurn()
     {
 		float turnEndTime = 0f;
+		float turnStartTime = Haxan.history.turnCount == 0 ? 0f : Haxan.history.prevTurn.endTime;
 
 		//... this would have to catch implicit interruptions, like causing death :
-        List<UnitOp> CheckForInterrupt(List<UnitOp> inputOps)
+		List<UnitOp> CheckForInterrupt(List<UnitOp> inputOps)
 		{
             List<UnitOp> filteredOps = new List<UnitOp>();
             foreach(var op in inputOps)
@@ -233,9 +246,9 @@ public partial class BoardUI : MonoBehaviour
 				Haxan.history.allOps[Haxan.history.totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
 				numOpsCreatedThisStep++;
 				numOpsCreatedThisTurn++;
-				var realEndTime = generatedOps[j].playbackData.endTime + currPlaybackTime;
+				var realEndTime = generatedOps[j].playbackData.endTime + turnStartTime;
 				if (realEndTime > turnEndTime)
-					turnEndTime = generatedOps[j].playbackData.endTime + currPlaybackTime;
+					turnEndTime = generatedOps[j].playbackData.endTime + turnStartTime;
 			}
 
 			for (int k = 0; k < numOpsCreatedThisTurn; k++)
@@ -255,40 +268,14 @@ public partial class BoardUI : MonoBehaviour
 			instigator = currInstigator,
 			stepIndex = indexToCreateStepsAt,
 			stepCount = numStepsCreatedThisTurn,
-			//startTime = currPlaybackTurn == 0 ? 0f : Haxan.history.turns[currPlaybackTurn - 1].endTime,
-			startTime = currPlaybackTime,
+
+			//... TODO: this should instead be some lastTurnEndTime:
+			startTime = turnStartTime,
 			endTime = turnEndTime
 		};
 
 		Haxan.history.turns[Haxan.history.turnCount] = newTurn;
 		Haxan.history.turnCount++;
-
-		//      //int opIndex = totalCreatedOps;
-		//for (int i = 0; i < totalInstigatingOps; i++)
-		//      {
-		//          //.. we just add this op to the list of all ops:
-		//          allOps[totalCreatedOps + i] = currInstigatingOps[i];
-		//          TurnStep newTurnStep = new TurnStep()
-		//          {
-		//              opIndex = i + totalCreatedOps,
-		//              opCount = 1
-		//          };
-
-		//          totalCreatedOps++;
-
-		//          turnSteps[turnStepCount] = newTurnStep;
-		//          turnStepCount++;
-		//}
-
-		//      Turn newTurn = new Turn()
-		//      {
-		//          instigator = currInstigator,
-		//          stepCount = totalInstigatingOps,
-		//          //startTime = 
-		//      };
-
-		//turns[turnCount] = newTurn;
-  //      turnCount++;
     }
 
 	void HandleCommandProcessing()
@@ -311,14 +298,9 @@ public partial class BoardUI : MonoBehaviour
 		}
 	}
 
-	public void HandleTurnScrub(int turnIndex)
+    void HandleTurnForward()
 	{
-
-	}
-
-    public void HandleTurnForward()
-	{
-        Turn currTurn = Haxan.history.turns[currPlaybackTurn];
+        Turn currTurn = Haxan.history.currTurn;
 		/*. every tick, we run through every TURN STEP
 		 * ... even ones that are out of range
 		 * ... so we're always getting to those "end" indices after running a full loop
@@ -330,7 +312,7 @@ public partial class BoardUI : MonoBehaviour
 
 		bool allOpsFullyTicked = true;
 
-		//... looping through all turnSteps:
+		//... looping through all turnSteps in this current turn:
 		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
 		{
 			TurnStep currTurnStep = Haxan.history.turnSteps[i];
@@ -347,14 +329,14 @@ public partial class BoardUI : MonoBehaviour
 				float effectiveEndTime = opData.endTime + currTurn.startTime;
 
 				if (prevPlaybackTime < effectiveEndTime)
+				//... if prevTime is less than effTime, this op will hasn't been ticked to completion, so:
 					allOpsFullyTicked = false;
 
 				if (currPlaybackTime < effectiveStartTime)
+				//... our time isn't caught up to this Op yet:
 					continue;
 
                 Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
-
-				// TODO: offet opDataStartTime by the startTime of the turn you're looking at.
 
                 //... BEGIN TICK:
                 if (currPlaybackTime >= effectiveStartTime && prevPlaybackTime < effectiveStartTime)
@@ -404,7 +386,10 @@ public partial class BoardUI : MonoBehaviour
 			SelectUnit(lastSelectedUnit);
 
 			currInstigator = null;
-			currPlaybackTurn++;
+			Haxan.history.currPlaybackTurn++;
+
+			//... TO-DO:
+			//... should reset playback time here somehow, avoid grimey numbers:
 
 			//currPlaybackTime = Haxan.history.turns[currPlaybackTurn].endTime;
 		}
@@ -412,5 +397,95 @@ public partial class BoardUI : MonoBehaviour
 		//prevPlaybackTime = currPlaybackTime;
   //      currPlaybackTime += Time.deltaTime * currTimeScale;
     }
-    
+
+	void HandleTurnBackward()
+	{
+		Turn currTurn = Haxan.history.currTurn;
+
+		bool allOpsFullyUnticked = true;
+
+		//... looping through all turnSteps:
+		for (int i = currTurn.stepIndex + currTurn.stepCount - 1; i >= currTurn.stepIndex; i--)
+		{
+			TurnStep currTurnStep = Haxan.history.turnSteps[i];
+
+			//NOTE: why is it turn & move playing together in same frame & failing...
+
+			//... looping through all ops in that step:
+			for (int j = currTurnStep.opIndex + currTurnStep.opCount - 1; j > currTurnStep.opIndex; j--)
+			{
+				UnitOp op = Haxan.history.allOps[j];
+				OpPlaybackData opData = op.playbackData;
+
+				float effectiveStartTime = opData.startTime + currTurn.startTime;
+				float effectiveEndTime = opData.endTime + currTurn.startTime;
+
+				if (prevPlaybackTime > effectiveStartTime)
+					allOpsFullyUnticked = false;
+
+				if (currPlaybackTime < effectiveStartTime)
+					continue;
+
+				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
+
+				// TODO: offet opDataStartTime by the startTime of the turn you're looking at.
+
+				//... BEGIN TICK:
+				if (currPlaybackTime >= effectiveStartTime && prevPlaybackTime < effectiveStartTime)
+				{
+					//... OnBeginTick();    
+				}
+
+				Debug.Log(
+					$"backwards ticking op: {j}, " +
+					$"playbackTime: {currPlaybackTime}, " +
+					$"startTime: {effectiveStartTime}" +
+					$"endTime: {effectiveEndTime}"
+					);
+
+				//.. TICK:
+				if (currPlaybackTime >= effectiveStartTime && currPlaybackTime < effectiveEndTime)
+				{
+					Debug.LogWarning($"op {j} still backwards running.");
+					//allOpsFullyTicked = false;
+					var normalizedTime = Mathf.Clamp01((currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
+					op.Tick(affectedUnit, normalizedTime);
+				}
+
+				bool opUndoneThisFrame = currPlaybackTime > effectiveEndTime && prevPlaybackTime < effectiveEndTime;
+				//... COMPLETE TICK();
+				if (opUndoneThisFrame)
+				{
+					op.Undo(affectedUnit);
+				}
+			}
+		}
+
+		prevPlaybackTime = currPlaybackTime;
+		currPlaybackTime -= Time.deltaTime * currTimeScale;
+
+		//... if we're at the final op of the final step:
+		if (
+			//opCompletedThisFrame
+			allOpsFullyUnticked
+			//&& i == (currTurn.stepIndex + currTurn.stepCount - 1)
+			//&& j == (currTurnStep.opIndex + currTurnStep.opCount - 1)
+			)
+		{
+			Debug.Log("Reversed through all turnSteps.");
+
+			if(targetPlaybackTurn == Haxan.history.currPlaybackTurn)
+			{
+				playbackState = TurnPlaybackState.PAUSED;
+				SelectUnit(lastSelectedUnit);
+
+				currInstigator = null;
+				Haxan.history.currPlaybackTurn--;
+			}
+			else
+			{
+				Haxan.history.currPlaybackTurn--;
+			}
+		}
+	}
 }
