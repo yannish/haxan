@@ -60,7 +60,7 @@ public class TurnOp : UnitOp
 
 	public override void Tick(Unit unit, float t)
 	{
-		Debug.LogWarning($"Ticking turn: {t}");
+		//Debug.LogWarning($"Ticking turn: {t}");
 		unit.SetDirectFacing(Vector3.Slerp(currFacing, endFacing, t));
 	}
 }

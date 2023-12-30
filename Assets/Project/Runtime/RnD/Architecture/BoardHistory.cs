@@ -20,6 +20,32 @@ public class BoardHistory
 	public Turn currTurn => turns[currPlaybackTurn];
 	public Turn prevTurn => turns[currPlaybackTurn - 1];
 
+	public TurnStep currTurnStep => currPlaybackTurn == 0 ? turnSteps[0] : turnSteps[stepHead - 1];
+
+	//... write new ops at this index:
+	public int opHead
+	{
+		get
+		{
+			if(stepHead == 0)
+				return 0;
+
+			return turnSteps[stepHead - 1].opCount + turnSteps[stepHead - 1].opIndex;
+		}
+	}
+
+	//... write new turnSteps at this index:
+	public int stepHead
+	{
+		get
+		{
+			if(currPlaybackTurn == 0)
+				return 0;
+
+			return prevTurn.stepIndex + prevTurn.stepCount;
+		}
+	}
+
 	public Turn[] turns = new Turn[MAX_TURNS];
 	public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
 

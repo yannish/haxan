@@ -37,8 +37,8 @@ public struct Turn
 [System.Serializable]
 public struct TurnStep
 {
-    public float startTime;
-    public float duration;
+    //public float startTime;
+    //public float duration;
 
     public int opIndex;
     public int opCount;
@@ -64,6 +64,9 @@ public partial class BoardUI : MonoBehaviour
     public List<UnitOp_STRUCT> currInstigatingOps_NEW;
     public List<IUnitOperable> currInstigatingOps_OLD;
 	public List<UnitOp> currInstigatingOps;
+
+	[Header("DEBUG:")]
+	public bool debugOps;
 
 	//public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
 	//[ReadOnly] public int totalInstigatingOps;
@@ -249,9 +252,19 @@ public partial class BoardUI : MonoBehaviour
 		}
 
 
-		int indexToCreateStepsAt = Haxan.history.totalCreatedTurnSteps;
+		//var currTurn = Haxan.history.currTurn;
+		//var currStep = Haxan.history.turnSteps[currTurn.stepIndex + currTurn.stepCount - 1];
+
+		int indexToCreateStepsAt = Haxan.history.stepHead;
+		//int indexToCreateStepsAt = currTurn.stepIndex + currTurn.stepCount;
+		int indexToCreateOpsAt = Haxan.history.opHead;
+		//int indexToCreateOpsAt = currStep.opIndex + currStep.opCount;
+
+		Debug.LogWarning($"steps at {indexToCreateStepsAt}, ops at {indexToCreateOpsAt}");
+
+		//int indexToCreateStepsAt = Haxan.history.totalCreatedTurnSteps;
 		int numOpsCreatedThisTurn = 0; //... we track this for an index into the array of all Ops
-		int numStepsCreatedThisTurn = 0; 
+		int numStepsCreatedThisTurn = 0;
 
 		//... now write back all the List of generated ops over to the arrays:
 		for (int i = 0; i < allGeneratedOps.Count; i++)
@@ -260,14 +273,18 @@ public partial class BoardUI : MonoBehaviour
 			List<UnitOp> generatedOps = allGeneratedOps[i];
 			TurnStep newTurnStep = new TurnStep()
 			{
-				opIndex = Haxan.history.totalCreatedOps,
+				opIndex = indexToCreateOpsAt + numOpsCreatedThisTurn,
 				opCount = generatedOps.Count
 			};
 
 			int numOpsCreatedThisStep = 0;
 			for (int j = 0; j < generatedOps.Count; j++)
 			{
-				Haxan.history.allOps[Haxan.history.totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
+				Haxan.history.allOps[indexToCreateOpsAt + numOpsCreatedThisStep + numOpsCreatedThisTurn] = generatedOps[j];
+
+				Debug.LogWarning($"new op created at {indexToCreateOpsAt + numOpsCreatedThisStep + numOpsCreatedThisTurn}");
+
+				//Haxan.history.allOps[Haxan.history.totalCreatedOps + numOpsCreatedThisStep] = generatedOps[j];
 				numOpsCreatedThisStep++;
 				numOpsCreatedThisTurn++;
 				var realEndTime = generatedOps[j].playbackData.endTime + turnStartTime;
@@ -281,8 +298,11 @@ public partial class BoardUI : MonoBehaviour
 			}
 
 			Haxan.history.totalCreatedOps += numOpsCreatedThisStep;
-			Haxan.history.turnSteps[Haxan.history.totalCreatedTurnSteps] = newTurnStep;
-			
+			Haxan.history.turnSteps[Haxan.history.stepHead + numStepsCreatedThisTurn] = newTurnStep;
+
+			Debug.LogWarning($"new step created at {Haxan.history.stepHead + numStepsCreatedThisTurn}");
+			//Haxan.history.turnSteps[Haxan.history.totalCreatedTurnSteps] = newTurnStep;
+
 			numStepsCreatedThisTurn++;
 			Haxan.history.totalCreatedTurnSteps++;
 		}
@@ -298,9 +318,11 @@ public partial class BoardUI : MonoBehaviour
 			endTime = turnEndTime
 		};
 
-		Haxan.history.turns[Haxan.history.turnCount] = newTurn;
+		Haxan.history.turns[Haxan.history.currPlaybackTurn] = newTurn;
+		//Haxan.history.turns[Haxan.history.turnCount] = newTurn;
+		//Haxan.history.currPlaybackTurn++;
 		Haxan.history.turnCount++;
-    }
+	}
 
 	void HandleCommandProcessing()
 	{
@@ -358,7 +380,8 @@ public partial class BoardUI : MonoBehaviour
 
 				if (currPlaybackTime < effectiveStartTime)
 				{
-					Debug.Log($"out, currPlayback is pre startTime, {currPlaybackTime}, {effectiveStartTime}");
+					if(debugOps)
+						Debug.Log($"out, currPlayback is pre startTime, {currPlaybackTime}, {effectiveStartTime}");
 					//... our time isn't caught up to this Op yet:
 					continue;
 				}
@@ -371,18 +394,21 @@ public partial class BoardUI : MonoBehaviour
 					//... OnBeginTick();    
 				}
 
-				Debug.Log(
-					$"forward ticking op: {j}, " +
-					$"currPlaybackTime: {currPlaybackTime}, " +
-					$"prevPlaybackTime: {prevPlaybackTime}, " +
-					$"startTime: {effectiveStartTime}" +
-					$"endTime: {effectiveEndTime}"
-					);
+				if (debugOps)
+					Debug.Log(
+						$"forward ticking op: {j}, " +
+						$"currPlaybackTime: {currPlaybackTime}, " +
+						$"prevPlaybackTime: {prevPlaybackTime}, " +
+						$"startTime: {effectiveStartTime}" +
+						$"endTime: {effectiveEndTime}"
+						);
 
 				//.. TICK:
 				if (currPlaybackTime >= effectiveStartTime && currPlaybackTime < effectiveEndTime)
 				{
-					Debug.LogWarning($"op {j} still running.");
+					if(debugOps)
+						Debug.LogWarning($"op {j} still running.");
+
                     //allOpsFullyTicked = false;
                     var normalizedTime = Mathf.Clamp01((currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
                     op.Tick(affectedUnit, normalizedTime);
