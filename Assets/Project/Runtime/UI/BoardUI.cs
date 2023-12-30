@@ -51,8 +51,7 @@ public partial class BoardUI : MonoBehaviour
     public PooledMonoBehaviour abilityValidMarker;
     public PooledMonoBehaviour pathValidMarker;
 
-    public Dictionary<Vector2Int, PooledCellVisuals> coordToCellMarkerLookup = 
-        new Dictionary<Vector2Int, PooledCellVisuals>();
+    public Dictionary<Vector2Int, PooledCellVisuals> coordToCellMarkerLookup = new Dictionary<Vector2Int, PooledCellVisuals>();
     Cell currHoveredEmptyCell;
 
 
@@ -70,10 +69,8 @@ public partial class BoardUI : MonoBehaviour
 
 
     [Header("ABILITIES:")]
-    Dictionary<Vector2Int, PooledMonoBehaviour> abilityValidLookup = 
-        new Dictionary<Vector2Int, PooledMonoBehaviour>();
-    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPreviewLookup = 
-        new Dictionary<Vector2Int, PooledMonoBehaviour>();
+    Dictionary<Vector2Int, PooledMonoBehaviour> abilityValidLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
+    Dictionary<Vector2Int, PooledMonoBehaviour> coordToPreviewLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
     Vector2Int hoveredValidAbilityCoord;
 
     bool hoveredValidMoveLastFrame;
@@ -105,7 +102,6 @@ public partial class BoardUI : MonoBehaviour
 
     [Header("PATHING:")]
     Dictionary<Vector2Int, PooledMonoBehaviour> coordToPathableCellLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
-
 
 
     public void Init()
@@ -165,7 +161,7 @@ public partial class BoardUI : MonoBehaviour
         input = new Controls();
     }
 
-    void Update()
+    public void Update()
     {
         mousePos = MouseToOffsetPos();
         mouseMoved = (Input.GetAxis("Mouse X") != 0f || Input.GetAxis("Mouse Y") != 0f);

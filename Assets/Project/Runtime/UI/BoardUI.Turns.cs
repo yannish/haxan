@@ -106,32 +106,32 @@ public partial class BoardUI
         - these actions are bound by what instigated them, so together they form a block.
      */
 
-    private void HandleCommandProcessing_OLD()
-    {
-        switch (playbackState)
-        {
-            case TurnPlaybackState.PAUSED:
-                break;
+    //private void HandleCommandProcessing_OLD()
+    //{
+    //    switch (playbackState)
+    //    {
+    //        case TurnPlaybackState.PAUSED:
+    //            break;
 
-            case TurnPlaybackState.PLAYING:
-                HandleTurnForward_OLD();
-                if (currTimeBlock == null)
-                {
-                    Debug.LogWarning("DONE WITH TURN, BACK TO FLOW");
-                    playbackState = TurnPlaybackState.PAUSED;
-                    SelectUnit(lastSelectedUnit);
-                    currInstigator = null;
-                }
-                break;
+    //        case TurnPlaybackState.PLAYING:
+    //            HandleTurnForward_OLD();
+    //            if (currTimeBlock == null)
+    //            {
+    //                Debug.LogWarning("DONE WITH TURN, BACK TO FLOW");
+    //                playbackState = TurnPlaybackState.PAUSED;
+    //                SelectUnit(lastSelectedUnit);
+    //                currInstigator = null;
+    //            }
+    //            break;
 
-            case TurnPlaybackState.REWINDING:
-                HandleTurnBackward();
-                break;
+    //        case TurnPlaybackState.REWINDING:
+    //            HandleTurnBackward();
+    //            break;
 
-            default:
-                break;
-        }
-    }
+    //        default:
+    //            break;
+    //    }
+    //}
 
     private void HandleTurnForward_OLD()
     {

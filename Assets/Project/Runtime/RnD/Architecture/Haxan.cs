@@ -6,10 +6,13 @@ using UnityEngine;
 public static class Haxan
 {
 	private const string activeUnitsPath = "RuntimeSets/ActiveUnits";
+
 	public static UnitRuntimeSet activeUnits { get; private set; }
+	
 	public static List<Unit> units => activeUnits.Items;
 
 	private const string boardStatePath = "GameFlow/BoardState";
+	
 	private const string boardStateVariablePath = "GameFlow/BoardStateVariable";
 
 	public static BoardStateVariable stateVariable { get; set; }

@@ -32,8 +32,7 @@ public struct Turn
 
 
 /// <summary>
-/// A turn-step is the basic building block of a Turn. 
-/// It can contain any number of UnitOps, played out in parallel.
+/// A turn-step is collection of UnitOps, played out in parallel.
 /// </summary>
 [System.Serializable]
 public struct TurnStep
@@ -67,16 +66,15 @@ public partial class BoardUI : MonoBehaviour
 	public List<UnitOp> currInstigatingOps;
 
 	//public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
-
 	//[ReadOnly] public int totalInstigatingOps;
 
 	[Header("PLAYBACK:")]
     [ReadOnly] public TurnPlaybackState playbackState;
     //... 
-    [ReadOnly] public int currPlaybackStep;
-    //[ReadOnly] public int currPlaybackTurn;
 
+    [ReadOnly] public int currPlaybackStep;
 	[ReadOnly] public int targetPlaybackTurn;
+    //[ReadOnly] public int currPlaybackTurn;
 
     [ReadOnly] public float currNormalizedTime; //... reset to 0 as each TimeStep is processed.
     [ReadOnly] public float lastTurnStartTime;
@@ -86,6 +84,7 @@ public partial class BoardUI : MonoBehaviour
 
 	[Header("DUMMY:")]
 	public int numDummyOps;
+
 
 	void OnEnable()
 	{
@@ -99,6 +98,7 @@ public partial class BoardUI : MonoBehaviour
 		GameContext.OnSmashToTurnClicked -= HandleSmashCutToTurn;
 	}
 
+
 	void HandleScrubToTurn(int newTargetTurn)
 	{
 		if (Haxan.history.currPlaybackTurn == newTargetTurn)
@@ -106,7 +106,10 @@ public partial class BoardUI : MonoBehaviour
 			Debug.LogWarning($"Already scrubbed to turn {newTargetTurn}!");
 			return;
 		}
-	
+
+		lastSelectedUnit = selectedUnit;
+		DeselectUnit();
+
 		Debug.LogWarning($"Scrubbing to turn: {newTargetTurn}");
 
 		mode = Mode.ProcessingCommands;
@@ -169,11 +172,6 @@ public partial class BoardUI : MonoBehaviour
 		//}
     }
 
-    /// <summary>
-    /// for now this is just taking in the instigating ops
-    /// ... & putting them directly into turnSteps.
-    /// ... but really this is where you'd build more complex result from input action.
-    /// </summary>
     void GenerateTurn()
     {
 		float turnEndTime = 0f;
@@ -209,7 +207,6 @@ public partial class BoardUI : MonoBehaviour
 		}
 
         var interruptFilteredOps = CheckForInterrupt(currInstigatingOps);
-
 
 		List<UnitOp> ProcessOpForReactions(UnitOp op)
 		{
@@ -360,8 +357,11 @@ public partial class BoardUI : MonoBehaviour
 					allOpsFullyTicked = false;
 
 				if (currPlaybackTime < effectiveStartTime)
-				//... our time isn't caught up to this Op yet:
+				{
+					Debug.Log($"out, currPlayback is pre startTime, {currPlaybackTime}, {effectiveStartTime}");
+					//... our time isn't caught up to this Op yet:
 					continue;
+				}
 
                 Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
 
@@ -372,8 +372,9 @@ public partial class BoardUI : MonoBehaviour
 				}
 
 				Debug.Log(
-					$"ticking op: {j}, " +
-					$"playbackTime: {currPlaybackTime}, " +
+					$"forward ticking op: {j}, " +
+					$"currPlaybackTime: {currPlaybackTime}, " +
+					$"prevPlaybackTime: {prevPlaybackTime}, " +
 					$"startTime: {effectiveStartTime}" +
 					$"endTime: {effectiveEndTime}"
 					);
@@ -450,8 +451,12 @@ public partial class BoardUI : MonoBehaviour
 				if (prevPlaybackTime > opStartTime)
 					allOpsFullyUnticked = false;
 
-				if (currPlaybackTime < opStartTime)
+				if (currPlaybackTime > opEndTime)
+				//if (currPlaybackTime < opStartTime)
+				{
+					Debug.Log($"out, currPlayback is post endTime, {currPlaybackTime}, {opStartTime}");
 					continue;
+				}
 
 				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
 
@@ -464,10 +469,11 @@ public partial class BoardUI : MonoBehaviour
 				}
 
 				Debug.Log(
-					$"backwards ticking op: {j}, " +
-					$"playbackTime: {currPlaybackTime}, " +
-					$"startTime: {opStartTime}" +
-					$"endTime: {opEndTime}"
+					$"backwards op: {j}, " +
+					$"curr: {currPlaybackTime}, " +
+					$"prev: {prevPlaybackTime}, " +
+					$"S: {opStartTime}, " +
+					$"E: {opEndTime}"
 					);
 
 				//.. TICK:
@@ -479,10 +485,11 @@ public partial class BoardUI : MonoBehaviour
 					op.Tick(affectedUnit, normalizedTime);
 				}
 
-				bool opUndoneThisFrame = currPlaybackTime < opStartTime && prevPlaybackTime > opStartTime;
+				bool opUndoneThisFrame = currPlaybackTime <= opStartTime && prevPlaybackTime > opStartTime;
 				//... COMPLETE TICK();
 				if (opUndoneThisFrame)
 				{
+					Debug.LogWarning($"... op {j} undone.");
 					op.Undo(affectedUnit);
 				}
 			}
@@ -490,6 +497,11 @@ public partial class BoardUI : MonoBehaviour
 
 		prevPlaybackTime = currPlaybackTime;
 		currPlaybackTime -= Time.deltaTime * currTimeScale;
+
+		Debug.Log(
+					$"... curr: {currPlaybackTime}, " +
+					$"... prev: {prevPlaybackTime} " 
+					);
 
 		//... if we're at the final op of the final step:
 		if (allOpsFullyUnticked)
