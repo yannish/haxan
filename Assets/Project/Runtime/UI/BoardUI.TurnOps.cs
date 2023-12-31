@@ -178,7 +178,7 @@ public partial class BoardUI : MonoBehaviour
     void GenerateTurn()
     {
 		float turnEndTime = 0f;
-		float turnStartTime = Haxan.history.turnCount == 0 ? 0f : Haxan.history.prevTurn.endTime;
+		float turnStartTime = Haxan.history.currPlaybackTurn == 0 ? 0f : Haxan.history.prevTurn.endTime;
 
 		//... this would have to catch implicit interruptions, like causing death :
 		List<UnitOp> CheckForInterrupt(List<UnitOp> inputOps)

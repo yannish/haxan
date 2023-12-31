@@ -72,7 +72,7 @@ public class GroundMoveOp : UnitOp
 
 	public override void Tick(Unit unit, float t)
 	{
-		Debug.LogWarning($"Ticking ground move: {t}");
+		//Debug.LogWarning($"Ticking ground move: {t}");
 		unit.SetVisualPos(Vector3.Lerp(startPos, endPos, t));
 	}
 }
