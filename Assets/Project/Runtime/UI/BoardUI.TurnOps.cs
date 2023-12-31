@@ -319,9 +319,13 @@ public partial class BoardUI : MonoBehaviour
 		};
 
 		Haxan.history.turns[Haxan.history.currPlaybackTurn] = newTurn;
-		//Haxan.history.turns[Haxan.history.turnCount] = newTurn;
 		//Haxan.history.currPlaybackTurn++;
-		Haxan.history.turnCount++;
+		//Haxan.history.turnCount++;
+
+		/*
+		 * We've finished constructing a new turn. This now becomes the latest entry in the history.
+		 * 
+		 */
 	}
 
 	void HandleCommandProcessing()
@@ -337,6 +341,10 @@ public partial class BoardUI : MonoBehaviour
 
 			case TurnPlaybackState.REWINDING:
                 HandleTurnBackward();
+				break;
+
+			case TurnPlaybackState.FAST_FORWARDING:
+				HandleFastForward();
 				break;
 
 			default:
@@ -428,12 +436,7 @@ public partial class BoardUI : MonoBehaviour
 		currPlaybackTime += Time.deltaTime * currTimeScale;
 
 		//... if we're at the final op of the final step:
-		if (
-			//opCompletedThisFrame
-			allOpsFullyTicked
-			//&& i == (currTurn.stepIndex + currTurn.stepCount - 1)
-			//&& j == (currTurnStep.opIndex + currTurnStep.opCount - 1)
-			)
+		if (allOpsFullyTicked)
 		{
 			Debug.Log("Played through all turnSteps.");
 
@@ -443,14 +446,22 @@ public partial class BoardUI : MonoBehaviour
 			currInstigator = null;
 			Haxan.history.currPlaybackTurn++;
 
+			//... we're exiting PLAY mode, ie. we've input a new turn.
+			//..  & we're creating history, not scrubbing through it.
+			//..	so we clamp turnCount to the current playback turn. 
+			//... other turns beyond this one are now lost in the playback options.
+
+			Haxan.history.turnCount = Haxan.history.currPlaybackTurn;
+			//Haxan.history.turnCount = Mathf.Clamp(Haxan.history.turnCount, 0, Haxan.history.currPlaybackTurn);
+
 			//... TO-DO:
 			//... should reset playback time here somehow, avoid grimey numbers:
 
-			//currPlaybackTime = Haxan.history.turns[currPlaybackTurn].endTime;
+			currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+				? 0f
+				: Haxan.history.prevTurn.endTime;
+				//Haxan.history.turns[currPlaybackTurn].endTime;
 		}
-
-		//prevPlaybackTime = currPlaybackTime;
-  //      currPlaybackTime += Time.deltaTime * currTimeScale;
     }
 
 	void HandleTurnBackward()
@@ -550,5 +561,10 @@ public partial class BoardUI : MonoBehaviour
 				Haxan.history.currPlaybackTurn--;
 			}
 		}
+	}
+
+	void HandleFastForward()
+	{
+
 	}
 }
