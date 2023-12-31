@@ -15,6 +15,8 @@ public static class Haxan
 	
 	private const string boardStateVariablePath = "GameFlow/BoardStateVariable";
 
+
+
 	public static BoardStateVariable stateVariable { get; set; }
 
 	public static BoardState state { get => stateVariable.state; set => stateVariable.state = value; }

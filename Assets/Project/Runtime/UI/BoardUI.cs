@@ -663,9 +663,9 @@ public partial class BoardUI : MonoBehaviour
     {
         mode = Mode.Neutral;
 
-        DestroyPathGizmos(selectedUnit);
+		if(selectedUnit != null)
+			DestroyPathGizmos(selectedUnit);
         HideUnitPortrait();
-
         HideValidMoves();
         validMoveCoords.Clear();
         //^^ sometimes you've deselected, but are still hovering the unit.!

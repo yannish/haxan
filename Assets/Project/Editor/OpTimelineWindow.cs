@@ -90,7 +90,6 @@ public class OpTimelineWindow : EditorWindow
 
 		EditorGUILayout.BeginHorizontal();
 		DrawRuntimeControls();
-		//DrawDebugSelectedTurn();
 		DrawSelectedTurn();
 		EditorGUILayout.EndHorizontal();
 		
@@ -169,6 +168,7 @@ public class OpTimelineWindow : EditorWindow
 		}
 		EditorGUILayout.EndHorizontal();
 	}
+
 
 	private void TickInputs()
 	{
@@ -291,14 +291,6 @@ public class OpTimelineWindow : EditorWindow
 		}
 	}
 
-	private void DrawDebugSelectedTurn()
-	{
-		using (new EditorGUILayout.VerticalScope("box", GUILayout.ExpandHeight(true)))
-		{
-			EditorGUILayout.LabelField("NEXT SECTION:");
-		}
-	}
-
 	private void DrawSelectedTurn()
 	{
 		if(selectedTurnIndex < 0)
@@ -353,6 +345,38 @@ public class OpTimelineWindow : EditorWindow
 		}
 		EditorGUILayout.EndVertical();
 	}
+
+	private void DrawTurnControls()
+	{
+		GUIContent playIcon = EditorGUIUtility.IconContent("d_PlayButton On");
+		for (int i = 0; i < Haxan.history.turnCount; i++)
+		{
+			if(GUILayout.Button(playIcon, GUILayout.Width(24)))
+			{
+				Debug.LogWarning("HIT PLAY ON TURN : " + i);
+			}
+		}
+	}
+
+	private void DrawSelectionGrid()
+	{
+		var buttonNames = new string[Haxan.history.turnCount];
+		for (int i = 0; i < Haxan.history.turnCount; i++)
+		{
+			var instigatorName = Haxan.history.turns[i].instigator.name.ToUpper();
+			//var instigatorName = "instigator";
+			//if(selectedTurnIndex < Haxan.history.turnCount)
+			//{
+			//	var instigator = Haxan.history.turns[selectedTurnIndex].instigator;
+			//	if (instigator != null)
+			//		instigatorName = instigator.name.ToUpper();
+			//}
+			buttonNames[i] = $"TURN {i} // {instigatorName}";
+		}
+		selectedTurnIndex = GUILayout.SelectionGrid(selectedTurnIndex, buttonNames, 1);
+	}
+
+
 
 	private void DrawDebugPicker()
 	{
@@ -459,57 +483,11 @@ public class OpTimelineWindow : EditorWindow
 		EditorGUILayout.EndHorizontal();
 	}
 
-	private void DrawTurnControls()
+	private void DrawDebugSelectedTurn()
 	{
-		GUIContent playIcon = EditorGUIUtility.IconContent("d_PlayButton On");
-		for (int i = 0; i < Haxan.history.turnCount; i++)
+		using (new EditorGUILayout.VerticalScope("box", GUILayout.ExpandHeight(true)))
 		{
-			if(GUILayout.Button(playIcon, GUILayout.Width(24)))
-			{
-				Debug.LogWarning("HIT PLAY ON TURN : " + i);
-			}
+			EditorGUILayout.LabelField("NEXT SECTION:");
 		}
-	}
-
-	private void DrawSelectionGrid()
-	{
-		var buttonNames = new string[Haxan.history.turnCount];
-		for (int i = 0; i < Haxan.history.turnCount; i++)
-		{
-			var instigatorName = Haxan.history.turns[i].instigator.name.ToUpper();
-			//var instigatorName = "instigator";
-			//if(selectedTurnIndex < Haxan.history.turnCount)
-			//{
-			//	var instigator = Haxan.history.turns[selectedTurnIndex].instigator;
-			//	if (instigator != null)
-			//		instigatorName = instigator.name.ToUpper();
-			//}
-			buttonNames[i] = $"TURN {i} // {instigatorName}";
-		}
-		selectedTurnIndex = GUILayout.SelectionGrid(selectedTurnIndex, buttonNames, 1);
-	}
-
-	private void DrawSideBarContent()
-	{
-		if (GUILayout.Button("CLEAR"))
-			selectedTurnIndex = -1;
-
-		for (int i = 0; i < Haxan.history.turnCount; i++)
-		{
-			if(GUILayout.Button($"TURN {i}"))
-			{
-				selectedTurnIndex = i;
-			}	
-		}
-	}
-
-	private void DrawOpTimelines()
-	{
-		//for (int i = 0; i < boardUI.numDummyOps; i++)
-		//{
-		//	Rect rect = EditorGUILayout.GetControlRect();
-		//	EditorGUI.DrawRect(rect, ColorPicker.Swatches.collisionProbe);
-		//	//GUI.DrawTexture(rect, EditorGUIUtility.whiteTexture);
-		//}
 	}
 }
