@@ -418,6 +418,7 @@ public partial class BoardUI : MonoBehaviour
 				//... COMPLETE TICK();
 				if (opCompletedThisFrame)
 				{
+					op.Tick(affectedUnit, 1f);
                     op.Execute(affectedUnit);
 				}
 			}
@@ -516,6 +517,7 @@ public partial class BoardUI : MonoBehaviour
 				if (opUndoneThisFrame)
 				{
 					Debug.LogWarning($"... op {j} undone.");
+					op.Tick(affectedUnit, 0f);
 					op.Undo(affectedUnit);
 				}
 			}
