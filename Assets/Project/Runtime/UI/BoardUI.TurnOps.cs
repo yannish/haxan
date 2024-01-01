@@ -372,6 +372,8 @@ void HandleCommandProcessing()
 					Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
 						? 0f
 						: Haxan.history.prevTurn.endTime;
+
+					Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
 				}
 				break;
 
@@ -424,6 +426,25 @@ void HandleCommandProcessing()
 					//... we're exiting FF mode, ie. we're just scrubbing around, & not creating history.
 					//... other turns beyond this one are still shown in the playback options.
 
+					Haxan.history.currPlaybackTurn++;
+					if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
+					{
+						playbackState = TurnPlaybackState.PAUSED;
+						SelectUnit(lastSelectedUnit);
+
+						currInstigator = null;
+						//Haxan.history.currPlaybackTurn++;
+						Haxan.history.currPlaybackTime = Haxan.history.prevTurn.endTime;
+						Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
+						//Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+						//	? 0f
+						//	: Haxan.history.prevTurn.endTime;
+					}
+					//else
+					//{
+					//	Haxan.history.currPlaybackTurn++;
+					//}
+
 					//if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
 					//{
 					//	playbackState = TurnPlaybackState.PAUSED;
@@ -441,15 +462,16 @@ void HandleCommandProcessing()
 					//	Haxan.history.currPlaybackTurn++;
 					//}
 
-					playbackState = TurnPlaybackState.PAUSED;
 
-					SelectUnit(lastSelectedUnit);
-					currInstigator = null;
+					//playbackState = TurnPlaybackState.PAUSED;
 
-					Haxan.history.currPlaybackTurn++;
-					Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
-						? 0f
-						: Haxan.history.prevTurn.endTime;
+					//SelectUnit(lastSelectedUnit);
+					//currInstigator = null;
+
+					//Haxan.history.currPlaybackTurn++;
+					//Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+					//	? 0f
+					//	: Haxan.history.prevTurn.endTime;
 				}
 				break;
 
@@ -490,11 +512,14 @@ void HandleCommandProcessing()
 					continue;
 				}
 
+				//if (Haxan.history.currPlaybackTime > effectiveEndTime && Haxan.history.prevPlaybackTime > effectiveEndTime)
+				//	continue;
+
 				if (debugOps)
 					Debug.Log(
 						$"forward ticking op: {j}, " +
-						$"Haxan.history.currPlaybackNewTime: {Haxan.history.currPlaybackTime}, " +
-						$"Haxan.history.prevPlaybackNewTime: {Haxan.history.prevPlaybackTime}, " +
+						$"currPlaybackTime: {Haxan.history.currPlaybackTime}, " +
+						$"prevPlaybackTime: {Haxan.history.prevPlaybackTime}, " +
 						$"startTime: {effectiveStartTime}" +
 						$"endTime: {effectiveEndTime}"
 						);
