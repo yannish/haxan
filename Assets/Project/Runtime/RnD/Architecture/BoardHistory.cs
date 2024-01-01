@@ -16,6 +16,8 @@ public class BoardHistory
 	[ReadOnly] public int totalCreatedTurnSteps = 0;
 	[ReadOnly] public int totalCreatedOps = 0;
 	[ReadOnly] public int currPlaybackTurn;
+	[ReadOnly] public float currPlaybackTime;
+	[ReadOnly] public float prevPlaybackTime;
 
 	public Turn currTurn => turns[currPlaybackTurn];
 	public Turn prevTurn => turns[currPlaybackTurn - 1];

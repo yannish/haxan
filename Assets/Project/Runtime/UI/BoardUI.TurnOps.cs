@@ -79,8 +79,8 @@ public partial class BoardUI : MonoBehaviour
 
     [ReadOnly] public float currNormalizedTime; //... reset to 0 as each TimeStep is processed.
     [ReadOnly] public float lastTurnStartTime;
-    [ReadOnly] public float currPlaybackTime;   //... total running-time for the Turn
-    [ReadOnly] public float prevPlaybackTime;
+    //[ReadOnly] public float Haxan.history.currPlaybackNewTime;   //... total running-time for the Turn
+    //[ReadOnly] public float Haxan.history.prevPlaybackNewTime;
     [ReadOnly] public float currTimeScale = 1f;
 
 	[Header("DUMMY:")]
@@ -137,16 +137,16 @@ public partial class BoardUI : MonoBehaviour
 		playbackState = TurnPlaybackState.REWINDING;
 		Haxan.history.currPlaybackTurn--;
 		var currTurn = Haxan.history.currTurn;
-		currPlaybackTime = currTurn.endTime;
-		prevPlaybackTime = currPlaybackTime + 1f;
+		Haxan.history.currPlaybackTime = currTurn.endTime;
+		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime + 1f;
 	}
 
 	void SetStateToFastForward()
 	{
 		playbackState = TurnPlaybackState.FAST_FORWARDING;
 		var currTurn = Haxan.history.currTurn;
-		currPlaybackTime = currTurn.startTime;
-		prevPlaybackTime = currPlaybackTime - 1f;
+		Haxan.history.currPlaybackTime = currTurn.startTime;
+		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - 1f;
 	}
 
 	void HandleSmashCutToTurn(int turnIndex)
@@ -348,23 +348,39 @@ public partial class BoardUI : MonoBehaviour
 					//... other turns beyond this one are now lost in the playback options.
 
 					playbackState = TurnPlaybackState.PAUSED;
-					
+
 					SelectUnit(lastSelectedUnit);
 					currInstigator = null;
 
 					Haxan.history.currPlaybackTurn++;
 					Haxan.history.turnCount = Haxan.history.currPlaybackTurn;
 
-					currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+					Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
 						? 0f
 						: Haxan.history.prevTurn.endTime;
 				}
-
-				//HandleTurnForward();
 				break;
 
 			case TurnPlaybackState.REWINDING:
-                HandleTurnBackward();
+				HandleTurnBackward();
+				//if (HandleTurnBackward_NEW())
+				//{
+				//	Debug.Log("Reversed through all turnSteps.");
+
+				//	if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
+				//	{
+				//		playbackState = TurnPlaybackState.PAUSED;
+				//		SelectUnit(lastSelectedUnit);
+
+				//		currInstigator = null;
+				//		Haxan.history.currPlaybackTime = Haxan.history.currTurn.startTime;
+				//		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
+				//	}
+				//	else
+				//	{
+				//		Haxan.history.currPlaybackTurn--;
+				//	}
+				//}
 				break;
 
 			case TurnPlaybackState.FAST_FORWARDING:
@@ -373,19 +389,33 @@ public partial class BoardUI : MonoBehaviour
 					//... we're exiting FF mode, ie. we're just scrubbing around, & not creating history.
 					//... other turns beyond this one are still shown in the playback options.
 
+					//if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
+					//{
+					//	playbackState = TurnPlaybackState.PAUSED;
+
+					//	SelectUnit(lastSelectedUnit);
+					//	currInstigator = null;
+
+					//	Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+					//		? 0f
+					//		: Haxan.history.prevTurn.endTime;
+					//	Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
+					//}
+					//else
+					//{
+					//	Haxan.history.currPlaybackTurn++;
+					//}
+
 					playbackState = TurnPlaybackState.PAUSED;
 
 					SelectUnit(lastSelectedUnit);
 					currInstigator = null;
 
 					Haxan.history.currPlaybackTurn++;
-
-					currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+					Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
 						? 0f
 						: Haxan.history.prevTurn.endTime;
 				}
-
-				//HandleFastForward();
 				break;
 
 			default:
@@ -413,47 +443,47 @@ public partial class BoardUI : MonoBehaviour
 				float effectiveStartTime = opData.startTime + currTurn.startTime;
 				float effectiveEndTime = opData.endTime + currTurn.startTime;
 
-				if (prevPlaybackTime < effectiveEndTime)
+				if (Haxan.history.prevPlaybackTime < effectiveEndTime)
 					//... if prevTime is less than effTime, this op will hasn't been ticked to completion, so:
 					allOpsFullyTicked = false;
 
-				if (currPlaybackTime < effectiveStartTime)
+				if (Haxan.history.currPlaybackTime < effectiveStartTime)
 				{
 					//... our time isn't caught up to this Op yet:
 					if (debugOps)
-						Debug.Log($"out, currPlayback is pre startTime, {currPlaybackTime}, {effectiveStartTime}");
+						Debug.Log($"out, currPlayback is pre startTime, {Haxan.history.currPlaybackTime}, {effectiveStartTime}");
 					continue;
 				}
 
 				if (debugOps)
 					Debug.Log(
 						$"forward ticking op: {j}, " +
-						$"currPlaybackTime: {currPlaybackTime}, " +
-						$"prevPlaybackTime: {prevPlaybackTime}, " +
+						$"Haxan.history.currPlaybackNewTime: {Haxan.history.currPlaybackTime}, " +
+						$"Haxan.history.prevPlaybackNewTime: {Haxan.history.prevPlaybackTime}, " +
 						$"startTime: {effectiveStartTime}" +
 						$"endTime: {effectiveEndTime}"
 						);
 
 				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
 				//... BEGIN TICK:
-				if (currPlaybackTime >= effectiveStartTime && prevPlaybackTime < effectiveStartTime)
+				if (Haxan.history.currPlaybackTime >= effectiveStartTime && Haxan.history.prevPlaybackTime < effectiveStartTime)
 				{
 					//... OnBeginTick();    
 				}
 
 				//.. TICK:
-				if (currPlaybackTime >= effectiveStartTime && currPlaybackTime < effectiveEndTime)
+				if (Haxan.history.currPlaybackTime >= effectiveStartTime && Haxan.history.currPlaybackTime < effectiveEndTime)
 				{
 					if (debugOps)
 						Debug.LogWarning($"op {j} still running.");
 
 					//allOpsFullyTicked = false;
-					var normalizedTime = Mathf.Clamp01((currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
+					var normalizedTime = Mathf.Clamp01((Haxan.history.currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
 					op.Tick(affectedUnit, normalizedTime);
 				}
 
 				//... COMPLETE TICK();
-				bool opCompletedThisFrame = currPlaybackTime > effectiveEndTime && prevPlaybackTime < effectiveEndTime;
+				bool opCompletedThisFrame = Haxan.history.currPlaybackTime > effectiveEndTime && Haxan.history.prevPlaybackTime < effectiveEndTime;
 				if (opCompletedThisFrame)
 				{
 					op.Tick(affectedUnit, 1f);
@@ -462,8 +492,8 @@ public partial class BoardUI : MonoBehaviour
 			}
 		}
 
-		prevPlaybackTime = currPlaybackTime;
-		currPlaybackTime += Time.deltaTime * currTimeScale;
+		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime;
+		Haxan.history.currPlaybackTime += Time.deltaTime * currTimeScale;
 
 		//... if we're at the final op of the final step:
 		if (allOpsFullyTicked)
@@ -487,7 +517,7 @@ public partial class BoardUI : MonoBehaviour
 			////... TO-DO:
 			////... should reset playback time here somehow, avoid grimey numbers:
 
-			//currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+			//Haxan.history.currPlaybackNewTime = Haxan.history.currPlaybackTurn == 0
 			//	? 0f
 			//	: Haxan.history.prevTurn.endTime;
 
@@ -527,14 +557,14 @@ public partial class BoardUI : MonoBehaviour
 				float effectiveStartTime = opData.startTime + currTurn.startTime;
 				float effectiveEndTime = opData.endTime + currTurn.startTime;
 
-				if (prevPlaybackTime < effectiveEndTime)
+				if (Haxan.history.prevPlaybackTime < effectiveEndTime)
 				//... if prevTime is less than effTime, this op will hasn't been ticked to completion, so:
 					allOpsFullyTicked = false;
 
-				if (currPlaybackTime < effectiveStartTime)
+				if (Haxan.history.currPlaybackTime < effectiveStartTime)
 				{
 					if(debugOps)
-						Debug.Log($"out, currPlayback is pre startTime, {currPlaybackTime}, {effectiveStartTime}");
+						Debug.Log($"out, currPlayback is pre startTime, {Haxan.history.currPlaybackTime}, {effectiveStartTime}");
 					//... our time isn't caught up to this Op yet:
 					continue;
 				}
@@ -542,7 +572,7 @@ public partial class BoardUI : MonoBehaviour
                 Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
 
                 //... BEGIN TICK:
-                if (currPlaybackTime >= effectiveStartTime && prevPlaybackTime < effectiveStartTime)
+                if (Haxan.history.currPlaybackTime >= effectiveStartTime && Haxan.history.prevPlaybackTime < effectiveStartTime)
 				{
 					//... OnBeginTick();    
 				}
@@ -550,24 +580,24 @@ public partial class BoardUI : MonoBehaviour
 				if (debugOps)
 					Debug.Log(
 						$"forward ticking op: {j}, " +
-						$"currPlaybackTime: {currPlaybackTime}, " +
-						$"prevPlaybackTime: {prevPlaybackTime}, " +
+						$"Haxan.history.currPlaybackNewTime: {Haxan.history.currPlaybackTime}, " +
+						$"Haxan.history.prevPlaybackNewTime: {Haxan.history.prevPlaybackTime}, " +
 						$"startTime: {effectiveStartTime}" +
 						$"endTime: {effectiveEndTime}"
 						);
 
 				//.. TICK:
-				if (currPlaybackTime >= effectiveStartTime && currPlaybackTime < effectiveEndTime)
+				if (Haxan.history.currPlaybackTime >= effectiveStartTime && Haxan.history.currPlaybackTime < effectiveEndTime)
 				{
 					if(debugOps)
 						Debug.LogWarning($"op {j} still running.");
 
                     //allOpsFullyTicked = false;
-                    var normalizedTime = Mathf.Clamp01((currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
+                    var normalizedTime = Mathf.Clamp01((Haxan.history.currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
                     op.Tick(affectedUnit, normalizedTime);
 				}
 
-				bool opCompletedThisFrame = currPlaybackTime > effectiveEndTime && prevPlaybackTime < effectiveEndTime;
+				bool opCompletedThisFrame = Haxan.history.currPlaybackTime > effectiveEndTime && Haxan.history.prevPlaybackTime < effectiveEndTime;
 				//... COMPLETE TICK();
 				if (opCompletedThisFrame)
 				{
@@ -577,8 +607,8 @@ public partial class BoardUI : MonoBehaviour
 			}
 		}
 
-		prevPlaybackTime = currPlaybackTime;
-		currPlaybackTime += Time.deltaTime * currTimeScale;
+		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime;
+		Haxan.history.currPlaybackTime += Time.deltaTime * currTimeScale;
 
 		//... if we're at the final op of the final step:
 		if (allOpsFullyTicked)
@@ -602,12 +632,99 @@ public partial class BoardUI : MonoBehaviour
 			//... TO-DO:
 			//... should reset playback time here somehow, avoid grimey numbers:
 
-			currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+			Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
 				? 0f
 				: Haxan.history.prevTurn.endTime;
 				//Haxan.history.turns[currPlaybackTurn].endTime;
 		}
     }
+
+	bool HandleTurnBackward_NEW()
+	{
+		Turn currTurn = Haxan.history.currTurn;
+
+		bool allOpsFullyUnticked = true;
+
+		//... looping through all turnSteps:
+		for (int i = currTurn.stepIndex + currTurn.stepCount - 1; i >= currTurn.stepIndex; i--)
+		{
+			TurnStep currTurnStep = Haxan.history.turnSteps[i];
+
+			//NOTE: why is it turn & move playing together in same frame & failing...
+
+			//... looping through all ops in that step:
+			for (int j = currTurnStep.opIndex + currTurnStep.opCount - 1; j >= currTurnStep.opIndex; j--)
+			{
+				UnitOp op = Haxan.history.allOps[j];
+				OpPlaybackData opData = op.playbackData;
+
+				float opStartTime = opData.startTime + currTurn.startTime;
+				float opEndTime = opData.endTime + currTurn.startTime;
+
+				if (Haxan.history.prevPlaybackTime > opStartTime)
+					allOpsFullyUnticked = false;
+
+				if (Haxan.history.currPlaybackTime > opEndTime)
+				//if (Haxan.history.currPlaybackNewTime < opStartTime)
+				{
+					Debug.Log($"out, currPlayback is post endTime, {Haxan.history.currPlaybackTime}, {opStartTime}");
+					continue;
+				}
+
+				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
+
+				// TODO: offet opDataStartTime by the startTime of the turn you're looking at.
+
+				//... BEGIN TICK:
+				if (Haxan.history.currPlaybackTime >= opStartTime && Haxan.history.prevPlaybackTime < opStartTime)
+				{
+					//... OnBeginTick();    
+				}
+
+				Debug.Log(
+					$"backwards op: {j}, " +
+					$"curr: {Haxan.history.currPlaybackTime}, " +
+					$"prev: {Haxan.history.prevPlaybackTime}, " +
+					$"S: {opStartTime}, " +
+					$"E: {opEndTime}"
+					);
+
+				//.. TICK:
+				if (Haxan.history.currPlaybackTime >= opStartTime && Haxan.history.currPlaybackTime < opEndTime)
+				{
+					Debug.LogWarning($"op {j} still backwards running.");
+					//allOpsFullyTicked = false;
+					var normalizedTime = Mathf.Clamp01((Haxan.history.currPlaybackTime - opStartTime) / op.playbackData.duration);
+					op.Tick(affectedUnit, normalizedTime);
+				}
+
+				bool opUndoneThisFrame = Haxan.history.currPlaybackTime <= opStartTime && Haxan.history.prevPlaybackTime > opStartTime;
+				//... COMPLETE TICK();
+				if (opUndoneThisFrame)
+				{
+					Debug.LogWarning($"... op {j} undone.");
+					op.Tick(affectedUnit, 0f);
+					op.Undo(affectedUnit);
+				}
+			}
+		}
+
+		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime;
+		Haxan.history.currPlaybackTime -= Time.deltaTime * currTimeScale;
+
+		Debug.Log(
+					$"... curr: {Haxan.history.currPlaybackTime}, " +
+					$"... prev: {Haxan.history.prevPlaybackTime} "
+					);
+
+		//... if we're at the final op of the final step:
+		if (allOpsFullyUnticked)
+		{
+			return true;
+		}
+
+		return false;
+	}
 
 	void HandleTurnBackward()
 	{
@@ -631,13 +748,13 @@ public partial class BoardUI : MonoBehaviour
 				float opStartTime = opData.startTime + currTurn.startTime;
 				float opEndTime = opData.endTime + currTurn.startTime;
 
-				if (prevPlaybackTime > opStartTime)
+				if (Haxan.history.prevPlaybackTime > opStartTime)
 					allOpsFullyUnticked = false;
 
-				if (currPlaybackTime > opEndTime)
-				//if (currPlaybackTime < opStartTime)
+				if (Haxan.history.currPlaybackTime > opEndTime)
+				//if (Haxan.history.currPlaybackNewTime < opStartTime)
 				{
-					Debug.Log($"out, currPlayback is post endTime, {currPlaybackTime}, {opStartTime}");
+					Debug.Log($"out, currPlayback is post endTime, {Haxan.history.currPlaybackTime}, {opStartTime}");
 					continue;
 				}
 
@@ -646,29 +763,29 @@ public partial class BoardUI : MonoBehaviour
 				// TODO: offet opDataStartTime by the startTime of the turn you're looking at.
 
 				//... BEGIN TICK:
-				if (currPlaybackTime >= opStartTime && prevPlaybackTime < opStartTime)
+				if (Haxan.history.currPlaybackTime >= opStartTime && Haxan.history.prevPlaybackTime < opStartTime)
 				{
 					//... OnBeginTick();    
 				}
 
 				Debug.Log(
 					$"backwards op: {j}, " +
-					$"curr: {currPlaybackTime}, " +
-					$"prev: {prevPlaybackTime}, " +
+					$"curr: {Haxan.history.currPlaybackTime}, " +
+					$"prev: {Haxan.history.prevPlaybackTime}, " +
 					$"S: {opStartTime}, " +
 					$"E: {opEndTime}"
 					);
 
 				//.. TICK:
-				if (currPlaybackTime >= opStartTime && currPlaybackTime < opEndTime)
+				if (Haxan.history.currPlaybackTime >= opStartTime && Haxan.history.currPlaybackTime < opEndTime)
 				{
 					Debug.LogWarning($"op {j} still backwards running.");
 					//allOpsFullyTicked = false;
-					var normalizedTime = Mathf.Clamp01((currPlaybackTime - opStartTime) / op.playbackData.duration);
+					var normalizedTime = Mathf.Clamp01((Haxan.history.currPlaybackTime - opStartTime) / op.playbackData.duration);
 					op.Tick(affectedUnit, normalizedTime);
 				}
 
-				bool opUndoneThisFrame = currPlaybackTime <= opStartTime && prevPlaybackTime > opStartTime;
+				bool opUndoneThisFrame = Haxan.history.currPlaybackTime <= opStartTime && Haxan.history.prevPlaybackTime > opStartTime;
 				//... COMPLETE TICK();
 				if (opUndoneThisFrame)
 				{
@@ -679,12 +796,12 @@ public partial class BoardUI : MonoBehaviour
 			}
 		}
 
-		prevPlaybackTime = currPlaybackTime;
-		currPlaybackTime -= Time.deltaTime * currTimeScale;
+		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime;
+		Haxan.history.currPlaybackTime -= Time.deltaTime * currTimeScale;
 
 		Debug.Log(
-					$"... curr: {currPlaybackTime}, " +
-					$"... prev: {prevPlaybackTime} " 
+					$"... curr: {Haxan.history.currPlaybackTime}, " +
+					$"... prev: {Haxan.history.prevPlaybackTime} " 
 					);
 
 		//... if we're at the final op of the final step:
@@ -698,8 +815,8 @@ public partial class BoardUI : MonoBehaviour
 				SelectUnit(lastSelectedUnit);
 
 				currInstigator = null;
-				currPlaybackTime = currTurn.startTime;
-				prevPlaybackTime = currPlaybackTime - Time.deltaTime * currTimeScale;
+				Haxan.history.currPlaybackTime = currTurn.startTime;
+				Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
 			}
 			else
 			{

@@ -245,8 +245,10 @@ public class OpTimelineWindow : EditorWindow
 				}
 			}
 
-			for (int i = 0; i < Haxan.stateVariable.state.history.turnCount; i++)
+			for (int i = 0; i < Haxan.history.turnCount; i++)
 			{
+				var turn = Haxan.history.turns[i];
+
 				using (new EditorGUILayout.HorizontalScope())
 				{
 					int buttonCount = 3;
@@ -288,8 +290,13 @@ public class OpTimelineWindow : EditorWindow
 					Rect overRect = rect;
 					var width = overRect.width;
 
+					var normalizedTime = Mathf.InverseLerp(
+						turn.startTime, 
+						turn.endTime, 
+						Haxan.history.currPlaybackTime
+						);
 
-					overRect.width = width * currSliderValue;
+					overRect.width = width * normalizedTime;
 					EditorGUI.DrawRect(overRect, ColorPicker.Swatches.trigger);
 
 					float markerWidth = 2f;

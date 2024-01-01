@@ -53,7 +53,8 @@ public static class Haxan
 		Haxan.history.totalCreatedOps = 0;
 		Haxan.history.currPlaybackTurn = 0;
 
-		//state.history.turnCount = 0;
+		Haxan.history.currPlaybackTime = 0f;
+		Haxan.history.prevPlaybackTime = 0f;
 
 		var allUnitArchetypes = Resources.LoadAll<UnitDefinition>("UnitArchetypes").ToList();
 		allUnitArchetypes.ToDictionary(r => r.type, r => r);
