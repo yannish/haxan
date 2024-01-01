@@ -23,6 +23,13 @@ public class GroundedMove : Ability
 		return coordsInRange;
 	}
 
+	public List<UnitOp> GetOpPreview(Vector2Int origin, Vector2Int dest, Unit unit)
+	{
+		List<UnitOp> ops = FetchUnitOps(dest, unit);
+
+		return ops;
+	}
+
 	public override List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int destination, Unit unit)
 	{
 		Vector2Int[] path = Board.FindPath_NEW(origin, destination);
@@ -83,72 +90,6 @@ public class GroundedMove : Ability
 		pathQuads.Clear();
 	}
 
-	public override List<UnitOp_STRUCT> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit)
-	{
-		if (targetCoord == unit.OffsetPos)
-			return null;
-
-		Cell originCell = Board.TryGetCellAtPos(targetCoord);
-		if (originCell == null)
-			return null;
-
-		Unit foundUnit = Board.GetUnitAtPos(targetCoord);
-		if (foundUnit != null && foundUnit.preset && !foundUnit.preset.isPassable)
-			return null;
-
-		Vector2Int[] path = Board.FindPath_NEW(unit.OffsetPos, targetCoord);
-		if (path.Length == 0)
-			return null;
-
-		List<UnitOp_STRUCT> ops = new List<UnitOp_STRUCT>();
-
-		HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
-
-		float totalDuration = 0f;
-
-		if(unit.Facing != toFirstCellDir)
-		{
-			UnitOp_STRUCT newTurnOp = UnitOp_STRUCT.TurnOp(
-				unit: unit,
-				fromDir: unit.Facing,
-				toDir: toFirstCellDir,
-				startTime: 0f,
-				duration: turnDuration
-				);
-
-			ops.Add(newTurnOp);
-			totalDuration += turnDuration;
-			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
-			Debog.logGameflow(firstTurnLog);
-		}
-
-		HexDirectionFT lastFacingDir = toFirstCellDir;
-		for (int i = 0; i < path.Length; i++)
-		{
-			Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
-			Vector2Int toCell = path[i];
-			HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
-			if(lastFacingDir != toNextCellDir)
-			{
-				UnitOp_STRUCT newTurnOp = UnitOp_STRUCT.TurnOp(
-				unit: unit,
-				fromDir: lastFacingDir,
-				toDir: toNextCellDir,
-				startTime: 0f,
-				duration: turnDuration
-				);
-
-				ops.Add(newTurnOp);
-				totalDuration += turnDuration;
-				lastFacingDir = toFirstCellDir;
-				string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
-				Debog.logGameflow(firstTurnLog);
-			}
-		}
-
-		return ops;
-	}
-
 	public override List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit)
 	{
 		if (targetCoord == unit.OffsetPos)
@@ -178,11 +119,11 @@ public class GroundedMove : Ability
 		if (unit.Facing != toFirstCellDir)
 		{
 			TurnOp newTurnOp = new TurnOp(
-				unit : unit,
-				fromDir : unit.Facing,
-				toDir : toFirstCellDir,
-				startTime : 0f,
-				duration : turnDuration
+				unit: unit,
+				fromDir: unit.Facing,
+				toDir: toFirstCellDir,
+				startTime: 0f,
+				duration: turnDuration
 				);
 
 			ops.Add(newTurnOp);
@@ -218,9 +159,9 @@ public class GroundedMove : Ability
 			}
 
 			GroundMoveOp newStepOp = new GroundMoveOp(
-				unit, 
-				fromCell, 
-				toCell, 
+				unit,
+				fromCell,
+				toCell,
 				totalDuration,
 				stepDuration
 				);
@@ -237,6 +178,73 @@ public class GroundedMove : Ability
 
 		return ops;
 	}
+
+	//public override List<UnitOp_STRUCT> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit)
+	//{
+	//	if (targetCoord == unit.OffsetPos)
+	//		return null;
+
+	//	Cell originCell = Board.TryGetCellAtPos(targetCoord);
+	//	if (originCell == null)
+	//		return null;
+
+	//	Unit foundUnit = Board.GetUnitAtPos(targetCoord);
+	//	if (foundUnit != null && foundUnit.preset && !foundUnit.preset.isPassable)
+	//		return null;
+
+	//	Vector2Int[] path = Board.FindPath_NEW(unit.OffsetPos, targetCoord);
+	//	if (path.Length == 0)
+	//		return null;
+
+	//	List<UnitOp_STRUCT> ops = new List<UnitOp_STRUCT>();
+
+	//	HexDirectionFT toFirstCellDir = unit.OffsetPos.ToNeighbour(path[0]);
+
+	//	float totalDuration = 0f;
+
+	//	if(unit.Facing != toFirstCellDir)
+	//	{
+	//		UnitOp_STRUCT newTurnOp = UnitOp_STRUCT.TurnOp(
+	//			unit: unit,
+	//			fromDir: unit.Facing,
+	//			toDir: toFirstCellDir,
+	//			startTime: 0f,
+	//			duration: turnDuration
+	//			);
+
+	//		ops.Add(newTurnOp);
+	//		totalDuration += turnDuration;
+	//		string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+	//		Debog.logGameflow(firstTurnLog);
+	//	}
+
+	//	HexDirectionFT lastFacingDir = toFirstCellDir;
+	//	for (int i = 0; i < path.Length; i++)
+	//	{
+	//		Vector2Int fromCell = i == 0 ? unit.OffsetPos : path[i - 1];
+	//		Vector2Int toCell = path[i];
+	//		HexDirectionFT toNextCellDir = fromCell.ToNeighbour(toCell);
+	//		if(lastFacingDir != toNextCellDir)
+	//		{
+	//			UnitOp_STRUCT newTurnOp = UnitOp_STRUCT.TurnOp(
+	//			unit: unit,
+	//			fromDir: lastFacingDir,
+	//			toDir: toNextCellDir,
+	//			startTime: 0f,
+	//			duration: turnDuration
+	//			);
+
+	//			ops.Add(newTurnOp);
+	//			totalDuration += turnDuration;
+	//			lastFacingDir = toFirstCellDir;
+	//			string firstTurnLog = $"doing turn from : {unit.Facing} to {toFirstCellDir}";
+	//			Debog.logGameflow(firstTurnLog);
+	//		}
+	//	}
+
+	//	return ops;
+	//}
+
 
 	//public override Queue<UnitCommand> FetchCommandChain_OLD(Vector2Int targetCoord, Unit unit)
 	//{

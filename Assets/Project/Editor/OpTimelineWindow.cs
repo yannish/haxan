@@ -221,30 +221,6 @@ public class OpTimelineWindow : EditorWindow
 			}
 
 			debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos);
-
-			//... unnecessary "START" button.. ?
-
-			using (new EditorGUILayout.HorizontalScope())
-			{
-				if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
-				{
-					//Debug.LogWarning("HIT PLAY ON TURN : " + i);
-					GameContext.OnScrubToTurnClicked?.Invoke(-1);
-				}
-
-				if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
-				{
-					//Debug.LogWarning("HIT FF ON TURN : " + i);
-					GameContext.OnSmashToTurnClicked?.Invoke(-1);
-				}
-
-				if (GUILayout.Button("START", GUILayout.Width(nameWidth)))
-				{
-					//Debug.LogWarning($"Displaying turn {i}");
-					selectedTurnIndex = -1;
-				}
-			}
-
 			for (int i = 0; i < Haxan.history.turnCount; i++)
 			{
 				var turn = Haxan.history.turns[i];

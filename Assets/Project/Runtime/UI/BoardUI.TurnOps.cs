@@ -332,21 +332,8 @@ public partial class BoardUI : MonoBehaviour
 		 */
 	}
 
-//	if(targetPlaybackTurn == Haxan.history.currPlaybackTurn)
-//			{
-//				playbackState = TurnPlaybackState.PAUSED;
-//				SelectUnit(lastSelectedUnit);
 
-//	currInstigator = null;
-//				Haxan.history.currPlaybackTime = currTurn.startTime;
-//				Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime* currTimeScale;
-//}
-//			else
-//{
-//	Haxan.history.currPlaybackTurn--;
-//}
-
-void HandleCommandProcessing()
+	void HandleCommandProcessing()
 	{
 		switch (playbackState)
 		{
@@ -354,7 +341,7 @@ void HandleCommandProcessing()
 				break;
 
 			case TurnPlaybackState.PLAYING:
-				if (HandleTurnForward_NEW())
+				if (HandleTurnForward())
 				{
 					//... we're exiting PLAY mode, ie. we've input a new turn.
 					//..  & we're creating history, not scrubbing through it.
@@ -378,8 +365,7 @@ void HandleCommandProcessing()
 				break;
 
 			case TurnPlaybackState.REWINDING:
-				//HandleTurnBackward();
-				if (HandleTurnBackward_NEW())
+				if (HandleTurnBackward())
 				{
 					Debug.Log("Reversed through all turnSteps.");
 
@@ -396,32 +382,11 @@ void HandleCommandProcessing()
 					{
 						Haxan.history.currPlaybackTurn--;
 					}
-
-					//Debug.Log("Reversed through all turnSteps.");
-
-					//if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
-					//{
-					//	playbackState = TurnPlaybackState.PAUSED;
-					//	SelectUnit(lastSelectedUnit);
-
-					//	currInstigator = null;
-
-					//	Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
-					//		? 0f
-					//		: Haxan.history.prevTurn.endTime;
-					//	//Haxan.history.currPlaybackTime = Haxan.history.currTurn.startTime;
-					//	Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime + Time.deltaTime * currTimeScale;
-					//}
-					//else
-					//{
-					//	Haxan.history.currPlaybackTurn--;
-					//}
 				}
 				break;
 
 			case TurnPlaybackState.FAST_FORWARDING:
-				//HandleTurnForward();
-				if (HandleTurnForward_NEW())
+				if (HandleTurnForward())
 				{
 					//... we're exiting FF mode, ie. we're just scrubbing around, & not creating history.
 					//... other turns beyond this one are still shown in the playback options.
@@ -433,45 +398,9 @@ void HandleCommandProcessing()
 						SelectUnit(lastSelectedUnit);
 
 						currInstigator = null;
-						//Haxan.history.currPlaybackTurn++;
 						Haxan.history.currPlaybackTime = Haxan.history.prevTurn.endTime;
 						Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
-						//Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
-						//	? 0f
-						//	: Haxan.history.prevTurn.endTime;
 					}
-					//else
-					//{
-					//	Haxan.history.currPlaybackTurn++;
-					//}
-
-					//if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
-					//{
-					//	playbackState = TurnPlaybackState.PAUSED;
-
-					//	SelectUnit(lastSelectedUnit);
-					//	currInstigator = null;
-
-					//	Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
-					//		? 0f
-					//		: Haxan.history.prevTurn.endTime;
-					//	Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
-					//}
-					//else
-					//{
-					//	Haxan.history.currPlaybackTurn++;
-					//}
-
-
-					//playbackState = TurnPlaybackState.PAUSED;
-
-					//SelectUnit(lastSelectedUnit);
-					//currInstigator = null;
-
-					//Haxan.history.currPlaybackTurn++;
-					//Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
-					//	? 0f
-					//	: Haxan.history.prevTurn.endTime;
 				}
 				break;
 
@@ -480,7 +409,7 @@ void HandleCommandProcessing()
 		}
 	}
 
-	bool HandleTurnForward_NEW()
+	bool HandleTurnForward()
 	{
 		Turn currTurn = Haxan.history.currTurn;
 
@@ -587,7 +516,7 @@ void HandleCommandProcessing()
 		return false;
 	}
 
-    void HandleTurnForward()
+    void HandleTurnForward_OLDER()
 	{
         Turn currTurn = Haxan.history.currTurn;
 		/*. every tick, we run through every TURN STEP
@@ -699,7 +628,7 @@ void HandleCommandProcessing()
 		}
     }
 
-	bool HandleTurnBackward_NEW()
+	bool HandleTurnBackward()
 	{
 		Turn currTurn = Haxan.history.currTurn;
 
@@ -786,7 +715,7 @@ void HandleCommandProcessing()
 		return false;
 	}
 
-	void HandleTurnBackward()
+	void HandleTurnBackward_OLD()
 	{
 		Turn currTurn = Haxan.history.currTurn;
 

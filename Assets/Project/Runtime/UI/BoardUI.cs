@@ -339,6 +339,8 @@ public partial class BoardUI : MonoBehaviour
 
     List<Vector2Int> currPath;
 
+	List<UnitOp> opPath;
+
 
     //... UNIT:
     void HandleUnitSelectedMode()
@@ -426,6 +428,8 @@ public partial class BoardUI : MonoBehaviour
                         selectedUnit
                         );
 
+					//var opPreview = selectedUnit.MovementAbility.GetOpPreview
+
                     foreach(var item in selectedUnit.inventory)
 					{
                         //item.ShowPathReaction(selectedUnit.OffsetPos, previewedPath);
@@ -450,14 +454,9 @@ public partial class BoardUI : MonoBehaviour
         {
             Debug.Log("CLICKED A VALID MOVE)");
 
-            //var fetchUnitOps = selectedUnit.MovementAbility.FetchUnitOps_NEW(mouseUpPos, selectedUnit);
 			var fetchUnitOps = selectedUnit.MovementAbility.FetchUnitOps(mouseUpPos, selectedUnit);
-			//var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain(mouseUpPos, selectedUnit);
-			//var fetchedCommands = selectedUnit.MovementAbility.FetchCommandChain_OLD(mouseUpPos, selectedUnit);
 
 			StartProcessingTurn(fetchUnitOps);
-			//StartProcessingTurn_NEW(fetchUnitOps);
-            //StartProcessingCommands(fetchedCommands);
 
             mousePosLastFrame = mousePos;
             hoveredWaypointLastFrame = hoveredWaypoint;
@@ -932,6 +931,7 @@ public partial class BoardUI : MonoBehaviour
             {
                 Debug.LogWarning("hovering valid move at : " + currValidMoveCoord.ToString());
                 selectedAbility.ShowPreview(currValidMoveCoord, selectedUnit);
+
 				HoverValidAbilityMove(selectedAbility, currValidMoveCoord);
 			}
         }
