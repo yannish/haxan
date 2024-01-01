@@ -65,8 +65,6 @@ public partial class BoardUI : MonoBehaviour
     public List<IUnitOperable> currInstigatingOps_OLD;
 	public List<UnitOp> currInstigatingOps;
 
-	[Header("DEBUG:")]
-	public bool debugOps;
 
 	//public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
 	//[ReadOnly] public int totalInstigatingOps;
@@ -107,6 +105,12 @@ public partial class BoardUI : MonoBehaviour
 		if (Haxan.history.currPlaybackTurn == newTargetTurn)
 		{
 			Debug.LogWarning($"Already scrubbed to turn {newTargetTurn}!");
+			return;
+		}
+
+		if(newTargetTurn > Haxan.history.turnCount)
+		{
+			Debug.LogWarning($"Target turn {newTargetTurn} out of bounds!");
 			return;
 		}
 
@@ -336,7 +340,27 @@ public partial class BoardUI : MonoBehaviour
 				break;
 
 			case TurnPlaybackState.PLAYING:
-				HandleTurnForward();
+				if (HandleTurnForward_NEW())
+				{
+					//... we're exiting PLAY mode, ie. we've input a new turn.
+					//..  & we're creating history, not scrubbing through it.
+					//..	so we clamp turnCount to the current playback turn. 
+					//... other turns beyond this one are now lost in the playback options.
+
+					playbackState = TurnPlaybackState.PAUSED;
+					
+					SelectUnit(lastSelectedUnit);
+					currInstigator = null;
+
+					Haxan.history.currPlaybackTurn++;
+					Haxan.history.turnCount = Haxan.history.currPlaybackTurn;
+
+					currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+						? 0f
+						: Haxan.history.prevTurn.endTime;
+				}
+
+				//HandleTurnForward();
 				break;
 
 			case TurnPlaybackState.REWINDING:
@@ -344,12 +368,133 @@ public partial class BoardUI : MonoBehaviour
 				break;
 
 			case TurnPlaybackState.FAST_FORWARDING:
-				HandleFastForward();
+				if (HandleTurnForward_NEW())
+				{
+					//... we're exiting FF mode, ie. we're just scrubbing around, & not creating history.
+					//... other turns beyond this one are still shown in the playback options.
+
+					playbackState = TurnPlaybackState.PAUSED;
+
+					SelectUnit(lastSelectedUnit);
+					currInstigator = null;
+
+					Haxan.history.currPlaybackTurn++;
+
+					currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+						? 0f
+						: Haxan.history.prevTurn.endTime;
+				}
+
+				//HandleFastForward();
 				break;
 
 			default:
 				break;
 		}
+	}
+
+	bool HandleTurnForward_NEW()
+	{
+		Turn currTurn = Haxan.history.currTurn;
+
+		bool allOpsFullyTicked = true;
+
+		//... looping through all turnSteps in this current turn:
+		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
+		{
+			TurnStep currTurnStep = Haxan.history.turnSteps[i];
+
+			//... looping through all ops in that step:
+			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
+			{
+				UnitOp op = Haxan.history.allOps[j];
+				OpPlaybackData opData = op.playbackData;
+
+				float effectiveStartTime = opData.startTime + currTurn.startTime;
+				float effectiveEndTime = opData.endTime + currTurn.startTime;
+
+				if (prevPlaybackTime < effectiveEndTime)
+					//... if prevTime is less than effTime, this op will hasn't been ticked to completion, so:
+					allOpsFullyTicked = false;
+
+				if (currPlaybackTime < effectiveStartTime)
+				{
+					//... our time isn't caught up to this Op yet:
+					if (debugOps)
+						Debug.Log($"out, currPlayback is pre startTime, {currPlaybackTime}, {effectiveStartTime}");
+					continue;
+				}
+
+				if (debugOps)
+					Debug.Log(
+						$"forward ticking op: {j}, " +
+						$"currPlaybackTime: {currPlaybackTime}, " +
+						$"prevPlaybackTime: {prevPlaybackTime}, " +
+						$"startTime: {effectiveStartTime}" +
+						$"endTime: {effectiveEndTime}"
+						);
+
+				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
+				//... BEGIN TICK:
+				if (currPlaybackTime >= effectiveStartTime && prevPlaybackTime < effectiveStartTime)
+				{
+					//... OnBeginTick();    
+				}
+
+				//.. TICK:
+				if (currPlaybackTime >= effectiveStartTime && currPlaybackTime < effectiveEndTime)
+				{
+					if (debugOps)
+						Debug.LogWarning($"op {j} still running.");
+
+					//allOpsFullyTicked = false;
+					var normalizedTime = Mathf.Clamp01((currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
+					op.Tick(affectedUnit, normalizedTime);
+				}
+
+				//... COMPLETE TICK();
+				bool opCompletedThisFrame = currPlaybackTime > effectiveEndTime && prevPlaybackTime < effectiveEndTime;
+				if (opCompletedThisFrame)
+				{
+					op.Tick(affectedUnit, 1f);
+					op.Execute(affectedUnit);
+				}
+			}
+		}
+
+		prevPlaybackTime = currPlaybackTime;
+		currPlaybackTime += Time.deltaTime * currTimeScale;
+
+		//... if we're at the final op of the final step:
+		if (allOpsFullyTicked)
+		{
+			Debug.Log("Played through all turnSteps.");
+
+			//playbackState = TurnPlaybackState.PAUSED;
+			//SelectUnit(lastSelectedUnit);
+
+			//currInstigator = null;
+			//Haxan.history.currPlaybackTurn++;
+
+			////... we're exiting PLAY mode, ie. we've input a new turn.
+			////..  & we're creating history, not scrubbing through it.
+			////..	so we clamp turnCount to the current playback turn. 
+			////... other turns beyond this one are now lost in the playback options.
+
+			//Haxan.history.turnCount = Haxan.history.currPlaybackTurn;
+			////Haxan.history.turnCount = Mathf.Clamp(Haxan.history.turnCount, 0, Haxan.history.currPlaybackTurn);
+
+			////... TO-DO:
+			////... should reset playback time here somehow, avoid grimey numbers:
+
+			//currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+			//	? 0f
+			//	: Haxan.history.prevTurn.endTime;
+
+			return true;
+		}
+
+		return false;
 	}
 
     void HandleTurnForward()

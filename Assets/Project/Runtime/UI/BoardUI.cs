@@ -11,9 +11,10 @@ public partial class BoardUI : MonoBehaviour
     , IPointerExitHandler
 {
 	[Header("DEBUG:")]
+	public bool debugOps;
 	public bool logMouseDebug;
 
-    enum Mode
+	enum Mode
     {
         Neutral,
         UnitSelected,

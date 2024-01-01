@@ -241,6 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92706310b13d94af4a56ea22480a97db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugOps: 1
   logMouseDebug: 0
   mode: 0
   isPointerInUI: 0
@@ -260,7 +261,7 @@ MonoBehaviour:
   hoveredItemUseButton: {fileID: 0}
   playbackState: 0
   currPlaybackStep: 0
-  currPlaybackTurn: 0
+  targetPlaybackTurn: 0
   currNormalizedTime: 0
   lastTurnStartTime: 0
   currPlaybackTime: 0

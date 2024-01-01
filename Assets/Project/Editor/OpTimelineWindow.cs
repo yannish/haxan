@@ -17,6 +17,7 @@ public class OpTimelineWindow : EditorWindow
 	public float currFloatSliderValue;
 
 	GUIContent playIcon;
+	GUIContent undoIcon;
 	GUIContent ffIcon;
 
 
@@ -66,6 +67,7 @@ public class OpTimelineWindow : EditorWindow
 	private void OnFocus()
 	{
 		playIcon = EditorGUIUtility.IconContent("PlayButton On");
+		undoIcon = EditorGUIUtility.IconContent("d_TreeEditor.Refresh");
 		ffIcon = EditorGUIUtility.IconContent("d_StepButton On");
 	}
 
@@ -219,38 +221,45 @@ public class OpTimelineWindow : EditorWindow
 			}
 
 			debugScrollPos = EditorGUILayout.BeginScrollView(debugScrollPos);
-			
+
 			//... unnecessary "START" button.. ?
 
-			//using (new EditorGUILayout.HorizontalScope())
-			//{
-			//	if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
-			//	{
-			//		//Debug.LogWarning("HIT PLAY ON TURN : " + i);
-			//		GameContext.OnScrubToTurnClicked?.Invoke(-1);
-			//	}
+			using (new EditorGUILayout.HorizontalScope())
+			{
+				if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
+				{
+					//Debug.LogWarning("HIT PLAY ON TURN : " + i);
+					GameContext.OnScrubToTurnClicked?.Invoke(-1);
+				}
 
-			//	if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
-			//	{
-			//		//Debug.LogWarning("HIT FF ON TURN : " + i);
-			//		GameContext.OnSmashToTurnClicked?.Invoke(-1);
-			//	}
+				if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
+				{
+					//Debug.LogWarning("HIT FF ON TURN : " + i);
+					GameContext.OnSmashToTurnClicked?.Invoke(-1);
+				}
 
-			//	if (GUILayout.Button("START", GUILayout.Width(nameWidth)))
-			//	{
-			//		//Debug.LogWarning($"Displaying turn {i}");
-			//		selectedTurnIndex = -1;
-			//	}
-			//}
+				if (GUILayout.Button("START", GUILayout.Width(nameWidth)))
+				{
+					//Debug.LogWarning($"Displaying turn {i}");
+					selectedTurnIndex = -1;
+				}
+			}
 
 			for (int i = 0; i < Haxan.stateVariable.state.history.turnCount; i++)
 			{
 				using (new EditorGUILayout.HorizontalScope())
 				{
-					if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
+					int buttonCount = 3;
+					if (GUILayout.Button(undoIcon, GUILayout.Width(buttonWidth)))
 					{
 						//Debug.LogWarning("HIT PLAY ON TURN : " + i);
 						GameContext.OnScrubToTurnClicked?.Invoke(i);
+					}
+
+					if (GUILayout.Button(playIcon, GUILayout.Width(buttonWidth)))
+					{
+						//Debug.LogWarning("HIT PLAY ON TURN : " + i);
+						GameContext.OnScrubToTurnClicked?.Invoke(i + 1);
 					}
 
 					if (GUILayout.Button(ffIcon, GUILayout.Width(buttonWidth)))
@@ -259,14 +268,14 @@ public class OpTimelineWindow : EditorWindow
 						GameContext.OnSmashToTurnClicked?.Invoke(i);
 					}
 
-					if (GUILayout.Button("TURN NAME", GUILayout.Width(nameWidth)))
+					if (GUILayout.Button("SHOW", GUILayout.Width(nameWidth)))
 					{
 						//Debug.LogWarning($"Displaying turn {i}");
 						selectedTurnIndex = i;
 					}
 
 					Rect rect = GUILayoutUtility.GetRect(
-						200 - buttonWidth * 2f - nameWidth,
+						200 - buttonWidth * buttonCount - nameWidth,
 						EditorGUIUtility.singleLineHeight
 						);
 
@@ -278,6 +287,8 @@ public class OpTimelineWindow : EditorWindow
 
 					Rect overRect = rect;
 					var width = overRect.width;
+
+
 					overRect.width = width * currSliderValue;
 					EditorGUI.DrawRect(overRect, ColorPicker.Swatches.trigger);
 
