@@ -332,7 +332,21 @@ public partial class BoardUI : MonoBehaviour
 		 */
 	}
 
-	void HandleCommandProcessing()
+//	if(targetPlaybackTurn == Haxan.history.currPlaybackTurn)
+//			{
+//				playbackState = TurnPlaybackState.PAUSED;
+//				SelectUnit(lastSelectedUnit);
+
+//	currInstigator = null;
+//				Haxan.history.currPlaybackTime = currTurn.startTime;
+//				Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime* currTimeScale;
+//}
+//			else
+//{
+//	Haxan.history.currPlaybackTurn--;
+//}
+
+void HandleCommandProcessing()
 	{
 		switch (playbackState)
 		{
@@ -362,28 +376,49 @@ public partial class BoardUI : MonoBehaviour
 				break;
 
 			case TurnPlaybackState.REWINDING:
-				HandleTurnBackward();
-				//if (HandleTurnBackward_NEW())
-				//{
-				//	Debug.Log("Reversed through all turnSteps.");
+				//HandleTurnBackward();
+				if (HandleTurnBackward_NEW())
+				{
+					Debug.Log("Reversed through all turnSteps.");
 
-				//	if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
-				//	{
-				//		playbackState = TurnPlaybackState.PAUSED;
-				//		SelectUnit(lastSelectedUnit);
+					if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
+					{
+						playbackState = TurnPlaybackState.PAUSED;
+						SelectUnit(lastSelectedUnit);
 
-				//		currInstigator = null;
-				//		Haxan.history.currPlaybackTime = Haxan.history.currTurn.startTime;
-				//		Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
-				//	}
-				//	else
-				//	{
-				//		Haxan.history.currPlaybackTurn--;
-				//	}
-				//}
+						currInstigator = null;
+						Haxan.history.currPlaybackTime = Haxan.history.currTurn.startTime;
+						Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime - Time.deltaTime * currTimeScale;
+					}
+					else
+					{
+						Haxan.history.currPlaybackTurn--;
+					}
+
+					//Debug.Log("Reversed through all turnSteps.");
+
+					//if (targetPlaybackTurn == Haxan.history.currPlaybackTurn)
+					//{
+					//	playbackState = TurnPlaybackState.PAUSED;
+					//	SelectUnit(lastSelectedUnit);
+
+					//	currInstigator = null;
+
+					//	Haxan.history.currPlaybackTime = Haxan.history.currPlaybackTurn == 0
+					//		? 0f
+					//		: Haxan.history.prevTurn.endTime;
+					//	//Haxan.history.currPlaybackTime = Haxan.history.currTurn.startTime;
+					//	Haxan.history.prevPlaybackTime = Haxan.history.currPlaybackTime + Time.deltaTime * currTimeScale;
+					//}
+					//else
+					//{
+					//	Haxan.history.currPlaybackTurn--;
+					//}
+				}
 				break;
 
 			case TurnPlaybackState.FAST_FORWARDING:
+				//HandleTurnForward();
 				if (HandleTurnForward_NEW())
 				{
 					//... we're exiting FF mode, ie. we're just scrubbing around, & not creating history.
