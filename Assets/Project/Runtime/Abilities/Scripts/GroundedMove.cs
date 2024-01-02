@@ -1,4 +1,5 @@
 using BOG;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +24,16 @@ public class GroundedMove : Ability
 		return coordsInRange;
 	}
 
-	public List<UnitOp> GetOpPreview(Vector2Int origin, Vector2Int dest, Unit unit)
+	public override List<UnitOp> GetOpPreview(Vector2Int dest, Unit unit)
 	{
 		List<UnitOp> ops = FetchUnitOps(dest, unit);
-
+		Debug.LogWarning($"getting op preview: {ops.Count}");
 		return ops;
 	}
 
 	public override List<Vector2Int> GetAffectedCells(Vector2Int origin, Vector2Int destination, Unit unit)
 	{
 		Vector2Int[] path = Board.FindPath_NEW(origin, destination);
-
-		//Debug.LogWarning("Path length: " + path.Length);
 
 		for (int i = 0; i < path.Length; i++)
 		{
@@ -51,31 +50,6 @@ public class GroundedMove : Ability
 
 			pathQuads.Add(pathQuad);
 		}
-
-		//string pathName = $"Path{unit.GetInstanceID()}";
-		//for (int i = 0; i < path.Length; i++)
-		//{
-		//	Vector2Int from = (i == 0) ? unit.OffsetPos : path[i - 1];
-		//	Vector2Int to = path[i];
-		//	GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab);
-		//	pathQuad.name = pathName;
-		//	pathQuad.transform.position = Board.OffsetToWorld(from);
-		//	// Rotate the path by locating its index in the neighbor
-		//	// look-up table
-		//	float degrees = 0f;
-		//	{
-		//		int parity = from.x & 1;
-		//		Vector2Int delta = to - from;
-		//		int j;
-		//		for (j = 0; j < 6; j++)
-		//		{
-		//			if (Board.neighborLut[parity, j] == delta)
-		//				break;
-		//		}
-		//		degrees = (1 + j) * 60f;
-		//	}
-		//	pathQuad.transform.rotation = Quaternion.Euler(0, degrees, 0);
-		//}
 
 		return path.ToList();
 	}

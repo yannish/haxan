@@ -22,6 +22,44 @@ public class Bash : Ability
 	PooledMonoBehaviour pushableMarkerInstance;
 	PooledMonoBehaviour unpushableMarkerInstance;
 
+
+	public override Action ReactToOps(List<UnitOp> ops, Unit instigator, Unit owner)
+	{
+		if (instigator != owner)
+			return null;
+
+		Debug.LogWarning("BASH REACTING TO SOME OPS");
+		Action shutDownUI = () => { };
+		
+		foreach(var op in ops)
+		{
+			GroundMoveOp groundMoveOp = op as GroundMoveOp;
+			if (groundMoveOp == null)
+				continue;
+
+			var startingPos = groundMoveOp.fromCoord;
+
+			List<Unit> bashedUnits = new List<Unit>();
+			var startingNeighbours = Board.GetNeighbouringUnits(startingPos);
+			var endingNeighbours = Board.GetNeighbouringUnits(groundMoveOp.toCoord);
+			foreach(var startingNeighbour in startingNeighbours)
+			{
+				if (endingNeighbours.Contains(startingNeighbour))
+					bashedUnits.Add(startingNeighbour);
+			}
+
+			foreach(var bashedUnit in bashedUnits)
+			{
+				var basherUnitWorldPos = startingPos.ToWorld();
+				var bashedUnitWorldPos = bashedUnit.OffsetPos.ToWorld();
+				var pushableMarkerInstance = pushableMarker.GetAndPlay(bashedUnitWorldPos, basherUnitWorldPos.To(bashedUnitWorldPos));
+				shutDownUI += () => pushableMarkerInstance.Stop();
+			}
+		}
+
+		return shutDownUI;
+	}
+
 	public override void ShowPreview(Vector2Int target, Unit unit)
 	{
 		Vector3 originWorldPos = Board.OffsetToWorld(unit.OffsetPos);

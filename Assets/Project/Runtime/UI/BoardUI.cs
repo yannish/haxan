@@ -69,7 +69,8 @@ public partial class BoardUI : MonoBehaviour
     List<Vector2Int> validMoveCoords = new List<Vector2Int>();
 
 
-    [Header("ABILITIES:")]
+	[Header("ABILITIES:")]
+	public List<UnitOp> inputOpsPreview = new List<UnitOp>();
     Dictionary<Vector2Int, PooledMonoBehaviour> abilityValidLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
     Dictionary<Vector2Int, PooledMonoBehaviour> coordToPreviewLookup = new Dictionary<Vector2Int, PooledMonoBehaviour>();
     Vector2Int hoveredValidAbilityCoord;
@@ -341,6 +342,7 @@ public partial class BoardUI : MonoBehaviour
 
 	List<UnitOp> opPath;
 
+	Action onPreviewUpdated;
 
     //... UNIT:
     void HandleUnitSelectedMode()
@@ -409,10 +411,22 @@ public partial class BoardUI : MonoBehaviour
         if(currPath != null)
             currPath.Clear();
 
+		//... refresh ability preview UI that needs refreshin'.
+		if(!isPointerInUI && mouseMoveAcrossCells)
+		{
+			if(onPreviewUpdated != null)
+			{
+				onPreviewUpdated.Invoke();
+				onPreviewUpdated = null;
+			}
+		}
+
         if (!isPointerInUI && mouseMoveAcrossCells)
         {
             if (hoveredWaypoint && mousePosLastFrame != mousePos)
             {
+				//... PREVIEW MOVE:
+
                 // ^ The mouse is hovering over a waypoint, and it is not the
                 // current path's destination. The second check is done to avoid
                 // running the A* algorithm and regenerating pathing markers
@@ -428,11 +442,33 @@ public partial class BoardUI : MonoBehaviour
                         selectedUnit
                         );
 
-					//var opPreview = selectedUnit.MovementAbility.GetOpPreview
+					Debug.LogWarning("previewing movement ability");
 
-                    foreach(var item in selectedUnit.inventory)
+					inputOpsPreview = selectedUnit.MovementAbility.GetOpPreview(hoveredCellPos, selectedUnit);
+					if(inputOpsPreview != null)
 					{
-                        //item.ShowPathReaction(selectedUnit.OffsetPos, previewedPath);
+						//foreach(var op in inputOpsPreview)
+						//{
+						//	Debug.LogWarning(op.GetType().ToString());
+						//}
+
+						foreach(var unit in Haxan.units)
+						{
+							foreach(var ability in unit.Abilities)
+							{
+								var reaction = ability.ReactToOps(inputOpsPreview, selectedUnit, unit);
+								if (reaction != null)
+									onPreviewUpdated += reaction;
+							}
+						}
+
+						//... TODO: item reactions.
+
+						//foreach (var item in selectedUnit.inventory)
+						//{
+							//item.React
+							//item.ShowPathReaction(selectedUnit.OffsetPos, previewedPath);
+						//}
 					}
                 }
             }
@@ -930,6 +966,7 @@ public partial class BoardUI : MonoBehaviour
             if (prevValidMoveCoord != currValidMoveCoord || !hoveredValidMoveLastFrame)
             {
                 Debug.LogWarning("hovering valid move at : " + currValidMoveCoord.ToString());
+
                 selectedAbility.ShowPreview(currValidMoveCoord, selectedUnit);
 
 				HoverValidAbilityMove(selectedAbility, currValidMoveCoord);

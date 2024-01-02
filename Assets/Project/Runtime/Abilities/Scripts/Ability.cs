@@ -36,6 +36,8 @@ public class Ability : ScriptableObject
 
     public virtual void HidePreview() { }
 
+	public virtual Action ReactToOps(List<UnitOp> ops, Unit instigator, Unit owner) => null;
+
 	public virtual List<UnitOp> GetOpPreview(Vector2Int dest, Unit unit) => null;
 
     public virtual List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit) => null;
@@ -45,17 +47,9 @@ public class Ability : ScriptableObject
 
     public virtual PooledMonoBehaviour PreviewAffectedCell(Vector2Int origin, Vector2Int affectedCoord) => null;
 
-    //public virtual List<UnitOp_STRUCT> FetchUnitOps_NEW(Vector2Int targetCoord, Unit unit) => new List<UnitOp_STRUCT>();
-
 	public virtual List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
 
-	//public virtual List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit) => new List<UnitOp>();
-
-	//public virtual OpInterruptType TryInterruptOp_OLD(Unit unit, IUnitOperable op) => OpInterruptType.PASS;
-
 	public virtual OpInterruptType TryInterrupOp(Unit unit, UnitOp op) => OpInterruptType.PASS;
-
-	//public virtual OpInterruptType TryInterruptOp_NEW(Unit unit, UnitOp_STRUCT op) => OpInterruptType.PASS;
 
 	public virtual bool TryReact(UnitOp intigatingOp, out List<UnitOp> reaction)
 	{

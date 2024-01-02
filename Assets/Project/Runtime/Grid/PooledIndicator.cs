@@ -17,6 +17,12 @@ public class PooledIndicator : PooledMonoBehaviour
 		base.Tick();
 	}
 
+	public override void Stop(int stopParams = 0)
+	{
+		base.Stop(stopParams);
+		Hide();
+	}
+
 	protected override void OnEnable()
 	{
 		//Debug.LogWarning("ENABLED POOLED INDICATOR: " + this.gameObject.name);

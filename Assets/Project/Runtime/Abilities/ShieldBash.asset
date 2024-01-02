@@ -16,5 +16,8 @@ MonoBehaviour:
   phase: 2
   type: 1
   range: 1
-  pushableMarker: {fileID: 896178287657779941, guid: 6fbdd9c6b966fae4e8f7fba0ce31d7e6, type: 3}
+  stepDuration: 0
+  turnDuration: 0
+  impactParticle: {fileID: 0}
+  pushableMarker: {fileID: 8334102909507666580, guid: e4aa81a2585281a44b5d82af869a6d43, type: 3}
   unpushableMarker: {fileID: 4960268334033378908, guid: d76b9dce4633adf47844d0642d056dbf, type: 3}

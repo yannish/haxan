@@ -264,8 +264,6 @@ MonoBehaviour:
   targetPlaybackTurn: 0
   currNormalizedTime: 0
   lastTurnStartTime: 0
-  currPlaybackTime: 0
-  prevPlaybackTime: 0
   currTimeScale: 0
   numDummyOps: 16
   logTurnDebug: 1
@@ -3285,6 +3283,61 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 986381865}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &735865516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 735865518}
+  - component: {fileID: 735865517}
+  m_Layer: 0
+  m_Name: poolTester
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &735865517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735865516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b742441e317edf4198ed2ff0ef3f672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  floatRef:
+    UseConstant: 1
+    ConstantValue: 0
+    Variable: {fileID: 0}
+  poolPrefab: {fileID: 8334102909507666580, guid: e4aa81a2585281a44b5d82af869a6d43, type: 3}
+  spot: {x: 0, y: 0, z: 0}
+  normal: {x: 0, y: 0, z: 1}
+  bump: 1
+  poolCell: {fileID: 0}
+  poolAbilityMarker: {fileID: 0}
+  pooledIndicator: {fileID: 0}
+--- !u!4 &735865518
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 735865516}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.8386927, y: 2.4499989, z: 8.241017}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &793034269
 GameObject:
@@ -9261,3 +9314,4 @@ SceneRoots:
   - {fileID: 1498428480}
   - {fileID: 1452277392}
   - {fileID: 930057422}
+  - {fileID: 735865518}

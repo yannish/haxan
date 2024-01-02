@@ -37,9 +37,6 @@ public struct Turn
 [System.Serializable]
 public struct TurnStep
 {
-    //public float startTime;
-    //public float duration;
-
     public int opIndex;
     public int opCount;
 }
@@ -47,44 +44,17 @@ public struct TurnStep
 
 public partial class BoardUI : MonoBehaviour
 {
-    public const int MAX_OPS = 500;
-    public const int MAX_INSTIGATING_OPS = 100;
-    public const int MAX_TURNS = 100;
-    public const int MAX_TURN_STEPS = 100;
-
-	//public Turn[] turns = new Turn[MAX_TURNS];
-	//public TurnStep[] turnSteps = new TurnStep[MAX_TURN_STEPS];
-	//public IUnitOperable[] allOps = new IUnitOperable[MAX_OPS];
-
-	//[ReadOnly] public int turnCount;
-	//[ReadOnly] public int totalCreatedTurnSteps;
-	//[ReadOnly] public int totalCreatedOps;
-
-	public UnitOp_STRUCT[] allOps_NEW = new UnitOp_STRUCT[MAX_OPS];
-    public List<UnitOp_STRUCT> currInstigatingOps_NEW;
-    public List<IUnitOperable> currInstigatingOps_OLD;
 	public List<UnitOp> currInstigatingOps;
-
-
-	//public IUnitOperable[] currInstigatingOps = new IUnitOperable[MAX_OPS];
-	//[ReadOnly] public int totalInstigatingOps;
 
 	[Header("PLAYBACK:")]
     [ReadOnly] public TurnPlaybackState playbackState;
-    //... 
 
     [ReadOnly] public int currPlaybackStep;
 	[ReadOnly] public int targetPlaybackTurn;
-    //[ReadOnly] public int currPlaybackTurn;
 
-    [ReadOnly] public float currNormalizedTime; //... reset to 0 as each TimeStep is processed.
     [ReadOnly] public float lastTurnStartTime;
-    //[ReadOnly] public float Haxan.history.currPlaybackNewTime;   //... total running-time for the Turn
-    //[ReadOnly] public float Haxan.history.prevPlaybackNewTime;
     [ReadOnly] public float currTimeScale = 1f;
 
-	[Header("DUMMY:")]
-	public int numDummyOps;
 
 
 	void OnEnable()

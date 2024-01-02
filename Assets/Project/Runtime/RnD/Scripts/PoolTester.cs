@@ -19,12 +19,23 @@ public class PoolTester : MonoBehaviour
 		if (poolPrefab == null)
 			return;
 
-		poolPrefab.GetAndPlay(
+		doItInstance = poolPrefab.GetAndPlay(
 			transform.position + spot,
 			normal
 			);
 
 		spot += Vector3.right * bump;
+	}
+	PooledMonoBehaviour doItInstance;
+
+	public EditorButton stopIt = new EditorButton("StopIt", true);
+	public void StopIt()
+	{
+		if (doItInstance == null)
+			return;
+
+		doItInstance.Stop();
+		doItInstance = null;
 	}
 
 
