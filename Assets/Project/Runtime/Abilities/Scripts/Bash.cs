@@ -23,6 +23,10 @@ public class Bash : Ability
 	PooledMonoBehaviour unpushableMarkerInstance;
 
 
+	/*
+	 * this ShieldBash will smack any smackable units as the Owner travels along.
+	 */
+
 	public override Action ReactToOps(List<UnitOp> ops, Unit instigator, Unit owner)
 	{
 		if (instigator != owner)
