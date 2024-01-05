@@ -7,12 +7,19 @@ public class ClipSetter : MonoBehaviour
 {
     [ReadOnly] public ClipHandler clipHandler;
     public AnimationClip clip;
+
 	[Range(0f, 1f)] public float scrubTime;
+	public bool setClip = true;
 
 	private void Start()
 	{
 		clipHandler = GetComponent<ClipHandler>();
-		clipHandler.SetClip(clip);
+	}
+
+	public EditorButton setClipBtn = new EditorButton("SetClip", true);
+	public void SetClip()
+	{
+		clipHandler.SetClip(clip, setClip);
 		clipHandler.Scrub(scrubTime);
 	}
 }
