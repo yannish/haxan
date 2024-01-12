@@ -188,6 +188,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8529860107246465284, guid: dd715dd2d0efaf449b897df32fdddae7, type: 3}
+      propertyPath: m_Intensity
+      value: 2.2
+      objectReference: {fileID: 0}
     - target: {fileID: 8529860107246465285, guid: dd715dd2d0efaf449b897df32fdddae7, type: 3}
       propertyPath: m_Name
       value: haxanLight
@@ -237,6 +241,75 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd715dd2d0efaf449b897df32fdddae7, type: 3}
+--- !u!1 &1482968033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1482968036}
+  - component: {fileID: 1482968035}
+  - component: {fileID: 1482968034}
+  m_Layer: 0
+  m_Name: clipPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1482968034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482968033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36f2add7c52052144996c5668afd12c0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clips: []
+  scrubClips: []
+  currClip: 0
+--- !u!95 &1482968035
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482968033}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!4 &1482968036
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1482968033}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.3912773, y: -1.2373941, z: 2.6166635}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1559728620
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -466,8 +539,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5086299010797799908, guid: c6a2cf55b9a39f2478ac82a8c4eeda38, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7142107631256587780}
   m_SourcePrefab: {fileID: 100100000, guid: c6a2cf55b9a39f2478ac82a8c4eeda38, type: 3}
+--- !u!1 &7142107631256587779 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5086299010797799908, guid: c6a2cf55b9a39f2478ac82a8c4eeda38, type: 3}
+  m_PrefabInstance: {fileID: 7142107631256587778}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7142107631256587780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7142107631256587779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd9ae16ff57f0264dad857548c2a6a59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clips:
+  - {fileID: 7400000, guid: f9a065fdb2a25a7439e2add78502af4b, type: 2}
+  - {fileID: 7400000, guid: e0f22c6151b476049aff891ab1b7de21, type: 2}
+  scrubClips: []
+  currClip: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -477,3 +575,4 @@ SceneRoots:
   - {fileID: 1559728620}
   - {fileID: 5252892749381678435}
   - {fileID: 7142107631256587778}
+  - {fileID: 1482968036}

@@ -7,7 +7,7 @@ using UnityEngine.Playables;
 
 
 [Serializable]
-public class ScrubClip
+public class ScrubClip_OLD
 {
     public AnimationClip clip;
     public AnimationClipPlayable clipPlayable;
@@ -18,7 +18,7 @@ public class ScrubClip
 
     public int index;
 
-    public ScrubClip(PlayableGraph graph, AnimationClip clip)
+    public ScrubClip_OLD(PlayableGraph graph, AnimationClip clip)
 	{
         this.clip = clip;
         this.speed = 1f;
@@ -29,11 +29,11 @@ public class ScrubClip
 
 
 [RequireComponent(typeof(Animator))]
-public class ClipPlayer : MonoBehaviour
+public class ClipPlayer_OLD : MonoBehaviour
 {
     public List<AnimationClip> clips = new List<AnimationClip>();
 
-    public List<ScrubClip> scrubClips = new List<ScrubClip>();
+    public List<ScrubClip_OLD> scrubClips = new List<ScrubClip_OLD>();
 
     public AnimationClipPlayable[] clipPlayables;
 
@@ -63,7 +63,7 @@ public class ClipPlayer : MonoBehaviour
 		{
             var clip = clips[i];
 
-            scrubClips.Add(new ScrubClip(graph, clip));
+            scrubClips.Add(new ScrubClip_OLD(graph, clip));
 
 			//clipPlayables[i] = AnimationClipPlayable.Create(graph, clip);
 
@@ -83,13 +83,13 @@ public class ClipPlayer : MonoBehaviour
         //mixerPlayable.SetInputWeight(0, 1f);
 	}
 
-	public ScrubClip RegisterClip(AnimationClip clip)
+	public ScrubClip_OLD RegisterClip(AnimationClip clip)
 	{
-		var newScrubClip = new ScrubClip(graph, clip);
+		var newScrubClip = new ScrubClip_OLD(graph, clip);
         return newScrubClip;
 	}
 
-    public void SetClip(ScrubClip scrubClip)
+    public void SetClip(ScrubClip_OLD scrubClip)
 	{
 
 	}
