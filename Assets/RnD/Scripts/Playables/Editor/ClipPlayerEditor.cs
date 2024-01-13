@@ -16,17 +16,22 @@ public class ClipPlayerEditor : Editor
 	GUIContent playBackwards;
 	GUIContent playFromStart;
 	GUIContent rewindFromEnd;
+	GUIContent blendTo;
 	GUIContent pause;
 
 	float buttonWidth = 24f;
 
 	private void OnEnable()
 	{
+		var clipPlayer = target as ClipPlayer;
 		playFromStart = EditorGUIUtility.IconContent("Animation.NextKey");
 		rewindFromEnd = EditorGUIUtility.IconContent("Animation.PrevKey");
-		playBackwards = EditorGUIUtility.IconContent("Profiler.NextFrame");
-		playForwards = EditorGUIUtility.IconContent("Profiler.PrevFrame");
+		playBackwards = EditorGUIUtility.IconContent("Profiler.PrevFrame");
+		playForwards = EditorGUIUtility.IconContent("Profiler.NextFrame");
+		blendTo = EditorGUIUtility.IconContent("UnityEditor.Graphs.AnimatorControllerTool");
 		pause = EditorGUIUtility.IconContent("d_PauseButton On");
+
+		GraphVisualizerClient.Show(clipPlayer.graph);
 	}
 
 	public override void OnInspectorGUI()
@@ -56,12 +61,18 @@ public class ClipPlayerEditor : Editor
 						{
 							case ScrubClipPlaybackMode.PAUSED:
 								if(GUILayout.Button(playForwards, GUILayout.Width(buttonWidth)))
-								{
 									clipPlayer.PlayClip(clipPlayer.scrubClips[i]);
+
+								if(clipPlayer.currClip != clipPlayer.scrubClips[i])
+								{
+									if (GUILayout.Button(blendTo, GUILayout.Width(buttonWidth)))
+										clipPlayer.TransitionTo(clipPlayer.scrubClips[i]);
 								}
 								break;
+
 							case ScrubClipPlaybackMode.PLAYING:
 								break;
+
 							case ScrubClipPlaybackMode.REWINDING:
 								break;
 						}

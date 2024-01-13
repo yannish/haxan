@@ -14,18 +14,27 @@ public interface IScrubConnectable
 [Serializable]
 public class ScrubClip
 {
+	//... config:
     public AnimationClip clip;
-    public AnimationClipPlayable clipPlayable;
-    
-    public double scrubTime;
-    public float inputWeight;
-    public float speed;
+
 	public float transitionTime;
 
-    public int index;
+
+	//... state:
+	public AnimationClipPlayable clipPlayable;
 
 	public ScrubClipPlaybackMode mode;
 
+	public double scrubTime;
+    
+	public float inputWeight;
+    
+	public float speed;
+	
+    public int index;
+
+	
+	
 	public void Play()
 	{
 
@@ -67,14 +76,13 @@ public class ClipPlayer : MonoBehaviour
 
     public AnimationClipPlayable[] clipPlayables;
 
-    PlayableGraph graph;
+	public PlayableGraph graph { get; private set; }
 
-    AnimationMixerPlayable mixerPlayable;
+	AnimationMixerPlayable mixerPlayable;
 
     Animator animator;
 
 
-	//[ReadOnly] public int currClip;
 
 
 	void Start()
@@ -135,6 +143,7 @@ public class ClipPlayer : MonoBehaviour
 			var normalizedTime = Mathf.Clamp01(transitionTimer / transitionTime);
 			mixerPlayable.SetInputWeight(0, normalizedTime);
 			mixerPlayable.SetInputWeight(1, 1f - normalizedTime);
+
 			if(transitionTimer <= 0f)
 			{
 				mixerPlayable.SetInputWeight(0, 1f);
@@ -175,10 +184,15 @@ public class ClipPlayer : MonoBehaviour
 		currClip = clip;
 		clip.clipPlayable.Play();
 
+		mixerPlayable.DisconnectInput(0);
 		mixerPlayable.SetInputWeight(0, 1f);
-		mixerPlayable.DisconnectInput(1);
-		
 		graph.Connect(clip.clipPlayable, 0, mixerPlayable, 0);
+
+		//Debug.LogWarning($"mixer input count: { mixerPlayable.GetInputCount()}");
+
+		//if(mixerPlayable.GetInputCount() > 1)
+		//	mixerPlayable.DisconnectInput(1);
+		
 	}
 
 	[ReadOnly] public float transitionTimer;
