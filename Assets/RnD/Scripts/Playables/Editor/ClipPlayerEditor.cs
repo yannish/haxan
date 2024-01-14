@@ -32,6 +32,14 @@ public class ClipPlayerEditor : Editor
 		pause = EditorGUIUtility.IconContent("d_PauseButton On");
 
 		GraphVisualizerClient.Show(clipPlayer.graph);
+
+		EditorApplication.update -= Repaint;
+		EditorApplication.update += Repaint;
+	}
+
+	private void OnDisable()
+	{
+		EditorApplication.update -= Repaint;
 	}
 
 	public override void OnInspectorGUI()
@@ -43,15 +51,19 @@ public class ClipPlayerEditor : Editor
 		if (!Application.isPlaying)
 			return;
 
+		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
+		{
+			EditorGUILayout.LabelField($"PLAYABLES COUNT: {clipPlayer.graph.GetPlayableCount()}");
+		}
 
 		using (new GUILayout.VerticalScope(EditorStyles.helpBox))
 		{
 			EditorGUILayout.LabelField("CLIPS:", EditorStyles.boldLabel);
-			for (int i = 0; i < clipPlayer.scrubClips.Count; i++)
+			for (int i = 0; i < clipPlayer.debugClips.Count; i++)
 			{
 				using (new GUILayout.VerticalScope(EditorStyles.helpBox))
 				{
-					var scrubClip = clipPlayer.scrubClips[i];
+					var scrubClip = clipPlayer.debugClips[i];
 					using (new GUILayout.HorizontalScope(EditorStyles.helpBox))
 					{
 						bool isPlayingForward = scrubClip.clipPlayable.GetPlayState() == PlayState.Playing;
@@ -60,14 +72,11 @@ public class ClipPlayerEditor : Editor
 						switch (scrubClip.mode)
 						{
 							case ScrubClipPlaybackMode.PAUSED:
-								if(GUILayout.Button(playForwards, GUILayout.Width(buttonWidth)))
-									clipPlayer.PlayClip(clipPlayer.scrubClips[i]);
+								if (GUILayout.Button(playForwards, GUILayout.Width(buttonWidth)))
+									clipPlayer.PlayImmediate(clipPlayer.debugClips[i]);
 
-								if(clipPlayer.currClip != clipPlayer.scrubClips[i])
-								{
-									if (GUILayout.Button(blendTo, GUILayout.Width(buttonWidth)))
-										clipPlayer.TransitionTo(clipPlayer.scrubClips[i]);
-								}
+								if (GUILayout.Button(blendTo, GUILayout.Width(buttonWidth)))
+									clipPlayer.TransitionTo(clipPlayer.debugClips[i]);
 								break;
 
 							case ScrubClipPlaybackMode.PLAYING:
@@ -93,19 +102,16 @@ public class ClipPlayerEditor : Editor
 						//	EditorGUIUtility.IconContent("d_PlayButton On") :
 						//	EditorGUIUtility.IconContent("d_PauseButton On");
 
-						if (GUILayout.Button((clipPlayer.clips[i].name).ToUpper()))
-							clipPlayer.SetClip(i);
+						//if (GUILayout.Button((clipPlayer.clips[i].name).ToUpper()))
+						//	clipPlayer.SetClip(i);
 					}
 
+					var normalizedTime = Mathf.Repeat((float)scrubClip.clipPlayable.GetTime() / scrubClip.clip.length, 1f);
 					EditorGUI.BeginChangeCheck();
-					float newScrubTime = EditorGUILayout.Slider(
-						(float) scrubClip.clipPlayable.GetTime(),
-						0f,
-						1f
-						);
+					float newScrubTime = EditorGUILayout.Slider(normalizedTime, 0f, 1f);
 					if (EditorGUI.EndChangeCheck())
 					{
-						//clipPlayer.Scrub(i, newScrubTime);
+
 					}
 				}
 			}

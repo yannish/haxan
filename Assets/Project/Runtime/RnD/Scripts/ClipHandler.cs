@@ -6,7 +6,7 @@ using UnityEngine.Animations;
 using UnityEngine.Playables;
 
 [Serializable]
-public class ClipHandle
+public class ClipHandle_OLD
 {
     public AnimationClip clip;
     public AnimationClipPlayable clipPlayable;
@@ -15,7 +15,7 @@ public class ClipHandle
     public float inputWeight;
     public float speed;
 
-    public ClipHandle(AnimationClip clip, double scrubTime = 0, float weight = 1f, float speed = 1f)
+    public ClipHandle_OLD(AnimationClip clip, double scrubTime = 0, float weight = 1f, float speed = 1f)
 	{
         this.clip = clip;
         this.scrubTime = scrubTime;
@@ -53,13 +53,13 @@ public class ClipHandler : MonoBehaviour
         graph.Play();
     }
 
-    public ClipHandle currClipHandle;
+    public ClipHandle_OLD currClipHandle;
 
     public void SetClip(AnimationClip clip, bool playClip = false)
 	{
         Debug.LogWarning("SET CLIP: " + clip.name);
 
-        var newClipHandle = new ClipHandle(clip);
+        var newClipHandle = new ClipHandle_OLD(clip);
 
         newClipHandle.clipPlayable = AnimationClipPlayable.Create(graph, clip);
         mixerPlayable.DisconnectInput(0);

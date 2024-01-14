@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Playables;
@@ -11,14 +12,13 @@ public interface IScrubConnectable
 
 }
 
-[Serializable]
-public class ScrubClip
+//[Serializable]
+public class ClipHandle
 {
 	//... config:
     public AnimationClip clip;
 
 	public float transitionTime;
-
 
 	//... state:
 	public AnimationClipPlayable clipPlayable;
@@ -50,7 +50,7 @@ public class ScrubClip
 
 	}
 
-    public ScrubClip(PlayableGraph graph, AnimationClip clip)
+    public ClipHandle(PlayableGraph graph, AnimationClip clip)
 	{
         this.clip = clip;
         this.speed = 1f;
@@ -67,25 +67,79 @@ public enum ScrubClipPlaybackMode
 }
 
 
+public enum ClipPlayerMode
+{
+	PAUSED,
+	PLAYING,
+	//REWINDING,
+	BLENDING
+}
+
+
+/*
+ * TODO:
+ * 
+ * If a clip is "released", the index in ClipHandle will probably need to be updated.
+ * 
+ * GOAL:
+ * 
+ * - Set a clip
+ *	- blend into it gradually.
+ *	- scrub it along in sync w/ an Op.
+ *	- scrub it to a completion time, but, will always have a tail for it to blend out of from there.
+ *	
+ * 
+ * Nicer if this only interfaces w/ Clips? Handles ScrubClip as an internal thing?
+ * 
+ * Input 0 & 1: Used to transition "main" clips.
+ * 
+ * Input 0 - X: Used to play added layers. Something "requests" to play a clip addititvely & clipPlayer handles that.
+ */
+
+
 [RequireComponent(typeof(Animator))]
 public class ClipPlayer : MonoBehaviour
 {
+	[Header("STATE:")]
+	public ClipPlayerMode mode = ClipPlayerMode.PAUSED;
+	public List<ClipHandle> additiveClips = new List<ClipHandle>();
+	public List<ClipHandle> scrubClips = new List<ClipHandle>();
+	public List<ClipHandle> debugClips = new List<ClipHandle>();
+
+	[Header("CONFIG:")]
+	public int mixerClipCount;
+	public int scrubClipCount;
+	public int additiveMixerClipCount;
+	public bool rebindOnGraphChanged;
+
+	//... debug clips:
+	[Header("CLIPS:")]
     public List<AnimationClip> clips = new List<AnimationClip>();
-
-    public List<ScrubClip> scrubClips = new List<ScrubClip>();
-
-    public AnimationClipPlayable[] clipPlayables;
 
 	public PlayableGraph graph { get; private set; }
 
-	AnimationMixerPlayable mixerPlayable;
+	AnimationMixerPlayable mixer;
+
+	AnimationMixerPlayable scrubMixer;
+
+	AnimationMixerPlayable additiveMixer;
+
+	AnimationLayerMixerPlayable layerMixer;
 
     Animator animator;
 
+	[ReadOnly] public float transitionTimer;
+	[ReadOnly] public float transitionTime;
+	public ClipHandle currClip;
+	public ClipHandle nextClip;
+
+
+	MethodInfo rebindMethod;
+	object[] target;
 
 
 
-	void Start()
+	void Awake()
 	{
         animator = GetComponent<Animator>();
         animator.runtimeAnimatorController = null;
@@ -94,133 +148,250 @@ public class ClipPlayer : MonoBehaviour
 
         var playableOutput = AnimationPlayableOutput.Create(graph, "Animation", animator);
 
-        mixerPlayable = AnimationMixerPlayable.Create(graph, clips.Count);
+        mixer = AnimationMixerPlayable.Create(graph, mixerClipCount);
 
-        playableOutput.SetSourcePlayable(mixerPlayable);
+		additiveMixer = AnimationMixerPlayable.Create(graph, additiveMixerClipCount);
 
-        clipPlayables = new AnimationClipPlayable[clips.Count];
+		scrubMixer = AnimationMixerPlayable.Create(graph, scrubClipCount);
 
-		for (int i = 0; i < clips.Count; i++)
-		{
-            var clip = clips[i];
+		layerMixer = AnimationLayerMixerPlayable.Create(graph, 3);
 
-            scrubClips.Add(new ScrubClip(graph, clip));
+		graph.Connect(mixer, 0, layerMixer, 0);
+		graph.Connect(additiveMixer, 0, layerMixer, 1);
+		graph.Connect(scrubMixer, 0, layerMixer, 2);
 
-			//clipPlayables[i] = AnimationClipPlayable.Create(graph, clip);
+		layerMixer.SetInputWeight(0, 1f);
+		layerMixer.SetInputWeight(1, 1f);
+		layerMixer.SetInputWeight(2, 1f);
 
-			//var clipPlayable = AnimationClipPlayable.Create(graph, clip);
+		//Debug.LogWarning(
+		//	$"additives: {layerMixer.IsLayerAdditive(0)}," +
+		//	$" {layerMixer.IsLayerAdditive(1)}, " +
+		//	$"{layerMixer.IsLayerAdditive(2)}"
+		//	);
 
-			//graph.Connect(scrubClips[i].clipPlayable, 0, mixerPlayable, i);
-
-			//mixerPlayable.SetInputWeight(i, 1f);
-
-			//scrubClips[i].clipPlayable.Play();
-		}
+		playableOutput.SetSourcePlayable(layerMixer);
 
         graph.Play();
+		target = new object[] { false };
 
-		if(!scrubClips.IsNullOrEmpty() && scrubClips[0] != null)
-			PlayClip(scrubClips[0]);
+		rebindMethod = typeof(Animator).GetMethod(
+			"Rebind", 
+			System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance
+			);
 	}
-
-	//public ScrubClip RegisterClip(AnimationClip clip)
-	//{
-	//	var newScrubClip = new ScrubClip(graph, clip);
-	//	return newScrubClip;
-	//}
-
-	//public void SetClip(ScrubClip scrubClip)
-	//{
-
-	//}
 
 	private void LateUpdate()
 	{
 		//... track clips to be stopped
-		if(transitionTimer > 0f)
-		{
-			transitionTimer -= Time.deltaTime;
-			var normalizedTime = Mathf.Clamp01(transitionTimer / transitionTime);
-			mixerPlayable.SetInputWeight(0, normalizedTime);
-			mixerPlayable.SetInputWeight(1, 1f - normalizedTime);
 
-			if(transitionTimer <= 0f)
-			{
-				mixerPlayable.SetInputWeight(0, 1f);
-				mixerPlayable.ConnectInput(0, nextClip.clipPlayable, 0);
-				mixerPlayable.DisconnectInput(1);
-				currClip = nextClip;
-				nextClip = null;
-			}
+		switch (mode)
+		{
+			case ClipPlayerMode.PAUSED:
+				break;
+
+			case ClipPlayerMode.PLAYING:
+				break;
+
+			//case ClipPlayerMode.REWINDING:
+			//	break;
+
+			case ClipPlayerMode.BLENDING:
+				var normalizedTime = transitionTime > 0f
+					? Mathf.Clamp01(transitionTimer / transitionTime)
+					: 0f;
+
+				mixer.SetInputWeight(0, normalizedTime);
+				mixer.SetInputWeight(1, 1f - normalizedTime);
+
+				if (transitionTimer > 0f)
+					transitionTimer -= Time.deltaTime;
+
+				if (normalizedTime == 0f || transitionTimer <= 0f)
+				{
+					mixer.DisconnectInput(0);
+					mixer.DisconnectInput(1);
+
+					mixer.ConnectInput(0, nextClip.clipPlayable, 0);
+					mixer.SetInputWeight(0, 1f);
+					
+					if(currClip != null && !currClip.clipPlayable.IsNull())
+					{
+						currClip.clipPlayable.Pause();
+						graph.DestroyPlayable(currClip.clipPlayable);
+					}
+					
+					currClip = nextClip;
+					nextClip = null;
+
+					mode = ClipPlayerMode.PLAYING;
+				}
+				break;
+
+			default:
+				break;
+		}
+
+		foreach(var scrubClip in additiveClips)
+		{
+			mixer.SetInputWeight(scrubClip.index, scrubClip.inputWeight);
 		}
 	}
 
-	public void SetClip(int clipIndex)
+	public void PlayImmediate(ClipHandle clip)
 	{
-        //currClip = clipIndex;
+		mode = ClipPlayerMode.PLAYING;
 
-		for (int i = 0; i < clips.Count; i++)
-		{
-            mixerPlayable.SetInputWeight(i, 0f);
-        }
-
-        mixerPlayable.SetInputWeight(clipIndex, 1f);
-        mixerPlayable.DisconnectInput(0);
-
-        graph.Connect(scrubClips[clipIndex].clipPlayable, 0, mixerPlayable, 0);
-
-        //clipPlayables[clipIndex].Play();
-
-        //      int inputCount = mixerPlayable.GetInputCount();
-        //      for (int i = 0; i < inputCount; i++)
-        //{
-        //          //graph.Disconnect(i)
-        //      }
-
-    }
-
-	public void PlayClip(ScrubClip clip)
-	{
 		currClip = clip;
 		clip.clipPlayable.Play();
 
-		mixerPlayable.DisconnectInput(0);
-		mixerPlayable.SetInputWeight(0, 1f);
-		graph.Connect(clip.clipPlayable, 0, mixerPlayable, 0);
-
-		//Debug.LogWarning($"mixer input count: { mixerPlayable.GetInputCount()}");
-
-		//if(mixerPlayable.GetInputCount() > 1)
-		//	mixerPlayable.DisconnectInput(1);
+		mixer.DisconnectInput(0);
+		mixer.SetInputWeight(0, 1f);
+		graph.Connect(clip.clipPlayable, 0, mixer, 0);
 		
 	}
 
-	[ReadOnly] public float transitionTimer;
-	[ReadOnly] public float transitionTime;
-	public ScrubClip currClip;
-	public ScrubClip nextClip;
-	//[ReadOnly] public float transitionTime;
-	public void TransitionTo(ScrubClip nextClip)
+	public void TransitionTo(ClipHandle nextClip, float blendTime = 1f, float startTime = 0f)
 	{
-		transitionTimer = nextClip.transitionTime;
-		transitionTime = nextClip.transitionTime;
+		mode = ClipPlayerMode.BLENDING;
+
+		transitionTime = nextClip.transitionTime > 0f ? nextClip.transitionTime : blendTime;
+		transitionTimer = transitionTime;
 		this.nextClip = nextClip;
-		mixerPlayable.SetInputWeight(0, 1f);
-		mixerPlayable.SetInputWeight(1, 0f);
-		graph.Connect(nextClip.clipPlayable, 0, mixerPlayable, 1);
+		if(startTime >= 0f)
+			nextClip.clipPlayable.SetTime(startTime);
+		nextClip.clipPlayable.Play();
+		mixer.SetInputWeight(0, 1f);
+		mixer.SetInputWeight(1, 0f);
+		graph.Connect(nextClip.clipPlayable, 0, mixer, 1);
 	}
 
- //   public void Scrub(int clipIndex, double normalizedClipTime)
-	//{
- //       //Debug.LogWarning("SCRUB: " + clipTime);
+	public ClipHandle GetScrubClip(
+		AnimationClip clip,
+		float startTime = 0f,
+		float initialWeight = 1f
+		)
+	{
+		var newScrubClip = new ClipHandle(graph, clip);
+		//newScrubClip.index = scrubClips.Count;
+		
+		if(startTime >= 0f)
+			newScrubClip.clipPlayable.SetTime(startTime);
+		scrubClips.Add(newScrubClip);
 
- //       if (currClip != clipIndex)
- //           SetClip(clipIndex);
+		RewireMixer(scrubClips, scrubMixer);
 
- //       var scrubClip = scrubClips[clipIndex];
- //       scrubClip.scrubTime = normalizedClipTime * scrubClip.clip.length;
- //       scrubClip.clipPlayable.SetTime(scrubClip.scrubTime);
-	//}
+		Debug.LogWarning($"TRYING TO CONNECT TO INDEX:{newScrubClip.index}");
+
+		//graph.Connect(newScrubClip.clipPlayable, 0, scrubMixer, newScrubClip.index);
+		scrubMixer.SetInputWeight(newScrubClip.index, initialWeight);
+
+		return newScrubClip;
+	}
+
+	public void ReleaseScrubClip(ClipHandle clipHandle)
+	{
+		scrubMixer.DisconnectInput(clipHandle.index);
+		scrubClips.Remove(clipHandle);
+		graph.DestroyPlayable(clipHandle.clipPlayable);
+
+		RewireMixer(scrubClips, scrubMixer);
+	}
+
+	private void RewireMixer(List<ClipHandle> clipHandles, AnimationMixerPlayable mixer)
+	{
+		var mixerInputCount = mixer.GetInputCount();
+		for (int i = 0; i < mixerInputCount; i++)
+		{
+			Debug.LogWarning($"Disconnecting mixer input: {i}");
+			mixer.DisconnectInput(i);
+			mixer.SetInputWeight(i, 0f);
+		}
+
+		mixer.SetInputCount(clipHandles.Count);
+		for (int i = 0; i < clipHandles.Count; i++)
+		{
+			Debug.LogWarning($"... connecting mixer input: {i}");
+			mixer.ConnectInput(i, clipHandles[i].clipPlayable, 0);
+			mixer.SetInputWeight(i, 1f);
+			//Debug.LogWarning($"setting clip index: {i}");
+			clipHandles[i].index = i;
+		}
+	}
+
+	public ClipHandle TransitionToRaw(
+		AnimationClip nextClip, 
+		float blendTime = 1f, 
+		float startTime = 0f, 
+		bool playClip = true
+		)
+	{
+		mode = ClipPlayerMode.BLENDING;
+
+		transitionTime = this.nextClip.transitionTime > 0f ? this.nextClip.transitionTime : blendTime;
+		transitionTimer = transitionTime;
+
+		var nextScrubClip = new ClipHandle(graph, nextClip);
+		this.nextClip = nextScrubClip;
+
+		if (startTime >= 0f)
+			this.nextClip.clipPlayable.SetTime(startTime);
+
+		if(playClip)
+			nextScrubClip.clipPlayable.Play();
+
+		mixer.SetInputWeight(0, 1f);
+		mixer.SetInputWeight(1, 0f);
+
+		graph.Connect(this.nextClip.clipPlayable, 0, mixer, 1);
+
+		return nextScrubClip;
+	}
+
+	public ClipHandle PlayAdditively(
+		AnimationClip clip, 
+		float blendTime = 1f,
+		float initialWeight = 1f,
+		float startTime = 0f
+		)
+	{
+		var newScrubClip = new ClipHandle(graph, clip);
+		newScrubClip.index = additiveClips.Count;
+		newScrubClip.inputWeight = initialWeight;
+		newScrubClip.clipPlayable.Play();
+		if (startTime >= 0f)
+			newScrubClip.clipPlayable.SetTime(startTime);
+		additiveClips.Add(newScrubClip);
+
+		graph.Connect(newScrubClip.clipPlayable, 0, additiveMixer, newScrubClip.index);
+		additiveMixer.SetInputWeight(newScrubClip.index, initialWeight);
+
+		return newScrubClip;
+
+	}
+
+	public void PlayOneShot()
+	{
+
+	}
+
+	public void PlayAdditiveOneShot()
+	{
+
+	}
+
+	public void Release(ClipHandle clip)
+	{
+		if(rebindOnGraphChanged)
+			rebindMethod.Invoke(animator, target);
+
+		additiveMixer.SetInputWeight(clip.index, 0f);
+		additiveMixer.DisconnectInput(clip.index);
+		graph.DestroyPlayable(clip.clipPlayable);
+		if (additiveClips.Contains(clip))
+			additiveClips.Remove(clip);
+	}
+
 
 	private void OnDisable()
 	{
@@ -228,4 +399,5 @@ public class ClipPlayer : MonoBehaviour
             return;
         graph.Destroy();
 	}
+
 }
