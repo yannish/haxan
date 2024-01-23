@@ -56,6 +56,8 @@ public class GroundedMove : Ability
 
 	public override void HidePreview()
 	{
+		Debug.LogWarning("HIDING PREVIEW!");
+
 		foreach(var quad in pathQuads)
 		{
 			Destroy(quad.gameObject);
