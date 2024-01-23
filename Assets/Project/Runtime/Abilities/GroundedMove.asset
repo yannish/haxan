@@ -17,4 +17,5 @@ MonoBehaviour:
   type: 0
   stepDuration: 0.2
   turnDuration: 0.1
+  pathQuadPoolable: {fileID: 2365953863980819871, guid: 55efaec8318aa4b10a2f015fb017f426, type: 3}
   pathQuadPrefab: {fileID: 8348903859375885478, guid: 55efaec8318aa4b10a2f015fb017f426, type: 3}
