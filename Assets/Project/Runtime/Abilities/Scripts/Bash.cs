@@ -56,7 +56,10 @@ public class Bash : Ability
 			{
 				var basherUnitWorldPos = startingPos.ToWorld();
 				var bashedUnitWorldPos = bashedUnit.OffsetPos.ToWorld();
-				var pushableMarkerInstance = pushableMarker.GetAndPlay(bashedUnitWorldPos, basherUnitWorldPos.To(bashedUnitWorldPos));
+				var pushableMarkerInstance = pushableMarker.GetAndPlay(
+					bashedUnitWorldPos, 
+					basherUnitWorldPos.To(bashedUnitWorldPos)
+					);
 				shutDownUI += () => pushableMarkerInstance.Stop();
 			}
 		}

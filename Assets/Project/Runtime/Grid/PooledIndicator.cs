@@ -76,6 +76,7 @@ public class PooledIndicator : PooledMonoBehaviour
 		UpdateVisualTargets();
 	}
 
+
 	[Header("COLOR:")]
 	public MaterialBlockHandle blockHandle;
 	public Color currColor;
