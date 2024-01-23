@@ -14,10 +14,9 @@ public class GroundedMove : Ability
 	public float turnDuration;
 
 	[Header("VISUALS:")]
-	public PooledIndicator pathQuadPoolable;
 	public GameObject pathQuadPrefab;
 	List<GameObject> pathQuads;
-	List<PooledIndicator> pathQuadInstances;
+
 
     public override List<Vector2Int> GetValidCoords(Vector2Int origin, Unit unit)
 	{
@@ -41,18 +40,15 @@ public class GroundedMove : Ability
 			Vector2Int from = (i == 0) ? unit.OffsetPos : path[i - 1];
 			Vector2Int to = path[i];
 
+			GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab);
+			pathQuad.transform.position = Board.OffsetToWorld(from);
+
 			HexDirectionFT hexDir = from.ToNeighbour(to);
 			Vector3 lookDir = hexDir.ToVector();
 
-			//GameObject pathQuad = (GameObject)Instantiate(pathQuadPrefab);
-			//pathQuad.transform.position = Board.OffsetToWorld(from);
+			pathQuad.transform.rotation = Quaternion.LookRotation(lookDir);
 
-			//pathQuad.transform.rotation = Quaternion.LookRotation(lookDir);
-
-			//pathQuads.Add(pathQuad);
-
-			var pathQuadInstance = pathQuadPoolable.GetAndPlay(from.ToWorld(), lookDir);
-			pathQuadInstances.Add(pathQuadInstance);
+			pathQuads.Add(pathQuad);
 		}
 
 		return path.ToList();
@@ -60,20 +56,14 @@ public class GroundedMove : Ability
 
 	public override void HidePreview()
 	{
-		Debug.LogWarning("Hiding grounded move.");
+		Debug.LogWarning("HIDING PREVIEW!");
 
 		foreach(var quad in pathQuads)
 		{
 			Destroy(quad.gameObject);
 		}
 
-		foreach(var quad in pathQuadInstances)
-		{
-			quad.Stop();
-		}
-
 		pathQuads.Clear();
-		pathQuadInstances.Clear();
 	}
 
 	public override List<UnitOp> FetchUnitOps(Vector2Int targetCoord, Unit unit)

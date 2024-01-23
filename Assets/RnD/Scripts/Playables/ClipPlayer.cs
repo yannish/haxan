@@ -34,7 +34,6 @@ public class ClipHandle
     public int index;
 
 	
-	
 	public void Play()
 	{
 
@@ -136,7 +135,6 @@ public class ClipPlayer : MonoBehaviour
 
 	MethodInfo rebindMethod;
 	object[] target;
-
 
 
 	void Awake()
