@@ -7,9 +7,13 @@ using BOG;
 [SelectionBase]
 public class Unit : MonoBehaviour
 {
+    public static Action<Unit> OnUnitChanged;
+
     public bool logDebug;
 
-    public static Action<Unit> OnUnitChanged;
+    public bool logOps;
+
+	public ClipPlayer clipPlayer;
 
     [ReadOnly] public string templatePath = "";
 
@@ -34,7 +38,8 @@ public class Unit : MonoBehaviour
 
 	private void OnEnable()
 	{
-        Debug.LogWarning($"UNIT ENABLED: {this.gameObject.name}");
+        if(logDebug)
+            Debug.LogWarning($"UNIT ENABLED: {this.gameObject.name}");
 
         //if (GameContext.I == null)
         //    return;
@@ -88,6 +93,7 @@ public class Unit : MonoBehaviour
 
     public virtual void Start()
     {
+		clipPlayer = GetComponentInChildren<ClipPlayer>();
         OffsetPos = Board.WorldToOffset(transform.position);
     }
 

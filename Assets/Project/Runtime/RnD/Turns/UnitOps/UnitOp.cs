@@ -13,6 +13,8 @@ using UnityEditor;
  *	Let's say yes for now.
  */
 
+
+
 [Serializable]
 public struct OpPlaybackData
 {
@@ -21,11 +23,16 @@ public struct OpPlaybackData
 	public float duration;
 	public float endTime { get => startTime + duration; }
 
+	public AnimationClip[] clips;
+	public AnimationCurve[] curves;
+
 	public OpPlaybackData(Unit unit, float startTime, float duration)
 	{
 		this.unitIndex = unit.ToIndex();
 		this.startTime = startTime;
 		this.duration = duration;
+		this.clips = new AnimationClip[0];
+		this.curves = new AnimationCurve[0];
 	}
 }
 
@@ -98,7 +105,6 @@ public abstract class UnitOp
 
 	public Unit unit;
 	public int unitIndex;
-
 	public OpPlaybackData playbackData;
 
 	public float startTime;
@@ -108,6 +114,13 @@ public abstract class UnitOp
 	public abstract void Undo(Unit unit);
 	public abstract void Tick(Unit unit, float t);
 
+	public virtual void OnBeginTick() { }
+	public virtual void OnCompleteTick() { }
+
+	public virtual void OnBeginReverseTick() { }
+	public virtual void OnCompleteReverseTick() { }
+
 	public virtual void DrawInspectorContent() { }
 }
+
 

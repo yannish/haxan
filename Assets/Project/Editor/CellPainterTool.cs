@@ -27,6 +27,7 @@ class CellPainterTool : BaseEditorTool
 	public override void OnActivated()
 	{
 		Debug.LogWarning("Activated stamper tool.");
+
 		window = EditorWindow.GetWindow<CellPainterWindow>();
 		boardData = FindObjectOfType<BoardData>();
 		grid = target as GridV2;

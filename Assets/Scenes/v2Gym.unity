@@ -241,11 +241,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92706310b13d94af4a56ea22480a97db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugOps: 1
-  logMouseDebug: 0
   mode: 0
   isPointerInUI: 0
   againstBoardUI: 0
+  debugOps: 0
+  debugFlow: 0
+  logMouseDebug: 0
   hoverCellMarker: {fileID: 7442397779138924845, guid: 94413009902bf224dafeec5e27d4efa0, type: 3}
   abilityValidMarker: {fileID: 2003857084417268403, guid: 50892034a6429bd438ecfa597a2c1fec, type: 3}
   pathValidMarker: {fileID: 2003857084417268403, guid: 9865dfd6db68bfc47ad6fab49c41f5e5, type: 3}
@@ -259,11 +260,12 @@ MonoBehaviour:
   selectedAbility: {fileID: 0}
   itemButtons: []
   hoveredItemUseButton: {fileID: 0}
+  currTimeScale: 1
+  slowMotionTimeScale: 0.3
   playbackState: 0
   currPlaybackStep: 0
   targetPlaybackTurn: 0
   lastTurnStartTime: 0
-  currTimeScale: 0
   logTurnDebug: 1
   currTime: 0
   commandIndex: -1
@@ -3145,6 +3147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09bf324891e12154484d596013ab5b9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logDebug: 0
   allGrids:
   - {fileID: 1236377442}
   entries:
@@ -8415,6 +8418,8 @@ MonoBehaviour:
     unitIndex: 0
     startTime: 0
     duration: 0
+    clips: []
+    curves: []
   jsonOps: []
   opTypes: []
   jsonBlob: 

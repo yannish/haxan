@@ -6,7 +6,7 @@ using UnityEngine;
 
 abstract class BaseEditorTool : EditorTool
 {
-    const string iconPath = "Assets/Editor/ToolIcons/";
+    const string iconPath = "Assets/Project/Editor/Tools/ToolIcons/";
 
     // Never assigned warning
 #pragma warning disable CS0649

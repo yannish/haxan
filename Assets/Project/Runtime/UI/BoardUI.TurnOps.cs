@@ -47,13 +47,14 @@ public partial class BoardUI : MonoBehaviour
 	public List<UnitOp> currInstigatingOps;
 
 	[Header("PLAYBACK:")]
+    [Range(0f, 1f)]
+	public float currTimeScale = 1f;
+	public float slowMotionTimeScale = 0.3f;
     [ReadOnly] public TurnPlaybackState playbackState;
 
     [ReadOnly] public int currPlaybackStep;
 	[ReadOnly] public int targetPlaybackTurn;
-
     [ReadOnly] public float lastTurnStartTime;
-    [ReadOnly] public float currTimeScale = 1f;
 
 
 
@@ -70,7 +71,25 @@ public partial class BoardUI : MonoBehaviour
 	}
 
 
-	void HandleScrubToTurn(int newTargetTurn)
+    public void TickTurnOps()
+    {
+        if (
+            Input.GetKey(KeyCode.LeftShift)
+            //&& Input.GetKey(KeyCode.LeftAlt)
+            && Input.GetKeyDown(KeyCode.P)
+            )
+            ToggleSlowmotion();
+    }
+
+    bool slowMotionActive;
+    private void ToggleSlowmotion()
+    {
+        slowMotionActive = !slowMotionActive;
+        Debug.LogWarning($"Toggled slowmotion : {slowMotionActive}");
+        currTimeScale = slowMotionActive ? slowMotionTimeScale : 1f;
+    }
+
+    void HandleScrubToTurn(int newTargetTurn)
 	{
 		if (Haxan.history.currPlaybackTurn == newTargetTurn)
 		{
@@ -135,7 +154,7 @@ public partial class BoardUI : MonoBehaviour
         mode = Mode.ProcessingCommands;
         playbackState = TurnPlaybackState.PLAYING;
 
-        currTimeScale = 1f;
+        //currTimeScale = 1f;
 
         this.currInstigatingOps = instigatingOps;
 
@@ -385,67 +404,80 @@ public partial class BoardUI : MonoBehaviour
 
 		bool allOpsFullyTicked = true;
 
-		//... looping through all turnSteps in this current turn:
-		for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
-		{
-			TurnStep currTurnStep = Haxan.history.turnSteps[i];
+        //... looping through all turnSteps in this current turn:
+        for (int i = currTurn.stepIndex; i < currTurn.stepIndex + currTurn.stepCount; i++)
+        {
+            TurnStep currTurnStep = Haxan.history.turnSteps[i];
 
-			//... looping through all ops in that step:
-			for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
-			{
-				UnitOp op = Haxan.history.allOps[j];
-				OpPlaybackData opData = op.playbackData;
+            //... looping through all ops in that step:
+            for (int j = currTurnStep.opIndex; j < currTurnStep.opIndex + currTurnStep.opCount; j++)
+            {
+                UnitOp op = Haxan.history.allOps[j];
+                OpPlaybackData opData = op.playbackData;
 
-				float effectiveStartTime = opData.startTime + currTurn.startTime;
-				float effectiveEndTime = opData.endTime + currTurn.startTime;
+                float effectiveStartTime = opData.startTime + currTurn.startTime;
+                float effectiveEndTime = opData.endTime + currTurn.startTime;
 
-				if (Haxan.history.prevPlaybackTime < effectiveEndTime)
-					//... if prevTime is less than effTime, this op will hasn't been ticked to completion, so:
-					allOpsFullyTicked = false;
+                if (Haxan.history.prevPlaybackTime < effectiveEndTime)
+                    //... if prevTime is less than effTime, this op will hasn't been ticked to completion, so:
+                    allOpsFullyTicked = false;
 
-				if (Haxan.history.currPlaybackTime < effectiveStartTime)
+                if (Haxan.history.currPlaybackTime < effectiveStartTime)
+                {
+                    //... our time isn't caught up to this Op yet:
+                    if (debugOps)
+                        Debug.Log($"out, currPlayback is pre startTime, {Haxan.history.currPlaybackTime}, {effectiveStartTime}");
+                    continue;
+                }
+
+                //if (Haxan.history.currPlaybackTime > effectiveEndTime && Haxan.history.prevPlaybackTime > effectiveEndTime)
+                //	continue;
+
+                if (debugOps)
+                    Debug.Log(
+                        $"forward ticking op: {j}, " +
+                        $"currPlaybackTime: {Haxan.history.currPlaybackTime}, " +
+                        $"prevPlaybackTime: {Haxan.history.prevPlaybackTime}, " +
+                        $"startTime: {effectiveStartTime}" +
+                        $"endTime: {effectiveEndTime}"
+                        );
+
+                Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
+
+                //... BEGIN TICK:
+                if (
+                    (Haxan.history.currPlaybackTime == 0f 
+                    && Haxan.history.prevPlaybackTime == 0f)
+                    || 
+                    (Haxan.history.currPlaybackTime >= effectiveStartTime 
+                    && Haxan.history.prevPlaybackTime < effectiveStartTime)
+					)
 				{
-					//... our time isn't caught up to this Op yet:
-					if (debugOps)
-						Debug.Log($"out, currPlayback is pre startTime, {Haxan.history.currPlaybackTime}, {effectiveStartTime}");
-					continue;
-				}
-
-				//if (Haxan.history.currPlaybackTime > effectiveEndTime && Haxan.history.prevPlaybackTime > effectiveEndTime)
-				//	continue;
-
-				if (debugOps)
-					Debug.Log(
-						$"forward ticking op: {j}, " +
-						$"currPlaybackTime: {Haxan.history.currPlaybackTime}, " +
-						$"prevPlaybackTime: {Haxan.history.prevPlaybackTime}, " +
-						$"startTime: {effectiveStartTime}" +
-						$"endTime: {effectiveEndTime}"
-						);
-
-				Unit affectedUnit = op.playbackData.unitIndex.ToUnit();
-				//... BEGIN TICK:
-				if (Haxan.history.currPlaybackTime >= effectiveStartTime && Haxan.history.prevPlaybackTime < effectiveStartTime)
-				{
-					//... OnBeginTick();    
+					op.OnBeginTick();
 				}
 
 				//.. TICK:
-				if (Haxan.history.currPlaybackTime >= effectiveStartTime && Haxan.history.currPlaybackTime < effectiveEndTime)
+				if (
+					Haxan.history.currPlaybackTime >= effectiveStartTime 
+					&& Haxan.history.currPlaybackTime < effectiveEndTime
+					)
 				{
 					if (debugOps)
 						Debug.LogWarning($"op {j} still running.");
 
-					//allOpsFullyTicked = false;
 					var normalizedTime = Mathf.Clamp01((Haxan.history.currPlaybackTime - effectiveStartTime) / op.playbackData.duration);
 					op.Tick(affectedUnit, normalizedTime);
 				}
 
 				//... COMPLETE TICK();
-				bool opCompletedThisFrame = Haxan.history.currPlaybackTime > effectiveEndTime && Haxan.history.prevPlaybackTime < effectiveEndTime;
+				bool opCompletedThisFrame = 
+					Haxan.history.currPlaybackTime > effectiveEndTime 
+					&& Haxan.history.prevPlaybackTime < effectiveEndTime;
+
 				if (opCompletedThisFrame)
 				{
 					op.Tick(affectedUnit, 1f);
+					op.OnCompleteTick();
 					op.Execute(affectedUnit);
 				}
 			}

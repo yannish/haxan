@@ -29,7 +29,7 @@ public class ScrubClip
 
 
 [RequireComponent(typeof(Animator))]
-public class ClipPlayer : MonoBehaviour
+public class ClipPlayer_OTHER : MonoBehaviour
 {
     public List<AnimationClip> clips = new List<AnimationClip>();
 

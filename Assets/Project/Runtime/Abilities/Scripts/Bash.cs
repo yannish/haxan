@@ -32,7 +32,9 @@ public class Bash : Ability
 		if (instigator != owner)
 			return null;
 
-		Debug.LogWarning("BASH REACTING TO SOME OPS");
+        if(instigator.logOps)
+		    Debug.LogWarning("BASH REACTING TO SOME OPS");
+
 		Action shutDownUI = () => { };
 		
 		foreach(var op in ops)

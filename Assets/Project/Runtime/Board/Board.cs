@@ -492,7 +492,6 @@ public class Board
         return result.ToArray();
     }
 
-
 	//private static List<Vector2Int> foundPath = new List<Vector2Int>();
 	private static List<Cell> exploredCells = new List<Cell>();
 	

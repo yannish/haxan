@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(ClipHandler))]
+[CustomEditor(typeof(ClipHandler_OLD))]
 public class ClipHandlerEditor : Editor
 {
 	public override void OnInspectorGUI()
 	{
 		DrawDefaultInspector();
 
-		var clipHandler = target as ClipHandler;
+		var clipHandler = target as ClipHandler_OLD;
 
 		using(new GUILayout.VerticalScope(EditorStyles.helpBox))
 		{

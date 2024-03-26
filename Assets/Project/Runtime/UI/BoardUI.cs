@@ -5,15 +5,12 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 using UnityEngine.EventSystems;
+using BOG;
 
 public partial class BoardUI : MonoBehaviour
     , IPointerEnterHandler
     , IPointerExitHandler
 {
-	[Header("DEBUG:")]
-	public bool debugOps;
-	public bool logMouseDebug;
-
 	enum Mode
     {
         Neutral,
@@ -25,11 +22,18 @@ public partial class BoardUI : MonoBehaviour
         ProcessingCommands
     }
 
+	[Header("STATE:")]
 	[SerializeField, ReadOnly] private Mode mode;
-    [ReadOnly] public bool isPointerInUI;
-    [ReadOnly] public bool againstBoardUI;
+	[ReadOnly] public bool isPointerInUI;
+	[ReadOnly] public bool againstBoardUI;
+
+	[Header("DEBUG:")]
+	public bool debugOps;
+    public bool debugFlow;
+	public bool logMouseDebug;
     public void OnPointerEnter(PointerEventData eventData) => againstBoardUI = true;
     public void OnPointerExit(PointerEventData eventData) => againstBoardUI = false;
+
 
     Vector2Int mousePos;
     Vector2Int mousePosLastFrame;
@@ -203,6 +207,8 @@ public partial class BoardUI : MonoBehaviour
         }
 
         mousePosLastFrame = mousePos;
+
+        TickTurnOps();
     }
 
 
@@ -442,7 +448,8 @@ public partial class BoardUI : MonoBehaviour
                         selectedUnit
                         );
 
-					Debug.LogWarning("previewing movement ability");
+                    if(debugFlow)
+					    Debog.logInput("previewing movement ability");
 
 					inputOpsPreview = selectedUnit.MovementAbility.GetOpPreview(hoveredCellPos, selectedUnit);
 					if(inputOpsPreview != null)
@@ -674,7 +681,8 @@ public partial class BoardUI : MonoBehaviour
         mode = Mode.UnitSelected;
         selectedUnit = unit;
 
-        Debug.LogWarning("... selected unit: " + selectedUnit.OffsetPos);
+        if(debugFlow)
+            Debog.logInput("... selected unit: " + selectedUnit.OffsetPos);
 
         ShowUnitPortrait(unit);
         ShowInventory(unit);
@@ -816,15 +824,6 @@ public partial class BoardUI : MonoBehaviour
 		{
             //item.HidePathReaction();
 		}
-
-        //string pathName = $"Path{unit.GetInstanceID()}";
-        //foreach (Transform child in gizmos.transform)
-        //{
-        //    if (child.name == pathName)
-        //    {
-        //        Destroy(child.gameObject);
-        //    }
-        //}
     }
 
     Unit GetUnitByGuid(int unitGuid)

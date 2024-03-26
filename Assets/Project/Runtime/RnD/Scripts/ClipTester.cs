@@ -2,15 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(ClipHandler))]
+[RequireComponent(typeof(ClipHandler_OLD))]
 public class ClipTester : MonoBehaviour
 {
     public List<AnimationClip> clips = new List<AnimationClip>();
-    public ClipHandler clipHandler;
+    public ClipHandler_OLD clipHandler;
     public float time;
 
     void Start()
     {
-        clipHandler = GetComponent<ClipHandler>();
+        clipHandler = GetComponent<ClipHandler_OLD>();
     }
 }

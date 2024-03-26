@@ -25,7 +25,7 @@ public class ClipHandle_OTHER_OLD
 }
 
 [RequireComponent(typeof(Animator))]
-public class ClipHandler : MonoBehaviour
+public class ClipHandler_OTHER_OLD : MonoBehaviour
 {
     PlayableGraph graph;
 

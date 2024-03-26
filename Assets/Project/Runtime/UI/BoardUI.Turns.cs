@@ -34,7 +34,6 @@ public partial class BoardUI
     List<TimeBlock> timeblockHistory = new List<TimeBlock>();
     TimeBlock currTimeBlock;
 
-
     //void ProcessInstigatorReactions(TimeBlock timeblock)
     //{
     //    foreach (var item in timeblock.instigator.inventory)
@@ -49,7 +48,6 @@ public partial class BoardUI
     //}
 
 
-
     void StartProcessingCommands(List<UnitCommand> commands)
     {
         if (logTurnDebug)
@@ -62,7 +60,8 @@ public partial class BoardUI
 
 		currTime = 0f;
         prevTime = -1f;
-		currTimeScale = 1f;
+
+		//currTimeScale = 1f;
 
         currInstigator = selectedUnit;
         commandsToProcess = commands;

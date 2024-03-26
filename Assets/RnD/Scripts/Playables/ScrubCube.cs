@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
+#pragma warning disable 0168  // variable declared but not used.
+#pragma warning disable 0219  // variable assigned but not used.
+#pragma warning disable 0414  // private field assigned but not used.
+
 public class ScrubCube : MonoBehaviour
 {
 	public ClipPlayer clipPlayer;
@@ -17,6 +21,7 @@ public class ScrubCube : MonoBehaviour
 
 	ClipHandle upDownScrubClip;
 	ClipHandle leftRightScrubClip;
+
 
 
 	private void Awake()
@@ -63,5 +68,37 @@ public class ScrubCube : MonoBehaviour
 
 		clipPlayer.ReleaseScrubClip(clipHandle);
 		upDownScrubClip = null;
+	}
+
+
+	[Header("LOOP:")]
+	public AnimationClip loopClip;
+	ClipHandle loopClipHandle;
+	[Range(0f, 1f)]
+	public float loopWeight;
+
+	public EditorButton playLoopBtn = new EditorButton("PlayLoop", true);
+	public void PlayLoop() => playLoopCR = StartCoroutine(DoPlayLoop());
+
+	Coroutine playLoopCR;
+	public IEnumerator DoPlayLoop()
+	{
+		float t = 0f;
+		loopClipHandle = clipPlayer.GetScrubClip(loopClip);
+		while (true)
+		{
+			t += Time.deltaTime;
+			t = Mathf.Repeat(t, 1f);
+			loopClipHandle.clipPlayable.SetTime(t);
+			loopClipHandle.inputWeight = loopWeight;
+			yield return 0;
+		}
+	}
+
+	public EditorButton stopLoopBtn = new EditorButton("StopLoop", true);
+	public void StopLoop()
+	{
+		clipPlayer.ReleaseScrubClip(loopClipHandle);
+		StopCoroutine(playLoopCR);
 	}
 }

@@ -12,9 +12,13 @@ public interface IScrubConnectable
 
 }
 
-//[Serializable]
+
+
+[Serializable]
 public class ClipHandle
 {
+	public ClipPlayer player;
+
 	//... config:
     public AnimationClip clip;
 
@@ -33,6 +37,7 @@ public class ClipHandle
 	
     public int index;
 
+    public bool IsValid => !clipPlayable.IsNull();
 	
 	public void Play()
 	{
@@ -49,11 +54,24 @@ public class ClipHandle
 
 	}
 
-    public ClipHandle(PlayableGraph graph, AnimationClip clip)
+    public void ScrubTo(float newTime)
+    {
+        this.scrubTime = newTime;
+        clipPlayable.SetTime(newTime);
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+        PlayableExtensions.SetSpeed(clipPlayable, speed);
+    }
+
+    public ClipHandle(ClipPlayer player, AnimationClip clip)
 	{
+		this.player = player;
         this.clip = clip;
         this.speed = 1f;
-        this.clipPlayable = AnimationClipPlayable.Create(graph, clip);
+        this.clipPlayable = AnimationClipPlayable.Create(player.graph, clip);
         this.clipPlayable.Pause();
 	}
 }
@@ -112,7 +130,7 @@ public class ClipPlayer : MonoBehaviour
 	public bool rebindOnGraphChanged;
 
 	//... debug clips:
-	[Header("CLIPS:")]
+	[Header("DEBUG CLIPS:")]
     public List<AnimationClip> clips = new List<AnimationClip>();
 
 	public PlayableGraph graph { get; private set; }
@@ -131,7 +149,6 @@ public class ClipPlayer : MonoBehaviour
 	[ReadOnly] public float transitionTime;
 	public ClipHandle currClip;
 	public ClipHandle nextClip;
-
 
 	MethodInfo rebindMethod;
 	object[] target;
@@ -171,6 +188,7 @@ public class ClipPlayer : MonoBehaviour
 		playableOutput.SetSourcePlayable(layerMixer);
 
         graph.Play();
+
 		target = new object[] { false };
 
 		rebindMethod = typeof(Animator).GetMethod(
@@ -179,10 +197,9 @@ public class ClipPlayer : MonoBehaviour
 			);
 	}
 
-	private void LateUpdate()
+	private void Update()
 	{
 		//... track clips to be stopped
-
 		switch (mode)
 		{
 			case ClipPlayerMode.PAUSED:
@@ -230,9 +247,14 @@ public class ClipPlayer : MonoBehaviour
 				break;
 		}
 
-		foreach(var scrubClip in additiveClips)
+		foreach(var additiveClip in additiveClips)
 		{
-			mixer.SetInputWeight(scrubClip.index, scrubClip.inputWeight);
+			mixer.SetInputWeight(additiveClip.index, additiveClip.inputWeight);
+		}
+
+		foreach(var scrubClip in scrubClips)
+		{
+			scrubMixer.SetInputWeight(scrubClip.index, scrubClip.inputWeight);
 		}
 	}
 
@@ -270,11 +292,14 @@ public class ClipPlayer : MonoBehaviour
 		float initialWeight = 1f
 		)
 	{
-		var newScrubClip = new ClipHandle(graph, clip);
+		var newScrubClip = new ClipHandle(this, clip);
+        newScrubClip.inputWeight = initialWeight;
+
 		//newScrubClip.index = scrubClips.Count;
 		
 		if(startTime >= 0f)
 			newScrubClip.clipPlayable.SetTime(startTime);
+
 		scrubClips.Add(newScrubClip);
 
 		RewireMixer(scrubClips, scrubMixer);
@@ -285,15 +310,6 @@ public class ClipPlayer : MonoBehaviour
 		scrubMixer.SetInputWeight(newScrubClip.index, initialWeight);
 
 		return newScrubClip;
-	}
-
-	public void ReleaseScrubClip(ClipHandle clipHandle)
-	{
-		scrubMixer.DisconnectInput(clipHandle.index);
-		scrubClips.Remove(clipHandle);
-		graph.DestroyPlayable(clipHandle.clipPlayable);
-
-		RewireMixer(scrubClips, scrubMixer);
 	}
 
 	private void RewireMixer(List<ClipHandle> clipHandles, AnimationMixerPlayable mixer)
@@ -329,7 +345,7 @@ public class ClipPlayer : MonoBehaviour
 		transitionTime = this.nextClip.transitionTime > 0f ? this.nextClip.transitionTime : blendTime;
 		transitionTimer = transitionTime;
 
-		var nextScrubClip = new ClipHandle(graph, nextClip);
+		var nextScrubClip = new ClipHandle(this, nextClip);
 		this.nextClip = nextScrubClip;
 
 		if (startTime >= 0f)
@@ -353,7 +369,7 @@ public class ClipPlayer : MonoBehaviour
 		float startTime = 0f
 		)
 	{
-		var newScrubClip = new ClipHandle(graph, clip);
+		var newScrubClip = new ClipHandle(this, clip);
 		newScrubClip.index = additiveClips.Count;
 		newScrubClip.inputWeight = initialWeight;
 		newScrubClip.clipPlayable.Play();
@@ -390,6 +406,20 @@ public class ClipPlayer : MonoBehaviour
 			additiveClips.Remove(clip);
 	}
 
+	public void ReleaseScrubClip(ClipHandle clipHandle)
+	{
+		scrubMixer.DisconnectInput(clipHandle.index);
+		scrubClips.Remove(clipHandle);
+		graph.DestroyPlayable(clipHandle.clipPlayable);
+
+		RewireMixer(scrubClips, scrubMixer);
+	}
+
+	public void PlayPose()
+	{
+		//var animationPlayable = new AnimationClipPlayable();
+	}
+	
 
 	private void OnDisable()
 	{

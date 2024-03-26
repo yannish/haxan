@@ -2,10 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(ClipHandler))]
+[RequireComponent(typeof(ClipHandler_OLD))]
 public class ClipSetter : MonoBehaviour
 {
-    [ReadOnly] public ClipHandler clipHandler;
+    [ReadOnly] public ClipHandler_OLD clipHandler;
     public AnimationClip clip;
 
 	[Range(0f, 1f)] public float scrubTime;
@@ -13,7 +13,7 @@ public class ClipSetter : MonoBehaviour
 
 	private void Start()
 	{
-		clipHandler = GetComponent<ClipHandler>();
+		clipHandler = GetComponent<ClipHandler_OLD>();
 	}
 
 	public EditorButton setClipBtn = new EditorButton("SetClip", true);

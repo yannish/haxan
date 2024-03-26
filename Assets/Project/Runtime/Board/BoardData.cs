@@ -20,6 +20,8 @@ public class BoardData : MonoBehaviour
 		}
 	}
 
+    public bool logDebug;
+
 	public List<GridV2> allGrids;
 
 	public Dictionary<int, Cell> indexToCellLookup = new Dictionary<int, Cell>();
@@ -33,7 +35,8 @@ public class BoardData : MonoBehaviour
 
 	private void OnEnable()
 	{
-		Debug.LogWarning("Enabled board data.");
+        if(logDebug)
+		    Debug.LogWarning("Enabled board data.");
 	}
 
 	public void OnBeforeSerialize()

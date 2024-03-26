@@ -31,7 +31,7 @@ public class Item : MonoBehaviour
 {
 	private const string hologramMatPath = "Materials/MAT hologram";
 
-	[ReadOnly] public ClipHandler clipHandler;
+	[ReadOnly] public ClipHandler_OLD clipHandler;
 	[ReadOnly] public Transform _root;
 	[ReadOnly] public Material hologramMat;
 	[ReadOnly] public Renderer[] renderers;
@@ -83,7 +83,7 @@ public class Item : MonoBehaviour
 	private void Awake()
 	{
 		_root = transform.Find("root");
-		clipHandler = GetComponent<ClipHandler>();
+		clipHandler = GetComponent<ClipHandler_OLD>();
 		hologramMat = Resources.Load<Material>(hologramMatPath);
 	}
 
@@ -157,7 +157,7 @@ public static class ItemExtentions
 
 		if(unit.styleToHolster.TryGetValue(item.holsteredStyle, out var foundBone))
 		{
-			Debug.LogWarning("holstering to bone pos: " + foundBone.transform.position, foundBone);
+			//Debug.LogWarning("holstering to bone pos: " + foundBone.transform.position, foundBone);
 			item.root.position = foundBone.transform.position;
 			item.root.rotation = foundBone.transform.rotation;
 			item.transform.SetParent(foundBone.transform, true);
